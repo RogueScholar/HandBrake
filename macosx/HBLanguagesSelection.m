@@ -87,7 +87,7 @@
             }
 
             HBLang *item = [[HBLang alloc] initWithLanguage:nativeLanguage
-                                                iso639_2code:@(lang->iso639_2)];
+                                           iso639_2code:@(lang->iso639_2)];
             if ([languages containsObject:item.iso639_2])
             {
                 item.isSelected = YES;
@@ -102,11 +102,11 @@
         // Insert the selected items
         // in the original order.
         [selected sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
-            return [languages indexOfObject:[obj1 iso639_2]] - [languages indexOfObject:[obj2 iso639_2]];
-        }];
+                     return [languages indexOfObject:[obj1 iso639_2]] - [languages indexOfObject:[obj2 iso639_2]];
+                 }];
 
         [internal insertObjects:selected
-                      atIndexes:[NSIndexSet indexSetWithIndexesInRange:(NSMakeRange(1, selected.count))]];
+                  atIndexes:[NSIndexSet indexSetWithIndexesInRange:(NSMakeRange(1, selected.count))]];
 
         _languagesArray = internal;
     }
@@ -171,8 +171,8 @@ NSString *kHBLanguagesDragRowsType = @"kHBLanguagesDragRowsType";
 
 - (void)awakeFromNib
 {
-	[self.tableView registerForDraggedTypes:@[kHBLanguagesDragRowsType]];
-	self.isDragginEnabled = YES;
+    [self.tableView registerForDraggedTypes:@[kHBLanguagesDragRowsType]];
+    self.isDragginEnabled = YES;
 }
 
 #pragma mark - NSTableView Delegate
@@ -180,7 +180,7 @@ NSString *kHBLanguagesDragRowsType = @"kHBLanguagesDragRowsType";
 - (BOOL)tableView:(NSTableView *)tableView writeRowsWithIndexes:(NSIndexSet *)rowIndexes toPasteboard:(NSPasteboard *)pboard
 {
     if (self.isDragginEnabled)
-	{
+    {
         NSData *data = nil;
         if (self.showSelectedOnly)
         {
@@ -215,17 +215,17 @@ NSString *kHBLanguagesDragRowsType = @"kHBLanguagesDragRowsType";
 }
 
 - (NSDragOperation)tableView:(NSTableView *)view
-                validateDrop:(id <NSDraggingInfo>)info
-                 proposedRow:(NSInteger)row
-       proposedDropOperation:(NSTableViewDropOperation)operation
+    validateDrop:(id <NSDraggingInfo>)info
+    proposedRow:(NSInteger)row
+    proposedDropOperation:(NSTableViewDropOperation)operation
 {
     NSDragOperation dragOp = NSDragOperationNone;
 
     // if drag source is our own table view, it's a move or a copy
     if ([info draggingSource] == view)
-	{
-		// At a minimum, allow move
-		dragOp =  NSDragOperationMove;
+    {
+        // At a minimum, allow move
+        dragOp =  NSDragOperationMove;
     }
 
     [view setDropRow:row dropOperation:NSTableViewDropAbove];
@@ -256,7 +256,7 @@ NSString *kHBLanguagesDragRowsType = @"kHBLanguagesDragRowsType";
         NSIndexSet *selectionSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(row, [indexSet count])];
         [view selectRowIndexes:selectionSet byExtendingSelection:NO];
 
-		return YES;
+        return YES;
     }
 
     return NO;
@@ -271,26 +271,26 @@ NSString *kHBLanguagesDragRowsType = @"kHBLanguagesDragRowsType";
 
     NSUInteger thisIndex = [indexSet lastIndex];
     while (thisIndex != NSNotFound)
-	{
-		if (thisIndex >= insertIndex)
-		{
-			removeIndex = thisIndex + aboveInsertIndexCount;
-			aboveInsertIndexCount += 1;
-		}
-		else
-		{
-			removeIndex = thisIndex;
-			insertIndex -= 1;
-		}
+    {
+        if (thisIndex >= insertIndex)
+        {
+            removeIndex = thisIndex + aboveInsertIndexCount;
+            aboveInsertIndexCount += 1;
+        }
+        else
+        {
+            removeIndex = thisIndex;
+            insertIndex -= 1;
+        }
 
-		// Get the object we're moving
-		id object = objects[removeIndex];
+        // Get the object we're moving
+        id object = objects[removeIndex];
 
-		// Move the object
-		[self removeObjectAtArrangedObjectIndex:removeIndex];
-		[self insertObject:object atArrangedObjectIndex:insertIndex];
+        // Move the object
+        [self removeObjectAtArrangedObjectIndex:removeIndex];
+        [self insertObject:object atArrangedObjectIndex:insertIndex];
 
-		thisIndex = [indexSet indexLessThanIndex:thisIndex];
+        thisIndex = [indexSet indexLessThanIndex:thisIndex];
     }
 }
 
