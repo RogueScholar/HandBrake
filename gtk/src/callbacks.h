@@ -64,7 +64,7 @@ void ghb_start_next_job(signal_user_data_t *ud);
 void ghb_check_dependency(
     signal_user_data_t *ud, GtkWidget *widget, const gchar *alt_name);
 void ghb_do_scan( signal_user_data_t *ud, const gchar *filename,
-    gint titlenum, gboolean force);
+                  gint titlenum, gboolean force);
 void ghb_log(gchar *log, ...);
 gpointer ghb_check_update(signal_user_data_t *ud);
 #if defined(_WIN32)

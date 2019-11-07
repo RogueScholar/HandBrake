@@ -35,7 +35,7 @@ ghb_load_icons()
     GResource *icon_res = ghb_icons_get_resource();
 
     char ** children = g_resource_enumerate_children(icon_res,
-                            "/fr/handbrake/ghb/icons/scalable/apps", 0, NULL);
+                       "/fr/handbrake/ghb/icons/scalable/apps", 0, NULL);
 
     if (children == NULL)
     {
@@ -69,10 +69,10 @@ ghb_load_icons()
             int size;
 
             gis = g_memory_input_stream_new_from_data(data, data_size,
-                                                      NULL);
+                    NULL);
             pb = gdk_pixbuf_new_from_stream_at_scale(gis,
-                                                     sizes[jj], sizes[jj],
-                                                     TRUE, NULL, NULL);
+                    sizes[jj], sizes[jj],
+                    TRUE, NULL, NULL);
             g_input_stream_close(gis, NULL, NULL);
             size = gdk_pixbuf_get_height(pb);
             gtk_icon_theme_add_builtin_icon(name, size, pb);

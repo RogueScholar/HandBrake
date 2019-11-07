@@ -95,9 +95,9 @@ create_builder_or_die(const gchar * name)
 
     const gchar *markup =
         N_("<b><big>Unable to create %s.</big></b>\n"
-        "\n"
-        "Internal error. Could not parse UI description.\n"
-        "%s");
+           "\n"
+           "Internal error. Could not parse UI description.\n"
+           "%s");
     g_debug("create_builder_or_die()\n");
     GtkBuilder *xml = gtk_builder_new();
     if (xml != NULL)
@@ -105,11 +105,11 @@ create_builder_or_die(const gchar * name)
     if (!xml || !res)
     {
         GtkWidget *dialog = gtk_message_dialog_new_with_markup(NULL,
-            GTK_DIALOG_MODAL,
-            GTK_MESSAGE_ERROR,
-            GTK_BUTTONS_CLOSE,
-            gettext(markup),
-            name, error->message);
+                            GTK_DIALOG_MODAL,
+                            GTK_MESSAGE_ERROR,
+                            GTK_BUTTONS_CLOSE,
+                            gettext(markup),
+                            name, error->message);
         gtk_dialog_run(GTK_DIALOG(dialog));
         gtk_widget_destroy(dialog);
         exit(EXIT_FAILURE);
@@ -194,7 +194,7 @@ change_font(GtkWidget *widget, gpointer data)
         gtk_container_foreach((GtkContainer*)widget, change_font, data);
     }
 }
-    //gtk_container_foreach((GtkContainer*)window, change_font, "sans 20");
+//gtk_container_foreach((GtkContainer*)window, change_font, "sans 20");
 #endif
 
 extern G_MODULE_EXPORT void audio_list_selection_changed_cb(void);
@@ -220,8 +220,8 @@ bind_audio_tree_model(signal_user_data_t *ud)
     treeview = GTK_TREE_VIEW(GHB_WIDGET(ud->builder, "audio_list_view"));
     selection = gtk_tree_view_get_selection(treeview);
     treestore = gtk_tree_store_new(6, G_TYPE_STRING, G_TYPE_STRING,
-                                      G_TYPE_STRING, G_TYPE_STRING,
-                                      G_TYPE_STRING, G_TYPE_FLOAT);
+                                   G_TYPE_STRING, G_TYPE_STRING,
+                                   G_TYPE_STRING, G_TYPE_FLOAT);
     gtk_tree_view_set_model(treeview, GTK_TREE_MODEL(treestore));
 
     source_cell = gtk_cell_renderer_text_new();
@@ -246,12 +246,12 @@ bind_audio_tree_model(signal_user_data_t *ud)
     gtk_tree_view_column_set_max_width(column, 400);
 
     column = gtk_tree_view_column_new_with_attributes(
-                                    _(""), edit_cell, "icon-name", 3, NULL);
+                 _(""), edit_cell, "icon-name", 3, NULL);
     //gtk_tree_view_column_set_min_width(column, 24);
     gtk_tree_view_append_column(treeview, GTK_TREE_VIEW_COLUMN(column));
 
     column = gtk_tree_view_column_new_with_attributes(
-                                    _(""), delete_cell, "icon-name", 4, NULL);
+                 _(""), delete_cell, "icon-name", 4, NULL);
     //gtk_tree_view_column_set_min_width(column, 24);
     gtk_tree_view_append_column(treeview, GTK_TREE_VIEW_COLUMN(column));
 
@@ -285,8 +285,8 @@ bind_subtitle_tree_model(signal_user_data_t *ud)
     treeview = GTK_TREE_VIEW(GHB_WIDGET(ud->builder, "subtitle_list_view"));
     selection = gtk_tree_view_get_selection(treeview);
     treestore = gtk_tree_store_new(6, G_TYPE_STRING, G_TYPE_STRING,
-                                      G_TYPE_STRING, G_TYPE_STRING,
-                                      G_TYPE_STRING, G_TYPE_FLOAT);
+                                   G_TYPE_STRING, G_TYPE_STRING,
+                                   G_TYPE_STRING, G_TYPE_FLOAT);
     gtk_tree_view_set_model(treeview, GTK_TREE_MODEL(treestore));
 
     source_cell = gtk_cell_renderer_text_new();
@@ -311,11 +311,11 @@ bind_subtitle_tree_model(signal_user_data_t *ud)
     gtk_tree_view_column_set_max_width(column, 400);
 
     column = gtk_tree_view_column_new_with_attributes(
-                                    _(""), edit_cell, "icon-name", 3, NULL);
+                 _(""), edit_cell, "icon-name", 3, NULL);
     gtk_tree_view_append_column(treeview, GTK_TREE_VIEW_COLUMN(column));
 
     column = gtk_tree_view_column_new_with_attributes(
-                                    _(""), delete_cell, "icon-name", 4, NULL);
+                 _(""), delete_cell, "icon-name", 4, NULL);
     gtk_tree_view_append_column(treeview, GTK_TREE_VIEW_COLUMN(column));
 
     g_signal_connect(selection, "changed", subtitle_list_selection_changed_cb, ud);
@@ -335,7 +335,7 @@ static const char * presets_drag_entries[] = {
 };
 #else
 static GtkTargetEntry presets_drag_entries[] = {
-   { "PRESETS_ROW", GTK_TARGET_SAME_WIDGET, 0 }
+    { "PRESETS_ROW", GTK_TARGET_SAME_WIDGET, 0 }
 };
 #endif
 
@@ -355,13 +355,13 @@ bind_presets_tree_model(signal_user_data_t *ud)
     treeview = GTK_TREE_VIEW(GHB_WIDGET(ud->builder, "presets_list"));
     selection = gtk_tree_view_get_selection(treeview);
     treestore = gtk_tree_store_new(6, G_TYPE_STRING, G_TYPE_INT, G_TYPE_INT,
-                                  G_TYPE_STRING, G_TYPE_STRING, G_TYPE_BOOLEAN);
+                                   G_TYPE_STRING, G_TYPE_STRING, G_TYPE_BOOLEAN);
     gtk_tree_view_set_model(treeview, GTK_TREE_MODEL(treestore));
 
     cell = gtk_cell_renderer_text_new();
     column = gtk_tree_view_column_new_with_attributes(_("Preset Name"), cell,
-        "text", 0, "weight", 1, "style", 2,
-        "foreground", 3, "editable", 5, NULL);
+             "text", 0, "weight", 1, "style", 2,
+             "foreground", 3, "editable", 5, NULL);
 
     g_signal_connect(cell, "edited", preset_edited_cb, ud);
 
@@ -380,7 +380,7 @@ bind_presets_tree_model(signal_user_data_t *ud)
     gdk_content_formats_unref(targets);
 #else
     gtk_tree_view_enable_model_drag_dest(treeview, presets_drag_entries, 1,
-                                            GDK_ACTION_MOVE);
+                                         GDK_ACTION_MOVE);
     gtk_tree_view_enable_model_drag_source(treeview, GDK_BUTTON1_MASK,
                                            presets_drag_entries, 1,
                                            GDK_ACTION_MOVE);
@@ -630,143 +630,143 @@ G_MODULE_EXPORT void preview_hud_size_alloc_cb(GtkWidget *widget, signal_user_da
 // Important: any widgets named in CSS must have their widget names set
 // below before setting CSS properties on them.
 const gchar *MyCSS =
-"@define-color black  #000000;"
-"@define-color gray18 #2e2e2e;"
-"@define-color gray22 #383838;"
-"@define-color gray26 #424242;"
-"@define-color gray32 #525252;"
-"@define-color gray40 #666666;"
-"@define-color gray46 #757575;"
-"@define-color white  #ffffff;"
+    "@define-color black  #000000;"
+    "@define-color gray18 #2e2e2e;"
+    "@define-color gray22 #383838;"
+    "@define-color gray26 #424242;"
+    "@define-color gray32 #525252;"
+    "@define-color gray40 #666666;"
+    "@define-color gray46 #757575;"
+    "@define-color white  #ffffff;"
 
-"#preview_hud"
-"{"
-"    border-radius: 20px;"
-"    background-color: alpha(@gray18, 0.8);"
-"    color: @white;"
-"}"
+    "#preview_hud"
+    "{"
+    "    border-radius: 20px;"
+    "    background-color: alpha(@gray18, 0.8);"
+    "    color: @white;"
+    "}"
 
-"#live_preview_play,"
-"#live_duration,"
-"#preview_reset"
-"{"
-"    background: @black;"
-"    background-color: @gray18;"
-"    color: @white;"
-"}"
+    "#live_preview_play,"
+    "#live_duration,"
+    "#preview_reset"
+    "{"
+    "    background: @black;"
+    "    background-color: @gray18;"
+    "    color: @white;"
+    "}"
 
-"#preview_show_crop"
-"{"
-"    background-color: @gray22;"
-"    border-color: @white;"
-"    color: @white;"
-"}"
+    "#preview_show_crop"
+    "{"
+    "    background-color: @gray22;"
+    "    border-color: @white;"
+    "    color: @white;"
+    "}"
 
-"#live_encode_progress,"
-"#live_preview_progress,"
-"#preview_frame"
-"{"
-"    background: @black;"
-"    background-color: alpha(@gray18, 0.0);"
-"    color: @white;"
-"}"
+    "#live_encode_progress,"
+    "#live_preview_progress,"
+    "#preview_frame"
+    "{"
+    "    background: @black;"
+    "    background-color: alpha(@gray18, 0.0);"
+    "    color: @white;"
+    "}"
 
 #if GTK_CHECK_VERSION(3, 20, 0)
-"#preview_reset:hover"
+    "#preview_reset:hover"
 #else
-"#preview_reset:prelight"
+    "#preview_reset:prelight"
 #endif
-"{"
-"    background: @black;"
-"    background-color: @gray32;"
-"    color: @white;"
-"}"
+    "{"
+    "    background: @black;"
+    "    background-color: @gray32;"
+    "    color: @white;"
+    "}"
 
-"#preview_reset:active"
-"{"
-"    background: @black;"
-"    background-color: @gray32;"
-"    color: @white;"
-"}"
+    "#preview_reset:active"
+    "{"
+    "    background: @black;"
+    "    background-color: @gray32;"
+    "    color: @white;"
+    "}"
 
-"#preview_reset:active"
-"{"
-"    background: @black;"
-"    background-color: @gray32;"
-"    color: @white;"
-"}"
+    "#preview_reset:active"
+    "{"
+    "    background: @black;"
+    "    background-color: @gray32;"
+    "    color: @white;"
+    "}"
 
-"textview"
-"{"
-"    padding: 5px 5px 5px 5px;"
-"}"
+    "textview"
+    "{"
+    "    padding: 5px 5px 5px 5px;"
+    "}"
 
-".entry"
-"{"
-"    margin: 0px 5px 0px 5px;"
-"    padding: 0px 0px 0px 0px;"
-"}"
+    ".entry"
+    "{"
+    "    margin: 0px 5px 0px 5px;"
+    "    padding: 0px 0px 0px 0px;"
+    "}"
 
 #if GTK_CHECK_VERSION(3, 20, 0)
-"stackswitcher button.text-button"
-"{"
-"    min-width: 50px;"
-"}"
+    "stackswitcher button.text-button"
+    "{"
+    "    min-width: 50px;"
+    "}"
 #endif
 
 #if GTK_CHECK_VERSION(3, 16, 0)
-"#activity_view"
-"{"
-"    font-family: monospace;"
-"    font-size: 8pt;"
-"    font-weight: lighter;"
-"}"
+    "#activity_view"
+    "{"
+    "    font-family: monospace;"
+    "    font-size: 8pt;"
+    "    font-weight: lighter;"
+    "}"
 #endif
 
-".row:not(:first-child)"
-"{"
-"    border-top: 1px solid transparent; "
-"    border-bottom: 1px solid transparent; "
-"}"
-".row:first-child"
-"{"
-"    border-top: 1px solid transparent; "
-"    border-bottom: 1px solid transparent; "
-"}"
-".row:last-child"
-"{"
-"    border-top: 1px solid transparent; "
-"    border-bottom: 1px solid transparent; "
-"}"
-".row.drag-icon"
-"{"
-"    background: white; "
-"    border: 1px solid black; "
-"}"
-".row.drag-row"
-"{"
-"    color: gray; "
-"    background: alpha(gray,0.2); "
-"}"
-".row.drag-row.drag-hover"
-"{"
-"    border-top: 1px solid #4e9a06; "
-"    border-bottom: 1px solid #4e9a06; "
-"}"
-".row.drag-hover image, "
-".row.drag-hover label"
-"{"
-"    color: #4e9a06; "
-"}"
-".row.drag-hover-top"
-"{"
-"    border-top: 1px solid #4e9a06; "
-"}"
-".row.drag-hover-bottom"
-"{"
-"    border-bottom: 1px solid #4e9a06; "
-"}"
-;
+    ".row:not(:first-child)"
+    "{"
+    "    border-top: 1px solid transparent; "
+    "    border-bottom: 1px solid transparent; "
+    "}"
+    ".row:first-child"
+    "{"
+    "    border-top: 1px solid transparent; "
+    "    border-bottom: 1px solid transparent; "
+    "}"
+    ".row:last-child"
+    "{"
+    "    border-top: 1px solid transparent; "
+    "    border-bottom: 1px solid transparent; "
+    "}"
+    ".row.drag-icon"
+    "{"
+    "    background: white; "
+    "    border: 1px solid black; "
+    "}"
+    ".row.drag-row"
+    "{"
+    "    color: gray; "
+    "    background: alpha(gray,0.2); "
+    "}"
+    ".row.drag-row.drag-hover"
+    "{"
+    "    border-top: 1px solid #4e9a06; "
+    "    border-bottom: 1px solid #4e9a06; "
+    "}"
+    ".row.drag-hover image, "
+    ".row.drag-hover label"
+    "{"
+    "    color: #4e9a06; "
+    "}"
+    ".row.drag-hover-top"
+    "{"
+    "    border-top: 1px solid #4e9a06; "
+    "}"
+    ".row.drag-hover-bottom"
+    "{"
+    "    border-bottom: 1px solid #4e9a06; "
+    "}"
+    ;
 
 extern G_MODULE_EXPORT void status_icon_query_tooltip_cb(void);
 
@@ -883,16 +883,21 @@ static void map_actions(GApplication * app, signal_user_data_t * ud)
         { "queue-export",          queue_export_action_cb          },
         { "queue-import",          queue_import_action_cb          },
         { "queue-edit",            queue_edit_action_cb            },
-        { "hbfd",                  NULL,
-          NULL, "false",           hbfd_action_cb                  },
-        { "show-presets",          NULL,
-          NULL, "false",           show_presets_action_cb          },
-        { "show-queue",            NULL,
-          NULL, "false",           show_queue_action_cb            },
-        { "show-preview",          NULL,
-          NULL, "false",           show_preview_action_cb          },
-        { "show-activity",         NULL,
-          NULL, "false",           show_activity_action_cb         },
+        {   "hbfd",                  NULL,
+            NULL, "false",           hbfd_action_cb
+        },
+        {   "show-presets",          NULL,
+            NULL, "false",           show_presets_action_cb
+        },
+        {   "show-queue",            NULL,
+            NULL, "false",           show_queue_action_cb
+        },
+        {   "show-preview",          NULL,
+            NULL, "false",           show_preview_action_cb
+        },
+        {   "show-activity",         NULL,
+            NULL, "false",           show_activity_action_cb
+        },
         { "preset-save",           preset_save_action_cb           },
         { "preset-save-as",        preset_save_as_action_cb        },
         { "preset-rename",         preset_rename_action_cb         },
@@ -951,7 +956,7 @@ extern G_MODULE_EXPORT void easter_egg_multi_cb(void);
 extern G_MODULE_EXPORT void preview_leave_cb(void);
 extern G_MODULE_EXPORT void preview_motion_cb(void);
 extern G_MODULE_EXPORT void preview_draw_cb(GtkDrawingArea*, cairo_t*, int, int,
-                                            gpointer);
+        gpointer);
 extern G_MODULE_EXPORT void hud_enter_cb(void);
 extern G_MODULE_EXPORT void hud_leave_cb(void);
 #endif
@@ -966,13 +971,13 @@ ghb_activate_cb(GApplication * app, signal_user_data_t * ud)
 #if GTK_CHECK_VERSION(3, 90, 0)
     GdkDisplay *dd = gdk_display_get_default();
     gtk_style_context_add_provider_for_display(dd,
-                                GTK_STYLE_PROVIDER(provider),
-                                GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+            GTK_STYLE_PROVIDER(provider),
+            GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 #else
     GdkScreen *ss = gdk_screen_get_default();
     gtk_style_context_add_provider_for_screen(ss,
-                                GTK_STYLE_PROVIDER(provider),
-                                GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+            GTK_STYLE_PROVIDER(provider),
+            GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 #endif
 
     g_object_unref(provider);
@@ -1044,7 +1049,7 @@ ghb_activate_cb(GApplication * app, signal_user_data_t * ud)
     ghb_preview_init(ud);
     IoRedirect(ud);
     ghb_log( "%s - %s - %s",
-        HB_PROJECT_TITLE, HB_PROJECT_HOST_TITLE, HB_PROJECT_URL_WEBSITE );
+             HB_PROJECT_TITLE, HB_PROJECT_HOST_TITLE, HB_PROJECT_URL_WEBSITE );
     ghb_init_dep_map();
 
     GtkTextView   * textview;
@@ -1247,7 +1252,7 @@ ghb_activate_cb(GApplication * app, signal_user_data_t * ud)
     // and we can access the buttons to change their width.
     GList *stack_switcher_children, *link;
     GtkContainer * stack_switcher = GTK_CONTAINER(
-                            GHB_WIDGET(ud->builder, "SettingsStackSwitcher"));
+                                        GHB_WIDGET(ud->builder, "SettingsStackSwitcher"));
     link = stack_switcher_children = gtk_container_get_children(stack_switcher);
     while (link != NULL)
     {
@@ -1339,7 +1344,7 @@ main(int argc, char *argv[])
     if (win32_console)
     {
         // Enable console logging
-        if(AttachConsole(ATTACH_PARENT_PROCESS) || AllocConsole()){
+        if(AttachConsole(ATTACH_PARENT_PROCESS) || AllocConsole()) {
             close(STDOUT_FILENO);
             freopen("CONOUT$", "w", stdout);
             close(STDERR_FILENO);

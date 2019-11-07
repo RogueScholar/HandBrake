@@ -36,9 +36,9 @@
 #include "subtitlehandler.h"
 
 static char * subtitle_get_track_description(GhbValue *settings,
-                                             GhbValue *subsettings);
+        GhbValue *subsettings);
 static void subtitle_list_refresh_selected(signal_user_data_t *ud,
-                                           GhbValue *subsettings);
+        GhbValue *subsettings);
 static void subtitle_add_to_settings(GhbValue *settings, GhbValue *subsettings);
 static void add_subtitle_to_ui(signal_user_data_t *ud, GhbValue *subsettings);
 static void add_to_subtitle_list_ui(signal_user_data_t *ud, GhbValue *settings);
@@ -112,7 +112,7 @@ subtitle_refresh_list_row_ui(
 
     GString *str = g_string_new("<small>");
     g_string_append_printf(str, "%s ", burned ? "Burned Into Video" :
-                                                "Passthrough");
+                           "Passthrough");
     if (forced)
     {
         g_string_append_printf(str, "(Forced Subtitles Only)");
@@ -126,14 +126,14 @@ subtitle_refresh_list_row_ui(
     info_dst = g_string_free(str, FALSE);
 
     gtk_tree_store_set(GTK_TREE_STORE(tm), ti,
-        // These are displayed in list
-        0, info_src,
-        1, "-->",
-        2, info_dst,
-        3, "hb-edit",
-        4, "hb-remove",
-        5, 0.5,
-        -1);
+                       // These are displayed in list
+                       0, info_src,
+                       1, "-->",
+                       2, info_dst,
+                       3, "hb-edit",
+                       4, "hb-remove",
+                       5, 0.5,
+                       -1);
 
     if (info_src_2 != NULL || info_dst_2 != NULL)
     {
@@ -147,11 +147,11 @@ subtitle_refresh_list_row_ui(
             gtk_tree_store_append(GTK_TREE_STORE(tm), &cti, ti);
         }
         gtk_tree_store_set(GTK_TREE_STORE(tm), &cti,
-            // These are displayed in list
-            0, info_src_2,
-            2, info_dst_2,
-            5, 0.0,
-            -1);
+                           // These are displayed in list
+                           0, info_src_2,
+                           2, info_dst_2,
+                           5, 0.0,
+                           -1);
     }
     else
     {
@@ -672,7 +672,7 @@ subtitle_update_dialog_widgets(signal_user_data_t *ud, GhbValue *subsettings)
             // Show import subitle widgets
             widget = GHB_WIDGET(ud->builder, "subtitle_import_grid");
             gtk_widget_set_visible(widget, source == IMPORTSRT ||
-                                           source == IMPORTSSA);
+                                   source == IMPORTSSA);
             widget = GHB_WIDGET(ud->builder, "srt_code_label");
             gtk_widget_set_visible(widget, source == IMPORTSRT);
             widget = GHB_WIDGET(ud->builder, "SrtCodeset");
@@ -845,7 +845,7 @@ subtitle_burned_toggled_cb(GtkWidget *widget, signal_user_data_t *ud)
     if (subsettings != NULL)
     {
         if (ghb_dict_get_bool(subsettings, "Burn") &&
-            ghb_dict_get(subsettings, "Track") != NULL) // !foreign audio search
+                ghb_dict_get(subsettings, "Track") != NULL) // !foreign audio search
         {
             ghb_ui_update(ud, "SubtitleDefaultTrack", ghb_boolean_value(FALSE));
             subtitle_exclusive_burn(ud, index);
@@ -880,8 +880,8 @@ subtitle_import_radio_toggled_cb(GtkWidget *widget, signal_user_data_t *ud)
 
     ghb_widget_to_setting(ud->settings, widget);
     if (!ghb_dict_get_bool(ud->settings, "SubtitleSrtEnable") &&
-        !ghb_dict_get_bool(ud->settings, "SubtitleSsaEnable") &&
-        !ghb_dict_get_bool(ud->settings, "SubtitleImportDisable"))
+            !ghb_dict_get_bool(ud->settings, "SubtitleSsaEnable") &&
+            !ghb_dict_get_bool(ud->settings, "SubtitleImportDisable"))
     {
         // Radio buttons are in an in-between state with none enabled.
         // Wait for the next toggle when something gets enabled.
@@ -891,7 +891,7 @@ subtitle_import_radio_toggled_cb(GtkWidget *widget, signal_user_data_t *ud)
     if (subsettings != NULL)
     {
         if (ghb_dict_get_bool(ud->settings, "SubtitleSrtEnable") ||
-            ghb_dict_get_bool(ud->settings, "SubtitleSsaEnable"))
+                ghb_dict_get_bool(ud->settings, "SubtitleSsaEnable"))
         {
             const gchar *pref_lang, *dir;
             gchar *filename;
@@ -911,8 +911,8 @@ subtitle_import_radio_toggled_cb(GtkWidget *widget, signal_user_data_t *ud)
                 g_free(filename);
             }
             ghb_dict_set_string(import, "Format",
-                        hb_dict_get_bool(ud->settings, "SubtitleSrtEnable") ?
-                            "SRT" : "SSA");
+                                hb_dict_get_bool(ud->settings, "SubtitleSrtEnable") ?
+                                "SRT" : "SSA");
         }
         else
         {
@@ -1168,17 +1168,17 @@ subtitle_add_clicked_cb(GtkWidget *xwidget, signal_user_data_t *ud)
 
     int count = hb_list_count(title->list_subtitle);
     for (subsettings = NULL, track = 0;
-         subsettings == NULL && track < count; track++)
+            subsettings == NULL && track < count; track++)
     {
         subsettings = subtitle_add_track(ud, ud->settings, track,
-                                mux->format, FALSE, FALSE, VOBSUB,
-                                FALSE, &one_burned);
+                                         mux->format, FALSE, FALSE, VOBSUB,
+                                         FALSE, &one_burned);
     }
     if (subsettings == NULL)
     {
         subsettings = subtitle_add_track(ud, ud->settings, 0,
-                                mux->format, FALSE, TRUE, IMPORTSRT,
-                                FALSE, &one_burned);
+                                         mux->format, FALSE, TRUE, IMPORTSRT,
+                                         FALSE, &one_burned);
     }
     if (subsettings != NULL)
     {
@@ -1372,7 +1372,7 @@ subtitle_update_pref_lang(signal_user_data_t *ud, const iso639_lang_t *lang)
         if (strncmp(code, "und", 4))
         {
             name = lang->native_name && lang->native_name[0] ?
-                                lang->native_name : lang->eng_name;
+                   lang->native_name : lang->eng_name;
         }
     }
 
@@ -1386,23 +1386,23 @@ subtitle_update_pref_lang(signal_user_data_t *ud, const iso639_lang_t *lang)
     // a preferred language to be set.
     gboolean sensitive = !(lang == NULL || !strncmp(code, "und", 4));
     button = GTK_BUTTON(GHB_WIDGET(ud->builder,
-                                  "SubtitleAddForeignAudioSubtitle"));
+                                   "SubtitleAddForeignAudioSubtitle"));
     if (sensitive)
     {
         str = g_strdup_printf(
-            _("Add %s subtitle track if default audio is not %s"), name, name);
+                  _("Add %s subtitle track if default audio is not %s"), name, name);
     }
     else
     {
         str = g_strdup_printf(
-            _("Add subtitle track if default audio is not your preferred language"));
+                  _("Add subtitle track if default audio is not your preferred language"));
     }
     gtk_button_set_label(button, str);
     g_free(str);
 
     gtk_widget_set_sensitive(GTK_WIDGET(button), sensitive);
     button = GTK_BUTTON(GHB_WIDGET(ud->builder,
-                                  "SubtitleAddForeignAudioSearch"));
+                                   "SubtitleAddForeignAudioSearch"));
     gtk_widget_set_sensitive(GTK_WIDGET(button), sensitive);
 }
 
@@ -1418,7 +1418,7 @@ ghb_subtitle_set_pref_lang(GhbValue *settings)
         if (glang != NULL)
         {
             ghb_dict_set_string(settings, "PreferredLanguage",
-                                    ghb_value_get_string(glang));
+                                ghb_value_get_string(glang));
             set = TRUE;
         }
     }
@@ -1856,7 +1856,7 @@ subtitle_list_toggled_cb(GtkWidget *widget, signal_user_data_t *ud)
 {
     gboolean active = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget));
     GtkToggleButton * selection = GTK_TOGGLE_BUTTON(GHB_WIDGET(ud->builder,
-                                                "subtitle_selection_toggle"));
+                                  "subtitle_selection_toggle"));
     gtk_toggle_button_set_active(selection, !active);
 
     GtkStack  * stack;
@@ -1875,6 +1875,6 @@ subtitle_selection_toggled_cb(GtkWidget *widget, signal_user_data_t *ud)
 {
     gboolean active = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget));
     GtkToggleButton * list = GTK_TOGGLE_BUTTON(GHB_WIDGET(ud->builder,
-                                                    "subtitle_list_toggle"));
+                             "subtitle_list_toggle"));
     gtk_toggle_button_set_active(list, !active);
 }

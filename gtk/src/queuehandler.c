@@ -100,7 +100,7 @@ ghb_queue_drag_n_drop_init(signal_user_data_t * ud)
 }
 #else
 static GtkTargetEntry queue_drag_entries[] = {
-   { "GTK_LIST_BOX_ROW", GTK_TARGET_SAME_APP, 0 }
+    { "GTK_LIST_BOX_ROW", GTK_TARGET_SAME_APP, 0 }
 };
 
 void
@@ -273,7 +273,7 @@ queue_update_summary(GhbValue * queueDict, signal_user_data_t *ud)
 
     display_width = (double)width * par_width / par_height;
     display_aspect = ghb_get_display_aspect_string(display_width,
-                                                   display_height);
+                     display_height);
 
     display_width  = ghb_dict_get_int(uiDict, "PictureDisplayWidth");
     text = g_strdup_printf(_("%d:%d:%d:%d Crop\n"
@@ -648,27 +648,27 @@ queue_update_stats(GhbValue * queueDict, signal_user_data_t *ud)
 
     switch (status)
     {
-        case GHB_QUEUE_RUNNING:
-            // This job is running.
-            // ghb_queue_update_live_stats() will update stats
-            return;
+    case GHB_QUEUE_RUNNING:
+        // This job is running.
+        // ghb_queue_update_live_stats() will update stats
+        return;
 
-        case GHB_QUEUE_DONE:
-            result = _("Completed");
-            break;
+    case GHB_QUEUE_DONE:
+        result = _("Completed");
+        break;
 
-        case GHB_QUEUE_CANCELED:
-            result = _("Canceled");
-            break;
+    case GHB_QUEUE_CANCELED:
+        result = _("Canceled");
+        break;
 
-        case GHB_QUEUE_FAIL:
-            result = _("Failed");
-            break;
+    case GHB_QUEUE_FAIL:
+        result = _("Failed");
+        break;
 
-        case GHB_QUEUE_PENDING:
-        default:
-            result = _("Pending");
-            break;
+    case GHB_QUEUE_PENDING:
+    default:
+        result = _("Pending");
+        break;
     }
 
     struct tm  * tm;
@@ -699,15 +699,15 @@ queue_update_stats(GhbValue * queueDict, signal_user_data_t *ud)
     }
     switch (dd)
     {
-        case 0:
-            str = g_strdup_printf("%02d:%02d:%02d", hh, mm, ss);
-            break;
-        case 1:
-            str = g_strdup_printf(_("%d Day %02d:%02d:%02d"), dd, hh, mm, ss);
-            break;
-        default:
-            str = g_strdup_printf(_("%d Days %02d:%02d:%02d"), dd, hh, mm, ss);
-            break;
+    case 0:
+        str = g_strdup_printf("%02d:%02d:%02d", hh, mm, ss);
+        break;
+    case 1:
+        str = g_strdup_printf(_("%d Day %02d:%02d:%02d"), dd, hh, mm, ss);
+        break;
+    default:
+        str = g_strdup_printf(_("%d Days %02d:%02d:%02d"), dd, hh, mm, ss);
+        break;
     }
     label = GTK_LABEL(GHB_WIDGET(ud->builder, "queue_stats_paused"));
     gtk_label_set_text(label, str);
@@ -727,15 +727,15 @@ queue_update_stats(GhbValue * queueDict, signal_user_data_t *ud)
     }
     switch (dd)
     {
-        case 0:
-            str = g_strdup_printf("%02d:%02d:%02d", hh, mm, ss);
-            break;
-        case 1:
-            str = g_strdup_printf(_("%d Day %02d:%02d:%02d"), dd, hh, mm, ss);
-            break;
-        default:
-            str = g_strdup_printf(_("%d Days %02d:%02d:%02d"), dd, hh, mm, ss);
-            break;
+    case 0:
+        str = g_strdup_printf("%02d:%02d:%02d", hh, mm, ss);
+        break;
+    case 1:
+        str = g_strdup_printf(_("%d Day %02d:%02d:%02d"), dd, hh, mm, ss);
+        break;
+    default:
+        str = g_strdup_printf(_("%d Days %02d:%02d:%02d"), dd, hh, mm, ss);
+        break;
     }
     label = GTK_LABEL(GHB_WIDGET(ud->builder, "queue_stats_encode"));
     gtk_label_set_text(label, str);
@@ -793,7 +793,7 @@ void queue_update_current_stats(signal_user_data_t * ud)
         // There is a queue list row selected
         index = gtk_list_box_row_get_index(row);
         if (index < 0 || index >= ghb_array_len(ud->queue))
-        { // Should never happen
+        {   // Should never happen
             return;
         }
         queueDict = ghb_array_get(ud->queue, index);
@@ -810,7 +810,7 @@ static void read_log(signal_user_data_t * ud, const char * log_path)
     char        * buf;
 
     if (ud->extra_activity_path != NULL &&
-        !strcmp(ud->extra_activity_path, log_path))
+            !strcmp(ud->extra_activity_path, log_path))
     {
         return;
     }
@@ -870,7 +870,7 @@ void ghb_queue_select_log(signal_user_data_t * ud)
 
         index = gtk_list_box_row_get_index(row);
         if (index < 0 || index >= ghb_array_len(ud->queue))
-        { // Should never happen
+        {   // Should never happen
             return;
         }
         queueDict = ghb_array_get(ud->queue, index);
@@ -1104,26 +1104,26 @@ ghb_queue_update_live_stats(signal_user_data_t * ud, int index, ghb_instance_sta
         gtk_widget_set_visible(GTK_WIDGET(label), TRUE);
         switch (status->pass_id)
         {
-            case HB_PASS_SUBTITLE:
-                pass = _("Foreign Audio Search");
-                break;
+        case HB_PASS_SUBTITLE:
+            pass = _("Foreign Audio Search");
+            break;
 
-            case HB_PASS_ENCODE:
-                pass = _("Encode");
-                break;
+        case HB_PASS_ENCODE:
+            pass = _("Encode");
+            break;
 
-            case HB_PASS_ENCODE_1ST:
-                pass = _("Encode First Pass (Analysis)");
-                break;
+        case HB_PASS_ENCODE_1ST:
+            pass = _("Encode First Pass (Analysis)");
+            break;
 
-            case HB_PASS_ENCODE_2ND:
-                pass = _("Encode Second Pass (Final)");
-                break;
+        case HB_PASS_ENCODE_2ND:
+            pass = _("Encode Second Pass (Final)");
+            break;
 
-            default:
-                // Should never happen
-                pass = _("Error");
-                break;
+        default:
+            // Should never happen
+            pass = _("Error");
+            break;
         }
         gstr = g_string_new(NULL);
         g_string_append_printf(gstr, _("pass %d of %d\n%s"), status->pass, status->pass_count, pass);
@@ -1152,22 +1152,22 @@ ghb_queue_update_live_stats(signal_user_data_t * ud, int index, ghb_instance_sta
     {
         switch (status->error)
         {
-            case GHB_ERROR_NONE:
-                result = _("Completed");
-                break;
+        case GHB_ERROR_NONE:
+            result = _("Completed");
+            break;
 
-            case GHB_ERROR_CANCELED:
-                result = _("Canceled");
-                break;
+        case GHB_ERROR_CANCELED:
+            result = _("Canceled");
+            break;
 
-            case GHB_ERROR_FAIL:
-                result = _("Failed");
-                break;
+        case GHB_ERROR_FAIL:
+            result = _("Failed");
+            break;
 
-            default:
-                // Should never happen
-                result = _("Unknown");
-                break;
+        default:
+            // Should never happen
+            result = _("Unknown");
+            break;
         }
     }
 
@@ -1197,15 +1197,15 @@ ghb_queue_update_live_stats(signal_user_data_t * ud, int index, ghb_instance_sta
     }
     switch (dd)
     {
-        case 0:
-            str = g_strdup_printf("%02d:%02d:%02d", hh, mm, ss);
-            break;
-        case 1:
-            str = g_strdup_printf(_("%d Day %02d:%02d:%02d"), dd, hh, mm, ss);
-            break;
-        default:
-            str = g_strdup_printf(_("%d Days %02d:%02d:%02d"), dd, hh, mm, ss);
-            break;
+    case 0:
+        str = g_strdup_printf("%02d:%02d:%02d", hh, mm, ss);
+        break;
+    case 1:
+        str = g_strdup_printf(_("%d Day %02d:%02d:%02d"), dd, hh, mm, ss);
+        break;
+    default:
+        str = g_strdup_printf(_("%d Days %02d:%02d:%02d"), dd, hh, mm, ss);
+        break;
     }
     label = GTK_LABEL(GHB_WIDGET(ud->builder, "queue_stats_paused"));
     gtk_label_set_text(label, str);
@@ -1225,15 +1225,15 @@ ghb_queue_update_live_stats(signal_user_data_t * ud, int index, ghb_instance_sta
     }
     switch (dd)
     {
-        case 0:
-            str = g_strdup_printf("%02d:%02d:%02d", hh, mm, ss);
-            break;
-        case 1:
-            str = g_strdup_printf(_("%d Day %02d:%02d:%02d"), dd, hh, mm, ss);
-            break;
-        default:
-            str = g_strdup_printf(_("%d Days %02d:%02d:%02d"), dd, hh, mm, ss);
-            break;
+    case 0:
+        str = g_strdup_printf("%02d:%02d:%02d", hh, mm, ss);
+        break;
+    case 1:
+        str = g_strdup_printf(_("%d Day %02d:%02d:%02d"), dd, hh, mm, ss);
+        break;
+    default:
+        str = g_strdup_printf(_("%d Days %02d:%02d:%02d"), dd, hh, mm, ss);
+        break;
     }
     label = GTK_LABEL(GHB_WIDGET(ud->builder, "queue_stats_encode"));
     gtk_label_set_text(label, str);
@@ -1305,22 +1305,22 @@ ghb_queue_update_status_icon(signal_user_data_t *ud, int index)
     const char * icon_name;
     switch (status)
     {
-        case GHB_QUEUE_RUNNING:
-             icon_name = "hb-start";
-            break;
-        case GHB_QUEUE_PENDING:
-             icon_name = "hb-source";
-            break;
-        case GHB_QUEUE_FAIL:
-        case GHB_QUEUE_CANCELED:
-             icon_name = "hb-stop";
-            break;
-        case GHB_QUEUE_DONE:
-             icon_name = "hb-complete";
-            break;
-        default:
-             icon_name = "hb-source";
-            break;
+    case GHB_QUEUE_RUNNING:
+        icon_name = "hb-start";
+        break;
+    case GHB_QUEUE_PENDING:
+        icon_name = "hb-source";
+        break;
+    case GHB_QUEUE_FAIL:
+    case GHB_QUEUE_CANCELED:
+        icon_name = "hb-stop";
+        break;
+    case GHB_QUEUE_DONE:
+        icon_name = "hb-complete";
+        break;
+    default:
+        icon_name = "hb-source";
+        break;
     }
     GtkListBox    * lb;
     GtkListBoxRow * row;
@@ -1411,11 +1411,11 @@ save_queue_file(signal_user_data_t *ud)
 
     hb_window = GTK_WINDOW(GHB_WIDGET(ud->builder, "hb_window"));
     dialog = gtk_file_chooser_dialog_new("Queue Destination",
-                      hb_window,
-                      GTK_FILE_CHOOSER_ACTION_SAVE,
-                      GHB_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-                      GHB_STOCK_SAVE, GTK_RESPONSE_ACCEPT,
-                      NULL);
+                                         hb_window,
+                                         GTK_FILE_CHOOSER_ACTION_SAVE,
+                                         GHB_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+                                         GHB_STOCK_SAVE, GTK_RESPONSE_ACCEPT,
+                                         NULL);
     gtk_file_chooser_set_current_name(GTK_FILE_CHOOSER(dialog), "queue.json");
     if (gtk_dialog_run(GTK_DIALOG (dialog)) != GTK_RESPONSE_ACCEPT)
     {
@@ -1462,7 +1462,7 @@ add_to_queue_list(signal_user_data_t *ud, GhbValue *queueDict)
 #endif
 
     status_icon = ghb_image_new_from_icon_name("hb-source",
-                                               GHB_ICON_SIZE_BUTTON);
+                  GHB_ICON_SIZE_BUTTON);
 
     gtk_widget_set_name(status_icon, "queue_item_status");
     gtk_image_set_pixel_size(GTK_IMAGE(status_icon), 16);
@@ -1528,7 +1528,7 @@ add_to_queue_list(signal_user_data_t *ud, GhbValue *queueDict)
     g_signal_connect(ebox, "drag-begin", G_CALLBACK(queue_drag_begin_cb), NULL);
     g_signal_connect(ebox, "drag-end", G_CALLBACK(queue_drag_end_cb), NULL);
     g_signal_connect(ebox, "drag-data-get",
-                    G_CALLBACK(queue_drag_data_get_cb), NULL);
+                     G_CALLBACK(queue_drag_data_get_cb), NULL);
 
 #if GTK_CHECK_VERSION(3, 90, 0)
     // connect key event controller to capture "delete" key press on row
@@ -1546,11 +1546,11 @@ open_queue_file(signal_user_data_t *ud)
 
     hb_window = GTK_WINDOW(GHB_WIDGET(ud->builder, "hb_window"));
     dialog = gtk_file_chooser_dialog_new("Queue Destination",
-                      hb_window,
-                      GTK_FILE_CHOOSER_ACTION_OPEN,
-                      GHB_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-                      GHB_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
-                      NULL);
+                                         hb_window,
+                                         GTK_FILE_CHOOSER_ACTION_OPEN,
+                                         GHB_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+                                         GHB_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
+                                         NULL);
 
     // Add filters
     GtkFileFilter *filter;
@@ -1614,13 +1614,13 @@ ghb_dest_free_space(GhbValue *settings)
 
     gfile = g_file_new_for_path(resolved);
     info  = g_file_query_filesystem_info(gfile,
-                                G_FILE_ATTRIBUTE_FILESYSTEM_FREE, NULL, NULL);
+                                         G_FILE_ATTRIBUTE_FILESYSTEM_FREE, NULL, NULL);
     if (info != NULL)
     {
         if (g_file_info_has_attribute(info, G_FILE_ATTRIBUTE_FILESYSTEM_FREE))
         {
             size = g_file_info_get_attribute_uint64(info,
-                                    G_FILE_ATTRIBUTE_FILESYSTEM_FREE);
+                                                    G_FILE_ATTRIBUTE_FILESYSTEM_FREE);
         }
         g_object_unref(info);
     }
@@ -1678,7 +1678,7 @@ ghb_low_disk_check(signal_user_data_t *ud)
     GhbValue        *settings;
 
     if (ghb_dict_get_bool(ud->globals, "SkipDiskFreeCheck") ||
-        !ghb_dict_get_bool(ud->prefs, "DiskFreeCheck"))
+            !ghb_dict_get_bool(ud->prefs, "DiskFreeCheck"))
     {
         return;
     }
@@ -1710,7 +1710,7 @@ ghb_low_disk_check(signal_user_data_t *ud)
     }
 
     if ((status.queue.state & GHB_STATE_WORKING) &&
-        !(status.queue.state & GHB_STATE_PAUSED))
+            !(status.queue.state & GHB_STATE_PAUSED))
     {
         paused_msg = "Encoding has been paused.\n\n";
         ghb_pause_queue();
@@ -1718,34 +1718,34 @@ ghb_low_disk_check(signal_user_data_t *ud)
     dest      = ghb_dict_get_string(settings, "destination");
     hb_window = GTK_WINDOW(GHB_WIDGET(ud->builder, "hb_window"));
     dialog    = gtk_message_dialog_new(hb_window, GTK_DIALOG_MODAL,
-            GTK_MESSAGE_WARNING, GTK_BUTTONS_NONE,
-            _("%sThe destination filesystem is almost full: %"PRId64" MB free.\n"
-              "Destination: %s\n"
-              "Encode may be incomplete if you proceed.\n"),
-            paused_msg, free_size / (1024 * 1024), dest);
+                                       GTK_MESSAGE_WARNING, GTK_BUTTONS_NONE,
+                                       _("%sThe destination filesystem is almost full: %"PRId64" MB free.\n"
+                                         "Destination: %s\n"
+                                         "Encode may be incomplete if you proceed.\n"),
+                                       paused_msg, free_size / (1024 * 1024), dest);
     gtk_dialog_add_buttons( GTK_DIALOG(dialog),
-                           _("Resume, I've fixed the problem"), 1,
-                           _("Resume, Don't tell me again"), 2,
-                           _("Cancel Current and Stop"), 3,
-                           NULL);
+                            _("Resume, I've fixed the problem"), 1,
+                            _("Resume, Don't tell me again"), 2,
+                            _("Cancel Current and Stop"), 3,
+                            NULL);
     response = gtk_dialog_run(GTK_DIALOG(dialog));
     gtk_widget_destroy(dialog);
     switch ((int)response)
     {
-        case 1:
-            ghb_resume_queue();
-            break;
-        case 2:
-            ghb_dict_set_bool(ud->globals, "SkipDiskFreeCheck", TRUE);
-            ghb_resume_queue();
-            break;
-        case 3:
-            ghb_stop_queue();
-            ud->cancel_encode = GHB_CANCEL_ALL;
-            break;
-        default:
-            ghb_resume_queue();
-            break;
+    case 1:
+        ghb_resume_queue();
+        break;
+    case 2:
+        ghb_dict_set_bool(ud->globals, "SkipDiskFreeCheck", TRUE);
+        ghb_resume_queue();
+        break;
+    case 3:
+        ghb_stop_queue();
+        ud->cancel_encode = GHB_CANCEL_ALL;
+        break;
+    default:
+        ghb_resume_queue();
+        break;
     }
 }
 
@@ -1779,10 +1779,10 @@ validate_settings(signal_user_data_t *ud, GhbValue *settings, gint batch)
         if (strcmp(dest, filename) == 0)
         {
             message = g_strdup_printf(
-                        _("Destination: %s\n\n"
-                        "Another queued job has specified the same destination.\n"
-                        "Do you want to overwrite?"),
-                        dest);
+                          _("Destination: %s\n\n"
+                            "Another queued job has specified the same destination.\n"
+                            "Do you want to overwrite?"),
+                          dest);
             if (!ghb_message_dialog(hb_window, GTK_MESSAGE_QUESTION,
                                     message, _("Cancel"), _("Overwrite")))
             {
@@ -1797,9 +1797,9 @@ validate_settings(signal_user_data_t *ud, GhbValue *settings, gint batch)
     if (!g_file_test(destdir, G_FILE_TEST_IS_DIR))
     {
         message = g_strdup_printf(
-                    _("Destination: %s\n\n"
-                    "This is not a valid directory."),
-                    destdir);
+                      _("Destination: %s\n\n"
+                        "This is not a valid directory."),
+                      destdir);
         ghb_message_dialog(hb_window, GTK_MESSAGE_ERROR,
                            message, _("Cancel"), NULL);
         g_free(message);
@@ -1811,9 +1811,9 @@ validate_settings(signal_user_data_t *ud, GhbValue *settings, gint batch)
     if (g_access(destdir, R_OK|W_OK) != 0)
     {
         message = g_strdup_printf(
-                    _("Destination: %s\n\n"
-                    "Can not read or write the directory."),
-                    destdir);
+                      _("Destination: %s\n\n"
+                        "Can not read or write the directory."),
+                      destdir);
         ghb_message_dialog(hb_window, GTK_MESSAGE_ERROR,
                            message, _("Cancel"), NULL);
         g_free(message);
@@ -1825,10 +1825,10 @@ validate_settings(signal_user_data_t *ud, GhbValue *settings, gint batch)
     if (g_file_test(dest, G_FILE_TEST_EXISTS))
     {
         message = g_strdup_printf(
-                    _("Destination: %s\n\n"
-                    "File already exists.\n"
-                    "Do you want to overwrite?"),
-                    dest);
+                      _("Destination: %s\n\n"
+                        "File already exists.\n"
+                        "Do you want to overwrite?"),
+                      dest);
         if (!ghb_message_dialog(hb_window, GTK_MESSAGE_QUESTION,
                                 message, _("Cancel"), _("Overwrite")))
         {
@@ -2039,13 +2039,13 @@ title_add_multiple_set_conflict_label(
             "Duplicate destination files detected.\n"
             "Duplicates will not be added to the queue."
             "</span>";
-            msg_type = GTK_MESSAGE_WARNING;
+        msg_type = GTK_MESSAGE_WARNING;
     }
     else
     {
         msg =
             "Destination files OK.  No duplicates detected.";
-            msg_type = GTK_MESSAGE_INFO;
+        msg_type = GTK_MESSAGE_INFO;
     }
     if (are_conflicts ^ conflict_showing)
     {
@@ -2138,7 +2138,7 @@ GtkWidget * title_create_row(signal_user_data_t *ud)
     // Select checkbox
     selected = GTK_CHECK_BUTTON(gtk_check_button_new());
     gtk_widget_set_tooltip_markup(GTK_WIDGET(selected),
-      _("Select this title for adding to the queue.\n"));
+                                  _("Select this title for adding to the queue.\n"));
     gtk_widget_set_valign(GTK_WIDGET(selected), GTK_ALIGN_CENTER);
     gtk_widget_set_name(GTK_WIDGET(selected), "title_selected");
     gtk_widget_show(GTK_WIDGET(selected));
@@ -2156,9 +2156,9 @@ GtkWidget * title_create_row(signal_user_data_t *ud)
 
     default_title_attrs = gtk_label_get_attributes(title);
     gtk_widget_set_tooltip_text(GTK_WIDGET(title),
-        _("There is another title with the same destination file name.\n"
-        "This title will not be added to the queue unless you change\n"
-        "the output file name.\n"));
+                                _("There is another title with the same destination file name.\n"
+                                  "This title will not be added to the queue unless you change\n"
+                                  "the output file name.\n"));
     gtk_widget_set_has_tooltip(GTK_WIDGET(title), FALSE);
 
     // Destination entry and file chooser
@@ -2174,10 +2174,10 @@ GtkWidget * title_create_row(signal_user_data_t *ud)
     g_signal_connect(dest_file, "changed", (GCallback)title_dest_file_cb, ud);
     ghb_box_append_child(vbox_dest, GTK_WIDGET(dest_file));
     dest_dir = GTK_FILE_CHOOSER_BUTTON(
-            gtk_file_chooser_button_new(_("Destination Directory"),
-                                        GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER));
+                   gtk_file_chooser_button_new(_("Destination Directory"),
+                           GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER));
     g_signal_connect(dest_dir, "selection-changed",
-                    (GCallback)title_dest_dir_cb, ud);
+                     (GCallback)title_dest_dir_cb, ud);
     gtk_widget_set_name(GTK_WIDGET(dest_dir), "title_dir");
     gtk_widget_set_hexpand(GTK_WIDGET(dest_dir), TRUE);
     gtk_widget_show(GTK_WIDGET(dest_dir));
@@ -2270,50 +2270,50 @@ ghb_queue_buttons_grey(signal_user_data_t *ud)
                   (GHB_STATE_WORKING | GHB_STATE_SEARCHING |
                    GHB_STATE_SCANNING | GHB_STATE_MUXING | GHB_STATE_PAUSED);
     allow_start = !(scan_state & GHB_STATE_SCANNING) &&
-                    (title != NULL || queue_count > 0);
+                  (title != NULL || queue_count > 0);
     allow_add   = !(scan_state & GHB_STATE_SCANNING) && title != NULL;
 
 
     paused = queue_state & GHB_STATE_PAUSED;
 
     action = G_SIMPLE_ACTION(g_action_map_lookup_action(G_ACTION_MAP(ud->app),
-                                                        "queue-export"));
+                             "queue-export"));
     g_simple_action_set_enabled(action, !!queue_count);
     action = G_SIMPLE_ACTION(g_action_map_lookup_action(G_ACTION_MAP(ud->app),
-                                                        "queue-add"));
+                             "queue-add"));
     g_simple_action_set_enabled(action, allow_add);
     action = G_SIMPLE_ACTION(g_action_map_lookup_action(G_ACTION_MAP(ud->app),
-                                                        "queue-add-all"));
+                             "queue-add-all"));
     g_simple_action_set_enabled(action, allow_add);
     action = G_SIMPLE_ACTION(g_action_map_lookup_action(G_ACTION_MAP(ud->app),
-                                                        "queue-start"));
+                             "queue-start"));
     g_simple_action_set_enabled(action, allow_start || show_stop);
     action = G_SIMPLE_ACTION(g_action_map_lookup_action(G_ACTION_MAP(ud->app),
-                                                        "queue-pause"));
+                             "queue-pause"));
     g_simple_action_set_enabled(action, show_stop);
 
     action = G_SIMPLE_ACTION(g_action_map_lookup_action(G_ACTION_MAP(ud->app),
-                                                        "queue-reset"));
+                             "queue-reset"));
     g_simple_action_set_enabled(action, row != NULL);
 
     action = G_SIMPLE_ACTION(g_action_map_lookup_action(G_ACTION_MAP(ud->app),
-                                                        "queue-edit"));
+                             "queue-edit"));
     g_simple_action_set_enabled(action, row != NULL);
 
     action = G_SIMPLE_ACTION(g_action_map_lookup_action(G_ACTION_MAP(ud->app),
-                                                        "queue-open-source"));
+                             "queue-open-source"));
     g_simple_action_set_enabled(action, row != NULL);
 
     action = G_SIMPLE_ACTION(g_action_map_lookup_action(G_ACTION_MAP(ud->app),
-                                                        "queue-open-dest"));
+                             "queue-open-dest"));
     g_simple_action_set_enabled(action, row != NULL);
 
     action = G_SIMPLE_ACTION(g_action_map_lookup_action(G_ACTION_MAP(ud->app),
-                                                        "queue-open-log-dir"));
+                             "queue-open-log-dir"));
     g_simple_action_set_enabled(action, status != GHB_QUEUE_PENDING);
 
     action = G_SIMPLE_ACTION(g_action_map_lookup_action(G_ACTION_MAP(ud->app),
-                                                        "queue-open-log"));
+                             "queue-open-log"));
     g_simple_action_set_enabled(action, status != GHB_QUEUE_PENDING);
 
     widget = GHB_WIDGET (ud->builder, "queue_start");
@@ -2419,7 +2419,7 @@ find_pid:
         queueDict = ghb_array_get(queue, ii);
         uiDict = ghb_dict_get(queueDict, "uiSettings");
         if (uiDict == NULL ||
-            ghb_dict_get_value(uiDict, "job_status") == NULL)
+                ghb_dict_get_value(uiDict, "job_status") == NULL)
         {
             ghb_array_remove(queue, ii);
             continue;
@@ -2492,7 +2492,7 @@ queue_row_key_cb(
     GtkListBoxRow * row;
 
     row = GTK_LIST_BOX_ROW(gtk_event_controller_get_widget(
-                                        GTK_EVENT_CONTROLLER(keycon)));
+                               GTK_EVENT_CONTROLLER(keycon)));
     return queue_row_key(row, keyval, ud);
 }
 
@@ -2584,14 +2584,14 @@ queue_edit_action_cb(GSimpleAction *action, GVariant *param,
 
 G_MODULE_EXPORT void
 queue_export_action_cb(GSimpleAction *action, GVariant *param,
-                     signal_user_data_t *ud)
+                       signal_user_data_t *ud)
 {
     save_queue_file(ud);
 }
 
 G_MODULE_EXPORT void
 queue_import_action_cb(GSimpleAction *action, GVariant *param,
-                     signal_user_data_t *ud)
+                       signal_user_data_t *ud)
 {
     open_queue_file(ud);
 }
@@ -2860,9 +2860,9 @@ queue_add_all_action_cb(GSimpleAction *action, GVariant *param,
     GtkToggleButton *clear_all;
 
     clear_all = GTK_TOGGLE_BUTTON(GHB_WIDGET(ud->builder,
-                                           "title_add_multiple_clear_all"));
+                                  "title_add_multiple_clear_all"));
     select_all = GTK_TOGGLE_BUTTON(GHB_WIDGET(ud->builder,
-                                           "title_add_multiple_select_all"));
+                                   "title_add_multiple_select_all"));
     gtk_toggle_button_set_active(clear_all, FALSE);
     gtk_toggle_button_set_active(select_all, FALSE);
     gtk_widget_set_sensitive(GTK_WIDGET(select_all), TRUE);
@@ -2938,7 +2938,7 @@ queue_reset_all_action_cb(GSimpleAction *action, GVariant *param,
 
 G_MODULE_EXPORT void
 queue_reset_fail_action_cb(GSimpleAction *action, GVariant *param,
-                          signal_user_data_t *ud)
+                           signal_user_data_t *ud)
 {
     int        ii, count, status;
     GhbValue * queueDict, * uiDict;
@@ -2963,7 +2963,7 @@ queue_reset_fail_action_cb(GSimpleAction *action, GVariant *param,
 
 G_MODULE_EXPORT void
 queue_reset_action_cb(GSimpleAction *action, GVariant *param,
-                          signal_user_data_t *ud)
+                      signal_user_data_t *ud)
 {
     GtkListBox    * lb;
     GtkListBoxRow * row;
@@ -3026,7 +3026,7 @@ queue_start_action_cb(GSimpleAction *action, GVariant *param,
         uiDict = ghb_dict_get(queueDict, "uiSettings");
         status = ghb_dict_get_int(uiDict, "job_status");
         if ((status == GHB_QUEUE_RUNNING) ||
-            (status == GHB_QUEUE_PENDING))
+                (status == GHB_QUEUE_PENDING))
         {
             running = TRUE;
             break;
@@ -3078,9 +3078,9 @@ title_add_multiple_select_all_cb(GtkWidget *widget, signal_user_data_t *ud)
     clear_select_all_busy = TRUE;
 
     clear_all = GTK_TOGGLE_BUTTON(GHB_WIDGET(ud->builder,
-                                           "title_add_multiple_clear_all"));
+                                  "title_add_multiple_clear_all"));
     select_all = GTK_TOGGLE_BUTTON(GHB_WIDGET(ud->builder,
-                                           "title_add_multiple_select_all"));
+                                   "title_add_multiple_select_all"));
     gtk_toggle_button_set_active(clear_all, FALSE);
     gtk_widget_set_sensitive(GTK_WIDGET(select_all), FALSE);
     gtk_widget_set_sensitive(GTK_WIDGET(clear_all), TRUE);
@@ -3117,9 +3117,9 @@ title_add_multiple_clear_all_cb(GtkWidget *widget, signal_user_data_t *ud)
     clear_select_all_busy = TRUE;
 
     clear_all = GTK_TOGGLE_BUTTON(GHB_WIDGET(ud->builder,
-                                           "title_add_multiple_clear_all"));
+                                  "title_add_multiple_clear_all"));
     select_all = GTK_TOGGLE_BUTTON(GHB_WIDGET(ud->builder,
-                                           "title_add_multiple_select_all"));
+                                   "title_add_multiple_select_all"));
     gtk_toggle_button_set_active(select_all, FALSE);
     gtk_widget_set_sensitive(GTK_WIDGET(select_all), TRUE);
     gtk_widget_set_sensitive(GTK_WIDGET(clear_all), FALSE);
@@ -3154,9 +3154,9 @@ title_selected_cb(GtkWidget *widget, signal_user_data_t *ud)
         return;
 
     clear_all = GTK_TOGGLE_BUTTON(GHB_WIDGET(ud->builder,
-                                           "title_add_multiple_clear_all"));
+                                  "title_add_multiple_clear_all"));
     select_all = GTK_TOGGLE_BUTTON(GHB_WIDGET(ud->builder,
-                                           "title_add_multiple_select_all"));
+                                   "title_add_multiple_select_all"));
     gtk_toggle_button_set_active(select_all, FALSE);
     gtk_toggle_button_set_active(clear_all, FALSE);
     gtk_widget_set_sensitive(GTK_WIDGET(clear_all), TRUE);
@@ -3167,7 +3167,7 @@ title_selected_cb(GtkWidget *widget, signal_user_data_t *ud)
     settings = ghb_array_get(ud->settings_array, index);
     can_select = title_multiple_can_select(ud->settings_array, index);
     ghb_dict_set_bool(settings, "title_selected",
-                             selected && can_select);
+                      selected && can_select);
 }
 
 G_MODULE_EXPORT void
@@ -3207,7 +3207,7 @@ title_dest_file_cb(GtkWidget *widget, signal_user_data_t *ud)
     g_free(dest);
 
     title_add_multiple_set_conflict_label(ud,
-        title_add_multiple_are_conflicts(ud));
+                                          title_add_multiple_are_conflicts(ud));
 }
 
 G_MODULE_EXPORT void
@@ -3247,7 +3247,7 @@ title_dest_dir_cb(GtkWidget *widget, signal_user_data_t *ud)
     g_free(dest);
 
     title_add_multiple_set_conflict_label(ud,
-        title_add_multiple_are_conflicts(ud));
+                                          title_add_multiple_are_conflicts(ud));
 }
 
 // Set up view of row to be dragged
@@ -3342,8 +3342,8 @@ queue_drag_data_get_cb(GtkWidget          * widget,
 
     row = gtk_widget_get_ancestor(widget, GTK_TYPE_LIST_BOX_ROW);
     gtk_selection_data_set(selection_data,
-                       ghb_atom_string("GTK_LIST_BOX_ROW"), 32,
-                       (const guchar *)&row, sizeof (gpointer));
+                           ghb_atom_string("GTK_LIST_BOX_ROW"), 32,
+                           (const guchar *)&row, sizeof (gpointer));
 }
 
 G_MODULE_EXPORT void

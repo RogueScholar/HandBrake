@@ -99,7 +99,7 @@ static inline void ghb_widget_get_preferred_height(
 }
 
 static inline void ghb_button_set_icon_name(GtkButton *button,
-                                            const char * name)
+        const char * name)
 {
 #if GTK_CHECK_VERSION(3, 90, 0)
     gtk_button_set_icon_name(button, name);
@@ -115,7 +115,7 @@ static inline void ghb_get_expand_fill(GtkBox * box, GtkWidget * child,
                                        gboolean *expand, gboolean *fill)
 {
     if (gtk_orientable_get_orientation(GTK_ORIENTABLE(box)) ==
-        GTK_ORIENTATION_HORIZONTAL)
+            GTK_ORIENTATION_HORIZONTAL)
     {
         *expand = gtk_widget_get_hexpand(child);
         *fill   = gtk_widget_get_halign(child) == GTK_ALIGN_FILL;
@@ -143,8 +143,8 @@ static inline void ghb_box_append_child(GtkBox * box, GtkWidget * child)
 }
 
 static inline void ghb_css_provider_load_from_data(GtkCssProvider *provider,
-                                                   const gchar *data,
-                                                   gssize length)
+        const gchar *data,
+        gssize length)
 {
 #if GTK_CHECK_VERSION(3, 90, 0)
     gtk_css_provider_load_from_data(provider, data, length);
@@ -163,7 +163,7 @@ static inline GdkEventType ghb_event_get_event_type(const GdkEvent *event)
 }
 
 static inline gboolean ghb_event_get_keyval(const GdkEvent *event,
-                                            guint *keyval)
+        guint *keyval)
 {
 #if GTK_CHECK_VERSION(3, 2, 0)
     return gdk_event_get_keyval(event, keyval);
@@ -174,7 +174,7 @@ static inline gboolean ghb_event_get_keyval(const GdkEvent *event,
 }
 
 static inline gboolean ghb_event_get_button(const GdkEvent *event,
-                                            guint *button)
+        guint *button)
 {
 #if GTK_CHECK_VERSION(3, 2, 0)
     return gdk_event_get_button(event, button);

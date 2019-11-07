@@ -440,7 +440,7 @@ ghb_update_widget(GtkWidget *widget, const GhbValue *value)
     {
         static int text_view_busy = 0;
         GtkTextBuffer *buffer = gtk_text_view_get_buffer(
-                                                GTK_TEXT_VIEW(widget));
+                                    GTK_TEXT_VIEW(widget));
         if (!text_view_busy)
         {
             text_view_busy = 1;

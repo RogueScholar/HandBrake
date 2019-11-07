@@ -214,8 +214,8 @@ chapter_keypress(
     int             index;
 
     if (keyval != GDK_KEY_Return &&
-        keyval != GDK_KEY_Down &&
-        keyval != GDK_KEY_Up)
+            keyval != GDK_KEY_Down &&
+            keyval != GDK_KEY_Up)
     {
         return FALSE;
     }
