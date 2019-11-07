@@ -23,7 +23,7 @@
 #if !defined(_GHB_APPCAST_H_)
 #define _GHB_APPCAST_H_
 
-void ghb_appcast_parse(
-    gchar *buf, gchar **desc, gchar **build, gchar **version);
+void ghb_appcast_parse(gchar *buf, gchar **desc, gchar **build,
+                       gchar **version);
 
 #endif // _GHB_APPCAST_H_

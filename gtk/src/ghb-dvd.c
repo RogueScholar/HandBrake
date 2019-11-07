@@ -24,18 +24,18 @@
 #include <windows.h>
 #endif
 
-#include <glib.h>
 #include <gio/gio.h>
+#include <glib.h>
 
 #include "ghb-dvd.h"
 
 #if 0
-#include <unistd.h>
 #include <fcntl.h>
 #include <string.h>
+#include <unistd.h>
 
 #ifndef PACKED
-#define PACKED              __attribute__((packed))
+#define PACKED __attribute__((packed))
 #endif
 
 struct volume_descriptor {
@@ -71,7 +71,7 @@ struct volume_structure_descriptor {
     guint8      version;
 } PACKED;
 
-#define VOLUME_ID_LABEL_SIZE        64
+#define VOLUME_ID_LABEL_SIZE 64
 typedef struct
 {
     gint fd;
@@ -105,7 +105,7 @@ enum endian {
 #endif
 #endif /* __BYTE_ORDER */
 
-#define UDF_VSD_OFFSET          0x8000
+#define UDF_VSD_OFFSET 0x8000
 
 static guint8*
 get_buffer(int fd, guint64 off, gsize len)
@@ -302,101 +302,83 @@ ghb_dvd_volname(const gchar *device)
 }
 #endif
 
-gchar*
-ghb_resolve_symlink(const gchar *name)
-{
-    gchar *file;
-    GFileInfo *info;
-    GFile *gfile;
+gchar *ghb_resolve_symlink(const gchar *name) {
+  gchar *file;
+  GFileInfo *info;
+  GFile *gfile;
 
-    gfile = g_file_new_for_path(name);
-    info = g_file_query_info(gfile,
-                             G_FILE_ATTRIBUTE_STANDARD_NAME ","
-                             G_FILE_ATTRIBUTE_STANDARD_SYMLINK_TARGET ","
-                             G_FILE_ATTRIBUTE_STANDARD_IS_SYMLINK,
-                             G_FILE_QUERY_INFO_NONE, NULL, NULL);
-    while ((info != NULL) && g_file_info_get_is_symlink(info))
-    {
-        GFile *parent;
-        const gchar *target;
+  gfile = g_file_new_for_path(name);
+  info = g_file_query_info(gfile,
+                           G_FILE_ATTRIBUTE_STANDARD_NAME
+                           "," G_FILE_ATTRIBUTE_STANDARD_SYMLINK_TARGET
+                           "," G_FILE_ATTRIBUTE_STANDARD_IS_SYMLINK,
+                           G_FILE_QUERY_INFO_NONE, NULL, NULL);
+  while ((info != NULL) && g_file_info_get_is_symlink(info)) {
+    GFile *parent;
+    const gchar *target;
 
-        parent = g_file_get_parent(gfile);
-        g_object_unref(gfile);
-        target = g_file_info_get_symlink_target(info);
-        gfile = g_file_resolve_relative_path(parent, target);
-        g_object_unref(parent);
-
-        g_object_unref(info);
-        info = g_file_query_info(gfile,
-                                 G_FILE_ATTRIBUTE_STANDARD_NAME ","
-                                 G_FILE_ATTRIBUTE_STANDARD_SYMLINK_TARGET ","
-                                 G_FILE_ATTRIBUTE_STANDARD_IS_SYMLINK,
-                                 G_FILE_QUERY_INFO_NONE, NULL, NULL);
-    }
-    if (info != NULL)
-    {
-        file = g_file_get_path(gfile);
-        g_object_unref(info);
-    }
-    else
-    {
-        file = g_strdup(name);
-    }
+    parent = g_file_get_parent(gfile);
     g_object_unref(gfile);
-    return file;
+    target = g_file_info_get_symlink_target(info);
+    gfile = g_file_resolve_relative_path(parent, target);
+    g_object_unref(parent);
+
+    g_object_unref(info);
+    info = g_file_query_info(gfile,
+                             G_FILE_ATTRIBUTE_STANDARD_NAME
+                             "," G_FILE_ATTRIBUTE_STANDARD_SYMLINK_TARGET
+                             "," G_FILE_ATTRIBUTE_STANDARD_IS_SYMLINK,
+                             G_FILE_QUERY_INFO_NONE, NULL, NULL);
+  }
+  if (info != NULL) {
+    file = g_file_get_path(gfile);
+    g_object_unref(info);
+  } else {
+    file = g_strdup(name);
+  }
+  g_object_unref(gfile);
+  return file;
 }
 
-void
-ghb_dvd_set_current(const gchar *name, signal_user_data_t *ud)
-{
+void ghb_dvd_set_current(const gchar *name, signal_user_data_t *ud) {
 #if !defined(_WIN32)
-    GFile *gfile;
-    GFileInfo *info;
-    gchar *resolved = ghb_resolve_symlink(name);
+  GFile *gfile;
+  GFileInfo *info;
+  gchar *resolved = ghb_resolve_symlink(name);
 
-    if (ud->current_dvd_device != NULL)
-    {
-        g_free(ud->current_dvd_device);
-        ud->current_dvd_device = NULL;
+  if (ud->current_dvd_device != NULL) {
+    g_free(ud->current_dvd_device);
+    ud->current_dvd_device = NULL;
+  }
+  gfile = g_file_new_for_path(resolved);
+  info = g_file_query_info(gfile, G_FILE_ATTRIBUTE_STANDARD_TYPE,
+                           G_FILE_QUERY_INFO_NONE, NULL, NULL);
+  if (info != NULL) {
+    if (g_file_info_get_file_type(info) == G_FILE_TYPE_SPECIAL) {
+      // I could go through the trouble to scan the connected drives and
+      // verify that this device is connected and is a DVD.  But I don't
+      // think its necessary.
+      ud->current_dvd_device = resolved;
+    } else {
+      g_free(resolved);
     }
-    gfile = g_file_new_for_path(resolved);
-    info = g_file_query_info(gfile,
-                             G_FILE_ATTRIBUTE_STANDARD_TYPE,
-                             G_FILE_QUERY_INFO_NONE, NULL, NULL);
-    if (info != NULL)
-    {
-        if (g_file_info_get_file_type(info) == G_FILE_TYPE_SPECIAL)
-        {
-            // I could go through the trouble to scan the connected drives and
-            // verify that this device is connected and is a DVD.  But I don't
-            // think its necessary.
-            ud->current_dvd_device = resolved;
-        }
-        else
-        {
-            g_free(resolved);
-        }
-        g_object_unref(info);
-    }
-    else
-    {
-        g_free(resolved);
-    }
-    g_object_unref(gfile);
+    g_object_unref(info);
+  } else {
+    g_free(resolved);
+  }
+  g_object_unref(gfile);
 #else
-    gchar drive[4];
-    guint dtype;
+  gchar drive[4];
+  guint dtype;
 
-    if (ud->current_dvd_device != NULL)
-    {
-        g_free(ud->current_dvd_device);
-        ud->current_dvd_device = NULL;
-    }
-    g_strlcpy(drive, name, 4);
-    dtype = GetDriveType(drive);
-    if (dtype == DRIVE_CDROM)
-    {
-        ud->current_dvd_device = g_strdup(name);
-    }
+  if (ud->current_dvd_device != NULL) {
+    g_free(ud->current_dvd_device);
+    ud->current_dvd_device = NULL;
+  }
+  g_strlcpy(drive, name, 4);
+  dtype = GetDriveType(drive);
+  if (dtype == DRIVE_CDROM) {
+    ud->current_dvd_device = g_strdup(name);
+  }
 #endif
 }

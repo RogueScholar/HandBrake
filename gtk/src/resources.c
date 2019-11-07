@@ -21,63 +21,55 @@
  *  Boston, MA  02110-1301, USA.
  */
 
-#include <glib.h>
-#include <glib-object.h>
-#include <glib/gstdio.h>
-#include <string.h>
+#include "resources.h"
+#include "data_res.h"
 #include "ghbcompat.h"
 #include "settings.h"
-#include "resources.h"
 #include "values.h"
-#include "data_res.h"
+#include <glib-object.h>
+#include <glib.h>
+#include <glib/gstdio.h>
+#include <string.h>
 
 static GhbValue *resources;
 
-void
-ghb_resource_init()
-{
-    GhbValue *val;
-    gsize data_size;
-    GBytes *gbytes;
-    gconstpointer data;
+void ghb_resource_init() {
+  GhbValue *val;
+  gsize data_size;
+  GBytes *gbytes;
+  gconstpointer data;
 
-    resources = ghb_dict_new();
+  resources = ghb_dict_new();
 
-    ghb_data_register_resource();
-    GResource *data_res = ghb_data_get_resource();
+  ghb_data_register_resource();
+  GResource *data_res = ghb_data_get_resource();
 
-    gbytes = g_resource_lookup_data(data_res,
-                                    "/fr/handbrake/ghb/data/internal_defaults.json", 0, NULL);
-    data = g_bytes_get_data(gbytes, &data_size);
-    val = ghb_json_parse(data);
-    g_bytes_unref(gbytes);
-    ghb_dict_set(resources, "internal-defaults", val);
+  gbytes = g_resource_lookup_data(
+      data_res, "/fr/handbrake/ghb/data/internal_defaults.json", 0, NULL);
+  data = g_bytes_get_data(gbytes, &data_size);
+  val = ghb_json_parse(data);
+  g_bytes_unref(gbytes);
+  ghb_dict_set(resources, "internal-defaults", val);
 
-    gbytes = g_resource_lookup_data(data_res,
-                                    "/fr/handbrake/ghb/data/widget.deps", 0, NULL);
-    data = g_bytes_get_data(gbytes, &data_size);
-    val = ghb_json_parse(data);
-    g_bytes_unref(gbytes);
-    ghb_dict_set(resources, "widget-deps", val);
+  gbytes = g_resource_lookup_data(
+      data_res, "/fr/handbrake/ghb/data/widget.deps", 0, NULL);
+  data = g_bytes_get_data(gbytes, &data_size);
+  val = ghb_json_parse(data);
+  g_bytes_unref(gbytes);
+  ghb_dict_set(resources, "widget-deps", val);
 
-    gbytes = g_resource_lookup_data(data_res,
-                                    "/fr/handbrake/ghb/data/widget_reverse.deps", 0, NULL);
-    data = g_bytes_get_data(gbytes, &data_size);
-    val = ghb_json_parse(data);
-    g_bytes_unref(gbytes);
-    ghb_dict_set(resources, "widget-reverse-deps", val);
+  gbytes = g_resource_lookup_data(
+      data_res, "/fr/handbrake/ghb/data/widget_reverse.deps", 0, NULL);
+  data = g_bytes_get_data(gbytes, &data_size);
+  val = ghb_json_parse(data);
+  g_bytes_unref(gbytes);
+  ghb_dict_set(resources, "widget-reverse-deps", val);
 }
 
-GhbValue*
-ghb_resource_get(const gchar *name)
-{
-    GhbValue *result;
-    result = ghb_dict_get(resources, name);
-    return result;
+GhbValue *ghb_resource_get(const gchar *name) {
+  GhbValue *result;
+  result = ghb_dict_get(resources, name);
+  return result;
 }
 
-void
-ghb_resource_free()
-{
-    ghb_value_free(&resources);
-}
+void ghb_resource_free() { ghb_value_free(&resources); }
