@@ -17,8 +17,8 @@ static BOOL hb_resolveBookmarks = YES;
 {
     NSDictionary *infoDictionary = NSBundle.mainBundle.infoDictionary;
     return [NSString stringWithFormat:@"Handbrake Version: %@ (%@)",
-            infoDictionary[@"CFBundleShortVersionString"],
-            infoDictionary[@"CFBundleVersion"]];
+                     infoDictionary[@"CFBundleShortVersionString"],
+                     infoDictionary[@"CFBundleVersion"]];
 }
 
 + (NSURL *)appSupportURL
@@ -261,23 +261,23 @@ enum {
 
             switch (permission)
             {
-                case errAEEventWouldRequireUserConsent:
-                    [HBUtilities writeToActivityLog:"Automation: request user consent for %s.", bundleIdentifier.UTF8String];
-                    result = HBPrivacyConsentStateUnknown;
-                    break;
-                case noErr:
-                    [HBUtilities writeToActivityLog:"Automation: permission granted for %s.", bundleIdentifier.UTF8String];
-                    result = HBPrivacyConsentStateGranted;
-                    break;
-                case errAEEventNotPermitted:
-                    [HBUtilities writeToActivityLog:"Automation: permission not granted for %s.", bundleIdentifier.UTF8String];
-                    result = HBPrivacyConsentStateDenied;
-                    break;
-                case procNotFound:
-                default:
-                    [HBUtilities writeToActivityLog:"Automation: permission unknown."];
-                    result = HBPrivacyConsentStateUnknown;
-                    break;
+            case errAEEventWouldRequireUserConsent:
+                [HBUtilities writeToActivityLog:"Automation: request user consent for %s.", bundleIdentifier.UTF8String];
+                result = HBPrivacyConsentStateUnknown;
+                break;
+            case noErr:
+                [HBUtilities writeToActivityLog:"Automation: permission granted for %s.", bundleIdentifier.UTF8String];
+                result = HBPrivacyConsentStateGranted;
+                break;
+            case errAEEventNotPermitted:
+                [HBUtilities writeToActivityLog:"Automation: permission not granted for %s.", bundleIdentifier.UTF8String];
+                result = HBPrivacyConsentStateDenied;
+                break;
+            case procNotFound:
+            default:
+                [HBUtilities writeToActivityLog:"Automation: permission unknown."];
+                result = HBPrivacyConsentStateUnknown;
+                break;
             }
             return result;
         }
