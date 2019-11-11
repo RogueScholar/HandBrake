@@ -84,27 +84,27 @@ static int rotate_init(hb_filter_object_t * filter, hb_filter_init_t * init)
     }
     switch (angle)
     {
-        case 0:
-            hflip = flip;
-            break;
-        case 90:
-            trans  = clock;
-            tmp    = width;
-            width  = height;
-            height = tmp;
-            break;
-        case 180:
-            vflip = 1;
-            hflip = !flip;
-            break;
-        case 270:
-            trans  = cclock;
-            tmp    = width;
-            width  = height;
-            height = tmp;
-            break;
-        default:
-            break;
+    case 0:
+        hflip = flip;
+        break;
+    case 90:
+        trans  = clock;
+        tmp    = width;
+        width  = height;
+        height = tmp;
+        break;
+    case 180:
+        vflip = 1;
+        hflip = !flip;
+        break;
+    case 270:
+        trans  = cclock;
+        tmp    = width;
+        width  = height;
+        height = tmp;
+        break;
+    default:
+        break;
     }
     if (trans != NULL)
     {
