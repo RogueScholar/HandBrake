@@ -9,1756 +9,1777 @@
 
 namespace HandBrakeWPF.ViewModels
 {
-    using System;
-    using System.ComponentModel;
-    using System.Diagnostics;
-    using System.Globalization;
-    using System.IO;
-    using System.Linq;
-    using System.Windows;
-    using System.Windows.Media;
+using System;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Windows;
+using System.Windows.Media;
 
-    using Caliburn.Micro;
+using Caliburn.Micro;
 
-    using HandBrake.Interop.Interop;
-    using HandBrake.Interop.Model;
-    using HandBrake.Interop.Utilities;
+using HandBrake.Interop.Interop;
+using HandBrake.Interop.Model;
+using HandBrake.Interop.Utilities;
 
-    using HandBrakeWPF.Model;
-    using HandBrakeWPF.Model.Options;
-    using HandBrakeWPF.Properties;
-    using HandBrakeWPF.Services.Interfaces;
-    using HandBrakeWPF.Utilities;
-    using HandBrakeWPF.ViewModels.Interfaces;
+using HandBrakeWPF.Model;
+using HandBrakeWPF.Model.Options;
+using HandBrakeWPF.Properties;
+using HandBrakeWPF.Services.Interfaces;
+using HandBrakeWPF.Utilities;
+using HandBrakeWPF.ViewModels.Interfaces;
 
-    using Microsoft.Win32;
+using Microsoft.Win32;
 
-    using Ookii.Dialogs.Wpf;
+using Ookii.Dialogs.Wpf;
 
-    using Execute = Caliburn.Micro.Execute;
-    using SystemInfo = HandBrake.Interop.Utilities.SystemInfo;
+using Execute = Caliburn.Micro.Execute;
+using SystemInfo = HandBrake.Interop.Utilities.SystemInfo;
+
+/// <summary>
+/// The Options View Model
+/// </summary>
+public class OptionsViewModel : ViewModelBase, IOptionsViewModel
+{
+    #region Constants and Fields
+
+    private readonly IUserSettingService userSettingService;
+    private readonly IUpdateService updateService;
+    private readonly IErrorService errorService;
+
+    private string arguments;
+    private string autoNameDefaultPath;
+    private bool automaticallyNameFiles;
+    private string autonameFormat;
+    private bool changeToTitleCase;
+    private bool checkForUpdates;
+    private UpdateCheck checkForUpdatesFrequency;
+    private bool clearOldOlgs;
+    private BindingList<string> constantQualityGranularity = new BindingList<string>();
+    private bool copyLogToEncodeDirectory;
+    private bool copyLogToSepcficedLocation;
+    private bool disableLibdvdNav;
+    private string logDirectory;
+    private BindingList<int> logVerbosityOptions = new BindingList<int>();
+    private long minLength;
+    private bool minimiseToTray;
+    private bool preventSleep;
+    private BindingList<int> previewPicturesToScan = new BindingList<int>();
+    private bool removeUnderscores;
+    private string selectedGranulairty;
+    private Mp4Behaviour selectedMp4Extension;
+    private int selectedPreviewCount;
+    private ProcessPriority selectedPriority;
+    private int selectedVerbosity;
+    private bool sendFileAfterEncode;
+    private string sendFileTo;
+    private string sendFileToPath;
+    private string vlcPath;
+    private WhenDone whenDone;
+    private bool clearQueueOnEncodeCompleted;
+    private OptionsTab selectedTab;
+    private string updateMessage;
+    private bool updateAvailable;
+    private int downloadProgressPercentage;
+    private UpdateCheckInformation updateInfo;
+    private bool removePunctuation;
+    private bool resetWhenDoneAction;
+    private bool enableQuickSyncDecoding;
+    private bool pauseOnLowDiskspace;
+    private long pauseOnLowDiskspaceLevel;
+    private bool useQsvDecodeForNonQsvEnc;
+    private bool showStatusInTitleBar;
+    private bool showPreviewOnSummaryTab;
+    private string whenDoneAudioFile;
+    private bool playSoundWhenDone;
+    private bool playSoundWhenQueueDone;
+    private bool enableQuickSyncEncoding;
+    private bool enableVceEncoder;
+    private bool enableNvencEncoder;
+    private InterfaceLanguage selectedLanguage;
+    private bool showAddSelectionToQueue;
+    private bool showAddAllToQueue;
+    private int selectedOverwriteBehaviour;
+    private int selectedCollisionBehaviour;
+    private string prePostFilenameText;
+    private bool showPrePostFilenameBox;
+    private bool whenDonePerformActionImmediately;
+    private bool useDarkTheme;
+
+    #endregion
+
+    #region Constructors and Destructors
 
     /// <summary>
-    /// The Options View Model
+    /// Initializes a new instance of the <see cref="OptionsViewModel"/> class.
     /// </summary>
-    public class OptionsViewModel : ViewModelBase, IOptionsViewModel
+    /// <param name="userSettingService">
+    /// The user Setting Service.
+    /// </param>
+    /// <param name="updateService">
+    /// The update Service.
+    /// </param>
+    /// <param name="aboutViewModel">
+    /// The about View Model.
+    /// </param>
+    /// <param name="errorService">
+    /// The error Service.
+    /// </param>
+    public OptionsViewModel(IUserSettingService userSettingService, IUpdateService updateService, IAboutViewModel aboutViewModel, IErrorService errorService)
     {
-        #region Constants and Fields
-
-        private readonly IUserSettingService userSettingService;
-        private readonly IUpdateService updateService;
-        private readonly IErrorService errorService;
-
-        private string arguments;
-        private string autoNameDefaultPath;
-        private bool automaticallyNameFiles;
-        private string autonameFormat;
-        private bool changeToTitleCase;
-        private bool checkForUpdates;
-        private UpdateCheck checkForUpdatesFrequency;
-        private bool clearOldOlgs;
-        private BindingList<string> constantQualityGranularity = new BindingList<string>();
-        private bool copyLogToEncodeDirectory;
-        private bool copyLogToSepcficedLocation;
-        private bool disableLibdvdNav;
-        private string logDirectory;
-        private BindingList<int> logVerbosityOptions = new BindingList<int>();
-        private long minLength;
-        private bool minimiseToTray;
-        private bool preventSleep;
-        private BindingList<int> previewPicturesToScan = new BindingList<int>();
-        private bool removeUnderscores;
-        private string selectedGranulairty;
-        private Mp4Behaviour selectedMp4Extension;
-        private int selectedPreviewCount;
-        private ProcessPriority selectedPriority;
-        private int selectedVerbosity;
-        private bool sendFileAfterEncode;
-        private string sendFileTo;
-        private string sendFileToPath;
-        private string vlcPath;
-        private WhenDone whenDone;
-        private bool clearQueueOnEncodeCompleted;
-        private OptionsTab selectedTab;
-        private string updateMessage;
-        private bool updateAvailable;
-        private int downloadProgressPercentage;
-        private UpdateCheckInformation updateInfo;
-        private bool removePunctuation;
-        private bool resetWhenDoneAction;
-        private bool enableQuickSyncDecoding;
-        private bool pauseOnLowDiskspace;
-        private long pauseOnLowDiskspaceLevel;
-        private bool useQsvDecodeForNonQsvEnc;
-        private bool showStatusInTitleBar;
-        private bool showPreviewOnSummaryTab;
-        private string whenDoneAudioFile;
-        private bool playSoundWhenDone;
-        private bool playSoundWhenQueueDone;
-        private bool enableQuickSyncEncoding;
-        private bool enableVceEncoder;    
-        private bool enableNvencEncoder;
-        private InterfaceLanguage selectedLanguage;
-        private bool showAddSelectionToQueue;
-        private bool showAddAllToQueue;
-        private int selectedOverwriteBehaviour;
-        private int selectedCollisionBehaviour;
-        private string prePostFilenameText;
-        private bool showPrePostFilenameBox;
-        private bool whenDonePerformActionImmediately;
-        private bool useDarkTheme;
-
-        #endregion
-
-        #region Constructors and Destructors
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="OptionsViewModel"/> class.
-        /// </summary>
-        /// <param name="userSettingService">
-        /// The user Setting Service.
-        /// </param>
-        /// <param name="updateService">
-        /// The update Service.
-        /// </param>
-        /// <param name="aboutViewModel">
-        /// The about View Model.
-        /// </param>
-        /// <param name="errorService">
-        /// The error Service.
-        /// </param>
-        public OptionsViewModel(IUserSettingService userSettingService, IUpdateService updateService, IAboutViewModel aboutViewModel, IErrorService errorService)
-        {
-            this.Title = "Options";
-            this.userSettingService = userSettingService;
-            this.updateService = updateService;
-            this.errorService = errorService;
-            this.AboutViewModel = aboutViewModel;
-            this.OnLoad();
-
-            this.SelectedTab = OptionsTab.General;
-            this.UpdateMessage = Resources.OptionsViewModel_CheckForUpdatesMsg;
-        }
-
-        #endregion
-
-        #region Window Properties
-
-        /// <summary>
-        /// Gets or sets SelectedTab.
-        /// </summary>
-        public OptionsTab SelectedTab
-        {
-            get
-            {
-                return this.selectedTab;
-            }
-
-            set
-            {
-                this.selectedTab = value;
-                this.NotifyOfPropertyChange(() => this.SelectedTab);
-            }
-        }
+        this.Title = "Options";
+        this.userSettingService = userSettingService;
+        this.updateService = updateService;
+        this.errorService = errorService;
+        this.AboutViewModel = aboutViewModel;
+        this.OnLoad();
 
-        /// <summary>
-        /// Gets or sets the about view model.
-        /// </summary>
-        public IAboutViewModel AboutViewModel { get; set; }
+        this.SelectedTab = OptionsTab.General;
+        this.UpdateMessage = Resources.OptionsViewModel_CheckForUpdatesMsg;
+    }
 
-        #endregion
+    #endregion
 
-        #region Properties
+    #region Window Properties
 
-        public bool IsUWP
+    /// <summary>
+    /// Gets or sets SelectedTab.
+    /// </summary>
+    public OptionsTab SelectedTab
+    {
+        get
         {
-            get
-            {
-                return UwpDetect.IsUWP();
-            }
+            return this.selectedTab;
         }
 
-        public bool IsNightly
+        set
         {
-            get
-            {
-                return VersionHelper.IsNightly();
-            }
+            this.selectedTab = value;
+            this.NotifyOfPropertyChange(() => this.SelectedTab);
         }
+    }
+
+    /// <summary>
+    /// Gets or sets the about view model.
+    /// </summary>
+    public IAboutViewModel AboutViewModel {
+        get;
+        set;
+    }
 
-        public bool IsWindows10 => HandBrakeWPF.Utilities.SystemInfo.IsWindows10();
+    #endregion
 
-        #region General
+    #region Properties
 
-        public BindingList<InterfaceLanguage> InterfaceLanguages
+    public bool IsUWP
+    {
+        get
         {
-            get
-            {
-                return new BindingList<InterfaceLanguage>(InterfaceLanguageUtilities.GetUserInterfaceLangauges());
-            }
+            return UwpDetect.IsUWP();
         }
+    }
 
-        public InterfaceLanguage SelectedLanguage
+    public bool IsNightly
+    {
+        get
         {
-            get => this.selectedLanguage;
-            set
-            {
-                if (Equals(value, this.selectedLanguage)) return;
-                this.selectedLanguage = value;
-                this.NotifyOfPropertyChange(() => this.SelectedLanguage);
-            }
+            return VersionHelper.IsNightly();
         }
+    }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether CheckForUpdates.
-        /// </summary>
-        public bool CheckForUpdates
-        {
-            get
-            {
-                return this.checkForUpdates;
-            }
+    public bool IsWindows10 => HandBrakeWPF.Utilities.SystemInfo.IsWindows10();
 
-            set
-            {
-                this.checkForUpdates = value;
-                this.NotifyOfPropertyChange("CheckForUpdates");
-            }
-        }
+    #region General
 
-        /// <summary>
-        /// Gets or sets a value indicating whether reset when done action.
-        /// </summary>
-        public bool ResetWhenDoneAction
+    public BindingList<InterfaceLanguage> InterfaceLanguages
+    {
+        get
         {
-            get
-            {
-                return this.resetWhenDoneAction;
-            }
-
-            set
-            {
-                this.resetWhenDoneAction = value;
-                this.NotifyOfPropertyChange("ResetWhenDoneAction");
-            }
+            return new BindingList<InterfaceLanguage>(InterfaceLanguageUtilities.GetUserInterfaceLangauges());
         }
+    }
 
-        /// <summary>
-        /// Gets or sets CheckForUpdatesFrequencies.
-        /// </summary>
-        public BindingList<UpdateCheck> CheckForUpdatesFrequencies
+    public InterfaceLanguage SelectedLanguage
+    {
+        get => this.selectedLanguage;
+        set
         {
-            get
-            {
-                return new BindingList<UpdateCheck>(EnumHelper<UpdateCheck>.GetEnumList().ToList());
-            }
+            if (Equals(value, this.selectedLanguage)) return;
+            this.selectedLanguage = value;
+            this.NotifyOfPropertyChange(() => this.SelectedLanguage);
         }
+    }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether CheckForUpdatesFrequency.
-        /// </summary>
-        public UpdateCheck CheckForUpdatesFrequency
+    /// <summary>
+    /// Gets or sets a value indicating whether CheckForUpdates.
+    /// </summary>
+    public bool CheckForUpdates
+    {
+        get
         {
-            get
-            {
-                return this.checkForUpdatesFrequency;
-            }
-
-            set
-            {
-                this.checkForUpdatesFrequency = value;
-                this.NotifyOfPropertyChange(() => this.CheckForUpdatesFrequency);
-            }
+            return this.checkForUpdates;
         }
 
-        /// <summary>
-        /// Gets or sets Arguments.
-        /// </summary>
-        public string Arguments
+        set
         {
-            get
-            {
-                return this.arguments;
-            }
-
-            set
-            {
-                this.arguments = value;
-                this.NotifyOfPropertyChange("Arguments");
-            }
+            this.checkForUpdates = value;
+            this.NotifyOfPropertyChange("CheckForUpdates");
         }
+    }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether SendFileAfterEncode.
-        /// </summary>
-        public bool SendFileAfterEncode
+    /// <summary>
+    /// Gets or sets a value indicating whether reset when done action.
+    /// </summary>
+    public bool ResetWhenDoneAction
+    {
+        get
         {
-            get
-            {
-                return this.sendFileAfterEncode;
-            }
-
-            set
-            {
-                this.sendFileAfterEncode = value;
-                this.NotifyOfPropertyChange("SendFileAfterEncode");
-            }
+            return this.resetWhenDoneAction;
         }
 
-        /// <summary>
-        /// Gets or sets SendFileTo.
-        /// </summary>
-        public string SendFileTo
+        set
         {
-            get
-            {
-                return this.sendFileTo;
-            }
-
-            set
-            {
-                this.sendFileTo = value;
-                this.NotifyOfPropertyChange("SendFileTo");
-            }
+            this.resetWhenDoneAction = value;
+            this.NotifyOfPropertyChange("ResetWhenDoneAction");
         }
+    }
 
-        /// <summary>
-        /// Gets or sets SendFileToPath.
-        /// </summary>
-        public string SendFileToPath
+    /// <summary>
+    /// Gets or sets CheckForUpdatesFrequencies.
+    /// </summary>
+    public BindingList<UpdateCheck> CheckForUpdatesFrequencies
+    {
+        get
         {
-            get
-            {
-                return this.sendFileToPath;
-            }
-
-            set
-            {
-                this.sendFileToPath = value;
-                this.NotifyOfPropertyChange("SendFileToPath");
-            }
+            return new BindingList<UpdateCheck>(EnumHelper<UpdateCheck>.GetEnumList().ToList());
         }
+    }
 
-        /// <summary>
-        /// Gets or sets WhenDone.
-        /// </summary>
-        public WhenDone WhenDone
+    /// <summary>
+    /// Gets or sets a value indicating whether CheckForUpdatesFrequency.
+    /// </summary>
+    public UpdateCheck CheckForUpdatesFrequency
+    {
+        get
         {
-            get
-            {
-                return this.whenDone;
-            }
-
-            set
-            {
-                this.whenDone = value;
-                this.NotifyOfPropertyChange("WhenDone");
-            }
+            return this.checkForUpdatesFrequency;
         }
 
-        /// <summary>
-        /// Gets WhenDoneOptions.
-        /// </summary>
-        public BindingList<WhenDone> WhenDoneOptions
+        set
         {
-            get
-            {
-                return new BindingList<WhenDone>(EnumHelper<WhenDone>.GetEnumList().ToList());
-            }
+            this.checkForUpdatesFrequency = value;
+            this.NotifyOfPropertyChange(() => this.CheckForUpdatesFrequency);
         }
+    }
 
-        public bool WhenDonePerformActionImmediately
+    /// <summary>
+    /// Gets or sets Arguments.
+    /// </summary>
+    public string Arguments
+    {
+        get
         {
-            get => this.whenDonePerformActionImmediately;
-            set
-            {
-                if (value == this.whenDonePerformActionImmediately) return;
-                this.whenDonePerformActionImmediately = value;
-                this.NotifyOfPropertyChange(() => this.WhenDonePerformActionImmediately);
-            }
+            return this.arguments;
         }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether to show encode status in the tile bar.
-        /// </summary>
-        public bool ShowStatusInTitleBar
+        set
         {
-            get
-            {
-                return this.showStatusInTitleBar;
-            }
-            set
-            {
-                if (value == this.showStatusInTitleBar) return;
-                this.showStatusInTitleBar = value;
-                this.NotifyOfPropertyChange(() => this.ShowStatusInTitleBar);
-            }
+            this.arguments = value;
+            this.NotifyOfPropertyChange("Arguments");
         }
+    }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether to show previews in the summary tab.
-        /// </summary>
-        public bool ShowPreviewOnSummaryTab
+    /// <summary>
+    /// Gets or sets a value indicating whether SendFileAfterEncode.
+    /// </summary>
+    public bool SendFileAfterEncode
+    {
+        get
         {
-            get
-            {
-                return this.showPreviewOnSummaryTab;
-            }
-            set
-            {
-                if (value == this.showPreviewOnSummaryTab) return;
-                this.showPreviewOnSummaryTab = value;
-                this.NotifyOfPropertyChange(() => this.ShowPreviewOnSummaryTab);
-            }
+            return this.sendFileAfterEncode;
         }
 
-        /// <summary>
-        /// When Done Audio File
-        /// </summary>
-        public string WhenDoneAudioFile
+        set
         {
-            get
-            {
-                return this.whenDoneAudioFile;
-            }
-            set
-            {
-                if (value == this.whenDoneAudioFile) return;
-                this.whenDoneAudioFile = value;
-                this.NotifyOfPropertyChange(() => this.WhenDoneAudioFile);
-            }
+            this.sendFileAfterEncode = value;
+            this.NotifyOfPropertyChange("SendFileAfterEncode");
         }
-
-        /// <summary>
-        /// When Done Audio File - File Path
-        /// </summary>
-        public string WhenDoneAudioFileFullPath { get; set; }
+    }
 
-        /// <summary>
-        /// Play a sound when an encode or queue finishes.
-        /// </summary>
-        public bool PlaySoundWhenDone
+    /// <summary>
+    /// Gets or sets SendFileTo.
+    /// </summary>
+    public string SendFileTo
+    {
+        get
         {
-            get
-            {
-                return this.playSoundWhenDone;
-            }
-            set
-            {
-                if (value == this.playSoundWhenDone) return;
-                this.playSoundWhenDone = value;
-                this.NotifyOfPropertyChange(() => this.PlaySoundWhenDone);
-            }
+            return this.sendFileTo;
         }
 
-        public bool PlaySoundWhenQueueDone
+        set
         {
-            get
-            {
-                return this.playSoundWhenQueueDone;
-            }
-            set
-            {
-                if (value == this.playSoundWhenQueueDone) return;
-                this.playSoundWhenQueueDone = value;
-                this.NotifyOfPropertyChange(() => this.PlaySoundWhenQueueDone);
-            }
+            this.sendFileTo = value;
+            this.NotifyOfPropertyChange("SendFileTo");
         }
+    }
 
-        public bool ShowAddSelectionToQueue
+    /// <summary>
+    /// Gets or sets SendFileToPath.
+    /// </summary>
+    public string SendFileToPath
+    {
+        get
         {
-            get => this.showAddSelectionToQueue;
-            set
-            {
-                if (value == this.showAddSelectionToQueue) return;
-                this.showAddSelectionToQueue = value;
-                this.NotifyOfPropertyChange(() => this.ShowAddSelectionToQueue);
-            }
+            return this.sendFileToPath;
         }
 
-        public bool ShowAddAllToQueue
+        set
         {
-            get => this.showAddAllToQueue;
-            set
-            {
-                if (value == this.showAddAllToQueue) return;
-                this.showAddAllToQueue = value;
-                this.NotifyOfPropertyChange(() => this.ShowAddAllToQueue);
-            }
+            this.sendFileToPath = value;
+            this.NotifyOfPropertyChange("SendFileToPath");
         }
+    }
 
-        public bool UseDarkTheme
+    /// <summary>
+    /// Gets or sets WhenDone.
+    /// </summary>
+    public WhenDone WhenDone
+    {
+        get
         {
-            get => this.useDarkTheme;
-            set
-            {
-                if (value == this.useDarkTheme) return;
-                this.useDarkTheme = value;
-                this.NotifyOfPropertyChange(() => this.UseDarkTheme);
-            }
+            return this.whenDone;
         }
 
-        #endregion
-
-        #region Output Files
-
-        /// <summary>
-        /// Gets or sets AutoNameDefaultPath.
-        /// </summary>
-        public string AutoNameDefaultPath
+        set
         {
-            get
-            {
-                return this.autoNameDefaultPath;
-            }
-
-            set
-            {
-                this.autoNameDefaultPath = value;
-                this.NotifyOfPropertyChange("AutoNameDefaultPath");
-            }
+            this.whenDone = value;
+            this.NotifyOfPropertyChange("WhenDone");
         }
+    }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether AutomaticallyNameFiles.
-        /// </summary>
-        public bool AutomaticallyNameFiles
+    /// <summary>
+    /// Gets WhenDoneOptions.
+    /// </summary>
+    public BindingList<WhenDone> WhenDoneOptions
+    {
+        get
         {
-            get
-            {
-                return this.automaticallyNameFiles;
-            }
-
-            set
-            {
-                this.automaticallyNameFiles = value;
-                this.NotifyOfPropertyChange("AutomaticallyNameFiles");
-            }
+            return new BindingList<WhenDone>(EnumHelper<WhenDone>.GetEnumList().ToList());
         }
+    }
 
-        /// <summary>
-        /// Gets or sets AutonameFormat.
-        /// </summary>
-        public string AutonameFormat
+    public bool WhenDonePerformActionImmediately
+    {
+        get => this.whenDonePerformActionImmediately;
+        set
         {
-            get
-            {
-                return this.autonameFormat;
-            }
-
-            set
-            {
-                if (this.IsValidAutonameFormat(value, false))
-                {
-                    this.autonameFormat = value;
-                }
-
-                this.NotifyOfPropertyChange("AutonameFormat");
-            }
+            if (value == this.whenDonePerformActionImmediately) return;
+            this.whenDonePerformActionImmediately = value;
+            this.NotifyOfPropertyChange(() => this.WhenDonePerformActionImmediately);
         }
+    }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether ChangeToTitleCase.
-        /// </summary>
-        public bool ChangeToTitleCase
+    /// <summary>
+    /// Gets or sets a value indicating whether to show encode status in the tile bar.
+    /// </summary>
+    public bool ShowStatusInTitleBar
+    {
+        get
         {
-            get
-            {
-                return this.changeToTitleCase;
-            }
-
-            set
-            {
-                this.changeToTitleCase = value;
-                this.NotifyOfPropertyChange("ChangeToTitleCase");
-            }
+            return this.showStatusInTitleBar;
         }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether RemoveUnderscores.
-        /// </summary>
-        public bool RemoveUnderscores
+        set
         {
-            get
-            {
-                return this.removeUnderscores;
-            }
-
-            set
-            {
-                this.removeUnderscores = value;
-                this.NotifyOfPropertyChange("RemoveUnderscores");
-            }
+            if (value == this.showStatusInTitleBar) return;
+            this.showStatusInTitleBar = value;
+            this.NotifyOfPropertyChange(() => this.ShowStatusInTitleBar);
         }
+    }
 
-        public BindingList<Mp4Behaviour> Mp4ExtensionOptions
+    /// <summary>
+    /// Gets or sets a value indicating whether to show previews in the summary tab.
+    /// </summary>
+    public bool ShowPreviewOnSummaryTab
+    {
+        get
         {
-            get
-            {
-                return new BindingList<Mp4Behaviour>(EnumHelper<Mp4Behaviour>.GetEnumList().ToList());
-            }
+            return this.showPreviewOnSummaryTab;
         }
-
-        /// <summary>
-        /// Gets or sets SelectedMp4Extension.
-        /// </summary>
-        public Mp4Behaviour SelectedMp4Extension
+        set
         {
-            get
-            {
-                return this.selectedMp4Extension;
-            }
-
-            set
-            {
-                this.selectedMp4Extension = value;
-                this.NotifyOfPropertyChange(() => this.SelectedMp4Extension);
-            }
+            if (value == this.showPreviewOnSummaryTab) return;
+            this.showPreviewOnSummaryTab = value;
+            this.NotifyOfPropertyChange(() => this.ShowPreviewOnSummaryTab);
         }
+    }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether remove punctuation.
-        /// </summary>
-        public bool RemovePunctuation
+    /// <summary>
+    /// When Done Audio File
+    /// </summary>
+    public string WhenDoneAudioFile
+    {
+        get
         {
-            get
-            {
-                return this.removePunctuation;
-            }
-            set
-            {
-                this.removePunctuation = value;
-                this.NotifyOfPropertyChange(() => RemovePunctuation);
-            }
+            return this.whenDoneAudioFile;
         }
-
-        public BindingList<FileOverwriteBehaviour> FileOverwriteBehaviourList { get; set; }
-
-        public int SelectedOverwriteBehaviour
+        set
         {
-            get => this.selectedOverwriteBehaviour;
-            set
-            {
-                if (value == this.selectedOverwriteBehaviour) return;
-                this.selectedOverwriteBehaviour = value;
-                this.NotifyOfPropertyChange(() => this.SelectedOverwriteBehaviour);
-            }
+            if (value == this.whenDoneAudioFile) return;
+            this.whenDoneAudioFile = value;
+            this.NotifyOfPropertyChange(() => this.WhenDoneAudioFile);
         }
+    }
 
-        public BindingList<AutonameFileCollisionBehaviour> AutonameFileCollisionBehaviours { get; set; }
+    /// <summary>
+    /// When Done Audio File - File Path
+    /// </summary>
+    public string WhenDoneAudioFileFullPath {
+        get;
+        set;
+    }
 
-        public int SelectedCollisionBehaviour
+    /// <summary>
+    /// Play a sound when an encode or queue finishes.
+    /// </summary>
+    public bool PlaySoundWhenDone
+    {
+        get
         {
-            get => this.selectedCollisionBehaviour;
-            set
-            {
-                if (value == this.selectedCollisionBehaviour) return;
-                this.selectedCollisionBehaviour = value;
-
-                this.ShowPrePostFilenameBox = this.selectedCollisionBehaviour >= 1;
-
-                this.NotifyOfPropertyChange(() => this.SelectedCollisionBehaviour);
-            }
+            return this.playSoundWhenDone;
         }
-
-        public string PrePostFilenameText
+        set
         {
-            get => this.prePostFilenameText;
-            set
-            {
-                if (value == this.prePostFilenameText) return;
-
-                if (this.IsValidAutonameFormat(value, false))
-                {
-                    this.prePostFilenameText = value;
-                }
-
-                this.NotifyOfPropertyChange(() => this.PrePostFilenameText);
-            }
+            if (value == this.playSoundWhenDone) return;
+            this.playSoundWhenDone = value;
+            this.NotifyOfPropertyChange(() => this.PlaySoundWhenDone);
         }
+    }
 
-        public bool ShowPrePostFilenameBox
+    public bool PlaySoundWhenQueueDone
+    {
+        get
         {
-            get => this.showPrePostFilenameBox;
-            set
-            {
-                if (value == this.showPrePostFilenameBox) return;
-                this.showPrePostFilenameBox = value;
-                this.NotifyOfPropertyChange(() => this.ShowPrePostFilenameBox);
-            }
+            return this.playSoundWhenQueueDone;
         }
-
-        #endregion
+        set
+        {
+            if (value == this.playSoundWhenQueueDone) return;
+            this.playSoundWhenQueueDone = value;
+            this.NotifyOfPropertyChange(() => this.PlaySoundWhenQueueDone);
+        }
+    }
 
-        #region Preview
+    public bool ShowAddSelectionToQueue
+    {
+        get => this.showAddSelectionToQueue;
+        set
+        {
+            if (value == this.showAddSelectionToQueue) return;
+            this.showAddSelectionToQueue = value;
+            this.NotifyOfPropertyChange(() => this.ShowAddSelectionToQueue);
+        }
+    }
 
-        /// <summary>
-        /// Gets or sets VLCPath.
-        /// </summary>
-        public string VLCPath
+    public bool ShowAddAllToQueue
+    {
+        get => this.showAddAllToQueue;
+        set
         {
-            get
-            {
-                return this.vlcPath;
-            }
+            if (value == this.showAddAllToQueue) return;
+            this.showAddAllToQueue = value;
+            this.NotifyOfPropertyChange(() => this.ShowAddAllToQueue);
+        }
+    }
 
-            set
-            {
-                this.vlcPath = value;
-                this.NotifyOfPropertyChange("VLCPath");
-            }
+    public bool UseDarkTheme
+    {
+        get => this.useDarkTheme;
+        set
+        {
+            if (value == this.useDarkTheme) return;
+            this.useDarkTheme = value;
+            this.NotifyOfPropertyChange(() => this.UseDarkTheme);
         }
+    }
 
-        #endregion
+    #endregion
 
-        #region System and Logging
+    #region Output Files
 
-        /// <summary>
-        /// Gets or sets a value indicating whether CopyLogToEncodeDirectory.
-        /// </summary>
-        public bool CopyLogToEncodeDirectory
+    /// <summary>
+    /// Gets or sets AutoNameDefaultPath.
+    /// </summary>
+    public string AutoNameDefaultPath
+    {
+        get
         {
-            get
-            {
-                return this.copyLogToEncodeDirectory;
-            }
-
-            set
-            {
-                this.copyLogToEncodeDirectory = value;
-                this.NotifyOfPropertyChange("CopyLogToEncodeDirectory");
-            }
+            return this.autoNameDefaultPath;
         }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether CopyLogToSepcficedLocation.
-        /// </summary>
-        public bool CopyLogToSepcficedLocation
+        set
         {
-            get
-            {
-                return this.copyLogToSepcficedLocation;
-            }
-
-            set
-            {
-                this.copyLogToSepcficedLocation = value;
-                this.NotifyOfPropertyChange("CopyLogToSepcficedLocation");
-            }
+            this.autoNameDefaultPath = value;
+            this.NotifyOfPropertyChange("AutoNameDefaultPath");
         }
+    }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether ClearOldOlgs.
-        /// </summary>
-        public bool ClearOldOlgs
+    /// <summary>
+    /// Gets or sets a value indicating whether AutomaticallyNameFiles.
+    /// </summary>
+    public bool AutomaticallyNameFiles
+    {
+        get
         {
-            get
-            {
-                return this.clearOldOlgs;
-            }
-
-            set
-            {
-                this.clearOldOlgs = value;
-                this.NotifyOfPropertyChange("ClearOldOlgs");
-            }
+            return this.automaticallyNameFiles;
         }
 
-        /// <summary>
-        /// Gets or sets LogDirectory.
-        /// </summary>
-        public string LogDirectory
+        set
         {
-            get
-            {
-                return this.logDirectory;
-            }
-
-            set
-            {
-                this.logDirectory = value;
-                this.NotifyOfPropertyChange("LogDirectory");
-            }
+            this.automaticallyNameFiles = value;
+            this.NotifyOfPropertyChange("AutomaticallyNameFiles");
         }
+    }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether PreventSleep.
-        /// </summary>
-        public bool PreventSleep
+    /// <summary>
+    /// Gets or sets AutonameFormat.
+    /// </summary>
+    public string AutonameFormat
+    {
+        get
         {
-            get
-            {
-                return this.preventSleep;
-            }
-
-            set
-            {
-                this.preventSleep = value;
-                this.NotifyOfPropertyChange("PreventSleep");
-            }
+            return this.autonameFormat;
         }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether HandBrake should pause on low disk space.
-        /// </summary>
-        public bool PauseOnLowDiskspace
+        set
         {
-            get
+            if (this.IsValidAutonameFormat(value, false))
             {
-                return this.pauseOnLowDiskspace;
+                this.autonameFormat = value;
             }
 
-            set
-            {
-                this.pauseOnLowDiskspace = value;
-                this.NotifyOfPropertyChange(() => this.PauseOnLowDiskspace);
-            }
+            this.NotifyOfPropertyChange("AutonameFormat");
         }
+    }
 
-        /// <summary>
-        /// Get or sets the value that HB warns about low disk space.
-        /// </summary>
-        public long PauseOnLowDiskspaceLevel
+    /// <summary>
+    /// Gets or sets a value indicating whether ChangeToTitleCase.
+    /// </summary>
+    public bool ChangeToTitleCase
+    {
+        get
         {
-            get
-            {
-                return this.pauseOnLowDiskspaceLevel;
-            }
-
-            set
-            {
-                this.pauseOnLowDiskspaceLevel = value;
-                this.NotifyOfPropertyChange(() => this.pauseOnLowDiskspaceLevel);
-            }
+            return this.changeToTitleCase;
         }
 
-        public BindingList<ProcessPriority> PriorityLevelOptions
+        set
         {
-            get
-            {
-                return new BindingList<ProcessPriority>(EnumHelper<ProcessPriority>.GetEnumList().ToList());
-            }
+            this.changeToTitleCase = value;
+            this.NotifyOfPropertyChange("ChangeToTitleCase");
         }
+    }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether SelectedGranulairty.
-        /// </summary>
-        public string SelectedGranulairty
+    /// <summary>
+    /// Gets or sets a value indicating whether RemoveUnderscores.
+    /// </summary>
+    public bool RemoveUnderscores
+    {
+        get
         {
-            get
-            {
-                return this.selectedGranulairty;
-            }
-
-            set
-            {
-                this.selectedGranulairty = value;
-                this.NotifyOfPropertyChange("SelectedGranulairty");
-            }
+            return this.removeUnderscores;
         }
 
-        /// <summary>
-        /// Gets or sets SelectedPriority.
-        /// </summary>
-        public ProcessPriority SelectedPriority
+        set
         {
-            get
-            {
-                return this.selectedPriority;
-            }
-
-            set
-            {
-                this.selectedPriority = value;
-                this.NotifyOfPropertyChange();
-
-                // Set the Process Priority
-                switch (value)
-                {
-                    case ProcessPriority.High:
-                        Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.High;
-                        break;
-                    case ProcessPriority.AboveNormal:
-                        Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.AboveNormal;
-                        break;
-                    case ProcessPriority.Normal:
-                        Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.Normal;
-                        break;
-                    case ProcessPriority.BelowNormal:
-                        Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.BelowNormal;
-                        break;
-                    case ProcessPriority.Low:
-                        Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.Idle;
-                        break;
-                    default:
-                        Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.BelowNormal;
-                        break;
-                }
-            }
+            this.removeUnderscores = value;
+            this.NotifyOfPropertyChange("RemoveUnderscores");
         }
-        #endregion
-
-        #region Advanced
+    }
 
-        /// <summary>
-        /// Gets or sets ConstantQualityGranularity.
-        /// </summary>
-        public BindingList<string> ConstantQualityGranularity
+    public BindingList<Mp4Behaviour> Mp4ExtensionOptions
+    {
+        get
         {
-            get
-            {
-                return this.constantQualityGranularity;
-            }
-
-            set
-            {
-                this.constantQualityGranularity = value;
-                this.NotifyOfPropertyChange("ConstantQualityGranularity");
-            }
+            return new BindingList<Mp4Behaviour>(EnumHelper<Mp4Behaviour>.GetEnumList().ToList());
         }
+    }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether DisableLibdvdNav.
-        /// </summary>
-        public bool DisableLibdvdNav
+    /// <summary>
+    /// Gets or sets SelectedMp4Extension.
+    /// </summary>
+    public Mp4Behaviour SelectedMp4Extension
+    {
+        get
         {
-            get
-            {
-                return this.disableLibdvdNav;
-            }
-
-            set
-            {
-                this.disableLibdvdNav = value;
-                this.NotifyOfPropertyChange("DisableLibdvdNav");
-            }
+            return this.selectedMp4Extension;
         }
 
-        /// <summary>
-        /// Gets or sets LogVerbosityOptions.
-        /// </summary>
-        public BindingList<int> LogVerbosityOptions
+        set
         {
-            get
-            {
-                return this.logVerbosityOptions;
-            }
-
-            set
-            {
-                this.logVerbosityOptions = value;
-                this.NotifyOfPropertyChange("LogVerbosityOptions");
-            }
+            this.selectedMp4Extension = value;
+            this.NotifyOfPropertyChange(() => this.SelectedMp4Extension);
         }
+    }
 
-        /// <summary>
-        /// Gets or sets MinLength.
-        /// </summary>
-        public long MinLength
+    /// <summary>
+    /// Gets or sets a value indicating whether remove punctuation.
+    /// </summary>
+    public bool RemovePunctuation
+    {
+        get
         {
-            get
-            {
-                return this.minLength;
-            }
-
-            set
-            {
-                this.minLength = value;
-                this.NotifyOfPropertyChange("MinLength");
-            }
+            return this.removePunctuation;
         }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether MinimiseToTray.
-        /// </summary>
-        public bool MinimiseToTray
+        set
         {
-            get
-            {
-                return this.minimiseToTray;
-            }
-
-            set
-            {
-                this.minimiseToTray = value;
-                this.NotifyOfPropertyChange("MinimiseToTray");
-            }
+            this.removePunctuation = value;
+            this.NotifyOfPropertyChange(() => RemovePunctuation);
         }
+    }
 
-        /// <summary>
-        /// Gets or sets PreviewPicturesToScan.
-        /// </summary>
-        public BindingList<int> PreviewPicturesToScan
-        {
-            get
-            {
-                return this.previewPicturesToScan;
-            }
+    public BindingList<FileOverwriteBehaviour> FileOverwriteBehaviourList {
+        get;
+        set;
+    }
 
-            set
-            {
-                this.previewPicturesToScan = value;
-                this.NotifyOfPropertyChange("PreviewPicturesToScan");
-            }
+    public int SelectedOverwriteBehaviour
+    {
+        get => this.selectedOverwriteBehaviour;
+        set
+        {
+            if (value == this.selectedOverwriteBehaviour) return;
+            this.selectedOverwriteBehaviour = value;
+            this.NotifyOfPropertyChange(() => this.SelectedOverwriteBehaviour);
         }
+    }
 
-        /// <summary>
-        /// Gets or sets SelectedPreviewCount.
-        /// </summary>
-        public int SelectedPreviewCount
+    public BindingList<AutonameFileCollisionBehaviour> AutonameFileCollisionBehaviours {
+        get;
+        set;
+    }
+
+    public int SelectedCollisionBehaviour
+    {
+        get => this.selectedCollisionBehaviour;
+        set
         {
-            get
-            {
-                return this.selectedPreviewCount;
-            }
+            if (value == this.selectedCollisionBehaviour) return;
+            this.selectedCollisionBehaviour = value;
 
-            set
-            {
-                this.selectedPreviewCount = value;
-                this.NotifyOfPropertyChange("SelectedPreviewCount");
-            }
+            this.ShowPrePostFilenameBox = this.selectedCollisionBehaviour >= 1;
+
+            this.NotifyOfPropertyChange(() => this.SelectedCollisionBehaviour);
         }
+    }
 
-        /// <summary>
-        /// Gets or sets SelectedVerbosity.
-        /// </summary>
-        public int SelectedVerbosity
+    public string PrePostFilenameText
+    {
+        get => this.prePostFilenameText;
+        set
         {
-            get
-            {
-                return this.selectedVerbosity;
-            }
+            if (value == this.prePostFilenameText) return;
 
-            set
+            if (this.IsValidAutonameFormat(value, false))
             {
-                this.selectedVerbosity = value;
-                this.NotifyOfPropertyChange("SelectedVerbosity");
+                this.prePostFilenameText = value;
             }
+
+            this.NotifyOfPropertyChange(() => this.PrePostFilenameText);
         }
+    }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether ClearQueueOnEncodeCompleted.
-        /// </summary>
-        public bool ClearQueueOnEncodeCompleted
+    public bool ShowPrePostFilenameBox
+    {
+        get => this.showPrePostFilenameBox;
+        set
         {
-            get
-            {
-                return this.clearQueueOnEncodeCompleted;
-            }
-            set
-            {
-                this.clearQueueOnEncodeCompleted = value;
-                this.NotifyOfPropertyChange(() => this.ClearQueueOnEncodeCompleted);
-            }
+            if (value == this.showPrePostFilenameBox) return;
+            this.showPrePostFilenameBox = value;
+            this.NotifyOfPropertyChange(() => this.ShowPrePostFilenameBox);
         }
+    }
 
-        #endregion
+    #endregion
 
-        #region Video
+    #region Preview
 
-        public bool EnableQuickSyncEncoding
+    /// <summary>
+    /// Gets or sets VLCPath.
+    /// </summary>
+    public string VLCPath
+    {
+        get
         {
-            get => this.enableQuickSyncEncoding && this.IsQuickSyncAvailable;
-            set
-            {
-                if (value == this.enableQuickSyncEncoding)
-                {
-                    return;
-                }
-
-                this.enableQuickSyncEncoding = value;
-                this.NotifyOfPropertyChange(() => this.EnableQuickSyncEncoding);
-            }
+            return this.vlcPath;
         }
 
-        public bool EnableVceEncoder
+        set
         {
-            get => this.enableVceEncoder && this.IsVceAvailable;
-            set
-            {
-                if (value == this.enableVceEncoder)
-                {
-                    return;
-                }
-
-                this.enableVceEncoder = value;
-                this.NotifyOfPropertyChange(() => this.EnableVceEncoder);
-            }
+            this.vlcPath = value;
+            this.NotifyOfPropertyChange("VLCPath");
         }
+    }
+
+    #endregion
+
+    #region System and Logging
 
-        public bool EnableNvencEncoder
+    /// <summary>
+    /// Gets or sets a value indicating whether CopyLogToEncodeDirectory.
+    /// </summary>
+    public bool CopyLogToEncodeDirectory
+    {
+        get
         {
-            get => this.enableNvencEncoder && this.IsNvencAvailable;
-            set
-            {
-                if (value == this.enableNvencEncoder)
-                {
-                    return;
-                }
-
-                this.enableNvencEncoder = value;
-                this.NotifyOfPropertyChange(() => this.EnableNvencEncoder);
-            }
+            return this.copyLogToEncodeDirectory;
         }
 
-        public bool EnableQuickSyncDecoding
+        set
         {
-            get
-            {
-                return this.enableQuickSyncDecoding;
-            }
+            this.copyLogToEncodeDirectory = value;
+            this.NotifyOfPropertyChange("CopyLogToEncodeDirectory");
+        }
+    }
 
-            set
-            {
-                if (value.Equals(this.enableQuickSyncDecoding))
-                {
-                    return;
-                }
-                this.enableQuickSyncDecoding = value;
-                this.NotifyOfPropertyChange(() => this.EnableQuickSyncDecoding);
-                this.NotifyOfPropertyChange(() => this.IsUseQsvDecAvailable);
-            }
+    /// <summary>
+    /// Gets or sets a value indicating whether CopyLogToSepcficedLocation.
+    /// </summary>
+    public bool CopyLogToSepcficedLocation
+    {
+        get
+        {
+            return this.copyLogToSepcficedLocation;
         }
 
-        public VideoScaler SelectedScalingMode { get; set; }
+        set
+        {
+            this.copyLogToSepcficedLocation = value;
+            this.NotifyOfPropertyChange("CopyLogToSepcficedLocation");
+        }
+    }
 
-        public bool IsQuickSyncAvailable
+    /// <summary>
+    /// Gets or sets a value indicating whether ClearOldOlgs.
+    /// </summary>
+    public bool ClearOldOlgs
+    {
+        get
         {
-            get
-            {
-                return SystemInfo.IsQsvAvailable;
-            }
+            return this.clearOldOlgs;
         }
 
-        public bool IsVceAvailable
+        set
         {
-            get
-            {
-                return SystemInfo.IsVceH264Available;
-            }
+            this.clearOldOlgs = value;
+            this.NotifyOfPropertyChange("ClearOldOlgs");
         }
+    }
 
-        public bool IsNvencAvailable
+    /// <summary>
+    /// Gets or sets LogDirectory.
+    /// </summary>
+    public string LogDirectory
+    {
+        get
         {
-            get
-            {
-                return SystemInfo.IsNVEncH264Available;
-            }
+            return this.logDirectory;
         }
 
-        /// <summary>
-        /// Gets a value indicating whether is use qsv dec available.
-        /// </summary>
-        public bool IsUseQsvDecAvailable
+        set
         {
-            get
-            {
-                return IsQuickSyncAvailable && this.EnableQuickSyncDecoding;
-            }
+            this.logDirectory = value;
+            this.NotifyOfPropertyChange("LogDirectory");
         }
+    }
 
-        public bool UseQSVDecodeForNonQSVEnc
+    /// <summary>
+    /// Gets or sets a value indicating whether PreventSleep.
+    /// </summary>
+    public bool PreventSleep
+    {
+        get
         {
-            get
-            {
-                return this.useQsvDecodeForNonQsvEnc;
-            }
+            return this.preventSleep;
+        }
 
-            set
-            {
-                if (value == this.useQsvDecodeForNonQsvEnc) return;
-                this.useQsvDecodeForNonQsvEnc = value;
-                this.NotifyOfPropertyChange(() => this.UseQSVDecodeForNonQSVEnc);
-            }
+        set
+        {
+            this.preventSleep = value;
+            this.NotifyOfPropertyChange("PreventSleep");
         }
+    }
 
-        public BindingList<VideoScaler> ScalingOptions
+    /// <summary>
+    /// Gets or sets a value indicating whether HandBrake should pause on low disk space.
+    /// </summary>
+    public bool PauseOnLowDiskspace
+    {
+        get
         {
-            get
-            {
-                return new BindingList<VideoScaler>(EnumHelper<VideoScaler>.GetEnumList().ToList());
-            }
+            return this.pauseOnLowDiskspace;
         }
 
-        public bool IsHardwareFallbackMode => HandBrakeUtils.IsInitNoHardware();
+        set
+        {
+            this.pauseOnLowDiskspace = value;
+            this.NotifyOfPropertyChange(() => this.PauseOnLowDiskspace);
+        }
+    }
 
-        #endregion
+    /// <summary>
+    /// Get or sets the value that HB warns about low disk space.
+    /// </summary>
+    public long PauseOnLowDiskspaceLevel
+    {
+        get
+        {
+            return this.pauseOnLowDiskspaceLevel;
+        }
 
-        #endregion
+        set
+        {
+            this.pauseOnLowDiskspaceLevel = value;
+            this.NotifyOfPropertyChange(() => this.pauseOnLowDiskspaceLevel);
+        }
+    }
 
-        #region About HandBrake
+    public BindingList<ProcessPriority> PriorityLevelOptions
+    {
+        get
+        {
+            return new BindingList<ProcessPriority>(EnumHelper<ProcessPriority>.GetEnumList().ToList());
+        }
+    }
 
-        /// <summary>
-        /// Gets Version.
-        /// </summary>
-        public string Version
+    /// <summary>
+    /// Gets or sets a value indicating whether SelectedGranulairty.
+    /// </summary>
+    public string SelectedGranulairty
+    {
+        get
         {
-            get
-            {
-                return string.Format("{0}", VersionHelper.GetVersion());
-            }
+            return this.selectedGranulairty;
         }
 
-        /// <summary>
-        /// Gets or sets UpdateMessage.
-        /// </summary>
-        public string UpdateMessage
+        set
         {
-            get
-            {
-                return this.updateMessage;
-            }
-            set
-            {
-                this.updateMessage = value;
-                this.NotifyOfPropertyChange(() => this.UpdateMessage);
-            }
+            this.selectedGranulairty = value;
+            this.NotifyOfPropertyChange("SelectedGranulairty");
         }
+    }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether UpdateAvailable.
-        /// </summary>
-        public bool UpdateAvailable
+    /// <summary>
+    /// Gets or sets SelectedPriority.
+    /// </summary>
+    public ProcessPriority SelectedPriority
+    {
+        get
         {
-            get
-            {
-                return this.updateAvailable;
-            }
-            set
-            {
-                this.updateAvailable = value;
-                this.NotifyOfPropertyChange(() => this.UpdateAvailable);
-            }
+            return this.selectedPriority;
         }
 
-        /// <summary>
-        /// Gets or sets DownloadProgressPercentage.
-        /// </summary>
-        public int DownloadProgressPercentage
+        set
         {
-            get
-            {
-                return this.downloadProgressPercentage;
-            }
-            set
+            this.selectedPriority = value;
+            this.NotifyOfPropertyChange();
+
+            // Set the Process Priority
+            switch (value)
             {
-                this.downloadProgressPercentage = value;
-                this.NotifyOfPropertyChange(() => this.DownloadProgressPercentage);
+            case ProcessPriority.High:
+                Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.High;
+                break;
+            case ProcessPriority.AboveNormal:
+                Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.AboveNormal;
+                break;
+            case ProcessPriority.Normal:
+                Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.Normal;
+                break;
+            case ProcessPriority.BelowNormal:
+                Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.BelowNormal;
+                break;
+            case ProcessPriority.Low:
+                Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.Idle;
+                break;
+            default:
+                Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.BelowNormal;
+                break;
             }
         }
+    }
+    #endregion
 
-        #endregion
+    #region Advanced
 
-        #region Public Methods
+    /// <summary>
+    /// Gets or sets ConstantQualityGranularity.
+    /// </summary>
+    public BindingList<string> ConstantQualityGranularity
+    {
+        get
+        {
+            return this.constantQualityGranularity;
+        }
 
-        /// <summary>
-        /// Close this window.
-        /// </summary>
-        public void Close()
+        set
         {
-            this.Save();
+            this.constantQualityGranularity = value;
+            this.NotifyOfPropertyChange("ConstantQualityGranularity");
+        }
+    }
 
-            IShellViewModel shellViewModel = IoC.Get<IShellViewModel>();
-            shellViewModel.DisplayWindow(ShellWindow.MainWindow);
+    /// <summary>
+    /// Gets or sets a value indicating whether DisableLibdvdNav.
+    /// </summary>
+    public bool DisableLibdvdNav
+    {
+        get
+        {
+            return this.disableLibdvdNav;
         }
 
-        /// <summary>
-        /// Browse - Send File To
-        /// </summary>
-        public void BrowseSendFileTo()
+        set
         {
-            OpenFileDialog dialog = new OpenFileDialog { Filter = "All files (*.*)|*.*", FileName = this.sendFileToPath };
-            bool? dialogResult = dialog.ShowDialog();
-            if (dialogResult.HasValue && dialogResult.Value)
-            {
-                this.SendFileTo = Path.GetFileNameWithoutExtension(dialog.FileName);
-                this.sendFileToPath = dialog.FileName;
-            }
+            this.disableLibdvdNav = value;
+            this.NotifyOfPropertyChange("DisableLibdvdNav");
         }
+    }
 
-        /// <summary>
-        /// Browse Auto Name Path
-        /// </summary>
-        public void BrowseAutoNamePath()
+    /// <summary>
+    /// Gets or sets LogVerbosityOptions.
+    /// </summary>
+    public BindingList<int> LogVerbosityOptions
+    {
+        get
         {
-            VistaFolderBrowserDialog dialog = new VistaFolderBrowserDialog { Description = Resources.OptionsView_SelectFolder, UseDescriptionForTitle = true, SelectedPath = this.AutoNameDefaultPath };
-            bool? dialogResult = dialog.ShowDialog();
-            if (dialogResult.HasValue && dialogResult.Value)
-            {
-                this.AutoNameDefaultPath = dialog.SelectedPath;
-            }
+            return this.logVerbosityOptions;
         }
 
-        /// <summary>
-        /// Browse VLC Path
-        /// </summary>
-        public void BrowseVlcPath()
+        set
         {
-            OpenFileDialog dialog = new OpenFileDialog { Filter = "All files (*.exe)|*.exe", FileName = this.VLCPath };
-            bool? dialogResult = dialog.ShowDialog();
-            if (dialogResult.HasValue && dialogResult.Value)
-            {
-                this.VLCPath = dialog.FileName;
-            }
+            this.logVerbosityOptions = value;
+            this.NotifyOfPropertyChange("LogVerbosityOptions");
         }
+    }
 
-        /// <summary>
-        /// Browse - Log Path
-        /// </summary>
-        public void BrowseLogPath()
+    /// <summary>
+    /// Gets or sets MinLength.
+    /// </summary>
+    public long MinLength
+    {
+        get
         {
-            VistaFolderBrowserDialog dialog = new VistaFolderBrowserDialog { Description = Resources.OptionsView_SelectFolder, UseDescriptionForTitle = true, SelectedPath = this.LogDirectory };
-            bool? dialogResult = dialog.ShowDialog();
-            if (dialogResult.HasValue && dialogResult.Value)
-            {
-                this.LogDirectory = dialog.SelectedPath;
-            }
+            return this.minLength;
         }
 
-        /// <summary>
-        /// View the Default Log Directory for HandBrake
-        /// </summary>
-        public void ViewLogDirectory()
+        set
         {
-            string logDir = DirectoryUtilities.GetLogDirectory();
-            string windir = Environment.GetEnvironmentVariable("WINDIR");
-            Process prc = new Process { StartInfo = { FileName = windir + @"\explorer.exe", Arguments = logDir } };
-            prc.Start();
+            this.minLength = value;
+            this.NotifyOfPropertyChange("MinLength");
         }
+    }
 
-        /// <summary>
-        /// Clear HandBrakes log directory.
-        /// </summary>
-        public void ClearLogHistory()
+    /// <summary>
+    /// Gets or sets a value indicating whether MinimiseToTray.
+    /// </summary>
+    public bool MinimiseToTray
+    {
+        get
         {
-            MessageBoxResult result = this.errorService.ShowMessageBox(Resources.OptionsView_ClearLogDirConfirm, Resources.OptionsView_ClearLogs,
-                                                  MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
-            if (result == MessageBoxResult.Yes)
-            {
-                GeneralUtilities.ClearLogFiles(0);
-                this.errorService.ShowMessageBox(Resources.OptionsView_LogsCleared, Resources.OptionsView_Notice, MessageBoxButton.OK, MessageBoxImage.Information);
-            }
+            return this.minimiseToTray;
         }
 
-        /// <summary>
-        /// Download an Update
-        /// </summary>
-        public void DownloadUpdate()
+        set
         {
-            this.UpdateMessage = Resources.OptionsView_PreparingUpdate;
-            this.updateService.DownloadFile(this.updateInfo.DownloadFile, this.updateInfo.Signature, this.DownloadComplete, this.DownloadProgress);
+            this.minimiseToTray = value;
+            this.NotifyOfPropertyChange("MinimiseToTray");
         }
+    }
 
-        /// <summary>
-        /// Check for updates
-        /// </summary>
-        public void PerformUpdateCheck()
+    /// <summary>
+    /// Gets or sets PreviewPicturesToScan.
+    /// </summary>
+    public BindingList<int> PreviewPicturesToScan
+    {
+        get
         {
-            this.UpdateMessage = Resources.OptionsView_CheckingForUpdates;
-            this.updateService.CheckForUpdates(this.UpdateCheckComplete);
+            return this.previewPicturesToScan;
         }
 
-        /// <summary>
-        /// Browse - Send File To
-        /// </summary>
-        public void BrowseWhenDoneAudioFile()
+        set
         {
-            OpenFileDialog dialog = new OpenFileDialog() { Filter = "All Files|*.wav;*.mp3", FileName = this.WhenDoneAudioFileFullPath };
-            bool? dialogResult = dialog.ShowDialog();
-            if (dialogResult.HasValue && dialogResult.Value)
-            {
-                this.WhenDoneAudioFile = Path.GetFileNameWithoutExtension(dialog.FileName);
-                this.WhenDoneAudioFileFullPath = dialog.FileName;
-            }
-            else
-            {
-                this.WhenDoneAudioFile = null;
-                this.WhenDoneAudioFileFullPath = null;
-            }
+            this.previewPicturesToScan = value;
+            this.NotifyOfPropertyChange("PreviewPicturesToScan");
         }
+    }
 
-        public void PlayWhenDoneFile()
+    /// <summary>
+    /// Gets or sets SelectedPreviewCount.
+    /// </summary>
+    public int SelectedPreviewCount
+    {
+        get
         {
-            if (!string.IsNullOrEmpty(this.WhenDoneAudioFileFullPath) && File.Exists(this.WhenDoneAudioFileFullPath))
-            {
-                var uri = new Uri(this.WhenDoneAudioFileFullPath, UriKind.RelativeOrAbsolute);
-                var player = new MediaPlayer();
-                player.Open(uri);
-                player.Play();
-                player.MediaFailed += (object sender, ExceptionEventArgs e) => { Debug.WriteLine(e); };
-            }
-            else
-            {
-                this.errorService.ShowMessageBox(
-                    Resources.OptionsView_MediaFileNotSet,
-                    Resources.Error,
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error);
-            }
+            return this.selectedPreviewCount;
         }
 
-        #endregion
-
-        /// <summary>
-        /// Load User Settings
-        /// </summary>
-        public override void OnLoad()
-        {
-            // #############################
-            // General
-            // #############################
-            string culture = this.userSettingService.GetUserSetting<string>(UserSettingConstants.UiLanguage);
-            this.SelectedLanguage = InterfaceLanguageUtilities.FindInterfaceLanguage(culture);
-
-            this.CheckForUpdates = this.userSettingService.GetUserSetting<bool>(UserSettingConstants.UpdateStatus);
-            this.CheckForUpdatesFrequency = (UpdateCheck)this.userSettingService.GetUserSetting<int>(UserSettingConstants.DaysBetweenUpdateCheck);
-            this.ShowStatusInTitleBar = this.userSettingService.GetUserSetting<bool>(UserSettingConstants.ShowStatusInTitleBar);
-            this.ShowPreviewOnSummaryTab = this.userSettingService.GetUserSetting<bool>(UserSettingConstants.ShowPreviewOnSummaryTab);
-            this.ShowAddAllToQueue = this.userSettingService.GetUserSetting<bool>(UserSettingConstants.ShowAddAllToQueue);
-            this.ShowAddSelectionToQueue = this.userSettingService.GetUserSetting<bool>(UserSettingConstants.ShowAddSelectionToQueue);
-            this.UseDarkTheme = this.userSettingService.GetUserSetting<bool>(UserSettingConstants.UseDarkTheme);
-
-            // #############################
-            // When Done
-            // #############################
-
-            this.WhenDone = (WhenDone)this.userSettingService.GetUserSetting<int>(UserSettingConstants.WhenCompleteAction);
-            if (this.userSettingService.GetUserSetting<bool>(UserSettingConstants.ResetWhenDoneAction))
-            {
-                this.WhenDone = WhenDone.DoNothing;
-            }
+        set
+        {
+            this.selectedPreviewCount = value;
+            this.NotifyOfPropertyChange("SelectedPreviewCount");
+        }
+    }
 
-            this.SendFileAfterEncode = this.userSettingService.GetUserSetting<bool>(UserSettingConstants.SendFile);
-            this.SendFileTo = Path.GetFileNameWithoutExtension(this.userSettingService.GetUserSetting<string>(UserSettingConstants.SendFileTo)) ?? string.Empty;
-            this.SendFileToPath = this.userSettingService.GetUserSetting<string>(UserSettingConstants.SendFileTo) ?? string.Empty;
-            this.Arguments = this.userSettingService.GetUserSetting<string>(UserSettingConstants.SendFileToArgs) ?? string.Empty;
-            this.ResetWhenDoneAction = this.userSettingService.GetUserSetting<bool>(UserSettingConstants.ResetWhenDoneAction);
-            this.WhenDonePerformActionImmediately = this.userSettingService.GetUserSetting<bool>(UserSettingConstants.WhenDonePerformActionImmediately);
-            this.WhenDoneAudioFile = Path.GetFileNameWithoutExtension(this.userSettingService.GetUserSetting<string>(UserSettingConstants.WhenDoneAudioFile)) ?? string.Empty;
-            this.WhenDoneAudioFileFullPath = this.userSettingService.GetUserSetting<string>(UserSettingConstants.WhenDoneAudioFile);
-            this.PlaySoundWhenDone = this.userSettingService.GetUserSetting<bool>(UserSettingConstants.PlaySoundWhenDone);
-            this.PlaySoundWhenQueueDone = this.userSettingService.GetUserSetting<bool>(UserSettingConstants.PlaySoundWhenQueueDone);
-
-            // #############################
-            // Output Settings
-            // #############################
-
-            // Enable auto naming feature.)
-            this.AutomaticallyNameFiles = this.userSettingService.GetUserSetting<bool>(UserSettingConstants.AutoNaming);
-
-            // Store the auto name path
-            this.AutoNameDefaultPath = this.userSettingService.GetUserSetting<string>(UserSettingConstants.AutoNamePath) ?? string.Empty;
-            if (string.IsNullOrEmpty(this.autoNameDefaultPath))
-                this.AutoNameDefaultPath = Resources.OptionsView_SetDefaultLocationOutputFIle;
-
-            // Store auto name format
-            string anf = this.userSettingService.GetUserSetting<string>(UserSettingConstants.AutoNameFormat) ?? string.Empty;
-            this.AutonameFormat = this.IsValidAutonameFormat(anf, true) ? anf : "{source}-{title}";
-
-            // Use iPod/iTunes friendly .m4v extension for MP4 files.
-            this.SelectedMp4Extension = (Mp4Behaviour)this.userSettingService.GetUserSetting<int>(UserSettingConstants.UseM4v);
-
-            // Remove Underscores
-            this.RemoveUnderscores = this.userSettingService.GetUserSetting<bool>(UserSettingConstants.AutoNameRemoveUnderscore);
-
-            // Title case
-            this.ChangeToTitleCase = this.userSettingService.GetUserSetting<bool>(UserSettingConstants.AutoNameTitleCase);
-            this.RemovePunctuation = this.userSettingService.GetUserSetting<bool>(UserSettingConstants.RemovePunctuation);
-
-            // File Overwrite
-            this.FileOverwriteBehaviourList = new BindingList<FileOverwriteBehaviour>();
-            this.FileOverwriteBehaviourList.Add(FileOverwriteBehaviour.Ask);
-            this.FileOverwriteBehaviourList.Add(FileOverwriteBehaviour.ForceOverwrite);
-            this.SelectedOverwriteBehaviour = this.userSettingService.GetUserSetting<int>(UserSettingConstants.FileOverwriteBehaviour);
-
-            // Collision behaviour
-            this.AutonameFileCollisionBehaviours = new BindingList<AutonameFileCollisionBehaviour>() { AutonameFileCollisionBehaviour.AppendNumber, AutonameFileCollisionBehaviour.Prefix, AutonameFileCollisionBehaviour.Postfix };
-            this.SelectedCollisionBehaviour = this.userSettingService.GetUserSetting<int>(UserSettingConstants.AutonameFileCollisionBehaviour);
-            this.PrePostFilenameText = this.userSettingService.GetUserSetting<string>(UserSettingConstants.AutonameFilePrePostString);
-
-            // #############################
-            // Picture Tab
-            // #############################
-
-            // VLC Path
-            this.VLCPath = this.userSettingService.GetUserSetting<string>(UserSettingConstants.VLCPath) ?? string.Empty;
-
-            // #############################
-            // Video
-            // #############################
-            this.EnableQuickSyncDecoding = this.userSettingService.GetUserSetting<bool>(UserSettingConstants.EnableQuickSyncDecoding);
-            this.SelectedScalingMode = this.userSettingService.GetUserSetting<VideoScaler>(UserSettingConstants.ScalingMode);
-            this.UseQSVDecodeForNonQSVEnc = this.userSettingService.GetUserSetting<bool>(UserSettingConstants.UseQSVDecodeForNonQSVEnc);
-
-            this.EnableQuickSyncEncoding = this.userSettingService.GetUserSetting<bool>(UserSettingConstants.EnableQuickSyncEncoding);
-            this.EnableVceEncoder = this.userSettingService.GetUserSetting<bool>(UserSettingConstants.EnableVceEncoder);
-            this.EnableNvencEncoder = this.userSettingService.GetUserSetting<bool>(UserSettingConstants.EnableNvencEncoder);
-
-            // #############################
-            // CLI
-            // #############################
-            this.SelectedPriority = (ProcessPriority)userSettingService.GetUserSetting<int>(UserSettingConstants.ProcessPriorityInt);
-
-            this.PreventSleep = userSettingService.GetUserSetting<bool>(UserSettingConstants.PreventSleep);
-            this.PauseOnLowDiskspace = userSettingService.GetUserSetting<bool>(UserSettingConstants.PauseOnLowDiskspace);
-            this.PauseOnLowDiskspaceLevel = this.userSettingService.GetUserSetting<long>(UserSettingConstants.PauseQueueOnLowDiskspaceLevel);
-
-            // Log Verbosity Level
-            this.logVerbosityOptions.Clear();
-            this.logVerbosityOptions.Add(0);
-            this.logVerbosityOptions.Add(1);
-            this.logVerbosityOptions.Add(2);
-            this.SelectedVerbosity = userSettingService.GetUserSetting<int>(UserSettingConstants.Verbosity);
-
-            // Logs
-            this.CopyLogToEncodeDirectory = userSettingService.GetUserSetting<bool>(UserSettingConstants.SaveLogWithVideo);
-            this.CopyLogToSepcficedLocation = userSettingService.GetUserSetting<bool>(UserSettingConstants.SaveLogToCopyDirectory);
-
-            // The saved log path
-            this.LogDirectory = userSettingService.GetUserSetting<string>(UserSettingConstants.SaveLogCopyDirectory) ?? string.Empty;
-
-            this.ClearOldOlgs = this.userSettingService.GetUserSetting<bool>(UserSettingConstants.ClearOldLogs);
-
-            // #############################
-            // Advanced
-            // #############################
-
-            // Minimise to Tray
-            this.MinimiseToTray = this.userSettingService.GetUserSetting<bool>(UserSettingConstants.MainWindowMinimize);
-            this.ClearQueueOnEncodeCompleted = userSettingService.GetUserSetting<bool>(UserSettingConstants.ClearCompletedFromQueue);
-
-            // Set the preview count
-            this.PreviewPicturesToScan.Clear();
-            this.PreviewPicturesToScan.Add(10);
-            this.PreviewPicturesToScan.Add(15);
-            this.PreviewPicturesToScan.Add(20);
-            this.PreviewPicturesToScan.Add(25);
-            this.PreviewPicturesToScan.Add(30);
-            this.PreviewPicturesToScan.Add(35);
-            this.PreviewPicturesToScan.Add(40);
-            this.PreviewPicturesToScan.Add(45);
-            this.PreviewPicturesToScan.Add(50);
-            this.PreviewPicturesToScan.Add(55);
-            this.PreviewPicturesToScan.Add(60);
-            this.SelectedPreviewCount = this.userSettingService.GetUserSetting<int>(UserSettingConstants.PreviewScanCount);
-
-            // x264 step
-            this.ConstantQualityGranularity.Clear();
-            this.ConstantQualityGranularity.Add("1.00");
-            this.ConstantQualityGranularity.Add("0.50");
-            this.ConstantQualityGranularity.Add("0.25");
-            this.SelectedGranulairty = userSettingService.GetUserSetting<double>(UserSettingConstants.X264Step).ToString("0.00", CultureInfo.InvariantCulture);
-
-            // Min Title Length
-            this.MinLength = this.userSettingService.GetUserSetting<int>(UserSettingConstants.MinScanDuration);
-
-            // Use dvdnav
-            this.DisableLibdvdNav = userSettingService.GetUserSetting<bool>(UserSettingConstants.DisableLibDvdNav);
-        }
-
-        /// <summary>
-        /// Some settings can be changed outside of this window. This will refresh their UI controls.
-        /// </summary>
-        public void UpdateSettings()
-        {
-            this.WhenDone = (WhenDone)this.userSettingService.GetUserSetting<int>(UserSettingConstants.WhenCompleteAction);
-        }
-
-        /// <summary>
-        /// The goto tab.
-        /// </summary>
-        /// <param name="tab">
-        /// The tab.
-        /// </param>
-        public void GotoTab(OptionsTab tab)
-        {
-            this.SelectedTab = tab;
-        }
-
-        /// <summary>
-        /// Load / Update the user settings.
-        /// </summary>
-        protected override void OnActivate()
-        {
-            this.OnLoad();
-            base.OnActivate();
-        }
-
-        /// <summary>
-        /// Save the settings selected
-        /// </summary>
-        private void Save()
-        {
-            /* General */
-            this.userSettingService.SetUserSetting(UserSettingConstants.UpdateStatus, this.CheckForUpdates);
-            this.userSettingService.SetUserSetting(UserSettingConstants.DaysBetweenUpdateCheck, this.CheckForUpdatesFrequency);
-            this.userSettingService.SetUserSetting(UserSettingConstants.SendFileTo, this.SendFileToPath);
-            this.userSettingService.SetUserSetting(UserSettingConstants.SendFile, this.SendFileAfterEncode);
-            this.userSettingService.SetUserSetting(UserSettingConstants.SendFileToArgs, this.Arguments);
-            this.userSettingService.SetUserSetting(UserSettingConstants.ShowStatusInTitleBar, this.ShowStatusInTitleBar);
-            this.userSettingService.SetUserSetting(UserSettingConstants.ShowPreviewOnSummaryTab, this.ShowPreviewOnSummaryTab);
-            this.userSettingService.SetUserSetting(UserSettingConstants.UseDarkTheme, this.UseDarkTheme);
-            this.userSettingService.SetUserSetting(UserSettingConstants.UiLanguage, this.SelectedLanguage?.Culture);
-            this.userSettingService.SetUserSetting(UserSettingConstants.ShowAddAllToQueue, this.ShowAddAllToQueue);
-            this.userSettingService.SetUserSetting(UserSettingConstants.ShowAddSelectionToQueue, this.ShowAddSelectionToQueue);
-
-            /* When Done */
-            this.userSettingService.SetUserSetting(UserSettingConstants.WhenCompleteAction, (int)this.WhenDone);
-            this.userSettingService.SetUserSetting(UserSettingConstants.ResetWhenDoneAction, this.ResetWhenDoneAction);
-            this.userSettingService.SetUserSetting(UserSettingConstants.WhenDonePerformActionImmediately, this.WhenDonePerformActionImmediately);
-            this.userSettingService.SetUserSetting(UserSettingConstants.PlaySoundWhenDone, this.PlaySoundWhenDone);
-            this.userSettingService.SetUserSetting(UserSettingConstants.PlaySoundWhenQueueDone, this.PlaySoundWhenQueueDone);
-            this.userSettingService.SetUserSetting(UserSettingConstants.WhenDoneAudioFile, this.WhenDoneAudioFileFullPath);
-
-            /* Output Files */
-            this.userSettingService.SetUserSetting(UserSettingConstants.AutoNaming, this.AutomaticallyNameFiles);
-            this.userSettingService.SetUserSetting(UserSettingConstants.AutoNameFormat, this.AutonameFormat);
-            this.userSettingService.SetUserSetting(UserSettingConstants.AutoNamePath, this.AutoNameDefaultPath);
-            this.userSettingService.SetUserSetting(UserSettingConstants.UseM4v, (int)this.SelectedMp4Extension);
-            this.userSettingService.SetUserSetting(UserSettingConstants.AutoNameRemoveUnderscore, this.RemoveUnderscores);
-            this.userSettingService.SetUserSetting(UserSettingConstants.AutoNameTitleCase, this.ChangeToTitleCase);
-            this.userSettingService.SetUserSetting(UserSettingConstants.RemovePunctuation, this.RemovePunctuation);
-            this.userSettingService.SetUserSetting(UserSettingConstants.FileOverwriteBehaviour, this.SelectedOverwriteBehaviour);
-            this.userSettingService.SetUserSetting(UserSettingConstants.AutonameFileCollisionBehaviour, this.SelectedCollisionBehaviour);
-            this.userSettingService.SetUserSetting(UserSettingConstants.AutonameFilePrePostString, this.PrePostFilenameText);
-
-            /* Previews */
-            this.userSettingService.SetUserSetting(UserSettingConstants.VLCPath, this.VLCPath);
-
-            /* Video */
-            this.userSettingService.SetUserSetting(UserSettingConstants.EnableQuickSyncDecoding, this.EnableQuickSyncDecoding);
-            this.userSettingService.SetUserSetting(UserSettingConstants.ScalingMode, this.SelectedScalingMode);
-            this.userSettingService.SetUserSetting(UserSettingConstants.UseQSVDecodeForNonQSVEnc, this.UseQSVDecodeForNonQSVEnc);
-
-            this.userSettingService.SetUserSetting(UserSettingConstants.EnableQuickSyncEncoding, this.EnableQuickSyncEncoding);
-            this.userSettingService.SetUserSetting(UserSettingConstants.EnableVceEncoder, this.EnableVceEncoder);
-            this.userSettingService.SetUserSetting(UserSettingConstants.EnableNvencEncoder, this.EnableNvencEncoder);
-
-            /* System and Logging */
-            this.userSettingService.SetUserSetting(UserSettingConstants.ProcessPriorityInt, this.SelectedPriority);
-            this.userSettingService.SetUserSetting(UserSettingConstants.PreventSleep, this.PreventSleep);
-            this.userSettingService.SetUserSetting(UserSettingConstants.PauseOnLowDiskspace, this.PauseOnLowDiskspace);
-            this.userSettingService.SetUserSetting(UserSettingConstants.PauseQueueOnLowDiskspaceLevel, this.PauseOnLowDiskspaceLevel);
-            this.userSettingService.SetUserSetting(UserSettingConstants.Verbosity, this.SelectedVerbosity);
-            this.userSettingService.SetUserSetting(UserSettingConstants.SaveLogWithVideo, this.CopyLogToEncodeDirectory);
-            this.userSettingService.SetUserSetting(UserSettingConstants.SaveLogToCopyDirectory, this.CopyLogToSepcficedLocation);
-            this.userSettingService.SetUserSetting(UserSettingConstants.SaveLogCopyDirectory, this.LogDirectory);
-            this.userSettingService.SetUserSetting(UserSettingConstants.ClearOldLogs, this.ClearOldOlgs);
-
-            /* Advanced */
-            this.userSettingService.SetUserSetting(UserSettingConstants.MainWindowMinimize, this.MinimiseToTray);
-            this.userSettingService.SetUserSetting(UserSettingConstants.ClearCompletedFromQueue, this.ClearQueueOnEncodeCompleted);
-            this.userSettingService.SetUserSetting(UserSettingConstants.PreviewScanCount, this.SelectedPreviewCount);
-            this.userSettingService.SetUserSetting(UserSettingConstants.X264Step, double.Parse(this.SelectedGranulairty, CultureInfo.InvariantCulture));
-
-            int value;
-            if (int.TryParse(this.MinLength.ToString(CultureInfo.InvariantCulture), out value))
-            {
-                this.userSettingService.SetUserSetting(UserSettingConstants.MinScanDuration, value);
-            }
+    /// <summary>
+    /// Gets or sets SelectedVerbosity.
+    /// </summary>
+    public int SelectedVerbosity
+    {
+        get
+        {
+            return this.selectedVerbosity;
+        }
 
-            this.userSettingService.SetUserSetting(UserSettingConstants.DisableLibDvdNav, this.DisableLibdvdNav);
+        set
+        {
+            this.selectedVerbosity = value;
+            this.NotifyOfPropertyChange("SelectedVerbosity");
         }
+    }
 
-        /// <summary>
-        /// Update Check Complete
-        /// </summary>
-        /// <param name="info">
-        /// The info.
-        /// </param>
-        private void UpdateCheckComplete(UpdateCheckInformation info)
+    /// <summary>
+    /// Gets or sets a value indicating whether ClearQueueOnEncodeCompleted.
+    /// </summary>
+    public bool ClearQueueOnEncodeCompleted
+    {
+        get
         {
-            this.updateInfo = info;
-            if (info.NewVersionAvailable)
-            {
-                this.UpdateMessage = Resources.OptionsViewModel_NewUpdate;
-                this.UpdateAvailable = true;
-            }
-            else if (Environment.Is64BitOperatingSystem && !System.Environment.Is64BitProcess)
-            {
-                this.UpdateMessage = Resources.OptionsViewModel_64bitAvailable;
-                this.UpdateAvailable = true;
-            }
-            else
-            {
-                this.UpdateMessage = Resources.OptionsViewModel_NoNewUpdates;
-                this.UpdateAvailable = false;
-            }
+            return this.clearQueueOnEncodeCompleted;
+        }
+        set
+        {
+            this.clearQueueOnEncodeCompleted = value;
+            this.NotifyOfPropertyChange(() => this.ClearQueueOnEncodeCompleted);
         }
+    }
+
+    #endregion
+
+    #region Video
 
-        /// <summary>
-        /// Download Progress Action
-        /// </summary>
-        /// <param name="info">
-        /// The info.
-        /// </param>
-        private void DownloadProgress(DownloadStatus info)
+    public bool EnableQuickSyncEncoding
+    {
+        get => this.enableQuickSyncEncoding && this.IsQuickSyncAvailable;
+        set
         {
-            if (info.TotalBytes == 0 || info.BytesRead == 0)
+            if (value == this.enableQuickSyncEncoding)
             {
-                this.UpdateAvailable = false;
-                this.UpdateMessage = info.WasSuccessful ? Resources.OptionsViewModel_UpdateDownloaded : Resources.OptionsViewModel_UpdateServiceUnavailable;
                 return;
             }
 
-            long p = (info.BytesRead * 100) / info.TotalBytes;
-            int progress;
-            int.TryParse(p.ToString(CultureInfo.InvariantCulture), out progress);
-            this.DownloadProgressPercentage = progress;
-            this.UpdateMessage = string.Format(
-                "{0} {1}% - {2}k of {3}k", Resources.OptionsView_Downloading, this.DownloadProgressPercentage, (info.BytesRead / 1024), (info.TotalBytes / 1024));
-        }
-
-        /// <summary>
-        /// Download Complete Action
-        /// </summary>
-        /// <param name="info">
-        /// The info.
-        /// </param>
-        private void DownloadComplete(DownloadStatus info)
-        {
-            this.UpdateAvailable = false;
-            this.UpdateMessage = info.WasSuccessful ? Resources.OptionsViewModel_UpdateDownloaded : info.Message;
-
-            if (info.WasSuccessful)
-            {
-                Process.Start(Path.Combine(Path.GetTempPath(), "handbrake-setup.exe"));
-                Execute.OnUIThread(() => Application.Current.Shutdown());
-            }
-        }
-
-        /// <summary>
-        /// Validate the Autoname Fileformat string
-        /// </summary>
-        /// <param name="input">The format string</param>
-        /// <param name="isSilent">Don't show an error dialog if true.</param>
-        /// <returns>True if valid</returns>
-        private bool IsValidAutonameFormat(string input, bool isSilent)
-        {
-            if (string.IsNullOrEmpty(input))
-            {
-                return true;
-            }
-
-            char[] invalidchars = Path.GetInvalidFileNameChars();
-            Array.Sort(invalidchars);
-            foreach (var characterToTest in input)
-            {
-                if (Array.BinarySearch(invalidchars, characterToTest) >= 0)
-                {
-                    if (!isSilent)
-                    {
-                        this.errorService.ShowMessageBox(
-                            Resources.OptionsView_InvalidFileFormatChars,
-                            Resources.Error,
-                            MessageBoxButton.OK,
-                            MessageBoxImage.Error);
-                    }
-                    return false;
-                }
-            }
-
-            return true;
+            this.enableQuickSyncEncoding = value;
+            this.NotifyOfPropertyChange(() => this.EnableQuickSyncEncoding);
         }
     }
+
+    public bool EnableVceEncoder
+    {
+        get => this.enableVceEncoder && this.IsVceAvailable;
+        set
+        {
+            if (value == this.enableVceEncoder)
+            {
+                return;
+            }
+
+            this.enableVceEncoder = value;
+            this.NotifyOfPropertyChange(() => this.EnableVceEncoder);
+        }
+    }
+
+    public bool EnableNvencEncoder
+    {
+        get => this.enableNvencEncoder && this.IsNvencAvailable;
+        set
+        {
+            if (value == this.enableNvencEncoder)
+            {
+                return;
+            }
+
+            this.enableNvencEncoder = value;
+            this.NotifyOfPropertyChange(() => this.EnableNvencEncoder);
+        }
+    }
+
+    public bool EnableQuickSyncDecoding
+    {
+        get
+        {
+            return this.enableQuickSyncDecoding;
+        }
+
+        set
+        {
+            if (value.Equals(this.enableQuickSyncDecoding))
+            {
+                return;
+            }
+            this.enableQuickSyncDecoding = value;
+            this.NotifyOfPropertyChange(() => this.EnableQuickSyncDecoding);
+            this.NotifyOfPropertyChange(() => this.IsUseQsvDecAvailable);
+        }
+    }
+
+    public VideoScaler SelectedScalingMode {
+        get;
+        set;
+    }
+
+    public bool IsQuickSyncAvailable
+    {
+        get
+        {
+            return SystemInfo.IsQsvAvailable;
+        }
+    }
+
+    public bool IsVceAvailable
+    {
+        get
+        {
+            return SystemInfo.IsVceH264Available;
+        }
+    }
+
+    public bool IsNvencAvailable
+    {
+        get
+        {
+            return SystemInfo.IsNVEncH264Available;
+        }
+    }
+
+    /// <summary>
+    /// Gets a value indicating whether is use qsv dec available.
+    /// </summary>
+    public bool IsUseQsvDecAvailable
+    {
+        get
+        {
+            return IsQuickSyncAvailable && this.EnableQuickSyncDecoding;
+        }
+    }
+
+    public bool UseQSVDecodeForNonQSVEnc
+    {
+        get
+        {
+            return this.useQsvDecodeForNonQsvEnc;
+        }
+
+        set
+        {
+            if (value == this.useQsvDecodeForNonQsvEnc) return;
+            this.useQsvDecodeForNonQsvEnc = value;
+            this.NotifyOfPropertyChange(() => this.UseQSVDecodeForNonQSVEnc);
+        }
+    }
+
+    public BindingList<VideoScaler> ScalingOptions
+    {
+        get
+        {
+            return new BindingList<VideoScaler>(EnumHelper<VideoScaler>.GetEnumList().ToList());
+        }
+    }
+
+    public bool IsHardwareFallbackMode => HandBrakeUtils.IsInitNoHardware();
+
+    #endregion
+
+    #endregion
+
+    #region About HandBrake
+
+    /// <summary>
+    /// Gets Version.
+    /// </summary>
+    public string Version
+    {
+        get
+        {
+            return string.Format("{0}", VersionHelper.GetVersion());
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets UpdateMessage.
+    /// </summary>
+    public string UpdateMessage
+    {
+        get
+        {
+            return this.updateMessage;
+        }
+        set
+        {
+            this.updateMessage = value;
+            this.NotifyOfPropertyChange(() => this.UpdateMessage);
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether UpdateAvailable.
+    /// </summary>
+    public bool UpdateAvailable
+    {
+        get
+        {
+            return this.updateAvailable;
+        }
+        set
+        {
+            this.updateAvailable = value;
+            this.NotifyOfPropertyChange(() => this.UpdateAvailable);
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets DownloadProgressPercentage.
+    /// </summary>
+    public int DownloadProgressPercentage
+    {
+        get
+        {
+            return this.downloadProgressPercentage;
+        }
+        set
+        {
+            this.downloadProgressPercentage = value;
+            this.NotifyOfPropertyChange(() => this.DownloadProgressPercentage);
+        }
+    }
+
+    #endregion
+
+    #region Public Methods
+
+    /// <summary>
+    /// Close this window.
+    /// </summary>
+    public void Close()
+    {
+        this.Save();
+
+        IShellViewModel shellViewModel = IoC.Get<IShellViewModel>();
+        shellViewModel.DisplayWindow(ShellWindow.MainWindow);
+    }
+
+    /// <summary>
+    /// Browse - Send File To
+    /// </summary>
+    public void BrowseSendFileTo()
+    {
+        OpenFileDialog dialog = new OpenFileDialog { Filter = "All files (*.*)|*.*", FileName = this.sendFileToPath };
+        bool? dialogResult = dialog.ShowDialog();
+        if (dialogResult.HasValue && dialogResult.Value)
+        {
+            this.SendFileTo = Path.GetFileNameWithoutExtension(dialog.FileName);
+            this.sendFileToPath = dialog.FileName;
+        }
+    }
+
+    /// <summary>
+    /// Browse Auto Name Path
+    /// </summary>
+    public void BrowseAutoNamePath()
+    {
+        VistaFolderBrowserDialog dialog = new VistaFolderBrowserDialog { Description = Resources.OptionsView_SelectFolder, UseDescriptionForTitle = true, SelectedPath = this.AutoNameDefaultPath };
+        bool? dialogResult = dialog.ShowDialog();
+        if (dialogResult.HasValue && dialogResult.Value)
+        {
+            this.AutoNameDefaultPath = dialog.SelectedPath;
+        }
+    }
+
+    /// <summary>
+    /// Browse VLC Path
+    /// </summary>
+    public void BrowseVlcPath()
+    {
+        OpenFileDialog dialog = new OpenFileDialog { Filter = "All files (*.exe)|*.exe", FileName = this.VLCPath };
+        bool? dialogResult = dialog.ShowDialog();
+        if (dialogResult.HasValue && dialogResult.Value)
+        {
+            this.VLCPath = dialog.FileName;
+        }
+    }
+
+    /// <summary>
+    /// Browse - Log Path
+    /// </summary>
+    public void BrowseLogPath()
+    {
+        VistaFolderBrowserDialog dialog = new VistaFolderBrowserDialog { Description = Resources.OptionsView_SelectFolder, UseDescriptionForTitle = true, SelectedPath = this.LogDirectory };
+        bool? dialogResult = dialog.ShowDialog();
+        if (dialogResult.HasValue && dialogResult.Value)
+        {
+            this.LogDirectory = dialog.SelectedPath;
+        }
+    }
+
+    /// <summary>
+    /// View the Default Log Directory for HandBrake
+    /// </summary>
+    public void ViewLogDirectory()
+    {
+        string logDir = DirectoryUtilities.GetLogDirectory();
+        string windir = Environment.GetEnvironmentVariable("WINDIR");
+        Process prc = new Process { StartInfo = { FileName = windir + @"\explorer.exe", Arguments = logDir } };
+        prc.Start();
+    }
+
+    /// <summary>
+    /// Clear HandBrakes log directory.
+    /// </summary>
+    public void ClearLogHistory()
+    {
+        MessageBoxResult result = this.errorService.ShowMessageBox(Resources.OptionsView_ClearLogDirConfirm, Resources.OptionsView_ClearLogs,
+                                  MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+        if (result == MessageBoxResult.Yes)
+        {
+            GeneralUtilities.ClearLogFiles(0);
+            this.errorService.ShowMessageBox(Resources.OptionsView_LogsCleared, Resources.OptionsView_Notice, MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+    }
+
+    /// <summary>
+    /// Download an Update
+    /// </summary>
+    public void DownloadUpdate()
+    {
+        this.UpdateMessage = Resources.OptionsView_PreparingUpdate;
+        this.updateService.DownloadFile(this.updateInfo.DownloadFile, this.updateInfo.Signature, this.DownloadComplete, this.DownloadProgress);
+    }
+
+    /// <summary>
+    /// Check for updates
+    /// </summary>
+    public void PerformUpdateCheck()
+    {
+        this.UpdateMessage = Resources.OptionsView_CheckingForUpdates;
+        this.updateService.CheckForUpdates(this.UpdateCheckComplete);
+    }
+
+    /// <summary>
+    /// Browse - Send File To
+    /// </summary>
+    public void BrowseWhenDoneAudioFile()
+    {
+        OpenFileDialog dialog = new OpenFileDialog() {
+            Filter = "All Files|*.wav;*.mp3", FileName = this.WhenDoneAudioFileFullPath
+        };
+        bool? dialogResult = dialog.ShowDialog();
+        if (dialogResult.HasValue && dialogResult.Value)
+        {
+            this.WhenDoneAudioFile = Path.GetFileNameWithoutExtension(dialog.FileName);
+            this.WhenDoneAudioFileFullPath = dialog.FileName;
+        }
+        else
+        {
+            this.WhenDoneAudioFile = null;
+            this.WhenDoneAudioFileFullPath = null;
+        }
+    }
+
+    public void PlayWhenDoneFile()
+    {
+        if (!string.IsNullOrEmpty(this.WhenDoneAudioFileFullPath) && File.Exists(this.WhenDoneAudioFileFullPath))
+        {
+            var uri = new Uri(this.WhenDoneAudioFileFullPath, UriKind.RelativeOrAbsolute);
+            var player = new MediaPlayer();
+            player.Open(uri);
+            player.Play();
+            player.MediaFailed += (object sender, ExceptionEventArgs e) => {
+                Debug.WriteLine(e);
+            };
+        }
+        else
+        {
+            this.errorService.ShowMessageBox(
+                Resources.OptionsView_MediaFileNotSet,
+                Resources.Error,
+                MessageBoxButton.OK,
+                MessageBoxImage.Error);
+        }
+    }
+
+    #endregion
+
+    /// <summary>
+    /// Load User Settings
+    /// </summary>
+    public override void OnLoad()
+    {
+        // #############################
+        // General
+        // #############################
+        string culture = this.userSettingService.GetUserSetting<string>(UserSettingConstants.UiLanguage);
+        this.SelectedLanguage = InterfaceLanguageUtilities.FindInterfaceLanguage(culture);
+
+        this.CheckForUpdates = this.userSettingService.GetUserSetting<bool>(UserSettingConstants.UpdateStatus);
+        this.CheckForUpdatesFrequency = (UpdateCheck)this.userSettingService.GetUserSetting<int>(UserSettingConstants.DaysBetweenUpdateCheck);
+        this.ShowStatusInTitleBar = this.userSettingService.GetUserSetting<bool>(UserSettingConstants.ShowStatusInTitleBar);
+        this.ShowPreviewOnSummaryTab = this.userSettingService.GetUserSetting<bool>(UserSettingConstants.ShowPreviewOnSummaryTab);
+        this.ShowAddAllToQueue = this.userSettingService.GetUserSetting<bool>(UserSettingConstants.ShowAddAllToQueue);
+        this.ShowAddSelectionToQueue = this.userSettingService.GetUserSetting<bool>(UserSettingConstants.ShowAddSelectionToQueue);
+        this.UseDarkTheme = this.userSettingService.GetUserSetting<bool>(UserSettingConstants.UseDarkTheme);
+
+        // #############################
+        // When Done
+        // #############################
+
+        this.WhenDone = (WhenDone)this.userSettingService.GetUserSetting<int>(UserSettingConstants.WhenCompleteAction);
+        if (this.userSettingService.GetUserSetting<bool>(UserSettingConstants.ResetWhenDoneAction))
+        {
+            this.WhenDone = WhenDone.DoNothing;
+        }
+
+        this.SendFileAfterEncode = this.userSettingService.GetUserSetting<bool>(UserSettingConstants.SendFile);
+        this.SendFileTo = Path.GetFileNameWithoutExtension(this.userSettingService.GetUserSetting<string>(UserSettingConstants.SendFileTo)) ?? string.Empty;
+        this.SendFileToPath = this.userSettingService.GetUserSetting<string>(UserSettingConstants.SendFileTo) ?? string.Empty;
+        this.Arguments = this.userSettingService.GetUserSetting<string>(UserSettingConstants.SendFileToArgs) ?? string.Empty;
+        this.ResetWhenDoneAction = this.userSettingService.GetUserSetting<bool>(UserSettingConstants.ResetWhenDoneAction);
+        this.WhenDonePerformActionImmediately = this.userSettingService.GetUserSetting<bool>(UserSettingConstants.WhenDonePerformActionImmediately);
+        this.WhenDoneAudioFile = Path.GetFileNameWithoutExtension(this.userSettingService.GetUserSetting<string>(UserSettingConstants.WhenDoneAudioFile)) ?? string.Empty;
+        this.WhenDoneAudioFileFullPath = this.userSettingService.GetUserSetting<string>(UserSettingConstants.WhenDoneAudioFile);
+        this.PlaySoundWhenDone = this.userSettingService.GetUserSetting<bool>(UserSettingConstants.PlaySoundWhenDone);
+        this.PlaySoundWhenQueueDone = this.userSettingService.GetUserSetting<bool>(UserSettingConstants.PlaySoundWhenQueueDone);
+
+        // #############################
+        // Output Settings
+        // #############################
+
+        // Enable auto naming feature.)
+        this.AutomaticallyNameFiles = this.userSettingService.GetUserSetting<bool>(UserSettingConstants.AutoNaming);
+
+        // Store the auto name path
+        this.AutoNameDefaultPath = this.userSettingService.GetUserSetting<string>(UserSettingConstants.AutoNamePath) ?? string.Empty;
+        if (string.IsNullOrEmpty(this.autoNameDefaultPath))
+            this.AutoNameDefaultPath = Resources.OptionsView_SetDefaultLocationOutputFIle;
+
+        // Store auto name format
+        string anf = this.userSettingService.GetUserSetting<string>(UserSettingConstants.AutoNameFormat) ?? string.Empty;
+        this.AutonameFormat = this.IsValidAutonameFormat(anf, true) ? anf : "{source}-{title}";
+
+        // Use iPod/iTunes friendly .m4v extension for MP4 files.
+        this.SelectedMp4Extension = (Mp4Behaviour)this.userSettingService.GetUserSetting<int>(UserSettingConstants.UseM4v);
+
+        // Remove Underscores
+        this.RemoveUnderscores = this.userSettingService.GetUserSetting<bool>(UserSettingConstants.AutoNameRemoveUnderscore);
+
+        // Title case
+        this.ChangeToTitleCase = this.userSettingService.GetUserSetting<bool>(UserSettingConstants.AutoNameTitleCase);
+        this.RemovePunctuation = this.userSettingService.GetUserSetting<bool>(UserSettingConstants.RemovePunctuation);
+
+        // File Overwrite
+        this.FileOverwriteBehaviourList = new BindingList<FileOverwriteBehaviour>();
+        this.FileOverwriteBehaviourList.Add(FileOverwriteBehaviour.Ask);
+        this.FileOverwriteBehaviourList.Add(FileOverwriteBehaviour.ForceOverwrite);
+        this.SelectedOverwriteBehaviour = this.userSettingService.GetUserSetting<int>(UserSettingConstants.FileOverwriteBehaviour);
+
+        // Collision behaviour
+        this.AutonameFileCollisionBehaviours = new BindingList<AutonameFileCollisionBehaviour>() {
+            AutonameFileCollisionBehaviour.AppendNumber, AutonameFileCollisionBehaviour.Prefix, AutonameFileCollisionBehaviour.Postfix
+        };
+        this.SelectedCollisionBehaviour = this.userSettingService.GetUserSetting<int>(UserSettingConstants.AutonameFileCollisionBehaviour);
+        this.PrePostFilenameText = this.userSettingService.GetUserSetting<string>(UserSettingConstants.AutonameFilePrePostString);
+
+        // #############################
+        // Picture Tab
+        // #############################
+
+        // VLC Path
+        this.VLCPath = this.userSettingService.GetUserSetting<string>(UserSettingConstants.VLCPath) ?? string.Empty;
+
+        // #############################
+        // Video
+        // #############################
+        this.EnableQuickSyncDecoding = this.userSettingService.GetUserSetting<bool>(UserSettingConstants.EnableQuickSyncDecoding);
+        this.SelectedScalingMode = this.userSettingService.GetUserSetting<VideoScaler>(UserSettingConstants.ScalingMode);
+        this.UseQSVDecodeForNonQSVEnc = this.userSettingService.GetUserSetting<bool>(UserSettingConstants.UseQSVDecodeForNonQSVEnc);
+
+        this.EnableQuickSyncEncoding = this.userSettingService.GetUserSetting<bool>(UserSettingConstants.EnableQuickSyncEncoding);
+        this.EnableVceEncoder = this.userSettingService.GetUserSetting<bool>(UserSettingConstants.EnableVceEncoder);
+        this.EnableNvencEncoder = this.userSettingService.GetUserSetting<bool>(UserSettingConstants.EnableNvencEncoder);
+
+        // #############################
+        // CLI
+        // #############################
+        this.SelectedPriority = (ProcessPriority)userSettingService.GetUserSetting<int>(UserSettingConstants.ProcessPriorityInt);
+
+        this.PreventSleep = userSettingService.GetUserSetting<bool>(UserSettingConstants.PreventSleep);
+        this.PauseOnLowDiskspace = userSettingService.GetUserSetting<bool>(UserSettingConstants.PauseOnLowDiskspace);
+        this.PauseOnLowDiskspaceLevel = this.userSettingService.GetUserSetting<long>(UserSettingConstants.PauseQueueOnLowDiskspaceLevel);
+
+        // Log Verbosity Level
+        this.logVerbosityOptions.Clear();
+        this.logVerbosityOptions.Add(0);
+        this.logVerbosityOptions.Add(1);
+        this.logVerbosityOptions.Add(2);
+        this.SelectedVerbosity = userSettingService.GetUserSetting<int>(UserSettingConstants.Verbosity);
+
+        // Logs
+        this.CopyLogToEncodeDirectory = userSettingService.GetUserSetting<bool>(UserSettingConstants.SaveLogWithVideo);
+        this.CopyLogToSepcficedLocation = userSettingService.GetUserSetting<bool>(UserSettingConstants.SaveLogToCopyDirectory);
+
+        // The saved log path
+        this.LogDirectory = userSettingService.GetUserSetting<string>(UserSettingConstants.SaveLogCopyDirectory) ?? string.Empty;
+
+        this.ClearOldOlgs = this.userSettingService.GetUserSetting<bool>(UserSettingConstants.ClearOldLogs);
+
+        // #############################
+        // Advanced
+        // #############################
+
+        // Minimise to Tray
+        this.MinimiseToTray = this.userSettingService.GetUserSetting<bool>(UserSettingConstants.MainWindowMinimize);
+        this.ClearQueueOnEncodeCompleted = userSettingService.GetUserSetting<bool>(UserSettingConstants.ClearCompletedFromQueue);
+
+        // Set the preview count
+        this.PreviewPicturesToScan.Clear();
+        this.PreviewPicturesToScan.Add(10);
+        this.PreviewPicturesToScan.Add(15);
+        this.PreviewPicturesToScan.Add(20);
+        this.PreviewPicturesToScan.Add(25);
+        this.PreviewPicturesToScan.Add(30);
+        this.PreviewPicturesToScan.Add(35);
+        this.PreviewPicturesToScan.Add(40);
+        this.PreviewPicturesToScan.Add(45);
+        this.PreviewPicturesToScan.Add(50);
+        this.PreviewPicturesToScan.Add(55);
+        this.PreviewPicturesToScan.Add(60);
+        this.SelectedPreviewCount = this.userSettingService.GetUserSetting<int>(UserSettingConstants.PreviewScanCount);
+
+        // x264 step
+        this.ConstantQualityGranularity.Clear();
+        this.ConstantQualityGranularity.Add("1.00");
+        this.ConstantQualityGranularity.Add("0.50");
+        this.ConstantQualityGranularity.Add("0.25");
+        this.SelectedGranulairty = userSettingService.GetUserSetting<double>(UserSettingConstants.X264Step).ToString("0.00", CultureInfo.InvariantCulture);
+
+        // Min Title Length
+        this.MinLength = this.userSettingService.GetUserSetting<int>(UserSettingConstants.MinScanDuration);
+
+        // Use dvdnav
+        this.DisableLibdvdNav = userSettingService.GetUserSetting<bool>(UserSettingConstants.DisableLibDvdNav);
+    }
+
+    /// <summary>
+    /// Some settings can be changed outside of this window. This will refresh their UI controls.
+    /// </summary>
+    public void UpdateSettings()
+    {
+        this.WhenDone = (WhenDone)this.userSettingService.GetUserSetting<int>(UserSettingConstants.WhenCompleteAction);
+    }
+
+    /// <summary>
+    /// The goto tab.
+    /// </summary>
+    /// <param name="tab">
+    /// The tab.
+    /// </param>
+    public void GotoTab(OptionsTab tab)
+    {
+        this.SelectedTab = tab;
+    }
+
+    /// <summary>
+    /// Load / Update the user settings.
+    /// </summary>
+    protected override void OnActivate()
+    {
+        this.OnLoad();
+        base.OnActivate();
+    }
+
+    /// <summary>
+    /// Save the settings selected
+    /// </summary>
+    private void Save()
+    {
+        /* General */
+        this.userSettingService.SetUserSetting(UserSettingConstants.UpdateStatus, this.CheckForUpdates);
+        this.userSettingService.SetUserSetting(UserSettingConstants.DaysBetweenUpdateCheck, this.CheckForUpdatesFrequency);
+        this.userSettingService.SetUserSetting(UserSettingConstants.SendFileTo, this.SendFileToPath);
+        this.userSettingService.SetUserSetting(UserSettingConstants.SendFile, this.SendFileAfterEncode);
+        this.userSettingService.SetUserSetting(UserSettingConstants.SendFileToArgs, this.Arguments);
+        this.userSettingService.SetUserSetting(UserSettingConstants.ShowStatusInTitleBar, this.ShowStatusInTitleBar);
+        this.userSettingService.SetUserSetting(UserSettingConstants.ShowPreviewOnSummaryTab, this.ShowPreviewOnSummaryTab);
+        this.userSettingService.SetUserSetting(UserSettingConstants.UseDarkTheme, this.UseDarkTheme);
+        this.userSettingService.SetUserSetting(UserSettingConstants.UiLanguage, this.SelectedLanguage?.Culture);
+        this.userSettingService.SetUserSetting(UserSettingConstants.ShowAddAllToQueue, this.ShowAddAllToQueue);
+        this.userSettingService.SetUserSetting(UserSettingConstants.ShowAddSelectionToQueue, this.ShowAddSelectionToQueue);
+
+        /* When Done */
+        this.userSettingService.SetUserSetting(UserSettingConstants.WhenCompleteAction, (int)this.WhenDone);
+        this.userSettingService.SetUserSetting(UserSettingConstants.ResetWhenDoneAction, this.ResetWhenDoneAction);
+        this.userSettingService.SetUserSetting(UserSettingConstants.WhenDonePerformActionImmediately, this.WhenDonePerformActionImmediately);
+        this.userSettingService.SetUserSetting(UserSettingConstants.PlaySoundWhenDone, this.PlaySoundWhenDone);
+        this.userSettingService.SetUserSetting(UserSettingConstants.PlaySoundWhenQueueDone, this.PlaySoundWhenQueueDone);
+        this.userSettingService.SetUserSetting(UserSettingConstants.WhenDoneAudioFile, this.WhenDoneAudioFileFullPath);
+
+        /* Output Files */
+        this.userSettingService.SetUserSetting(UserSettingConstants.AutoNaming, this.AutomaticallyNameFiles);
+        this.userSettingService.SetUserSetting(UserSettingConstants.AutoNameFormat, this.AutonameFormat);
+        this.userSettingService.SetUserSetting(UserSettingConstants.AutoNamePath, this.AutoNameDefaultPath);
+        this.userSettingService.SetUserSetting(UserSettingConstants.UseM4v, (int)this.SelectedMp4Extension);
+        this.userSettingService.SetUserSetting(UserSettingConstants.AutoNameRemoveUnderscore, this.RemoveUnderscores);
+        this.userSettingService.SetUserSetting(UserSettingConstants.AutoNameTitleCase, this.ChangeToTitleCase);
+        this.userSettingService.SetUserSetting(UserSettingConstants.RemovePunctuation, this.RemovePunctuation);
+        this.userSettingService.SetUserSetting(UserSettingConstants.FileOverwriteBehaviour, this.SelectedOverwriteBehaviour);
+        this.userSettingService.SetUserSetting(UserSettingConstants.AutonameFileCollisionBehaviour, this.SelectedCollisionBehaviour);
+        this.userSettingService.SetUserSetting(UserSettingConstants.AutonameFilePrePostString, this.PrePostFilenameText);
+
+        /* Previews */
+        this.userSettingService.SetUserSetting(UserSettingConstants.VLCPath, this.VLCPath);
+
+        /* Video */
+        this.userSettingService.SetUserSetting(UserSettingConstants.EnableQuickSyncDecoding, this.EnableQuickSyncDecoding);
+        this.userSettingService.SetUserSetting(UserSettingConstants.ScalingMode, this.SelectedScalingMode);
+        this.userSettingService.SetUserSetting(UserSettingConstants.UseQSVDecodeForNonQSVEnc, this.UseQSVDecodeForNonQSVEnc);
+
+        this.userSettingService.SetUserSetting(UserSettingConstants.EnableQuickSyncEncoding, this.EnableQuickSyncEncoding);
+        this.userSettingService.SetUserSetting(UserSettingConstants.EnableVceEncoder, this.EnableVceEncoder);
+        this.userSettingService.SetUserSetting(UserSettingConstants.EnableNvencEncoder, this.EnableNvencEncoder);
+
+        /* System and Logging */
+        this.userSettingService.SetUserSetting(UserSettingConstants.ProcessPriorityInt, this.SelectedPriority);
+        this.userSettingService.SetUserSetting(UserSettingConstants.PreventSleep, this.PreventSleep);
+        this.userSettingService.SetUserSetting(UserSettingConstants.PauseOnLowDiskspace, this.PauseOnLowDiskspace);
+        this.userSettingService.SetUserSetting(UserSettingConstants.PauseQueueOnLowDiskspaceLevel, this.PauseOnLowDiskspaceLevel);
+        this.userSettingService.SetUserSetting(UserSettingConstants.Verbosity, this.SelectedVerbosity);
+        this.userSettingService.SetUserSetting(UserSettingConstants.SaveLogWithVideo, this.CopyLogToEncodeDirectory);
+        this.userSettingService.SetUserSetting(UserSettingConstants.SaveLogToCopyDirectory, this.CopyLogToSepcficedLocation);
+        this.userSettingService.SetUserSetting(UserSettingConstants.SaveLogCopyDirectory, this.LogDirectory);
+        this.userSettingService.SetUserSetting(UserSettingConstants.ClearOldLogs, this.ClearOldOlgs);
+
+        /* Advanced */
+        this.userSettingService.SetUserSetting(UserSettingConstants.MainWindowMinimize, this.MinimiseToTray);
+        this.userSettingService.SetUserSetting(UserSettingConstants.ClearCompletedFromQueue, this.ClearQueueOnEncodeCompleted);
+        this.userSettingService.SetUserSetting(UserSettingConstants.PreviewScanCount, this.SelectedPreviewCount);
+        this.userSettingService.SetUserSetting(UserSettingConstants.X264Step, double.Parse(this.SelectedGranulairty, CultureInfo.InvariantCulture));
+
+        int value;
+        if (int.TryParse(this.MinLength.ToString(CultureInfo.InvariantCulture), out value))
+        {
+            this.userSettingService.SetUserSetting(UserSettingConstants.MinScanDuration, value);
+        }
+
+        this.userSettingService.SetUserSetting(UserSettingConstants.DisableLibDvdNav, this.DisableLibdvdNav);
+    }
+
+    /// <summary>
+    /// Update Check Complete
+    /// </summary>
+    /// <param name="info">
+    /// The info.
+    /// </param>
+    private void UpdateCheckComplete(UpdateCheckInformation info)
+    {
+        this.updateInfo = info;
+        if (info.NewVersionAvailable)
+        {
+            this.UpdateMessage = Resources.OptionsViewModel_NewUpdate;
+            this.UpdateAvailable = true;
+        }
+        else if (Environment.Is64BitOperatingSystem && !System.Environment.Is64BitProcess)
+        {
+            this.UpdateMessage = Resources.OptionsViewModel_64bitAvailable;
+            this.UpdateAvailable = true;
+        }
+        else
+        {
+            this.UpdateMessage = Resources.OptionsViewModel_NoNewUpdates;
+            this.UpdateAvailable = false;
+        }
+    }
+
+    /// <summary>
+    /// Download Progress Action
+    /// </summary>
+    /// <param name="info">
+    /// The info.
+    /// </param>
+    private void DownloadProgress(DownloadStatus info)
+    {
+        if (info.TotalBytes == 0 || info.BytesRead == 0)
+        {
+            this.UpdateAvailable = false;
+            this.UpdateMessage = info.WasSuccessful ? Resources.OptionsViewModel_UpdateDownloaded : Resources.OptionsViewModel_UpdateServiceUnavailable;
+            return;
+        }
+
+        long p = (info.BytesRead * 100) / info.TotalBytes;
+        int progress;
+        int.TryParse(p.ToString(CultureInfo.InvariantCulture), out progress);
+        this.DownloadProgressPercentage = progress;
+        this.UpdateMessage = string.Format(
+                                 "{0} {1}% - {2}k of {3}k", Resources.OptionsView_Downloading, this.DownloadProgressPercentage, (info.BytesRead / 1024), (info.TotalBytes / 1024));
+    }
+
+    /// <summary>
+    /// Download Complete Action
+    /// </summary>
+    /// <param name="info">
+    /// The info.
+    /// </param>
+    private void DownloadComplete(DownloadStatus info)
+    {
+        this.UpdateAvailable = false;
+        this.UpdateMessage = info.WasSuccessful ? Resources.OptionsViewModel_UpdateDownloaded : info.Message;
+
+        if (info.WasSuccessful)
+        {
+            Process.Start(Path.Combine(Path.GetTempPath(), "handbrake-setup.exe"));
+            Execute.OnUIThread(() => Application.Current.Shutdown());
+        }
+    }
+
+    /// <summary>
+    /// Validate the Autoname Fileformat string
+    /// </summary>
+    /// <param name="input">The format string</param>
+    /// <param name="isSilent">Don't show an error dialog if true.</param>
+    /// <returns>True if valid</returns>
+    private bool IsValidAutonameFormat(string input, bool isSilent)
+    {
+        if (string.IsNullOrEmpty(input))
+        {
+            return true;
+        }
+
+        char[] invalidchars = Path.GetInvalidFileNameChars();
+        Array.Sort(invalidchars);
+        foreach (var characterToTest in input)
+        {
+            if (Array.BinarySearch(invalidchars, characterToTest) >= 0)
+            {
+                if (!isSilent)
+                {
+                    this.errorService.ShowMessageBox(
+                        Resources.OptionsView_InvalidFileFormatChars,
+                        Resources.Error,
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+                }
+                return false;
+            }
+        }
+
+        return true;
+    }
+}
 }
