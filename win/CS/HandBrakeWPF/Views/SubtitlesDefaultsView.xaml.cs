@@ -9,28 +9,28 @@
 
 namespace HandBrakeWPF.Views
 {
-    using System.Windows;
-    using System.Windows.Controls;
+using System.Windows;
+using System.Windows.Controls;
 
-    using HandBrakeWPF.ViewModels;
+using HandBrakeWPF.ViewModels;
 
+/// <summary>
+/// Interaction logic for SubtitlesDefaultsView.xaml
+/// </summary>
+public partial class SubtitlesDefaultsView : Window
+{
     /// <summary>
-    /// Interaction logic for SubtitlesDefaultsView.xaml
+    /// Initializes a new instance of the <see cref="SubtitlesDefaultsView"/> class.
     /// </summary>
-    public partial class SubtitlesDefaultsView : Window
+    public SubtitlesDefaultsView()
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SubtitlesDefaultsView"/> class.
-        /// </summary>
-        public SubtitlesDefaultsView()
-        {
-            this.InitializeComponent();
-        }
-
-        private void Apply_OnClick(object sender, RoutedEventArgs e)
-        {
-            ((SubtitlesDefaultsViewModel)DataContext).IsApplied = true;
-            this.Close();
-        }
+        this.InitializeComponent();
     }
+
+    private void Apply_OnClick(object sender, RoutedEventArgs e)
+    {
+        ((SubtitlesDefaultsViewModel)DataContext).IsApplied = true;
+        this.Close();
+    }
+}
 }

@@ -9,38 +9,42 @@
 
 namespace HandBrakeWPF.ViewModels.Interfaces
 {
-    using HandBrakeWPF.Model.Audio;
-    using HandBrakeWPF.Services.Encode.Model;
-    using HandBrakeWPF.Services.Presets.Model;
+using HandBrakeWPF.Model.Audio;
+using HandBrakeWPF.Services.Encode.Model;
+using HandBrakeWPF.Services.Presets.Model;
+
+/// <summary>
+/// The Audio View Model Interface
+/// </summary>
+public interface IAudioDefaultsViewModel : IViewModelBase
+{
+    /// <summary>
+    /// Gets the audio behaviours.
+    /// </summary>
+    AudioBehaviours AudioBehaviours {
+        get;
+    }
+
+    bool IsApplied {
+        get;
+    }
 
     /// <summary>
-    /// The Audio View Model Interface
+    /// The setup languages.
     /// </summary>
-    public interface IAudioDefaultsViewModel : IViewModelBase
-    {
-        /// <summary>
-        /// Gets the audio behaviours.
-        /// </summary>
-        AudioBehaviours AudioBehaviours { get; }
+    /// <param name="preset">
+    /// The preset.
+    /// </param>
+    /// <param name="task">
+    /// The task.
+    /// </param>
+    void Setup(Preset preset, EncodeTask task);
 
-        bool IsApplied { get; }
+    /// <summary>
+    /// The refresh task.
+    /// </summary>
+    void RefreshTask();
 
-        /// <summary>
-        /// The setup languages.
-        /// </summary>
-        /// <param name="preset">
-        /// The preset.
-        /// </param>
-        /// <param name="task">
-        /// The task.
-        /// </param>
-        void Setup(Preset preset, EncodeTask task);
-
-        /// <summary>
-        /// The refresh task.
-        /// </summary>
-        void RefreshTask();
-
-        void ResetApplied();
-    }
+    void ResetApplied();
+}
 }
