@@ -102,15 +102,15 @@ class Configure(object):
         self.src_final = self._final_dir(self.build_dir, self.src_dir)
         self.prefix_final = self._final_dir(self.build_dir, self.prefix_dir)
         if build_tuple.match("*-*-darwin*"):
-            self.xcode_prefix_final = self._final_dir(
-                self.build_dir, self.xcode_prefix_dir
-            )
+            self.xcode_prefix_final = self._final_dir(self.build_dir,
+                                                      self.xcode_prefix_dir)
 
         self.infof("compute: makevar SRC/    = %s\n", self.src_final)
         self.infof("compute: makevar BUILD/  = %s\n", self.build_final)
         self.infof("compute: makevar PREFIX/ = %s\n", self.prefix_final)
         if build_tuple.match("*-*-darwin*"):
-            self.infof("compute: makevar XCODE.prefix/ = %s\n", self.xcode_prefix_final)
+            self.infof("compute: makevar XCODE.prefix/ = %s\n",
+                       self.xcode_prefix_final)
 
     # perform chdir and enable log recording
     def chdir(self):
@@ -225,13 +225,9 @@ class Configure(object):
 
     # generate a temporary filename - not worried about race conditions
     def mktmpname(self, filename):
-        return (
-            filename
-            + ".tmp."
-            + "".join(
-                random.choice(string.ascii_lowercase + string.digits) for _ in range(8)
-            )
-        )
+        return (filename + ".tmp." + "".join(
+            random.choice(string.ascii_lowercase + string.digits)
+            for _ in range(8)))
 
 
 ###############################################################################
@@ -324,9 +320,10 @@ class ShellProbe(Action):
 
     def _action(self):
         # pipe and redirect stderr to stdout; effects communicate result
-        pipe = subprocess.Popen(
-            self.command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
-        )
+        pipe = subprocess.Popen(self.command,
+                                shell=True,
+                                stdout=subprocess.PIPE,
+                                stderr=subprocess.STDOUT)
 
         # read data into memory buffers, only first element (stdout) data is used
         data = pipe.communicate()
@@ -438,7 +435,8 @@ class PkgConfigProbe(Action):
         self.lib = lib
 
     def _action(self):
-        self.fail, self.msg_end, self.session = PkgConfigTest(self.args, self.lib)
+        self.fail, self.msg_end, self.session = PkgConfigTest(
+            self.args, self.lib)
 
     def _dumpSession(self, printf):
         printf("  + %s %s\n", Tools.pkgconfig.pathname, self.args)
@@ -498,9 +496,8 @@ class LDProbe(Action):
         self.lib = lib
 
     def _action(self):
-        self.fail, self.msg_end, self.session = LDTest(
-            self.command, self.lib, self.test_file
-        )
+        self.fail, self.msg_end, self.session = LDTest(self.command, self.lib,
+                                                       self.test_file)
 
     def _dumpSession(self, printf):
         printf("  + %s\n", self.command)
@@ -524,14 +521,15 @@ class ChkLib(Action):
     def _action(self):
         # First try pkg-config
         if not Tools.pkgconfig.fail:
-            self.fail, self.msg_end, self.session = PkgConfigTest("--libs", self.lib)
+            self.fail, self.msg_end, self.session = PkgConfigTest(
+                "--libs", self.lib)
             if not self.fail:
                 return
 
         # If pkg-config fails, try compiling and linking test file
-        self.fail, self.msg_end, session = LDTest(
-            self.command, "-l%s" % self.lib, self.test_file
-        )
+        self.fail, self.msg_end, session = LDTest(self.command,
+                                                  "-l%s" % self.lib,
+                                                  self.test_file)
         self.session.append(session)
 
 
@@ -552,9 +550,10 @@ class BuildTupleProbe(ShellProbe, list):
     GNU_TUPLE_RE = "([^-]+)-?([^-]*)-([^0-9-]+)([^-]*)-?([^-]*)"
 
     def __init__(self):
-        super(BuildTupleProbe, self).__init__(
-            "build tuple", "%s/config.guess" % (cfg.dir), abort=True, head=True
-        )
+        super(BuildTupleProbe, self).__init__("build tuple",
+                                              "%s/config.guess" % (cfg.dir),
+                                              abort=True,
+                                              head=True)
 
     def _parseSession(self):
         self.spec = self.session[0].decode("utf-8") if self.session else ""
@@ -597,7 +596,9 @@ class BuildTupleProbe(ShellProbe, list):
 
 class HostTupleAction(Action, list):
     def __init__(self, cross=None):
-        super(HostTupleAction, self).__init__("compute", "host tuple", abort=True)
+        super(HostTupleAction, self).__init__("compute",
+                                              "host tuple",
+                                              abort=True)
         # Initialize, but allow to be reset by options
         self.setHost(cross)
 
@@ -642,10 +643,8 @@ class HostTupleAction(Action, list):
         self.title = "%s %s" % (self.systemf, self.machine)
         self.fail = False
 
-        self.spec = (
-            "%s-%s-%s%s-%s"
-            % (self.machine, self.vendor, self.system, self.release, self.extra)
-        ).rstrip("-")
+        self.spec = ("%s-%s-%s%s-%s" % (self.machine, self.vendor, self.system,
+                                        self.release, self.extra)).rstrip("-")
 
     def _action(self):
         try:
@@ -725,10 +724,11 @@ class ForHost(object):
 
 class ArchAction(Action):
     def __init__(self):
-        super(ArchAction, self).__init__(
-            "compute", "available architectures", abort=True
-        )
-        self.mode = SelectMode("architecture", (host_tuple.machine, host_tuple.spec))
+        super(ArchAction, self).__init__("compute",
+                                         "available architectures",
+                                         abort=True)
+        self.mode = SelectMode("architecture",
+                               (host_tuple.machine, host_tuple.spec))
 
     def _action(self):
         self.fail = False
@@ -739,14 +739,17 @@ class ArchAction(Action):
         elif host_tuple.match("*-*-mingw*"):
             pass
         elif host_tuple.match("*-*-darwin*"):
-            self.mode["x86_64"] = "x86_64-apple-darwin%s" % (host_tuple.release)
+            self.mode["x86_64"] = "x86_64-apple-darwin%s" % (
+                host_tuple.release)
         elif host_tuple.match("*-*-linux*"):
             pass
         elif host_tuple.match("*-*-solaris*"):
             pass
         elif host_tuple.match("*-*-freebsd*"):
-            self.mode["i386"] = "i386-portsbuild-freebsd%s" % (host_tuple.release)
-            self.mode["amd64"] = "amd64-portsbuild-freebsd%s" % (host_tuple.release)
+            self.mode["i386"] = "i386-portsbuild-freebsd%s" % (
+                host_tuple.release)
+            self.mode["amd64"] = "amd64-portsbuild-freebsd%s" % (
+                host_tuple.release)
         else:
             self.msg_pass = "WARNING"
 
@@ -810,7 +813,8 @@ class StoreCallbackAction(argparse.Action):
     def __init__(self, option_strings, dest, nargs=None, **kwargs):
         self.callback = kwargs.pop("callback", None)
 
-        super(StoreCallbackAction, self).__init__(option_strings, dest, nargs, **kwargs)
+        super(StoreCallbackAction, self).__init__(option_strings, dest, nargs,
+                                                  **kwargs)
 
     def __call__(self, parser, namespace, values, option_string=None):
         setattr(namespace, self.dest, values)
@@ -846,8 +850,8 @@ class SelectMode(dict):
         if value not in self:
             raise argparse.ArgumentError(
                 action,
-                "invalid %s%s: %s (choose from: %s)"
-                % (self.descr, self.what, value, self.toString(True)),
+                "invalid %s%s: %s (choose from: %s)" %
+                (self.descr, self.what, value, self.toString(True)),
             )
         self.mode = value
 
@@ -888,7 +892,8 @@ class RepoProbe(ShellProbe):
         except:
             sys.exit(1)
 
-        super(RepoProbe, self).__init__("repo info", "%s %s" % (repo_info, cfg.src_dir))
+        super(RepoProbe, self).__init__("repo info",
+                                        "%s %s" % (repo_info, cfg.src_dir))
 
         self.url = "git://nowhere.com/project/unknown"
         self.tag = ""
@@ -1060,8 +1065,10 @@ class Project(Action):
             m = re.match("^([a-zA-Z]+)\.([0-9]+)$", self.suffix)
             if not m:
                 # Regular release
-                self.version = "%d.%d.%d" % (self.vmajor, self.vminor, self.vpoint)
-                self.debversion = "%d.%d.%d" % (self.vmajor, self.vminor, self.vpoint)
+                self.version = "%d.%d.%d" % (self.vmajor, self.vminor,
+                                             self.vpoint)
+                self.debversion = "%d.%d.%d" % (self.vmajor, self.vminor,
+                                                self.vpoint)
                 url_ctype = ""
                 url_ntype = "stable"
             else:
@@ -1105,7 +1112,8 @@ class ToolProbe(Action):
     tools = []
 
     def __init__(self, var, option, *names, **kwargs):
-        super(ToolProbe, self).__init__("find", abort=kwargs.get("abort", True))
+        super(ToolProbe, self).__init__("find",
+                                        abort=kwargs.get("abort", True))
         if not self in ToolProbe.tools:
             ToolProbe.tools.append(self)
         self.var = var
@@ -1194,11 +1202,12 @@ class ToolProbe(Action):
 
 
 class VersionProbe(Action):
-    def __init__(self, name, command, minversion=None, rexpr=None, abort=False):
+    def __init__(self, name, command, minversion=None, rexpr=None,
+                 abort=False):
         super(VersionProbe, self).__init__(
             "version probe",
-            "%s %s"
-            % (os.path.basename(command[0]), ".".join([str(i) for i in minversion])),
+            "%s %s" % (os.path.basename(command[0]), ".".join(
+                [str(i) for i in minversion])),
             abort,
         )
         self.name = name
@@ -1214,9 +1223,9 @@ class VersionProbe(Action):
 
     def _action(self):
         # pipe and redirect stderr to stdout; effects communicate result
-        pipe = subprocess.Popen(
-            self.command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
-        )
+        pipe = subprocess.Popen(self.command,
+                                stdout=subprocess.PIPE,
+                                stderr=subprocess.STDOUT)
 
         # read data into memory buffers
         data = pipe.communicate()
@@ -1241,14 +1250,12 @@ class VersionProbe(Action):
             if self.abort is True:
                 stdout.write("(%s) %s\n" % (self.msg_fail, self.svers))
                 raise AbortError(
-                    "minimum required %s version is %s and %s is %s\n"
-                    % (
+                    "minimum required %s version is %s and %s is %s\n" % (
                         self.name,
                         ".".join([str(i) for i in self.minversion]),
                         self.command[0],
                         self.svers,
-                    )
-                )
+                    ))
 
     def _dumpSession(self, printf):
         printf("  + %s\n", " ".join(self.command))
@@ -1256,7 +1263,8 @@ class VersionProbe(Action):
 
     def _parse(self):
         for expression in self.rexprs:
-            mo = re.match(expression, self.session[0].decode("utf-8"), re.IGNORECASE)
+            mo = re.match(expression, self.session[0].decode("utf-8"),
+                          re.IGNORECASE)
             if mo is None:
                 continue
             md = mo.groupdict()
@@ -1445,9 +1453,10 @@ def createCLI(cross=None):
     )
 
     # add hidden options
-    cli.add_argument(
-        "--xcode-driver", default="bootstrap", action="store", help=argparse.SUPPRESS
-    )
+    cli.add_argument("--xcode-driver",
+                     default="bootstrap",
+                     action="store",
+                     help=argparse.SUPPRESS)
 
     # add general options
     grp = cli.add_argument_group("General Options")
@@ -1457,9 +1466,10 @@ def createCLI(cross=None):
         action="store_true",
         help="overwrite existing build config",
     )
-    grp.add_argument(
-        "--verbose", default=False, action="store_true", help="increase verbosity"
-    )
+    grp.add_argument("--verbose",
+                     default=False,
+                     action="store_true",
+                     help="increase verbosity")
 
     # add distfile options
     grp = cli.add_argument_group("Distfile Options")
@@ -1512,12 +1522,14 @@ def createCLI(cross=None):
 
     # add directory options
     grp = cli.add_argument_group("Directory Locations")
-    h = (
-        "specify Xcode SDK sysroot (macOS only)"
-        if (build_tuple.match("*-*-darwin*") and cross is None)
-        else argparse.SUPPRESS
-    )
-    grp.add_argument("--sysroot", default=None, action="store", metavar="DIR", help=h)
+    h = ("specify Xcode SDK sysroot (macOS only)" if
+         (build_tuple.match("*-*-darwin*")
+          and cross is None) else argparse.SUPPRESS)
+    grp.add_argument("--sysroot",
+                     default=None,
+                     action="store",
+                     metavar="DIR",
+                     help=h)
     grp.add_argument(
         "--src",
         default=cfg.src_dir,
@@ -1543,9 +1555,10 @@ def createCLI(cross=None):
 
     # add build options
     grp = cli.add_argument_group("Build Options")
-    grp.add_argument(
-        "--snapshot", default=False, action="store_true", help="Force a snapshot build"
-    )
+    grp.add_argument("--snapshot",
+                     default=False,
+                     action="store_true",
+                     help="Force a snapshot build")
     h = IfHost(
         "Build extra contribs for flatpak packaging",
         "*-*-linux*",
@@ -1595,22 +1608,25 @@ def createCLI(cross=None):
     # add Xcode options
     if build_tuple.match("*-*-darwin*") and cross is None:
         grp = cli.add_argument_group("Xcode Options (macOS only)")
-        grp.add_argument(
-            "--disable-xcode", default=False, action="store_true", help="disable Xcode"
-        )
+        grp.add_argument("--disable-xcode",
+                         default=False,
+                         action="store_true",
+                         help="disable Xcode")
         grp.add_argument(
             "--xcode-prefix",
             default=cfg.xcode_prefix_dir,
             action="store",
             metavar="DIR",
-            help="specify install dir for Xcode products [%s]" % (cfg.xcode_prefix_dir),
+            help="specify install dir for Xcode products [%s]" %
+            (cfg.xcode_prefix_dir),
         )
         grp.add_argument(
             "--xcode-symroot",
             default="xroot",
             action="store",
             metavar="DIR",
-            help="specify root of the directory hierarchy that contains product files and intermediate build files",
+            help=
+            "specify root of the directory hierarchy that contains product files and intermediate build files",
         )
         xcconfigMode.cli_add_argument(grp, "--xcode-config")
         grp.add_argument(
@@ -1631,12 +1647,19 @@ def createCLI(cross=None):
         "NOMATCH*-*-linux*",
         none=argparse.SUPPRESS,
     ).value
-    grp.add_argument("--enable-asm", default=False, action="store_true", help=h)
+    grp.add_argument("--enable-asm",
+                     default=False,
+                     action="store_true",
+                     help=h)
 
-    h = IfHost(
-        "disable GTK GUI", "*-*-linux*", "*-*-freebsd*", none=argparse.SUPPRESS
-    ).value
-    grp.add_argument("--disable-gtk", default=False, action="store_true", help=h)
+    h = IfHost("disable GTK GUI",
+               "*-*-linux*",
+               "*-*-freebsd*",
+               none=argparse.SUPPRESS).value
+    grp.add_argument("--disable-gtk",
+                     default=False,
+                     action="store_true",
+                     help=h)
 
     h = IfHost(
         "disable GTK GUI update checks",
@@ -1644,21 +1667,26 @@ def createCLI(cross=None):
         "*-*-freebsd*",
         none=argparse.SUPPRESS,
     ).value
-    grp.add_argument(
-        "--disable-gtk-update-checks", default=False, action="store_true", help=h
-    )
+    grp.add_argument("--disable-gtk-update-checks",
+                     default=False,
+                     action="store_true",
+                     help=h)
 
-    h = (
-        "enable GTK GUI for Windows"
-        if (cross is not None and "mingw" in cross)
-        else argparse.SUPPRESS
-    )
-    grp.add_argument("--enable-gtk-mingw", default=False, action="store_true", help=h)
+    h = ("enable GTK GUI for Windows" if
+         (cross is not None and "mingw" in cross) else argparse.SUPPRESS)
+    grp.add_argument("--enable-gtk-mingw",
+                     default=False,
+                     action="store_true",
+                     help=h)
 
-    h = IfHost(
-        "Build GUI with GTK4", "*-*-linux*", "*-*-freebsd*", none=argparse.SUPPRESS
-    ).value
-    grp.add_argument("--enable-gtk4", default=False, action="store_true", help=h)
+    h = IfHost("Build GUI with GTK4",
+               "*-*-linux*",
+               "*-*-freebsd*",
+               none=argparse.SUPPRESS).value
+    grp.add_argument("--enable-gtk4",
+                     default=False,
+                     action="store_true",
+                     help=h)
 
     h = IfHost(
         "disable GStreamer (live preview)",
@@ -1666,7 +1694,10 @@ def createCLI(cross=None):
         "*-*-freebsd*",
         none=argparse.SUPPRESS,
     ).value
-    grp.add_argument("--disable-gst", default=False, action="store_true", help=h)
+    grp.add_argument("--disable-gst",
+                     default=False,
+                     action="store_true",
+                     help=h)
 
     h = IfHost("x265 video encoder", "*-*-*", none=argparse.SUPPRESS).value
     grp.add_argument(
@@ -1713,11 +1744,8 @@ def createCLI(cross=None):
         help=(("disable %s" % h) if h != argparse.SUPPRESS else h),
     )
 
-    h = (
-        "FFmpeg AAC audio encoder"
-        if (host_tuple.match("*-*-darwin*"))
-        else argparse.SUPPRESS
-    )
+    h = ("FFmpeg AAC audio encoder" if
+         (host_tuple.match("*-*-darwin*")) else argparse.SUPPRESS)
     grp.add_argument(
         "--enable-ffmpeg-aac",
         dest="enable_ffmpeg_aac",
@@ -1732,9 +1760,10 @@ def createCLI(cross=None):
         help=(("disable %s" % h) if h != argparse.SUPPRESS else h),
     )
 
-    h = IfHost(
-        "Nvidia NVENC video encoder", "*-*-linux*", "*-*-mingw*", none=argparse.SUPPRESS
-    ).value
+    h = IfHost("Nvidia NVENC video encoder",
+               "*-*-linux*",
+               "*-*-mingw*",
+               none=argparse.SUPPRESS).value
     grp.add_argument(
         "--enable-nvenc",
         dest="enable_nvenc",
@@ -1769,9 +1798,10 @@ def createCLI(cross=None):
         help=(("disable %s" % h) if h != argparse.SUPPRESS else h),
     )
 
-    h = IfHost(
-        "AMD VCE video encoder", "*-*-linux*", "*-*-mingw*", none=argparse.SUPPRESS
-    ).value
+    h = IfHost("AMD VCE video encoder",
+               "*-*-linux*",
+               "*-*-mingw*",
+               none=argparse.SUPPRESS).value
     grp.add_argument(
         "--enable-vce",
         dest="enable_vce",
@@ -1844,7 +1874,8 @@ class Launcher:
         self.infof("time begin: %s\n", time.asctime())
         self.infof("launch: %s\n", cmd)
         if options.launch_quiet:
-            stdout.write("building to %s ...\n" % (os.path.abspath(cfg.build_final)))
+            stdout.write("building to %s ...\n" %
+                         (os.path.abspath(cfg.build_final)))
         else:
             stdout.write("%s\n" % ("-" * 79))
 
@@ -1983,9 +2014,10 @@ try:
         ranlib = ToolProbe("RANLIB.exe", "ranlib", "ranlib", abort=True)
         strip = ToolProbe("STRIP.exe", "strip", "strip", abort=True)
         tar = ToolProbe("TAR.exe", "tar", "gtar", "tar", abort=True)
-        python = ToolProbe(
-            "PYTHON.exe", "python", os.path.basename(sys.executable), abort=True
-        )
+        python = ToolProbe("PYTHON.exe",
+                           "python",
+                           os.path.basename(sys.executable),
+                           abort=True)
 
         gcc_tools = [
             "GCC.gcc",
@@ -2001,12 +2033,16 @@ try:
         else:
             gmake = ToolProbe("GMAKE.exe", "make", "gmake", "make", abort=True)
 
-        autoconf = ToolProbe(
-            "AUTOCONF.exe", "autoconf", "autoconf", abort=True, minversion=[2, 69, 0]
-        )
-        automake = ToolProbe(
-            "AUTOMAKE.exe", "automake", "automake", abort=True, minversion=[1, 15, 0]
-        )
+        autoconf = ToolProbe("AUTOCONF.exe",
+                             "autoconf",
+                             "autoconf",
+                             abort=True,
+                             minversion=[2, 69, 0])
+        automake = ToolProbe("AUTOMAKE.exe",
+                             "automake",
+                             "automake",
+                             abort=True,
+                             minversion=[1, 15, 0])
         libtool = ToolProbe("LIBTOOL.exe", "libtool", "libtool", abort=True)
         lipo = ToolProbe("LIPO.exe", "lipo", "lipo", abort=False)
         pkgconfig = ToolProbe(
@@ -2016,19 +2052,28 @@ try:
             abort=True,
             minversion=[0, 29, 0],
         )
-        meson = ToolProbe(
-            "MESON.exe", "meson", "meson", abort=True, minversion=[0, 47, 0]
-        )
-        nasm = ToolProbe("NASM.exe", "asm", "nasm", abort=True, minversion=[2, 13, 0])
-        ninja = ToolProbe("NINJA.exe", "ninja", "ninja-build", "ninja", abort=True)
+        meson = ToolProbe("MESON.exe",
+                          "meson",
+                          "meson",
+                          abort=True,
+                          minversion=[0, 47, 0])
+        nasm = ToolProbe("NASM.exe",
+                         "asm",
+                         "nasm",
+                         abort=True,
+                         minversion=[2, 13, 0])
+        ninja = ToolProbe("NINJA.exe",
+                          "ninja",
+                          "ninja-build",
+                          "ninja",
+                          abort=True)
 
         xcodebuild = ToolProbe(
             "XCODEBUILD.exe",
             "xcodebuild",
             "xcodebuild",
-            abort=(
-                True if (build_tuple.match("*-*-darwin*") and cross is None) else False
-            ),
+            abort=(True if (build_tuple.match("*-*-darwin*") and cross is None)
+                   else False),
             versionopt="-version",
             minversion=[10, 3, 0],
         )
@@ -2037,9 +2082,8 @@ try:
     for tool in ToolProbe.tools:
         tool.run()
 
-    debugMode = SelectMode(
-        "debug", ("none", "none"), ("min", "min"), ("std", "std"), ("max", "max")
-    )
+    debugMode = SelectMode("debug", ("none", "none"), ("min", "min"),
+                           ("std", "std"), ("max", "max"))
     optimizeMode = SelectMode(
         "optimize",
         ("none", "none"),
@@ -2051,7 +2095,8 @@ try:
     # find xcconfig values
     xcconfigMode = SelectMode("xcconfig", ("none", None), what="")
     if build_tuple.match("*-*-darwin*"):
-        for xc in glob.glob(os.path.join(cfg.dir, "../macosx/xcconfig/*.xcconfig")):
+        for xc in glob.glob(
+                os.path.join(cfg.dir, "../macosx/xcconfig/*.xcconfig")):
             bname = os.path.basename(xc)
             xname = os.path.splitext(bname)
             if xname and xname[0]:
@@ -2064,9 +2109,8 @@ try:
     # re-run tools with cross-compilation needs
     if cross:
         for tool in (Tools.ar, Tools.gcc, Tools.ranlib, Tools.strip):
-            tool.__init__(
-                tool.var, tool.option, "%s-%s" % (cross, tool.name), **tool.kwargs
-            )
+            tool.__init__(tool.var, tool.option, "%s-%s" % (cross, tool.name),
+                          **tool.kwargs)
             tool.run()
 
     # run host tuple and arch actions
@@ -2098,50 +2142,55 @@ try:
 
     # Sanitize options
     # Sandboxing is currently only implemented on macOS
-    options.enable_sandbox = IfHost(
-        options.enable_sandbox, "*-*-darwin*", none=False
-    ).value
+    options.enable_sandbox = IfHost(options.enable_sandbox,
+                                    "*-*-darwin*",
+                                    none=False).value
     # Require FFmpeg AAC on Linux and Windows
-    options.enable_ffmpeg_aac = IfHost(
-        options.enable_ffmpeg_aac, "*-*-darwin*", none=True
-    ).value
+    options.enable_ffmpeg_aac = IfHost(options.enable_ffmpeg_aac,
+                                       "*-*-darwin*",
+                                       none=True).value
     # Allow GTK mingw only on mingw
-    options.enable_gtk_mingw = IfHost(
-        options.enable_gtk_mingw, "*-*-mingw*", none=False
-    ).value
+    options.enable_gtk_mingw = IfHost(options.enable_gtk_mingw,
+                                      "*-*-mingw*",
+                                      none=False).value
     # Disable NVENC on unsupported platforms
-    options.enable_nvenc = IfHost(
-        options.enable_nvenc, "*-*-linux*", "*-*-mingw*", none=False
-    ).value
+    options.enable_nvenc = IfHost(options.enable_nvenc,
+                                  "*-*-linux*",
+                                  "*-*-mingw*",
+                                  none=False).value
     # NUMA is linux only and only needed with x265
-    options.enable_numa = (
-        IfHost(options.enable_numa, "*-*-linux*", none=False).value
-        and options.enable_x265
-    )
+    options.enable_numa = (IfHost(
+        options.enable_numa, "*-*-linux*", none=False).value
+                           and options.enable_x265)
     # Disable QSV on unsupported platforms
-    options.enable_qsv = IfHost(
-        options.enable_qsv, "*-*-linux*", "*-*-mingw*", none=False
-    ).value
+    options.enable_qsv = IfHost(options.enable_qsv,
+                                "*-*-linux*",
+                                "*-*-mingw*",
+                                none=False).value
     # Disable VCE on unsupported platforms
-    options.enable_vce = IfHost(
-        options.enable_vce, "*-*-linux*", "*-*-mingw*", none=False
-    ).value
+    options.enable_vce = IfHost(options.enable_vce,
+                                "*-*-linux*",
+                                "*-*-mingw*",
+                                none=False).value
 
     #####################################
     # Additional library and tool checks
     #####################################
     if options.flatpak or host_tuple.match("*-*-darwin*", "*-*-mingw"):
         # Requires Jansson which requires CMake 3.1.0 or later
-        Tools.cmake = ToolProbe(
-            "CMAKE.exe", "cmake", "cmake", abort=True, minversion=[3, 1, 0]
-        )
+        Tools.cmake = ToolProbe("CMAKE.exe",
+                                "cmake",
+                                "cmake",
+                                abort=True,
+                                minversion=[3, 1, 0])
     else:
-        Tools.cmake = ToolProbe(
-            "CMAKE.exe", "cmake", "cmake", abort=True, minversion=[2, 8, 12]
-        )
-    Tools.cmake.__init__(
-        Tools.cmake.var, Tools.cmake.option, Tools.cmake.name, **Tools.cmake.kwargs
-    )
+        Tools.cmake = ToolProbe("CMAKE.exe",
+                                "cmake",
+                                "cmake",
+                                abort=True,
+                                minversion=[2, 8, 12])
+    Tools.cmake.__init__(Tools.cmake.var, Tools.cmake.option, Tools.cmake.name,
+                         **Tools.cmake.kwargs)
     Tools.cmake.run()
     for action in Action.actions:
         action.run()
@@ -2172,9 +2221,8 @@ int main ()
   return status;
 }
 """
-        dlfcn = LDProbe(
-            "static dlfcn", "%s -static" % Tools.gcc.pathname, "-ldl", dlfcn_test
-        )
+        dlfcn = LDProbe("static dlfcn", "%s -static" % Tools.gcc.pathname,
+                        "-ldl", dlfcn_test)
         dlfcn.run()
 
         pthread_test = """
@@ -2204,9 +2252,8 @@ int main ()
   return 0;
 }
 """
-        bz2 = LDProbe(
-            "static bz2", "%s -static" % Tools.gcc.pathname, "-lbz2", bz2_test
-        )
+        bz2 = LDProbe("static bz2", "%s -static" % Tools.gcc.pathname, "-lbz2",
+                      bz2_test)
         bz2.run()
 
         libz_test = """
@@ -2218,9 +2265,8 @@ int main ()
   return 0;
 }
 """
-        libz = LDProbe(
-            "static zlib", "%s -static" % Tools.gcc.pathname, "-lz", libz_test
-        )
+        libz = LDProbe("static zlib", "%s -static" % Tools.gcc.pathname, "-lz",
+                       libz_test)
         libz.run()
 
         xz_test = """
@@ -2232,7 +2278,8 @@ int main ()
   return 0;
 }
 """
-        xz = LDProbe("static xz", "%s -static" % Tools.gcc.pathname, "-llzma", xz_test)
+        xz = LDProbe("static xz", "%s -static" % Tools.gcc.pathname, "-llzma",
+                     xz_test)
         xz.run()
 
         iconv_test = """
@@ -2244,9 +2291,8 @@ int main ()
   return 0;
 }
 """
-        iconv = LDProbe(
-            "static iconv", "%s -static" % Tools.gcc.pathname, "-liconv", iconv_test
-        )
+        iconv = LDProbe("static iconv", "%s -static" % Tools.gcc.pathname,
+                        "-liconv", iconv_test)
         iconv.run()
 
         regex_test = """
@@ -2282,9 +2328,8 @@ int main()
     return 0;
 }
 """
-        regex = LDProbe(
-            "static regex", "%s -static" % Tools.gcc.pathname, "-lregex", regex_test
-        )
+        regex = LDProbe("static regex", "%s -static" % Tools.gcc.pathname,
+                        "-lregex", regex_test)
         regex.run()
 
         strtok_r_test = """
@@ -2297,9 +2342,9 @@ int main ()
   return 0;
 }
 """
-        strtok_r = LDProbe(
-            "static strtok_r", "%s -static" % Tools.gcc.pathname, "", strtok_r_test
-        )
+        strtok_r = LDProbe("static strtok_r",
+                           "%s -static" % Tools.gcc.pathname, "",
+                           strtok_r_test)
         strtok_r.run()
 
     #########################################
@@ -2317,9 +2362,11 @@ return 0;
 }
 """
 
-            numa = ChkLib(
-                "numa", "%s" % Tools.gcc.pathname, "numa", numa_test, abort=True
-            )
+            numa = ChkLib("numa",
+                          "%s" % Tools.gcc.pathname,
+                          "numa",
+                          numa_test,
+                          abort=True)
             numa.run()
 
     #########################################
@@ -2339,7 +2386,8 @@ int main()
 }
 """
 
-    strerror_r = LDProbe("strerror_r", "%s" % Tools.gcc.pathname, "", strerror_r_test)
+    strerror_r = LDProbe("strerror_r", "%s" % Tools.gcc.pathname, "",
+                         strerror_r_test)
     strerror_r.run()
 
     #########################################
@@ -2349,11 +2397,9 @@ int main()
 
     Wno_format_truncation_command = (
         "%s -O2 -Werror -Wno-format-truncation -S -o /dev/null -xc /dev/null > /dev/null 2>&1"
-        % Tools.gcc.pathname
-    )
-    Wno_format_truncation = ShellProbe(
-        "checking for -Wno-format-truncation", "%s" % Wno_format_truncation_command
-    )
+        % Tools.gcc.pathname)
+    Wno_format_truncation = ShellProbe("checking for -Wno-format-truncation",
+                                       "%s" % Wno_format_truncation_command)
     Wno_format_truncation.run()
     if Wno_format_truncation.fail is False:
         gcc_w_extra.append("no-format-truncation")
@@ -2396,7 +2442,8 @@ int main()
     doc.add("HB.debversion", project.debversion)
     doc.add(
         "HB.version.hex",
-        "%04x%02x%02x%08x" % (project.vmajor, project.vminor, project.vpoint, repo.rev),
+        "%04x%02x%02x%08x" %
+        (project.vmajor, project.vminor, project.vpoint, repo.rev),
     )
 
     doc.add("HB.build", project.build)
@@ -2435,9 +2482,8 @@ int main()
     doc.add("HOST.extra", host_tuple.extra)
     doc.add("HOST.title", host_tuple.title)
 
-    doc.add(
-        "HOST.cross", int(options.cross != None or arch.mode.mode != arch.mode.default)
-    )
+    doc.add("HOST.cross",
+            int(options.cross != None or arch.mode.mode != arch.mode.default))
     if options.cross:
         doc.add("HOST.cross.prefix", "%s-" % (options.cross))
     else:
@@ -2465,7 +2511,8 @@ int main()
     doc.add("FEATURE.gtk4", int(options.enable_gtk4))
     doc.add("FEATURE.gtk", int(not options.disable_gtk))
     doc.add("FEATURE.gtk.mingw", int(options.enable_gtk_mingw))
-    doc.add("FEATURE.gtk.update.checks", int(not options.disable_gtk_update_checks))
+    doc.add("FEATURE.gtk.update.checks",
+            int(not options.disable_gtk_update_checks))
     doc.add("FEATURE.gst", int(not options.disable_gst))
     doc.add("FEATURE.nvenc", int(options.enable_nvenc))
     doc.add("FEATURE.qsv", int(options.enable_qsv))
@@ -2474,9 +2521,8 @@ int main()
     doc.add("FEATURE.numa", int(options.enable_numa))
 
     if build_tuple.match("*-*-darwin*") and options.cross is None:
-        doc.add(
-            "FEATURE.xcode", int(not (Tools.xcodebuild.fail or options.disable_xcode))
-        )
+        doc.add("FEATURE.xcode",
+                int(not (Tools.xcodebuild.fail or options.disable_xcode)))
         if not Tools.xcodebuild.fail and not options.disable_xcode:
             doc.addBlank()
             doc.add("XCODE.prefix", cfg.xcode_prefix_final)
@@ -2487,7 +2533,8 @@ int main()
             else:
                 doc.add(
                     "XCODE.symroot",
-                    os.path.abspath(os.path.join(cfg.build_dir, options.xcode_symroot)),
+                    os.path.abspath(
+                        os.path.join(cfg.build_dir, options.xcode_symroot)),
                 )
             doc.add("XCODE.xcconfig", xcconfigMode[xcconfigMode.mode])
 
@@ -2593,26 +2640,25 @@ int main()
     stdout.write(" (cross-compile)\n") if options.cross else stdout.write("\n")
     stdout.write("Harden:             %s\n" % options.enable_harden)
     stdout.write("Sandbox:            %s" % options.enable_sandbox)
-    stdout.write(
-        " (%s)\n" % note_unsupported
-    ) if not host_tuple.system == "darwin" else stdout.write("\n")
+    stdout.write(" (%s)\n" % note_unsupported
+                 ) if not host_tuple.system == "darwin" else stdout.write("\n")
     stdout.write("Enable FDK-AAC:     %s\n" % options.enable_fdk_aac)
     stdout.write("Enable FFmpeg AAC:  %s" % options.enable_ffmpeg_aac)
     stdout.write(
-        "  (%s)\n" % note_required
-    ) if host_tuple.system != "darwin" else stdout.write("\n")
+        "  (%s)\n" %
+        note_required) if host_tuple.system != "darwin" else stdout.write("\n")
     stdout.write("Enable NVENC:       %s" % options.enable_nvenc)
     stdout.write(" (%s)\n" % note_unsupported) if not (
-        host_tuple.system == "linux" or host_tuple.system == "mingw"
-    ) else stdout.write("\n")
+        host_tuple.system == "linux"
+        or host_tuple.system == "mingw") else stdout.write("\n")
     stdout.write("Enable QSV:         %s" % options.enable_qsv)
     stdout.write(" (%s)\n" % note_unsupported) if not (
-        host_tuple.system == "linux" or host_tuple.system == "mingw"
-    ) else stdout.write("\n")
+        host_tuple.system == "linux"
+        or host_tuple.system == "mingw") else stdout.write("\n")
     stdout.write("Enable VCE:         %s" % options.enable_vce)
     stdout.write(" (%s)\n" % note_unsupported) if not (
-        host_tuple.system == "linux" or host_tuple.system == "mingw"
-    ) else stdout.write("\n")
+        host_tuple.system == "linux"
+        or host_tuple.system == "mingw") else stdout.write("\n")
 
     if options.launch:
         stdout.write("%s\n" % ("-" * 79))
@@ -2631,18 +2677,16 @@ int main()
         if nocd:
             stdout.write("You may now examine the output.\n")
         else:
-            stdout.write(
-                "You may now cd into %s and examine the output.\n" % (cfg.build_dir)
-            )
+            stdout.write("You may now cd into %s and examine the output.\n" %
+                         (cfg.build_dir))
     else:
         stdout.write("Build is configured!\n")
         if nocd:
-            stdout.write("You may now run make (%s).\n" % (Tools.gmake.pathname))
+            stdout.write("You may now run make (%s).\n" %
+                         (Tools.gmake.pathname))
         else:
-            stdout.write(
-                "You may now cd into %s and run make (%s).\n"
-                % (cfg.build_dir, Tools.gmake.pathname)
-            )
+            stdout.write("You may now cd into %s and run make (%s).\n" %
+                         (cfg.build_dir, Tools.gmake.pathname))
 
 except AbortError as x:
     stderr.write("ERROR: %s\n" % (x))
