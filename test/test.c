@@ -265,10 +265,10 @@ static void test_tty()
     }
 #endif
 
-/*
-    if (stdout_tty == 1) stdout_sep = "\r";
-    if (stderr_tty == 1) stderr_sep = "\r";
-*/
+    /*
+        if (stdout_tty == 1) stdout_sep = "\r";
+        if (stderr_tty == 1) stderr_sep = "\r";
+    */
 }
 
 /****************************************************************************
@@ -336,25 +336,25 @@ void EventLoop(hb_handle_t *h, hb_dict_t *preset_dict)
         if( _kbhit() ) {
             switch( _getch() )
             {
-                case 0x03: /* ctrl-c */
-                case 'q':
-                    fprintf( stdout, "\nEncoding Quit by user command\n" );
-                    done_error = HB_ERROR_CANCELED;
-                    die = 1;
-                    break;
-                case 'p':
-                    fprintf(stdout,
-                            "\nEncoding Paused by user command, 'r' to resume\n");
-                    hb_pause(h);
-                    hb_system_sleep_allow(h);
-                    break;
-                case 'r':
-                    hb_system_sleep_prevent(h);
-                    hb_resume(h);
-                    break;
-                case 'h':
-                    ShowCommands();
-                    break;
+            case 0x03: /* ctrl-c */
+            case 'q':
+                fprintf( stdout, "\nEncoding Quit by user command\n" );
+                done_error = HB_ERROR_CANCELED;
+                die = 1;
+                break;
+            case 'p':
+                fprintf(stdout,
+                        "\nEncoding Paused by user command, 'r' to resume\n");
+                hb_pause(h);
+                hb_system_sleep_allow(h);
+                break;
+            case 'r':
+                hb_system_sleep_prevent(h);
+                hb_resume(h);
+                break;
+            case 'h':
+                ShowCommands();
+                break;
             }
         }
 #else
@@ -375,7 +375,7 @@ void EventLoop(hb_handle_t *h, hb_dict_t *preset_dict)
             int size = 0;
 
             while( size < 256 &&
-                   read( STDIN_FILENO, &buf[size], 1 ) > 0 )
+                    read( STDIN_FILENO, &buf[size], 1 ) > 0 )
             {
                 if( buf[size] == '\n' )
                 {
@@ -388,24 +388,24 @@ void EventLoop(hb_handle_t *h, hb_dict_t *preset_dict)
             {
                 switch( buf[0] )
                 {
-                    case 'q':
-                        fprintf( stdout, "\nEncoding Quit by user command\n" );
-                        done_error = HB_ERROR_CANCELED;
-                        die = 1;
-                        break;
-                    case 'p':
-                        fprintf(stdout,
-                                "\nEncoding Paused by user command, 'r' to resume\n");
-                        hb_pause(h);
-                        hb_system_sleep_allow(h);
-                        break;
-                    case 'r':
-                        hb_system_sleep_prevent(h);
-                        hb_resume(h);
-                        break;
-                    case 'h':
-                        ShowCommands();
-                        break;
+                case 'q':
+                    fprintf( stdout, "\nEncoding Quit by user command\n" );
+                    done_error = HB_ERROR_CANCELED;
+                    die = 1;
+                    break;
+                case 'p':
+                    fprintf(stdout,
+                            "\nEncoding Paused by user command, 'r' to resume\n");
+                    hb_pause(h);
+                    hb_system_sleep_allow(h);
+                    break;
+                case 'r':
+                    hb_system_sleep_prevent(h);
+                    hb_resume(h);
+                    break;
+                case 'h':
+                    ShowCommands();
+                    break;
                 }
             }
         }
@@ -497,7 +497,7 @@ int main( int argc, char ** argv )
 
     /* Parse command line */
     if( ParseOptions( argc, argv ) ||
-        CheckOptions( argc, argv ) )
+            CheckOptions( argc, argv ) )
     {
         hb_log_level_set(h, debug);
         goto cleanup;
@@ -562,7 +562,7 @@ int main( int argc, char ** argv )
             // If the user requested to export a preset, but not to
             // transcode or scan a file, exit here.
             if (input == NULL ||
-                (!titlescan && titleindex != 0 && output == NULL))
+                    (!titlescan && titleindex != 0 && output == NULL))
             {
                 hb_value_free(&preset_dict);
                 goto cleanup;
@@ -850,213 +850,213 @@ static int HandleEvents(hb_handle_t * h, hb_dict_t *preset_dict)
     hb_get_state( h, &s );
     switch( s.state )
     {
-        case HB_STATE_IDLE:
-            /* Nothing to do */
-            break;
+    case HB_STATE_IDLE:
+        /* Nothing to do */
+        break;
 
 #define p s.param.scanning
-        case HB_STATE_SCANNING:
-            /* Show what title is currently being scanned */
-            if (json)
-            {
-                show_progress_json(&s);
-                break;
-            }
-            if (p.preview_cur)
-            {
-                fprintf(stderr, "%sScanning title %d of %d, preview %d, %.2f %%",
-                        stderr_sep, p.title_cur, p.title_count, p.preview_cur, 100 * p.progress);
-            }
-            else
-            {
-                fprintf(stderr, "%sScanning title %d of %d, %.2f %%",
-                        stderr_sep, p.title_cur, p.title_count, 100 * p.progress);
-            }
-            fflush(stderr);
+    case HB_STATE_SCANNING:
+        /* Show what title is currently being scanned */
+        if (json)
+        {
+            show_progress_json(&s);
             break;
+        }
+        if (p.preview_cur)
+        {
+            fprintf(stderr, "%sScanning title %d of %d, preview %d, %.2f %%",
+                    stderr_sep, p.title_cur, p.title_count, p.preview_cur, 100 * p.progress);
+        }
+        else
+        {
+            fprintf(stderr, "%sScanning title %d of %d, %.2f %%",
+                    stderr_sep, p.title_cur, p.title_count, 100 * p.progress);
+        }
+        fflush(stderr);
+        break;
 #undef p
 
-        case HB_STATE_SCANDONE:
-        {
-            hb_title_set_t * title_set;
-            hb_title_t * title;
+    case HB_STATE_SCANDONE:
+    {
+        hb_title_set_t * title_set;
+        hb_title_t * title;
 
-            if (job_running)
+        if (job_running)
+        {
+            // SCANDONE generated by a scan during execution of the job
+            break;
+        }
+        title_set = hb_get_title_set( h );
+        if( !title_set || !hb_list_count( title_set->list_title ) )
+        {
+            /* No valid title, stop right there */
+            fprintf( stderr, "No title found.\n" );
+            done_error = HB_ERROR_WRONG_INPUT;
+            die = 1;
+            break;
+        }
+        if (main_feature)
+        {
+            int i;
+            int main_feature_idx=0;
+            int main_feature_pos=-1;
+            int main_feature_time=0;
+            int title_time;
+
+            fprintf( stderr, "Searching for main feature title...\n" );
+
+            for( i = 0; i < hb_list_count( title_set->list_title ); i++ )
             {
-                // SCANDONE generated by a scan during execution of the job
-                break;
+                title = hb_list_item( title_set->list_title, i );
+                title_time = (title->hours*60*60 ) + (title->minutes *60) + (title->seconds);
+                fprintf( stderr, " + Title (%d) index %d has length %dsec\n",
+                         i, title->index, title_time );
+                if( main_feature_time < title_time )
+                {
+                    main_feature_time = title_time;
+                    main_feature_pos = i;
+                    main_feature_idx = title->index;
+                }
+                if( title_set->feature == title->index )
+                {
+                    main_feature_pos = i;
+                    main_feature_idx = title->index;
+                    break;
+                }
             }
-            title_set = hb_get_title_set( h );
-            if( !title_set || !hb_list_count( title_set->list_title ) )
+            if( main_feature_pos == -1 )
             {
-                /* No valid title, stop right there */
-                fprintf( stderr, "No title found.\n" );
+                fprintf( stderr, "No main feature title found.\n" );
                 done_error = HB_ERROR_WRONG_INPUT;
                 die = 1;
                 break;
             }
-            if (main_feature)
-            {
-                int i;
-                int main_feature_idx=0;
-                int main_feature_pos=-1;
-                int main_feature_time=0;
-                int title_time;
+            titleindex = main_feature_idx;
+            fprintf(stderr, "Found main feature title %d\n",
+                    main_feature_idx);
 
-                fprintf( stderr, "Searching for main feature title...\n" );
+            title = hb_list_item(title_set->list_title, main_feature_pos);
+        } else {
+            title = hb_list_item(title_set->list_title, 0);
+        }
 
-                for( i = 0; i < hb_list_count( title_set->list_title ); i++ )
-                {
-                    title = hb_list_item( title_set->list_title, i );
-                    title_time = (title->hours*60*60 ) + (title->minutes *60) + (title->seconds);
-                    fprintf( stderr, " + Title (%d) index %d has length %dsec\n",
-                             i, title->index, title_time );
-                    if( main_feature_time < title_time )
-                    {
-                        main_feature_time = title_time;
-                        main_feature_pos = i;
-                        main_feature_idx = title->index;
-                    }
-                    if( title_set->feature == title->index )
-                    {
-                        main_feature_pos = i;
-                        main_feature_idx = title->index;
-                        break;
-                    }
-                }
-                if( main_feature_pos == -1 )
-                {
-                    fprintf( stderr, "No main feature title found.\n" );
-                    done_error = HB_ERROR_WRONG_INPUT;
-                    die = 1;
-                    break;
-                }
-                titleindex = main_feature_idx;
-                fprintf(stderr, "Found main feature title %d\n",
-                        main_feature_idx);
-
-                title = hb_list_item(title_set->list_title, main_feature_pos);
-            } else {
-                title = hb_list_item(title_set->list_title, 0);
-            }
-
-            if (!titleindex || titlescan)
-            {
-                /* Scan-only mode, print infos and exit */
-                PrintTitleSetInfo( title_set );
-                die = 1;
-                break;
-            }
-
-            fprintf( stderr, "+ Using preset: %s\n",
-                hb_value_get_string(hb_dict_get(preset_dict, "PresetName")));
-
-            PrintTitleInfo(title, title_set->feature);
-
-            // All overrides to the preset are complete
-            // Initialize the job from preset + overrides
-            // and apply job specific command line overrides
-            hb_dict_t *job_dict = PrepareJob(h, title, preset_dict);
-            if (job_dict == NULL)
-            {
-                die = 1;
-                return -1;
-            }
-
-            char * json_job;
-            json_job = hb_value_get_json(job_dict);
-            hb_value_free(&job_dict);
-            if (json_job == NULL)
-            {
-                fprintf(stderr, "Error in setting up job! Aborting.\n");
-                die = 1;
-                return -1;
-            }
-
-
-            hb_add_json(h, json_job);
-            free(json_job);
-            job_running = 1;
-            hb_start( h );
+        if (!titleindex || titlescan)
+        {
+            /* Scan-only mode, print infos and exit */
+            PrintTitleSetInfo( title_set );
+            die = 1;
             break;
         }
 
-#define p s.param.working
-        case HB_STATE_SEARCHING:
-            if (json)
-            {
-                show_progress_json(&s);
-                break;
-            }
-            fprintf( stdout, "%sEncoding: task %d of %d, Searching for start time, %.2f %%",
-                     stdout_sep, p.pass, p.pass_count, 100.0 * p.progress );
-            if( p.seconds > -1 )
-            {
-                fprintf( stdout, " (ETA %02dh%02dm%02ds)",
-                         p.hours, p.minutes, p.seconds );
-            }
-            fflush(stdout);
-            break;
+        fprintf( stderr, "+ Using preset: %s\n",
+                 hb_value_get_string(hb_dict_get(preset_dict, "PresetName")));
 
-        case HB_STATE_WORKING:
-            if (json)
-            {
-                show_progress_json(&s);
-                break;
-            }
-            fprintf( stdout, "%sEncoding: task %d of %d, %.2f %%",
-                     stdout_sep, p.pass, p.pass_count, 100.0 * p.progress );
-            if( p.seconds > -1 )
-            {
-                fprintf( stdout, " (%.2f fps, avg %.2f fps, ETA "
-                         "%02dh%02dm%02ds)", p.rate_cur, p.rate_avg,
-                         p.hours, p.minutes, p.seconds );
-            }
-            fflush(stdout);
+        PrintTitleInfo(title, title_set->feature);
+
+        // All overrides to the preset are complete
+        // Initialize the job from preset + overrides
+        // and apply job specific command line overrides
+        hb_dict_t *job_dict = PrepareJob(h, title, preset_dict);
+        if (job_dict == NULL)
+        {
+            die = 1;
+            return -1;
+        }
+
+        char * json_job;
+        json_job = hb_value_get_json(job_dict);
+        hb_value_free(&job_dict);
+        if (json_job == NULL)
+        {
+            fprintf(stderr, "Error in setting up job! Aborting.\n");
+            die = 1;
+            return -1;
+        }
+
+
+        hb_add_json(h, json_job);
+        free(json_job);
+        job_running = 1;
+        hb_start( h );
+        break;
+    }
+
+#define p s.param.working
+    case HB_STATE_SEARCHING:
+        if (json)
+        {
+            show_progress_json(&s);
             break;
+        }
+        fprintf( stdout, "%sEncoding: task %d of %d, Searching for start time, %.2f %%",
+                 stdout_sep, p.pass, p.pass_count, 100.0 * p.progress );
+        if( p.seconds > -1 )
+        {
+            fprintf( stdout, " (ETA %02dh%02dm%02ds)",
+                     p.hours, p.minutes, p.seconds );
+        }
+        fflush(stdout);
+        break;
+
+    case HB_STATE_WORKING:
+        if (json)
+        {
+            show_progress_json(&s);
+            break;
+        }
+        fprintf( stdout, "%sEncoding: task %d of %d, %.2f %%",
+                 stdout_sep, p.pass, p.pass_count, 100.0 * p.progress );
+        if( p.seconds > -1 )
+        {
+            fprintf( stdout, " (%.2f fps, avg %.2f fps, ETA "
+                     "%02dh%02dm%02ds)", p.rate_cur, p.rate_avg,
+                     p.hours, p.minutes, p.seconds );
+        }
+        fflush(stdout);
+        break;
 #undef p
 
 #define p s.param.muxing
-        case HB_STATE_MUXING:
+    case HB_STATE_MUXING:
+    {
+        if (json)
         {
-            if (json)
-            {
-                show_progress_json(&s);
-                break;
-            }
-            if (show_mux_warning)
-            {
-                fprintf( stdout, "%sMuxing: this may take awhile...", stdout_sep );
-                fflush(stdout);
-                show_mux_warning = 0;
-            }
+            show_progress_json(&s);
             break;
         }
+        if (show_mux_warning)
+        {
+            fprintf( stdout, "%sMuxing: this may take awhile...", stdout_sep );
+            fflush(stdout);
+            show_mux_warning = 0;
+        }
+        break;
+    }
 #undef p
 
 #define p s.param.working
-        case HB_STATE_WORKDONE:
-            /* Print error if any, then exit */
-            if (json)
-            {
-                show_progress_json(&s);
-            }
-            switch( p.error )
-            {
-                case HB_ERROR_NONE:
-                    fprintf( stderr, "\nEncode done!\n" );
-                    break;
-                case HB_ERROR_CANCELED:
-                    fprintf( stderr, "\nEncode canceled.\n" );
-                    break;
-                default:
-                    fprintf( stderr, "\nEncode failed (error %x).\n",
-                             p.error );
-            }
-            done_error = p.error;
-            work_done = 1;
-            job_running = 0;
+    case HB_STATE_WORKDONE:
+        /* Print error if any, then exit */
+        if (json)
+        {
+            show_progress_json(&s);
+        }
+        switch( p.error )
+        {
+        case HB_ERROR_NONE:
+            fprintf( stderr, "\nEncode done!\n" );
             break;
+        case HB_ERROR_CANCELED:
+            fprintf( stderr, "\nEncode canceled.\n" );
+            break;
+        default:
+            fprintf( stderr, "\nEncode failed (error %x).\n",
+                     p.error );
+        }
+        done_error = p.error;
+        work_done = 1;
+        job_running = 0;
+        break;
 #undef p
     }
     return 0;
@@ -1095,8 +1095,8 @@ static void showFilterPresets(FILE* const out, int filter_id)
     for (ii = 0; names[ii] != NULL; ii++)
     {
         if (!strcasecmp(names[ii], "custom") || // skip custom
-            !strcasecmp(names[ii], "off")    || // skip off
-            !strcasecmp(names[ii], "default"))  // skip default
+                !strcasecmp(names[ii], "off")    || // skip off
+                !strcasecmp(names[ii], "default"))  // skip default
             continue;
         count++;
     }
@@ -1110,8 +1110,8 @@ static void showFilterPresets(FILE* const out, int filter_id)
     for (ii = 0; names[ii] != NULL; ii++)
     {
         if (!strcasecmp(names[ii], "custom") || // skip custom
-            !strcasecmp(names[ii], "off")    || // skip off
-            !strcasecmp(names[ii], "default"))  // skip default
+                !strcasecmp(names[ii], "off")    || // skip off
+                !strcasecmp(names[ii], "default"))  // skip default
             continue;
         fprintf(out, "                               %s\n", names[ii]);
     }
@@ -1162,7 +1162,7 @@ static void showFilterKeys(FILE* const out, int filter_id)
     int     ii, linelen = 0;
 
     fprintf(out, "                           Custom Format:\n"
-                 "                               ");
+            "                               ");
     for (ii = 0; keys[ii] != NULL; ii++)
     {
         int c = tolower(keys[ii][0]);
@@ -1189,89 +1189,90 @@ static void showFilterDefault(FILE* const out, int filter_id)
     const char * preset = "default";
 
     fprintf(out, "                           Default:\n"
-                 "                               ");
+            "                               ");
     switch (filter_id)
     {
-        case HB_FILTER_UNSHARP:
-            preset = UNSHARP_DEFAULT_PRESET;
-            break;
-        case HB_FILTER_LAPSHARP:
-            preset = LAPSHARP_DEFAULT_PRESET;
-            break;
-        case HB_FILTER_CHROMA_SMOOTH:
-            preset = CHROMA_SMOOTH_DEFAULT_PRESET;
-            break;
-        case HB_FILTER_NLMEANS:
-            preset = NLMEANS_DEFAULT_PRESET;
-            break;
-        case HB_FILTER_DEINTERLACE:
-            preset = DEINTERLACE_DEFAULT_PRESET;
-            break;
-        case HB_FILTER_DECOMB:
-            preset = DECOMB_DEFAULT_PRESET;
-            break;
-        case HB_FILTER_DETELECINE:
-            preset = DETELECINE_DEFAULT_PRESET;
-            break;
-        case HB_FILTER_HQDN3D:
-            preset = HQDN3D_DEFAULT_PRESET;
-            break;
-        case HB_FILTER_COMB_DETECT:
-            preset = COMB_DETECT_DEFAULT_PRESET;
-            break;
-        case HB_FILTER_DEBLOCK:
-            preset = DEBLOCK_DEFAULT_PRESET;
-            break;
-        default:
-            break;
+    case HB_FILTER_UNSHARP:
+        preset = UNSHARP_DEFAULT_PRESET;
+        break;
+    case HB_FILTER_LAPSHARP:
+        preset = LAPSHARP_DEFAULT_PRESET;
+        break;
+    case HB_FILTER_CHROMA_SMOOTH:
+        preset = CHROMA_SMOOTH_DEFAULT_PRESET;
+        break;
+    case HB_FILTER_NLMEANS:
+        preset = NLMEANS_DEFAULT_PRESET;
+        break;
+    case HB_FILTER_DEINTERLACE:
+        preset = DEINTERLACE_DEFAULT_PRESET;
+        break;
+    case HB_FILTER_DECOMB:
+        preset = DECOMB_DEFAULT_PRESET;
+        break;
+    case HB_FILTER_DETELECINE:
+        preset = DETELECINE_DEFAULT_PRESET;
+        break;
+    case HB_FILTER_HQDN3D:
+        preset = HQDN3D_DEFAULT_PRESET;
+        break;
+    case HB_FILTER_COMB_DETECT:
+        preset = COMB_DETECT_DEFAULT_PRESET;
+        break;
+    case HB_FILTER_DEBLOCK:
+        preset = DEBLOCK_DEFAULT_PRESET;
+        break;
+    default:
+        break;
     }
     switch (filter_id)
     {
-        case HB_FILTER_DEINTERLACE:
-        case HB_FILTER_NLMEANS:
-        case HB_FILTER_CHROMA_SMOOTH:
-        case HB_FILTER_UNSHARP:
-        case HB_FILTER_LAPSHARP:
-        case HB_FILTER_DECOMB:
-        case HB_FILTER_DETELECINE:
-        case HB_FILTER_HQDN3D:
-        case HB_FILTER_COMB_DETECT:
-        case HB_FILTER_DEBLOCK:
+    case HB_FILTER_DEINTERLACE:
+    case HB_FILTER_NLMEANS:
+    case HB_FILTER_CHROMA_SMOOTH:
+    case HB_FILTER_UNSHARP:
+    case HB_FILTER_LAPSHARP:
+    case HB_FILTER_DECOMB:
+    case HB_FILTER_DETELECINE:
+    case HB_FILTER_HQDN3D:
+    case HB_FILTER_COMB_DETECT:
+    case HB_FILTER_DEBLOCK:
+    {
+        hb_dict_t * settings;
+        settings = hb_generate_filter_settings(filter_id, preset,
+                                               NULL, NULL);
+        char * str = hb_filter_settings_string(filter_id, settings);
+        hb_value_free(&settings);
+
+        char ** split = hb_str_vsplit(str, ':');
+        char  * colon = "", * newline;
+        int     ii, linelen = 0;
+
+        for (ii = 0; split[ii] != NULL; ii++)
         {
-            hb_dict_t * settings;
-            settings = hb_generate_filter_settings(filter_id, preset,
-                                                   NULL, NULL);
-            char * str = hb_filter_settings_string(filter_id, settings);
-            hb_value_free(&settings);
-
-            char ** split = hb_str_vsplit(str, ':');
-            char  * colon = "", * newline;
-            int     ii, linelen = 0;
-
-            for (ii = 0; split[ii] != NULL; ii++)
+            int len = strlen(split[ii]) + 1;
+            if (linelen + len > 48)
             {
-                int len = strlen(split[ii]) + 1;
-                if (linelen + len > 48)
-                {
-                    newline = "\n                               ";
-                    linelen = 0;
-                }
-                else
-                {
-                    newline = "";
-                }
-                fprintf(out, "%s%s%s", colon, newline, split[ii]);
-                linelen += len;
-                colon = ":";
+                newline = "\n                               ";
+                linelen = 0;
             }
-            hb_str_vfree(split);
-            free(str);
-        } break;
-        case HB_FILTER_ROTATE:
-            fprintf(out, "%s", ROTATE_DEFAULT);
-            break;
-        default:
-            break;
+            else
+            {
+                newline = "";
+            }
+            fprintf(out, "%s%s%s", colon, newline, split[ii]);
+            linelen += len;
+            colon = ":";
+        }
+        hb_str_vfree(split);
+        free(str);
+    }
+    break;
+    case HB_FILTER_ROTATE:
+        fprintf(out, "%s", ROTATE_DEFAULT);
+        break;
+    default:
+        break;
     }
     fprintf(out, "\n");
 }
@@ -1287,143 +1288,143 @@ static void ShowHelp()
     FILE* const out = stdout;
 
     fprintf( out,
-"Usage: HandBrakeCLI [options] -i <source> -o <destination>\n"
-"\n"
-"General Options --------------------------------------------------------------\n"
-"\n"
-"   -h, --help              Print help\n"
-"   --version               Print version\n"
-"   --json                  Log title, progress, and version info in\n"
-"                           JSON format\n"
-"   -v, --verbose[=number]  Be verbose (optional argument: logging level)\n"
-"   -Z. --preset <string>   Select preset by name (case-sensitive)\n"
-"                           Enclose names containing spaces in double quotation\n"
-"                           marks (e.g. \"Preset Name\")\n"
-"   -z, --preset-list       List available presets\n"
-"   --preset-import-file <filespec>\n"
-"                           Import presets from a json preset file.\n"
-"                           'filespec' may be a list of files separated\n"
-"                           by spaces, or it may use shell wildcards.\n"
-"   --preset-import-gui     Import presets from GUI config preset file.\n"
-"   --preset-export <string>\n"
-"                           Create a new preset from command line options and\n"
-"                           write a json representation of the preset to the\n"
-"                           console or a file if '--preset-export-file' is\n"
-"                           specified. The required argument will be the name\n"
-"                           of the new preset.\n"
-"   --preset-export-file <filename>\n"
-"                           Write new preset generated by '--preset-export'\n"
-"                           to file 'filename'.\n"
-"   --preset-export-description <string>\n"
-"                           Add a description to the new preset created with\n"
-"                           '--preset-export'\n"
-"   --queue-import-file <filename>\n"
-"                           Import an encode queue file created by the GUI\n"
-"       --no-dvdnav         Do not use dvdnav for reading DVDs\n"
-"\n"
-"\n"
-"Source Options ---------------------------------------------------------------\n"
-"\n"
-"   -i, --input <string>    Set input file or device (\"source\")\n"
-"   -t, --title <number>    Select a title to encode (0 to scan all titles\n"
-"                           only, default: 1)\n"
-"       --min-duration      Set the minimum title duration (in seconds).\n"
-"                           Shorter titles will be ignored (default: 10).\n"
-"       --scan              Scan selected title only.\n"
-"       --main-feature      Detect and select the main feature title.\n"
-"   -c, --chapters <string> Select chapters (e.g. \"1-3\" for chapters\n"
-"                           1 to 3 or \"3\" for chapter 3 only,\n"
-"                           default: all chapters)\n"
-"       --angle <number>    Select the video angle (DVD or Blu-ray only)\n"
-"       --previews <number:boolean>\n"
-"                           Select how many preview images are generated,\n"
-"                           and whether to store to disk (0 or 1).\n"
-"                           (default: 10:0)\n"
-"   --start-at-preview <number>\n"
-"                           Start encoding at a given preview.\n"
-"   --start-at <string:number>\n"
-"                           Start encoding at a given offset in seconds,\n"
-"                           frames, or pts (on a 90kHz clock)\n"
-"                           (e.g. seconds:10, frames:300, pts:900000).\n"
-"   --stop-at  <string:number>\n"
-"                           Stop encoding after a given duration in seconds,\n"
-"                           frames, or pts (on a 90kHz clock) has passed\n"
-"                           (e.g. seconds:10, frames:300, pts:900000).\n"
-"                           Duration is relative to --start-at, if specified.\n"
-"\n"
-"\n"
-"Destination Options ----------------------------------------------------------\n"
-"\n"
-"   -o, --output <filename> Set destination file name\n"
-"   -f, --format <string>   Select container format:\n");
+             "Usage: HandBrakeCLI [options] -i <source> -o <destination>\n"
+             "\n"
+             "General Options --------------------------------------------------------------\n"
+             "\n"
+             "   -h, --help              Print help\n"
+             "   --version               Print version\n"
+             "   --json                  Log title, progress, and version info in\n"
+             "                           JSON format\n"
+             "   -v, --verbose[=number]  Be verbose (optional argument: logging level)\n"
+             "   -Z. --preset <string>   Select preset by name (case-sensitive)\n"
+             "                           Enclose names containing spaces in double quotation\n"
+             "                           marks (e.g. \"Preset Name\")\n"
+             "   -z, --preset-list       List available presets\n"
+             "   --preset-import-file <filespec>\n"
+             "                           Import presets from a json preset file.\n"
+             "                           'filespec' may be a list of files separated\n"
+             "                           by spaces, or it may use shell wildcards.\n"
+             "   --preset-import-gui     Import presets from GUI config preset file.\n"
+             "   --preset-export <string>\n"
+             "                           Create a new preset from command line options and\n"
+             "                           write a json representation of the preset to the\n"
+             "                           console or a file if '--preset-export-file' is\n"
+             "                           specified. The required argument will be the name\n"
+             "                           of the new preset.\n"
+             "   --preset-export-file <filename>\n"
+             "                           Write new preset generated by '--preset-export'\n"
+             "                           to file 'filename'.\n"
+             "   --preset-export-description <string>\n"
+             "                           Add a description to the new preset created with\n"
+             "                           '--preset-export'\n"
+             "   --queue-import-file <filename>\n"
+             "                           Import an encode queue file created by the GUI\n"
+             "       --no-dvdnav         Do not use dvdnav for reading DVDs\n"
+             "\n"
+             "\n"
+             "Source Options ---------------------------------------------------------------\n"
+             "\n"
+             "   -i, --input <string>    Set input file or device (\"source\")\n"
+             "   -t, --title <number>    Select a title to encode (0 to scan all titles\n"
+             "                           only, default: 1)\n"
+             "       --min-duration      Set the minimum title duration (in seconds).\n"
+             "                           Shorter titles will be ignored (default: 10).\n"
+             "       --scan              Scan selected title only.\n"
+             "       --main-feature      Detect and select the main feature title.\n"
+             "   -c, --chapters <string> Select chapters (e.g. \"1-3\" for chapters\n"
+             "                           1 to 3 or \"3\" for chapter 3 only,\n"
+             "                           default: all chapters)\n"
+             "       --angle <number>    Select the video angle (DVD or Blu-ray only)\n"
+             "       --previews <number:boolean>\n"
+             "                           Select how many preview images are generated,\n"
+             "                           and whether to store to disk (0 or 1).\n"
+             "                           (default: 10:0)\n"
+             "   --start-at-preview <number>\n"
+             "                           Start encoding at a given preview.\n"
+             "   --start-at <string:number>\n"
+             "                           Start encoding at a given offset in seconds,\n"
+             "                           frames, or pts (on a 90kHz clock)\n"
+             "                           (e.g. seconds:10, frames:300, pts:900000).\n"
+             "   --stop-at  <string:number>\n"
+             "                           Stop encoding after a given duration in seconds,\n"
+             "                           frames, or pts (on a 90kHz clock) has passed\n"
+             "                           (e.g. seconds:10, frames:300, pts:900000).\n"
+             "                           Duration is relative to --start-at, if specified.\n"
+             "\n"
+             "\n"
+             "Destination Options ----------------------------------------------------------\n"
+             "\n"
+             "   -o, --output <filename> Set destination file name\n"
+             "   -f, --format <string>   Select container format:\n");
     container = NULL;
     while ((container = hb_container_get_next(container)) != NULL)
     {
         fprintf(out, "                               %s\n", container->short_name);
     }
     fprintf(out,
-"                           default: auto-detected from destination file name)\n"
-"   -m, --markers           Add chapter markers\n"
-"       --no-markers        Disable preset chapter markers\n"
-"   -O, --optimize          Optimize MP4 files for HTTP streaming (fast start,\n"
-"                           s.s. rewrite file to place MOOV atom at beginning)\n"
-"       --no-optimize       Disable preset 'optimize'\n"
-"   -I, --ipod-atom         Add iPod 5G compatibility atom to MP4 container\n"
-"       --no-ipod-atom      Disable iPod 5G atom\n"
-"       --align-av          Add audio silence or black video frames to start\n"
-"                           of streams so that all streams start at exactly\n"
-"                           the same time\n"
-"   --inline-parameter-sets Create adaptive streaming compatible output.\n"
-"                           Inserts parameter sets (SPS and PPS) inline\n"
-"                           in the video stream before each IDR.\n"
-"\n"
-"\n"
-"Video Options ----------------------------------------------------------------\n"
-"\n"
-"   -e, --encoder <string>  Select video encoder:\n");
+            "                           default: auto-detected from destination file name)\n"
+            "   -m, --markers           Add chapter markers\n"
+            "       --no-markers        Disable preset chapter markers\n"
+            "   -O, --optimize          Optimize MP4 files for HTTP streaming (fast start,\n"
+            "                           s.s. rewrite file to place MOOV atom at beginning)\n"
+            "       --no-optimize       Disable preset 'optimize'\n"
+            "   -I, --ipod-atom         Add iPod 5G compatibility atom to MP4 container\n"
+            "       --no-ipod-atom      Disable iPod 5G atom\n"
+            "       --align-av          Add audio silence or black video frames to start\n"
+            "                           of streams so that all streams start at exactly\n"
+            "                           the same time\n"
+            "   --inline-parameter-sets Create adaptive streaming compatible output.\n"
+            "                           Inserts parameter sets (SPS and PPS) inline\n"
+            "                           in the video stream before each IDR.\n"
+            "\n"
+            "\n"
+            "Video Options ----------------------------------------------------------------\n"
+            "\n"
+            "   -e, --encoder <string>  Select video encoder:\n");
     encoder = NULL;
     while ((encoder = hb_video_encoder_get_next(encoder)) != NULL)
     {
         fprintf(out, "                               %s\n", encoder->short_name);
     }
     fprintf(out,
-"       --encoder-preset <string>\n"
-"                           Adjust video encoding settings for a particular\n"
-"                           speed/efficiency tradeoff (encoder-specific)\n"
-"   --encoder-preset-list <string>\n"
-"                           List supported --encoder-preset values for the\n"
-"                           specified video encoder\n"
-"       --encoder-tune <string>\n"
-"                           Adjust video encoding settings for a particular\n"
-"                           type of source or situation (encoder-specific)\n"
-"   --encoder-tune-list <string>\n"
-"                           List supported --encoder-tune values for the\n"
-"                           specified video encoder\n"
-"   -x, --encopts <string>  Specify advanced encoding options in the same\n"
-"                           style as mencoder (all encoders except theora):\n"
-"                           option1=value1:option2=value2\n"
-"       --encoder-profile <string>\n"
-"                           Ensure compliance with the requested codec\n"
-"                           profile (encoder-specific)\n"
-"   --encoder-profile-list <string>\n"
-"                           List supported --encoder-profile values for the\n"
-"                           specified video encoder\n"
-"       --encoder-level <string>\n"
-"                           Ensures compliance with the requested codec\n"
-"                           level (encoder-specific)\n"
-"   --encoder-level-list <string>\n"
-"                           List supported --encoder-level values for the\n"
-"                           specified video encoder\n"
-"   -q, --quality <float>   Set video quality (e.g. 22.0)\n"
-"   -b, --vb <number>       Set video bitrate in kbit/s (default: 1000)\n"
-"   -2, --two-pass          Use two-pass mode\n"
-"       --no-two-pass       Disable two-pass mode\n"
-"   -T, --turbo             When using 2-pass use \"turbo\" options on the\n"
-"                           first pass to improve speed\n"
-"                           (works with x264 and x265)\n"
-"       --no-turbo          Disable 2-pass mode's \"turbo\" first pass\n"
-"   -r, --rate <float>      Set video framerate\n"
-"                           (" );
+            "       --encoder-preset <string>\n"
+            "                           Adjust video encoding settings for a particular\n"
+            "                           speed/efficiency tradeoff (encoder-specific)\n"
+            "   --encoder-preset-list <string>\n"
+            "                           List supported --encoder-preset values for the\n"
+            "                           specified video encoder\n"
+            "       --encoder-tune <string>\n"
+            "                           Adjust video encoding settings for a particular\n"
+            "                           type of source or situation (encoder-specific)\n"
+            "   --encoder-tune-list <string>\n"
+            "                           List supported --encoder-tune values for the\n"
+            "                           specified video encoder\n"
+            "   -x, --encopts <string>  Specify advanced encoding options in the same\n"
+            "                           style as mencoder (all encoders except theora):\n"
+            "                           option1=value1:option2=value2\n"
+            "       --encoder-profile <string>\n"
+            "                           Ensure compliance with the requested codec\n"
+            "                           profile (encoder-specific)\n"
+            "   --encoder-profile-list <string>\n"
+            "                           List supported --encoder-profile values for the\n"
+            "                           specified video encoder\n"
+            "       --encoder-level <string>\n"
+            "                           Ensures compliance with the requested codec\n"
+            "                           level (encoder-specific)\n"
+            "   --encoder-level-list <string>\n"
+            "                           List supported --encoder-level values for the\n"
+            "                           specified video encoder\n"
+            "   -q, --quality <float>   Set video quality (e.g. 22.0)\n"
+            "   -b, --vb <number>       Set video bitrate in kbit/s (default: 1000)\n"
+            "   -2, --two-pass          Use two-pass mode\n"
+            "       --no-two-pass       Disable two-pass mode\n"
+            "   -T, --turbo             When using 2-pass use \"turbo\" options on the\n"
+            "                           first pass to improve speed\n"
+            "                           (works with x264 and x265)\n"
+            "       --no-turbo          Disable 2-pass mode's \"turbo\" first pass\n"
+            "   -r, --rate <float>      Set video framerate\n"
+            "                           (" );
     i = 0;
     rate = NULL;
     while ((rate = hb_video_framerate_get_next(rate)) != NULL)
@@ -1447,57 +1448,57 @@ static void ShowHelp()
         fprintf(out, "%s", rate->name);
     }
     fprintf( out, "\n"
-"                           or a number between " );
+             "                           or a number between " );
     hb_video_framerate_get_limits(&clock_min, &clock_max, &clock);
     fprintf(out, "%i and %i", (clock / clock_max), (clock / clock_min));
     fprintf( out, ").\n"
-"                           Be aware that not specifying a framerate lets\n"
-"                           HandBrake preserve a source's time stamps,\n"
-"                           potentially creating variable framerate video\n"
-"   --vfr, --cfr, --pfr     Select variable, constant or peak-limited\n"
-"                           frame rate control. VFR preserves the source\n"
-"                           timing. CFR makes the output constant rate at\n"
-"                           the rate given by the -r flag (or the source's\n"
-"                           average rate if no -r is given). PFR doesn't\n"
-"                           allow the rate to go over the rate specified\n"
-"                           with the -r flag but won't change the source\n"
-"                           timing if it's below that rate.\n"
-"                           If none of these flags are given, the default\n"
-"                           is --pfr when -r is given and --vfr otherwise\n"
-"\n"
-"\n"
-"Audio Options ----------------------------------------------------------------\n"
-"\n"
-"       --audio-lang-list <string>\n"
-"                           Specify a comma separated list of audio\n"
-"                           languages you would like to select from the\n"
-"                           source title. By default, the first audio\n"
-"                           matching each language will be added to your\n"
-"                           output. Provide the language's ISO 639-2 code\n"
-"                           (e.g. fre, eng, spa, dut, et cetera)\n"
-"                           Use code 'und' (Unknown) to match all languages.\n"
-"       --all-audio         Select all audio tracks matching languages in\n"
-"                           the specified language list (--audio-lang-list).\n"
-"                           Any language if list is not specified.\n"
-"       --first-audio       Select first audio track matching languages in\n"
-"                           the specified language list (--audio-lang-list).\n"
-"                           Any language if list is not specified.\n"
-"   -a, --audio <string>    Select audio track(s), separated by commas\n"
-"                           (\"none\" for no audio, \"1,2,3\" for multiple\n"
-"                           tracks, default: first one).\n"
-"                           Multiple output tracks can be used for one input.\n"
-"   -E, --aencoder <string> Select audio encoder(s):\n" );
+             "                           Be aware that not specifying a framerate lets\n"
+             "                           HandBrake preserve a source's time stamps,\n"
+             "                           potentially creating variable framerate video\n"
+             "   --vfr, --cfr, --pfr     Select variable, constant or peak-limited\n"
+             "                           frame rate control. VFR preserves the source\n"
+             "                           timing. CFR makes the output constant rate at\n"
+             "                           the rate given by the -r flag (or the source's\n"
+             "                           average rate if no -r is given). PFR doesn't\n"
+             "                           allow the rate to go over the rate specified\n"
+             "                           with the -r flag but won't change the source\n"
+             "                           timing if it's below that rate.\n"
+             "                           If none of these flags are given, the default\n"
+             "                           is --pfr when -r is given and --vfr otherwise\n"
+             "\n"
+             "\n"
+             "Audio Options ----------------------------------------------------------------\n"
+             "\n"
+             "       --audio-lang-list <string>\n"
+             "                           Specify a comma separated list of audio\n"
+             "                           languages you would like to select from the\n"
+             "                           source title. By default, the first audio\n"
+             "                           matching each language will be added to your\n"
+             "                           output. Provide the language's ISO 639-2 code\n"
+             "                           (e.g. fre, eng, spa, dut, et cetera)\n"
+             "                           Use code 'und' (Unknown) to match all languages.\n"
+             "       --all-audio         Select all audio tracks matching languages in\n"
+             "                           the specified language list (--audio-lang-list).\n"
+             "                           Any language if list is not specified.\n"
+             "       --first-audio       Select first audio track matching languages in\n"
+             "                           the specified language list (--audio-lang-list).\n"
+             "                           Any language if list is not specified.\n"
+             "   -a, --audio <string>    Select audio track(s), separated by commas\n"
+             "                           (\"none\" for no audio, \"1,2,3\" for multiple\n"
+             "                           tracks, default: first one).\n"
+             "                           Multiple output tracks can be used for one input.\n"
+             "   -E, --aencoder <string> Select audio encoder(s):\n" );
     encoder = NULL;
     while ((encoder = hb_audio_encoder_get_next(encoder)) != NULL)
     {
         fprintf(out, "                               %s\n", encoder->short_name);
     }
     fprintf(out,
-"                           \"copy:<type>\" will pass through the corresponding\n"
-"                           audio track without modification, if pass through\n"
-"                           is supported for the audio type.\n"
-"                           Separate tracks by commas.\n"
-"                           Defaults:\n");
+            "                           \"copy:<type>\" will pass through the corresponding\n"
+            "                           audio track without modification, if pass through\n"
+            "                           is supported for the audio type.\n"
+            "                           Separate tracks by commas.\n"
+            "                           Defaults:\n");
     container = NULL;
     while ((container = hb_container_get_next(container)) != NULL)
     {
@@ -1507,16 +1508,16 @@ static void ShowHelp()
                 hb_audio_encoder_get_short_name(audio_encoder));
     }
     fprintf(out,
-"       --audio-copy-mask <string>\n"
-"                           Set audio codecs that are permitted when the\n"
-"                           \"copy\" audio encoder option is specified\n"
-"                           (" );
+            "       --audio-copy-mask <string>\n"
+            "                           Set audio codecs that are permitted when the\n"
+            "                           \"copy\" audio encoder option is specified\n"
+            "                           (" );
     i       = 0;
     encoder = NULL;
     while ((encoder = hb_audio_encoder_get_next(encoder)) != NULL)
     {
         if ((encoder->codec &  HB_ACODEC_PASS_FLAG) &&
-            (encoder->codec != HB_ACODEC_AUTO_PASS))
+                (encoder->codec != HB_ACODEC_AUTO_PASS))
         {
             if (i)
             {
@@ -1528,20 +1529,20 @@ static void ShowHelp()
         }
     }
     fprintf(out, ")\n"
-"                           Separated by commas for multiple allowed options.\n"
-"       --audio-fallback <string>\n"
-"                           Set audio codec to use when it is not possible\n"
-"                           to copy an audio track without re-encoding.\n"
-"   -B, --ab <number>       Set audio track bitrate(s) in kbit/s.\n"
-"                           (default: determined by the selected codec, mixdown,\n"
-"                           and samplerate combination).\n"
-"                           Separate tracks by commas.\n"
-"   -Q, --aq <float>        Set audio quality metric.\n"
-"                           Separate tracks by commas.\n"
-"   -C, --ac <float>        Set audio compression metric.\n"
-"                           (available depending on selected codec)\n"
-"                           Separate tracks by commas.\n"
-"   -6, --mixdown <string>  Format(s) for audio downmixing/upmixing:\n");
+            "                           Separated by commas for multiple allowed options.\n"
+            "       --audio-fallback <string>\n"
+            "                           Set audio codec to use when it is not possible\n"
+            "                           to copy an audio track without re-encoding.\n"
+            "   -B, --ab <number>       Set audio track bitrate(s) in kbit/s.\n"
+            "                           (default: determined by the selected codec, mixdown,\n"
+            "                           and samplerate combination).\n"
+            "                           Separate tracks by commas.\n"
+            "   -Q, --aq <float>        Set audio quality metric.\n"
+            "                           Separate tracks by commas.\n"
+            "   -C, --ac <float>        Set audio compression metric.\n"
+            "                           (available depending on selected codec)\n"
+            "                           Separate tracks by commas.\n"
+            "   -6, --mixdown <string>  Format(s) for audio downmixing/upmixing:\n");
     // skip HB_AMIXDOWN_NONE
     mixdown = hb_mixdown_get_next(NULL);
     while((mixdown = hb_mixdown_get_next(mixdown)) != NULL)
@@ -1550,8 +1551,8 @@ static void ShowHelp()
                 mixdown->short_name);
     }
     fprintf(out,
-"                           Separate tracks by commas.\n"
-"                           Defaults:\n");
+            "                           Separate tracks by commas.\n"
+            "                           Defaults:\n");
     encoder = NULL;
     while((encoder = hb_audio_encoder_get_next(encoder)) != NULL)
     {
@@ -1565,12 +1566,12 @@ static void ShowHelp()
         }
     }
     fprintf(out,
-"       --normalize-mix     Normalize audio mix levels to prevent clipping.\n"
-"              <string>     Separate tracks by commas.\n"
-"                           0 = Disable Normalization (default)\n"
-"                           1 = Enable Normalization\n"
-"   -R, --arate             Set audio samplerate(s)\n"
-"                           (" );
+            "       --normalize-mix     Normalize audio mix levels to prevent clipping.\n"
+            "              <string>     Separate tracks by commas.\n"
+            "                           0 = Disable Normalization (default)\n"
+            "                           1 = Enable Normalization\n"
+            "   -R, --arate             Set audio samplerate(s)\n"
+            "                           (" );
     rate = NULL;
     while ((rate = hb_audio_samplerate_get_next(rate)) != NULL)
     {
@@ -1581,18 +1582,18 @@ static void ShowHelp()
         }
     }
     fprintf( out, " kHz)\n"
-"                           or \"auto\". Separate tracks by commas.\n"
-"   -D, --drc <float>       Apply extra dynamic range compression to the\n"
-"                           audio, making soft sounds louder. Range is 1.0\n"
-"                           to 4.0 (too loud), with 1.5 - 2.5 being a useful\n"
-"                           range.\n"
-"                           Separate tracks by commas.\n"
-"       --gain <float>      Amplify or attenuate audio before encoding.  Does\n"
-"                           NOT work with audio passthru (copy). Values are\n"
-"                           in dB.  Negative values attenuate, positive\n"
-"                           values amplify. A 1 dB difference is barely\n"
-"                           audible.\n"
-"       --adither <string>  Select dithering to apply before encoding audio:\n");
+             "                           or \"auto\". Separate tracks by commas.\n"
+             "   -D, --drc <float>       Apply extra dynamic range compression to the\n"
+             "                           audio, making soft sounds louder. Range is 1.0\n"
+             "                           to 4.0 (too loud), with 1.5 - 2.5 being a useful\n"
+             "                           range.\n"
+             "                           Separate tracks by commas.\n"
+             "       --gain <float>      Amplify or attenuate audio before encoding.  Does\n"
+             "                           NOT work with audio passthru (copy). Values are\n"
+             "                           in dB.  Negative values attenuate, positive\n"
+             "                           values amplify. A 1 dB difference is barely\n"
+             "                           audible.\n"
+             "       --adither <string>  Select dithering to apply before encoding audio:\n");
     dither = NULL;
     while ((dither = hb_audio_dither_get_next(dither)) != NULL)
     {
@@ -1606,8 +1607,8 @@ static void ShowHelp()
         }
     }
     fprintf(out,
-"                           Separate tracks by commas.\n"
-"                           Supported by encoder(s):\n");
+            "                           Separate tracks by commas.\n"
+            "                           Supported by encoder(s):\n");
     encoder = NULL;
     while ((encoder = hb_audio_encoder_get_next(encoder)) != NULL)
     {
@@ -1617,319 +1618,319 @@ static void ShowHelp()
         }
     }
     fprintf(out,
-"   -A, --aname <string>    Set audio track name(s).\n"
-"                           Separate tracks by commas.\n"
-"\n"
-"\n"
-"Picture Options --------------------------------------------------------------\n"
-"\n"
-"   -w, --width  <number>   Set storage width in pixels\n"
-"   -l, --height <number>   Set storage height in pixels\n"
-"       --crop   <top:bottom:left:right>\n"
-"                           Set picture cropping in pixels\n"
-"                           (default: automatically remove black bars)\n"
-"       --loose-crop        Always crop to a multiple of the modulus\n"
-"       --no-loose-crop     Disable preset 'loose-crop'\n"
-"   -Y, --maxHeight <number>\n"
-"                           Set maximum height in pixels\n"
-"   -X, --maxWidth  <number>\n"
-"                           Set maximum width in pixels\n"
-"   --non-anamorphic        Set pixel aspect ratio to 1:1\n"
-"   --auto-anamorphic       Store pixel aspect ratio that maximizes storage\n"
-"                           resolution\n"
-"   --loose-anamorphic      Store pixel aspect ratio that is as close as\n"
-"                           possible to the source video pixel aspect ratio\n"
-"   --custom-anamorphic     Store pixel aspect ratio in video stream and\n"
-"                           directly control all parameters.\n"
-"   --display-width <number>\n"
-"                           Set display width in pixels, for custom anamorphic.\n"
-"                           This determines the display aspect during playback,\n"
-"                           which may differ from the storage aspect.\n"
-"   --keep-display-aspect   Preserve the source's display aspect ratio\n"
-"                           when using custom anamorphic\n"
-"   --no-keep-display-aspect\n"
-"                           Disable preset 'keep-display-aspect'\n"
-"   --pixel-aspect <par_x:par_y>\n"
-"                           Set pixel aspect for custom anamorphic\n"
-"                           (--display-width and --pixel-aspect are mutually\n"
-"                           exclusive.\n"
-"   --itu-par               Use wider ITU pixel aspect values for loose and\n"
-"                           custom anamorphic, useful with underscanned sources\n"
-"   --no-itu-par            Disable preset 'itu-par'\n"
-"   --modulus <number>      Set storage width and height modulus\n"
-"                           Dimensions will be made divisible by this number.\n"
-"                           (default: set by preset, typically 2)\n"
-"   -M, --color-matrix <string>\n"
-"                           Set the color space signaled by the output:\n"
-"                           Overrides color signalling with no conversion.\n"
-"                               2020\n"
-"                               709\n"
-"                               601\n"
-"                               ntsc (same as 601)\n"
-"                               pal\n"
-"                           (default: auto-detected from source)\n"
-"\n"
-"\n"
-"Filters Options --------------------------------------------------------------\n"
-"\n"
-"   --comb-detect[=string]  Detect interlace artifacts in frames.\n"
-"                           If not accompanied by the decomb or deinterlace\n"
-"                           filters, this filter only logs the interlaced\n"
-"                           frame count to the activity log.\n"
-"                           If accompanied by the decomb or deinterlace\n"
-"                           filters, it causes these filters to selectively\n"
-"                           deinterlace only those frames where interlacing\n"
-"                           is detected.\n");
+            "   -A, --aname <string>    Set audio track name(s).\n"
+            "                           Separate tracks by commas.\n"
+            "\n"
+            "\n"
+            "Picture Options --------------------------------------------------------------\n"
+            "\n"
+            "   -w, --width  <number>   Set storage width in pixels\n"
+            "   -l, --height <number>   Set storage height in pixels\n"
+            "       --crop   <top:bottom:left:right>\n"
+            "                           Set picture cropping in pixels\n"
+            "                           (default: automatically remove black bars)\n"
+            "       --loose-crop        Always crop to a multiple of the modulus\n"
+            "       --no-loose-crop     Disable preset 'loose-crop'\n"
+            "   -Y, --maxHeight <number>\n"
+            "                           Set maximum height in pixels\n"
+            "   -X, --maxWidth  <number>\n"
+            "                           Set maximum width in pixels\n"
+            "   --non-anamorphic        Set pixel aspect ratio to 1:1\n"
+            "   --auto-anamorphic       Store pixel aspect ratio that maximizes storage\n"
+            "                           resolution\n"
+            "   --loose-anamorphic      Store pixel aspect ratio that is as close as\n"
+            "                           possible to the source video pixel aspect ratio\n"
+            "   --custom-anamorphic     Store pixel aspect ratio in video stream and\n"
+            "                           directly control all parameters.\n"
+            "   --display-width <number>\n"
+            "                           Set display width in pixels, for custom anamorphic.\n"
+            "                           This determines the display aspect during playback,\n"
+            "                           which may differ from the storage aspect.\n"
+            "   --keep-display-aspect   Preserve the source's display aspect ratio\n"
+            "                           when using custom anamorphic\n"
+            "   --no-keep-display-aspect\n"
+            "                           Disable preset 'keep-display-aspect'\n"
+            "   --pixel-aspect <par_x:par_y>\n"
+            "                           Set pixel aspect for custom anamorphic\n"
+            "                           (--display-width and --pixel-aspect are mutually\n"
+            "                           exclusive.\n"
+            "   --itu-par               Use wider ITU pixel aspect values for loose and\n"
+            "                           custom anamorphic, useful with underscanned sources\n"
+            "   --no-itu-par            Disable preset 'itu-par'\n"
+            "   --modulus <number>      Set storage width and height modulus\n"
+            "                           Dimensions will be made divisible by this number.\n"
+            "                           (default: set by preset, typically 2)\n"
+            "   -M, --color-matrix <string>\n"
+            "                           Set the color space signaled by the output:\n"
+            "                           Overrides color signalling with no conversion.\n"
+            "                               2020\n"
+            "                               709\n"
+            "                               601\n"
+            "                               ntsc (same as 601)\n"
+            "                               pal\n"
+            "                           (default: auto-detected from source)\n"
+            "\n"
+            "\n"
+            "Filters Options --------------------------------------------------------------\n"
+            "\n"
+            "   --comb-detect[=string]  Detect interlace artifacts in frames.\n"
+            "                           If not accompanied by the decomb or deinterlace\n"
+            "                           filters, this filter only logs the interlaced\n"
+            "                           frame count to the activity log.\n"
+            "                           If accompanied by the decomb or deinterlace\n"
+            "                           filters, it causes these filters to selectively\n"
+            "                           deinterlace only those frames where interlacing\n"
+            "                           is detected.\n");
     showFilterPresets(out, HB_FILTER_COMB_DETECT);
     showFilterKeys(out, HB_FILTER_COMB_DETECT);
     showFilterDefault(out, HB_FILTER_COMB_DETECT);
     fprintf( out,
-"   --no-comb-detect        Disable preset comb-detect filter\n"
-"   -d, --deinterlace[=string]\n"
-"                           Deinterlace video using FFmpeg yadif.\n");
+             "   --no-comb-detect        Disable preset comb-detect filter\n"
+             "   -d, --deinterlace[=string]\n"
+             "                           Deinterlace video using FFmpeg yadif.\n");
     showFilterPresets(out, HB_FILTER_DEINTERLACE);
     showFilterKeys(out, HB_FILTER_DEINTERLACE);
     showFilterDefault(out, HB_FILTER_DEINTERLACE);
     fprintf( out,
-"       --no-deinterlace    Disable preset deinterlace filter\n"
-"   -5, --decomb[=string]   Deinterlace video using a combination of yadif,\n"
-"                           blend, cubic, or EEDI2 interpolation.\n");
+             "       --no-deinterlace    Disable preset deinterlace filter\n"
+             "   -5, --decomb[=string]   Deinterlace video using a combination of yadif,\n"
+             "                           blend, cubic, or EEDI2 interpolation.\n");
     showFilterPresets(out, HB_FILTER_DECOMB);
     showFilterKeys(out, HB_FILTER_DECOMB);
     showFilterDefault(out, HB_FILTER_DECOMB);
     fprintf( out,
-"   --no-decomb             Disable preset decomb filter\n"
-"   -9, --detelecine[=string]\n"
-"                           Detelecine (ivtc) video with pullup filter\n"
-"                           Note: this filter drops duplicate frames to\n"
-"                           restore the pre-telecine framerate, unless you\n"
-"                           specify a constant framerate\n"
-"                           (--rate 29.97 --cfr)\n");
+             "   --no-decomb             Disable preset decomb filter\n"
+             "   -9, --detelecine[=string]\n"
+             "                           Detelecine (ivtc) video with pullup filter\n"
+             "                           Note: this filter drops duplicate frames to\n"
+             "                           restore the pre-telecine framerate, unless you\n"
+             "                           specify a constant framerate\n"
+             "                           (--rate 29.97 --cfr)\n");
     showFilterPresets(out, HB_FILTER_DETELECINE);
     showFilterKeys(out, HB_FILTER_DETELECINE);
     showFilterDefault(out, HB_FILTER_DETELECINE);
     fprintf( out,
-"   --no-detelecine         Disable preset detelecine filter\n"
-"   -8, --hqdn3d[=string]   Denoise video with hqdn3d filter\n");
+             "   --no-detelecine         Disable preset detelecine filter\n"
+             "   -8, --hqdn3d[=string]   Denoise video with hqdn3d filter\n");
     showFilterPresets(out, HB_FILTER_HQDN3D);
     showFilterKeys(out, HB_FILTER_HQDN3D);
     showFilterDefault(out, HB_FILTER_HQDN3D);
     fprintf( out,
-"   --no-hqdn3d             Disable preset hqdn3d filter\n"
-"   --denoise[=string]      Legacy alias for '--hqdn3d'\n"
-"   --nlmeans[=string]      Denoise video with NLMeans filter\n");
+             "   --no-hqdn3d             Disable preset hqdn3d filter\n"
+             "   --denoise[=string]      Legacy alias for '--hqdn3d'\n"
+             "   --nlmeans[=string]      Denoise video with NLMeans filter\n");
     showFilterPresets(out, HB_FILTER_NLMEANS);
     showFilterKeys(out, HB_FILTER_NLMEANS);
     showFilterDefault(out, HB_FILTER_NLMEANS);
     fprintf( out,
 
-"   --no-nlmeans            Disable preset NLMeans filter\n"
-"   --nlmeans-tune <string> Tune NLMeans filter to content type\n");
+             "   --no-nlmeans            Disable preset NLMeans filter\n"
+             "   --nlmeans-tune <string> Tune NLMeans filter to content type\n");
     showFilterTunes(out, HB_FILTER_NLMEANS);
     fprintf( out,
-"                           Applies to NLMeans presets only (does not affect\n"
-"                           custom settings)\n"
-"   --chroma-smooth[=string]      Sharpen video with chroma smooth filter\n");
+             "                           Applies to NLMeans presets only (does not affect\n"
+             "                           custom settings)\n"
+             "   --chroma-smooth[=string]      Sharpen video with chroma smooth filter\n");
     showFilterPresets(out, HB_FILTER_CHROMA_SMOOTH);
     showFilterKeys(out, HB_FILTER_CHROMA_SMOOTH);
     showFilterDefault(out, HB_FILTER_CHROMA_SMOOTH);
     fprintf( out,
 
-"   --no-chroma-smooth            Disable preset chroma smooth filter\n"
-"   --chroma-smooth-tune <string> Tune chroma smooth filter\n");
+             "   --no-chroma-smooth            Disable preset chroma smooth filter\n"
+             "   --chroma-smooth-tune <string> Tune chroma smooth filter\n");
     showFilterTunes(out, HB_FILTER_CHROMA_SMOOTH);
     fprintf( out,
-"                                 Applies to chroma smooth presets only (does\n"
-"                                 not affect custom settings)\n"
-"   --unsharp[=string]      Sharpen video with unsharp filter\n");
+             "                                 Applies to chroma smooth presets only (does\n"
+             "                                 not affect custom settings)\n"
+             "   --unsharp[=string]      Sharpen video with unsharp filter\n");
     showFilterPresets(out, HB_FILTER_UNSHARP);
     showFilterKeys(out, HB_FILTER_UNSHARP);
     showFilterDefault(out, HB_FILTER_UNSHARP);
     fprintf( out,
 
-"   --no-unsharp            Disable preset unsharp filter\n"
-"   --unsharp-tune <string> Tune unsharp filter\n");
+             "   --no-unsharp            Disable preset unsharp filter\n"
+             "   --unsharp-tune <string> Tune unsharp filter\n");
     showFilterTunes(out, HB_FILTER_UNSHARP);
     fprintf( out,
-"                           Applies to unsharp presets only (does not affect\n"
-"                           custom settings)\n"
-"   --lapsharp[=string]     Sharpen video with lapsharp filter\n");
+             "                           Applies to unsharp presets only (does not affect\n"
+             "                           custom settings)\n"
+             "   --lapsharp[=string]     Sharpen video with lapsharp filter\n");
     showFilterPresets(out, HB_FILTER_LAPSHARP);
     showFilterKeys(out, HB_FILTER_LAPSHARP);
     showFilterDefault(out, HB_FILTER_LAPSHARP);
     fprintf( out,
 
-"   --no-lapsharp           Disable preset lapsharp filter\n"
-"   --lapsharp-tune <string>\n"
-"                           Tune lapsharp filter\n");
+             "   --no-lapsharp           Disable preset lapsharp filter\n"
+             "   --lapsharp-tune <string>\n"
+             "                           Tune lapsharp filter\n");
     showFilterTunes(out, HB_FILTER_LAPSHARP);
     fprintf( out,
-"                           Applies to lapsharp presets only (does not affect\n"
-"                           custom settings)\n"
-"   -7, --deblock[=string]  Deblock video with avfilter deblock\n");
+             "                           Applies to lapsharp presets only (does not affect\n"
+             "                           custom settings)\n"
+             "   -7, --deblock[=string]  Deblock video with avfilter deblock\n");
     showFilterPresets(out, HB_FILTER_DEBLOCK);
     showFilterKeys(out, HB_FILTER_DEBLOCK);
     showFilterDefault(out, HB_FILTER_DEBLOCK);
     fprintf( out,
-"   --no-deblock            Disable preset deblock filter\n"
-"   --deblock-tune <string>\n"
-"                           Tune deblock filter\n");
+             "   --no-deblock            Disable preset deblock filter\n"
+             "   --deblock-tune <string>\n"
+             "                           Tune deblock filter\n");
     showFilterTunes(out, HB_FILTER_DEBLOCK);
     fprintf( out,
-"                           Applies to deblock presets only (does not affect\n"
-"                           custom settings)\n"
-"   --rotate[=string]       Rotate image or flip its axes.\n"
-"                           angle rotates clockwise, can be one of:\n"
-"                               0, 90, 180, 270\n"
-"                           hflip=1 flips the image on the x axis (horizontally).\n");
+             "                           Applies to deblock presets only (does not affect\n"
+             "                           custom settings)\n"
+             "   --rotate[=string]       Rotate image or flip its axes.\n"
+             "                           angle rotates clockwise, can be one of:\n"
+             "                               0, 90, 180, 270\n"
+             "                           hflip=1 flips the image on the x axis (horizontally).\n");
     showFilterKeys(out, HB_FILTER_ROTATE);
     showFilterDefault(out, HB_FILTER_ROTATE);
     fprintf( out,
-"   --pad <string>          Pad image with borders (e.g. letterbox).\n"
-"                           The padding color may be set (default black).\n"
-"                           Color may be an HTML color name or RGB value.\n"
-"                           The position of image in pad may also be set.\n");
+             "   --pad <string>          Pad image with borders (e.g. letterbox).\n"
+             "                           The padding color may be set (default black).\n"
+             "                           Color may be an HTML color name or RGB value.\n"
+             "                           The position of image in pad may also be set.\n");
     showFilterKeys(out, HB_FILTER_PAD);
     fprintf( out,
-"   -g, --grayscale         Grayscale encoding\n"
-"   --no-grayscale          Disable preset 'grayscale'\n"
-"\n"
-"\n"
-"Subtitles Options ------------------------------------------------------------\n"
-"\n"
-"  --subtitle-lang-list <string>\n"
-"                           Specify a comma separated list of subtitle\n"
-"                           languages you would like to select from the\n"
-"                           source title. By default, the first subtitle\n"
-"                           matching each language will be added to your\n"
-"                           output. Provide the language's ISO 639-2 code\n"
-"                           (e.g. fre, eng, spa, dut, et cetera)\n"
-"      --all-subtitles      Select all subtitle tracks matching languages in\n"
-"                           the specified language list\n"
-"                           (--subtitle-lang-list).\n"
-"                           Any language if list is not specified.\n"
-"      --first-subtitle     Select first subtitle track matching languages in\n"
-"                           the specified language list\n"
-"                           (--subtitle-lang-list).\n"
-"                           Any language if list is not specified.\n"
-"  -s, --subtitle <string>  Select subtitle track(s), separated by commas\n"
-"                           More than one output track can be used for one\n"
-"                           input. \"none\" for no subtitles.\n"
-"                           Example: \"1,2,3\" for multiple tracks.\n"
-"                           A special track name \"scan\" adds an extra first\n"
-"                           pass. This extra pass scans subtitles matching\n"
-"                           the language of the first audio or the language \n"
-"                           selected by --native-language.\n"
-"                           The one that's only used 10 percent of the time\n"
-"                           or less is selected. This should locate subtitles\n"
-"                           for short foreign language segments. Best used in\n"
-"                           conjunction with --subtitle-forced.\n"
-"  -S, --subname <string>   Set subtitle track name(s).\n"
-"                           Separate tracks by commas.\n"
-"  -F, --subtitle-forced[=string]\n"
-"                           Only display subtitles from the selected stream\n"
-"                           if the subtitle has the forced flag set. The\n"
-"                           values in 'string' are indexes into the\n"
-"                           subtitle list specified with '--subtitle'.\n"
-"                           Separate tracks by commas.\n"
-"                           Example: \"1,2,3\" for multiple tracks.\n"
-"                           If \"string\" is omitted, the first track is\n"
-"                           forced.\n"
-"      --subtitle-burned[=number, \"native\", or \"none\"]\n"
-"                           \"Burn\" the selected subtitle into the video\n"
-"                           track. If \"subtitle\" is omitted, the first\n"
-"                           track is burned. \"subtitle\" is an index into\n"
-"                           the subtitle list specified with '--subtitle'\n"
-"                           or \"native\" to burn the subtitle track that may\n"
-"                           be added by the 'native-language' option.\n"
-"      --subtitle-default[=number or \"none\"]\n"
-"                           Flag the selected subtitle as the default\n"
-"                           subtitle to be displayed upon playback.  Setting\n"
-"                           no default means no subtitle will be displayed\n"
-"                           automatically. 'number' is an index into the\n"
-"                           subtitle list specified with '--subtitle'.\n"
-"                           \"none\" may be used to override an automatically\n"
-"                           selected default subtitle track.\n"
-"  -N, --native-language <string>\n"
-"                           Specify your language preference. When the first\n"
-"                           audio track does not match your native language\n"
-"                           then select the first subtitle that does. When\n"
-"                           used in conjunction with --native-dub the audio\n"
-"                           track is changed in preference to subtitles.\n"
-"                           Provide the language's ISO 639-2 code\n"
-"                           (e.g. fre, eng, spa, dut, et cetera)\n"
-"      --native-dub         Used in conjunction with --native-language\n"
-"                           requests that if no audio tracks are selected the\n"
-"                           default selected audio track will be the first\n"
-"                           one that matches the --native-language. If there\n"
-"                           are no matching audio tracks then the first\n"
-"                           matching subtitle track is used instead.\n"
-"     --srt-file <string>   SubRip SRT filename(s), separated by commas.\n"
-"     --srt-codeset <string>\n"
-"                           Character codeset(s) that the SRT file(s) are\n"
-"                           encoded as, separated by commas.\n"
-"                           If not specified, 'latin1' is assumed.\n"
-"                           Command 'iconv -l' provides a list of valid codesets.\n"
-"     --srt-offset <string> Offset (in milliseconds) to apply to the SRT\n"
-"                           file(s), separated by commas. If not specified,\n"
-"                           zero is assumed. Offsets may be negative.\n"
-"     --srt-lang <string>   SRT track language as an ISO 639-2 code\n"
-"                           (e.g. fre, eng, spa, dut, et cetera)\n"
-"                           If not specified, then 'und' is used.\n"
-"                           Separate by commas.\n"
-"     --srt-default[=number]\n"
-"                           Flag the selected SRT as the default subtitle\n"
-"                           to be displayed during playback.\n"
-"                           Setting no default means no subtitle will be\n"
-"                           automatically displayed. If 'number' is omitted,\n"
-"                           the first SRT is the default.\n"
-"                           'number' is a 1-based index into the 'srt-file' list\n"
-"     --srt-burn[=number]   \"Burn\" the selected SRT subtitle into\n"
-"                           the video track.\n"
-"                           If 'number' is omitted, the first SRT is burned.\n"
-"                           'number' is a 1-based index into the 'srt-file' list\n"
-"     --ssa-file <string>   SubStationAlpha SSA filename(s), separated by\n"
-"                           commas.\n"
-"     --ssa-offset <string> Offset (in milliseconds) to apply to the SSA\n"
-"                           file(s), separated by commas. If not specified,\n"
-"                           zero is assumed. Offsets may be negative.\n"
-"     --ssa-lang <string>   SSA track language as an ISO 639-2 code\n"
-"                           (e.g. fre, eng, spa, dut, et cetera)\n"
-"                           If not specified, then 'und' is used.\n"
-"                           Separate by commas.\n"
-"     --ssa-default[=number]\n"
-"                           Flag the selected SSA as the default subtitle\n"
-"                           to be displayed during playback.\n"
-"                           Setting no default means no subtitle will be\n"
-"                           automatically displayed. If 'number' is omitted,\n"
-"                           the first SSA is the default.\n"
-"                           'number' is a 1-based index into the 'ssa-file' list\n"
-"     --ssa-burn[=number]   \"Burn\" the selected SSA subtitle into\n"
-"                           the video track.\n"
-"                           If 'number' is omitted, the first SSA is burned.\n"
-"                           'number' is a 1-based index into the 'ssa-file' list\n"
-"\n"
-    );
+             "   -g, --grayscale         Grayscale encoding\n"
+             "   --no-grayscale          Disable preset 'grayscale'\n"
+             "\n"
+             "\n"
+             "Subtitles Options ------------------------------------------------------------\n"
+             "\n"
+             "  --subtitle-lang-list <string>\n"
+             "                           Specify a comma separated list of subtitle\n"
+             "                           languages you would like to select from the\n"
+             "                           source title. By default, the first subtitle\n"
+             "                           matching each language will be added to your\n"
+             "                           output. Provide the language's ISO 639-2 code\n"
+             "                           (e.g. fre, eng, spa, dut, et cetera)\n"
+             "      --all-subtitles      Select all subtitle tracks matching languages in\n"
+             "                           the specified language list\n"
+             "                           (--subtitle-lang-list).\n"
+             "                           Any language if list is not specified.\n"
+             "      --first-subtitle     Select first subtitle track matching languages in\n"
+             "                           the specified language list\n"
+             "                           (--subtitle-lang-list).\n"
+             "                           Any language if list is not specified.\n"
+             "  -s, --subtitle <string>  Select subtitle track(s), separated by commas\n"
+             "                           More than one output track can be used for one\n"
+             "                           input. \"none\" for no subtitles.\n"
+             "                           Example: \"1,2,3\" for multiple tracks.\n"
+             "                           A special track name \"scan\" adds an extra first\n"
+             "                           pass. This extra pass scans subtitles matching\n"
+             "                           the language of the first audio or the language \n"
+             "                           selected by --native-language.\n"
+             "                           The one that's only used 10 percent of the time\n"
+             "                           or less is selected. This should locate subtitles\n"
+             "                           for short foreign language segments. Best used in\n"
+             "                           conjunction with --subtitle-forced.\n"
+             "  -S, --subname <string>   Set subtitle track name(s).\n"
+             "                           Separate tracks by commas.\n"
+             "  -F, --subtitle-forced[=string]\n"
+             "                           Only display subtitles from the selected stream\n"
+             "                           if the subtitle has the forced flag set. The\n"
+             "                           values in 'string' are indexes into the\n"
+             "                           subtitle list specified with '--subtitle'.\n"
+             "                           Separate tracks by commas.\n"
+             "                           Example: \"1,2,3\" for multiple tracks.\n"
+             "                           If \"string\" is omitted, the first track is\n"
+             "                           forced.\n"
+             "      --subtitle-burned[=number, \"native\", or \"none\"]\n"
+             "                           \"Burn\" the selected subtitle into the video\n"
+             "                           track. If \"subtitle\" is omitted, the first\n"
+             "                           track is burned. \"subtitle\" is an index into\n"
+             "                           the subtitle list specified with '--subtitle'\n"
+             "                           or \"native\" to burn the subtitle track that may\n"
+             "                           be added by the 'native-language' option.\n"
+             "      --subtitle-default[=number or \"none\"]\n"
+             "                           Flag the selected subtitle as the default\n"
+             "                           subtitle to be displayed upon playback.  Setting\n"
+             "                           no default means no subtitle will be displayed\n"
+             "                           automatically. 'number' is an index into the\n"
+             "                           subtitle list specified with '--subtitle'.\n"
+             "                           \"none\" may be used to override an automatically\n"
+             "                           selected default subtitle track.\n"
+             "  -N, --native-language <string>\n"
+             "                           Specify your language preference. When the first\n"
+             "                           audio track does not match your native language\n"
+             "                           then select the first subtitle that does. When\n"
+             "                           used in conjunction with --native-dub the audio\n"
+             "                           track is changed in preference to subtitles.\n"
+             "                           Provide the language's ISO 639-2 code\n"
+             "                           (e.g. fre, eng, spa, dut, et cetera)\n"
+             "      --native-dub         Used in conjunction with --native-language\n"
+             "                           requests that if no audio tracks are selected the\n"
+             "                           default selected audio track will be the first\n"
+             "                           one that matches the --native-language. If there\n"
+             "                           are no matching audio tracks then the first\n"
+             "                           matching subtitle track is used instead.\n"
+             "     --srt-file <string>   SubRip SRT filename(s), separated by commas.\n"
+             "     --srt-codeset <string>\n"
+             "                           Character codeset(s) that the SRT file(s) are\n"
+             "                           encoded as, separated by commas.\n"
+             "                           If not specified, 'latin1' is assumed.\n"
+             "                           Command 'iconv -l' provides a list of valid codesets.\n"
+             "     --srt-offset <string> Offset (in milliseconds) to apply to the SRT\n"
+             "                           file(s), separated by commas. If not specified,\n"
+             "                           zero is assumed. Offsets may be negative.\n"
+             "     --srt-lang <string>   SRT track language as an ISO 639-2 code\n"
+             "                           (e.g. fre, eng, spa, dut, et cetera)\n"
+             "                           If not specified, then 'und' is used.\n"
+             "                           Separate by commas.\n"
+             "     --srt-default[=number]\n"
+             "                           Flag the selected SRT as the default subtitle\n"
+             "                           to be displayed during playback.\n"
+             "                           Setting no default means no subtitle will be\n"
+             "                           automatically displayed. If 'number' is omitted,\n"
+             "                           the first SRT is the default.\n"
+             "                           'number' is a 1-based index into the 'srt-file' list\n"
+             "     --srt-burn[=number]   \"Burn\" the selected SRT subtitle into\n"
+             "                           the video track.\n"
+             "                           If 'number' is omitted, the first SRT is burned.\n"
+             "                           'number' is a 1-based index into the 'srt-file' list\n"
+             "     --ssa-file <string>   SubStationAlpha SSA filename(s), separated by\n"
+             "                           commas.\n"
+             "     --ssa-offset <string> Offset (in milliseconds) to apply to the SSA\n"
+             "                           file(s), separated by commas. If not specified,\n"
+             "                           zero is assumed. Offsets may be negative.\n"
+             "     --ssa-lang <string>   SSA track language as an ISO 639-2 code\n"
+             "                           (e.g. fre, eng, spa, dut, et cetera)\n"
+             "                           If not specified, then 'und' is used.\n"
+             "                           Separate by commas.\n"
+             "     --ssa-default[=number]\n"
+             "                           Flag the selected SSA as the default subtitle\n"
+             "                           to be displayed during playback.\n"
+             "                           Setting no default means no subtitle will be\n"
+             "                           automatically displayed. If 'number' is omitted,\n"
+             "                           the first SSA is the default.\n"
+             "                           'number' is a 1-based index into the 'ssa-file' list\n"
+             "     --ssa-burn[=number]   \"Burn\" the selected SSA subtitle into\n"
+             "                           the video track.\n"
+             "                           If 'number' is omitted, the first SSA is burned.\n"
+             "                           'number' is a 1-based index into the 'ssa-file' list\n"
+             "\n"
+           );
 
 #if HB_PROJECT_FEATURE_QSV
-if (hb_qsv_available())
-{
-    fprintf( out,
-"\n"
-"-- Intel Quick Sync Video Options --------------------------------------------\n"
-"\n"
-"   --enable-qsv-decoding   Allow QSV hardware decoding of the video track\n"
-"   --disable-qsv-decoding  Disable QSV hardware decoding of the video track,\n"
-"                           forcing software decoding instead\n"
-"   --qsv-async-depth[=number]\n"
-"                           Set the number of asynchronous operations that\n"
-"                           should be performed before the result is\n"
-"                           explicitly synchronized.\n"
-"                           Omit 'number' for zero.\n"
-"                           (default: 4)\n"
-"\n"
-    );
-}
+    if (hb_qsv_available())
+    {
+        fprintf( out,
+                 "\n"
+                 "-- Intel Quick Sync Video Options --------------------------------------------\n"
+                 "\n"
+                 "   --enable-qsv-decoding   Allow QSV hardware decoding of the video track\n"
+                 "   --disable-qsv-decoding  Disable QSV hardware decoding of the video track,\n"
+                 "                           forcing software decoding instead\n"
+                 "   --qsv-async-depth[=number]\n"
+                 "                           Set the number of asynchronous operations that\n"
+                 "                           should be performed before the result is\n"
+                 "                           explicitly synchronized.\n"
+                 "                           Omit 'number' for zero.\n"
+                 "                           (default: 4)\n"
+                 "\n"
+               );
+    }
 #endif
 }
 
@@ -2096,78 +2097,78 @@ static double parse_hhmmss_strtok()
 static int ParseOptions( int argc, char ** argv )
 {
 
-    #define PREVIEWS             257
-    #define START_AT_PREVIEW     258
-    #define START_AT             259
-    #define STOP_AT              260
-    #define ANGLE                261
-    #define DVDNAV               262
-    #define DISPLAY_WIDTH        263
-    #define PIXEL_ASPECT         264
-    #define MODULUS              265
-    #define KEEP_DISPLAY_ASPECT  266
-    #define SUB_BURNED           267
-    #define SUB_DEFAULT          268
-    #define NATIVE_DUB           269
-    #define SRT_FILE             270
-    #define SRT_CODESET          271
-    #define SRT_OFFSET           272
-    #define SRT_LANG             273
-    #define SRT_DEFAULT          274
-    #define SRT_BURN             275
-    #define ROTATE_FILTER        276
-    #define SCAN_ONLY            277
-    #define MAIN_FEATURE         278
-    #define MIN_DURATION         279
-    #define AUDIO_GAIN           280
-    #define ALLOWED_AUDIO_COPY   281
-    #define AUDIO_FALLBACK       282
-    #define LOOSE_CROP           283
-    #define ENCODER_PRESET       284
-    #define ENCODER_PRESET_LIST  285
-    #define ENCODER_TUNE         286
-    #define ENCODER_TUNE_LIST    287
-    #define ENCODER_PROFILE      288
-    #define ENCODER_PROFILE_LIST 289
-    #define ENCODER_LEVEL        290
-    #define ENCODER_LEVEL_LIST   291
-    #define NORMALIZE_MIX        293
-    #define AUDIO_DITHER         294
-    #define QSV_BASELINE         295
-    #define QSV_ASYNC_DEPTH      296
-    #define QSV_IMPLEMENTATION   297
-    #define FILTER_NLMEANS       298
-    #define FILTER_NLMEANS_TUNE  299
-    #define AUDIO_LANG_LIST      300
-    #define SUBTITLE_LANG_LIST   301
-    #define PRESET_EXPORT        302
-    #define PRESET_EXPORT_DESC   303
-    #define PRESET_EXPORT_FILE   304
-    #define PRESET_IMPORT        305
-    #define PRESET_IMPORT_GUI    306
-    #define VERSION              307
-    #define DESCRIBE             308
-    #define PAD                  309
-    #define FILTER_COMB_DETECT   310
-    #define QUEUE_IMPORT         311
-    #define FILTER_UNSHARP       312
-    #define FILTER_UNSHARP_TUNE  313
-    #define FILTER_LAPSHARP      314
-    #define FILTER_LAPSHARP_TUNE 315
-    #define JSON_LOGGING         316
-    #define SSA_FILE             317
-    #define SSA_OFFSET           318
-    #define SSA_LANG             319
-    #define SSA_DEFAULT          320
-    #define SSA_BURN             321
-    #define FILTER_CHROMA_SMOOTH      322
-    #define FILTER_CHROMA_SMOOTH_TUNE 323
-    #define FILTER_DEBLOCK_TUNE  324
+#define PREVIEWS             257
+#define START_AT_PREVIEW     258
+#define START_AT             259
+#define STOP_AT              260
+#define ANGLE                261
+#define DVDNAV               262
+#define DISPLAY_WIDTH        263
+#define PIXEL_ASPECT         264
+#define MODULUS              265
+#define KEEP_DISPLAY_ASPECT  266
+#define SUB_BURNED           267
+#define SUB_DEFAULT          268
+#define NATIVE_DUB           269
+#define SRT_FILE             270
+#define SRT_CODESET          271
+#define SRT_OFFSET           272
+#define SRT_LANG             273
+#define SRT_DEFAULT          274
+#define SRT_BURN             275
+#define ROTATE_FILTER        276
+#define SCAN_ONLY            277
+#define MAIN_FEATURE         278
+#define MIN_DURATION         279
+#define AUDIO_GAIN           280
+#define ALLOWED_AUDIO_COPY   281
+#define AUDIO_FALLBACK       282
+#define LOOSE_CROP           283
+#define ENCODER_PRESET       284
+#define ENCODER_PRESET_LIST  285
+#define ENCODER_TUNE         286
+#define ENCODER_TUNE_LIST    287
+#define ENCODER_PROFILE      288
+#define ENCODER_PROFILE_LIST 289
+#define ENCODER_LEVEL        290
+#define ENCODER_LEVEL_LIST   291
+#define NORMALIZE_MIX        293
+#define AUDIO_DITHER         294
+#define QSV_BASELINE         295
+#define QSV_ASYNC_DEPTH      296
+#define QSV_IMPLEMENTATION   297
+#define FILTER_NLMEANS       298
+#define FILTER_NLMEANS_TUNE  299
+#define AUDIO_LANG_LIST      300
+#define SUBTITLE_LANG_LIST   301
+#define PRESET_EXPORT        302
+#define PRESET_EXPORT_DESC   303
+#define PRESET_EXPORT_FILE   304
+#define PRESET_IMPORT        305
+#define PRESET_IMPORT_GUI    306
+#define VERSION              307
+#define DESCRIBE             308
+#define PAD                  309
+#define FILTER_COMB_DETECT   310
+#define QUEUE_IMPORT         311
+#define FILTER_UNSHARP       312
+#define FILTER_UNSHARP_TUNE  313
+#define FILTER_LAPSHARP      314
+#define FILTER_LAPSHARP_TUNE 315
+#define JSON_LOGGING         316
+#define SSA_FILE             317
+#define SSA_OFFSET           318
+#define SSA_LANG             319
+#define SSA_DEFAULT          320
+#define SSA_BURN             321
+#define FILTER_CHROMA_SMOOTH      322
+#define FILTER_CHROMA_SMOOTH_TUNE 323
+#define FILTER_DEBLOCK_TUNE  324
 
     for( ;; )
     {
         static struct option long_options[] =
-          {
+        {
             { "help",        no_argument,       NULL,    'h' },
             { "version",     no_argument,       NULL,    VERSION },
             { "describe",    no_argument,       NULL,    DESCRIBE },
@@ -2339,7 +2340,7 @@ static int ParseOptions( int argc, char ** argv )
             { "audio-fallback",  required_argument, NULL, AUDIO_FALLBACK },
             { "json",        no_argument,       NULL,    JSON_LOGGING },
             { 0, 0, 0, 0 }
-          };
+        };
 
         int option_index = 0;
         int c;
@@ -2357,744 +2358,748 @@ static int ParseOptions( int argc, char ** argv )
 
         switch( c )
         {
-            case 0:
-                /* option was handled entirely in getopt_long */
-                break;
-            case 'h':
-                ShowHelp();
-                return 1;
-            case VERSION:
-                printf("HandBrake %s\n", hb_get_version(NULL));
-                return 1;
-            case DESCRIBE:
-                printf("%s\n", hb_get_full_description());
-                return 1;
-            case JSON_LOGGING:
-            {
-                hb_dict_t * version_dict;
-                char      * version_json;
+        case 0:
+            /* option was handled entirely in getopt_long */
+            break;
+        case 'h':
+            ShowHelp();
+            return 1;
+        case VERSION:
+            printf("HandBrake %s\n", hb_get_version(NULL));
+            return 1;
+        case DESCRIBE:
+            printf("%s\n", hb_get_full_description());
+            return 1;
+        case JSON_LOGGING:
+        {
+            hb_dict_t * version_dict;
+            char      * version_json;
 
-                version_dict = hb_version_dict();
-                version_json = hb_value_get_json(version_dict);
-                hb_value_free(&version_dict);
-                fprintf(stdout, "Version: %s\n", version_json);
-                free(version_json);
-                json = 1;
-            } break;
-            case 'v':
-                if( optarg != NULL )
-                {
-                    debug = atoi( optarg );
-                }
-                else
-                {
-                    debug = 1;
-                }
-                break;
-            case 'Z':
-                preset_name = strdup(optarg);
-                break;
-            case 'z':
-                ShowPresets(NULL, 0, 1);
-                return 1;
-            case PRESET_EXPORT:
-                preset_export_name = strdup(optarg);
-                break;
-            case PRESET_EXPORT_DESC:
-                preset_export_desc = strdup(optarg);
-                break;
-            case PRESET_EXPORT_FILE:
-                preset_export_file = strdup(optarg);
-                break;
-            case PRESET_IMPORT:
+            version_dict = hb_version_dict();
+            version_json = hb_value_get_json(version_dict);
+            hb_value_free(&version_dict);
+            fprintf(stdout, "Version: %s\n", version_json);
+            free(version_json);
+            json = 1;
+        }
+        break;
+        case 'v':
+            if( optarg != NULL )
             {
-                // Import list of preset files
-                while (optind < argc && argv[optind][0] != '-')
+                debug = atoi( optarg );
+            }
+            else
+            {
+                debug = 1;
+            }
+            break;
+        case 'Z':
+            preset_name = strdup(optarg);
+            break;
+        case 'z':
+            ShowPresets(NULL, 0, 1);
+            return 1;
+        case PRESET_EXPORT:
+            preset_export_name = strdup(optarg);
+            break;
+        case PRESET_EXPORT_DESC:
+            preset_export_desc = strdup(optarg);
+            break;
+        case PRESET_EXPORT_FILE:
+            preset_export_file = strdup(optarg);
+            break;
+        case PRESET_IMPORT:
+        {
+            // Import list of preset files
+            while (optind < argc && argv[optind][0] != '-')
+            {
+                int result = hb_presets_add_path(argv[optind]);
+                if (result < 0)
                 {
-                    int result = hb_presets_add_path(argv[optind]);
-                    if (result < 0)
-                    {
-                        fprintf(stderr, "Preset import failed, file (%s)\n",
-                                argv[optind]);
-                    }
-                    optind++;
+                    fprintf(stderr, "Preset import failed, file (%s)\n",
+                            argv[optind]);
                 }
-            }   break;
-            case PRESET_IMPORT_GUI:
-                hb_presets_gui_init();
-                break;
-            case QUEUE_IMPORT:
-                queue_import_name = strdup(optarg);
-                break;
-            case DVDNAV:
-                dvdnav = 0;
-                break;
+                optind++;
+            }
+        }
+        break;
+        case PRESET_IMPORT_GUI:
+            hb_presets_gui_init();
+            break;
+        case QUEUE_IMPORT:
+            queue_import_name = strdup(optarg);
+            break;
+        case DVDNAV:
+            dvdnav = 0;
+            break;
 
-            case 'f':
-                format = strdup( optarg );
-                break;
-            case 'i':
-                input = strdup( optarg );
+        case 'f':
+            format = strdup( optarg );
+            break;
+        case 'i':
+            input = strdup( optarg );
 #ifdef __APPLE_CC__
-                char *devName = bsd_name_for_path( input ); // alloc
-                if( devName != NULL )
-                {
-                    if( device_is_dvd( devName ))
-                    {
-                        free( input );
-                        input = malloc( strlen( "/dev/" ) + strlen( devName ) + 1 );
-                        if( input == NULL )
-                        {
-                            fprintf( stderr, "ERROR: malloc() failed while attempting to set device path.\n" );
-                            free( devName );
-                            return -1;
-                        }
-                        sprintf( input, "/dev/%s", devName );
-                    }
-                    free( devName );
-                }
-#endif
-                break;
-            case 'o':
-                output = strdup( optarg );
-                break;
-            case 'O':
-                mp4_optimize = 1;
-                break;
-            case 'I':
-                ipod_atom = 1;
-                break;
-            case 't':
-                titleindex = atoi( optarg );
-                break;
-            case SCAN_ONLY:
-                titlescan = 1;
-                break;
-            case MAIN_FEATURE:
-                main_feature = 1;
-                break;
-            case 'c':
+            char *devName = bsd_name_for_path( input ); // alloc
+            if( devName != NULL )
             {
-                int start, end;
-                if( sscanf( optarg, "%d-%d", &start, &end ) == 2 )
+                if( device_is_dvd( devName ))
                 {
-                    chapter_start = start;
-                    chapter_end   = end;
+                    free( input );
+                    input = malloc( strlen( "/dev/" ) + strlen( devName ) + 1 );
+                    if( input == NULL )
+                    {
+                        fprintf( stderr, "ERROR: malloc() failed while attempting to set device path.\n" );
+                        free( devName );
+                        return -1;
+                    }
+                    sprintf( input, "/dev/%s", devName );
                 }
-                else if( sscanf( optarg, "%d", &start ) == 1 )
-                {
-                    chapter_start = start;
-                    chapter_end   = chapter_start;
-                }
-                else
-                {
-                    fprintf( stderr, "chapters: Invalid syntax (%s)\n",
-                             optarg );
-                    return -1;
-                }
-                break;
+                free( devName );
             }
-            case ANGLE:
-                angle = atoi( optarg );
-                break;
-            case 'm':
-                if( optarg != NULL )
-                {
-                    marker_file = strdup( optarg );
-                }
-                chapter_markers = 1;
-                break;
-            case AUDIO_LANG_LIST:
-                audio_lang_list = hb_str_vsplit(optarg, ',');
-                break;
-            case SUBTITLE_LANG_LIST:
-                subtitle_lang_list = hb_str_vsplit(optarg, ',');
-                break;
-            case 'a':
-                if( optarg != NULL )
-                {
-                    atracks = hb_str_vsplit(optarg, ',');
-                }
-                else
-                {
-                    atracks = hb_str_vsplit("1", ',');
-                }
-                break;
-            case '6':
-                if( optarg != NULL )
-                {
-                    mixdowns = hb_str_vsplit(optarg, ',');
-                }
-                break;
-            case 'D':
-                if( optarg != NULL )
-                {
-                    dynamic_range_compression = hb_str_vsplit(optarg, ',');
-                }
-                break;
-            case AUDIO_GAIN:
-                if( optarg != NULL )
-                {
-                    audio_gain = hb_str_vsplit(optarg, ',');
-                }
-                break;
-            case AUDIO_DITHER:
-                if (optarg != NULL)
-                {
-                    audio_dither = hb_str_vsplit(optarg, ',');
-                }
-                break;
-            case NORMALIZE_MIX:
-                normalize_mix_level = hb_str_vsplit(optarg, ',');
-                break;
-            case 's':
-                subtracks = hb_str_vsplit( optarg, ',' );
-                break;
-            case 'F':
-                subforce = hb_str_vsplit( optarg, ',' );
-                break;
-            case SUB_BURNED:
-                if (optarg != NULL)
-                {
-                    if (!strcasecmp(optarg, "native") ||
+#endif
+            break;
+        case 'o':
+            output = strdup( optarg );
+            break;
+        case 'O':
+            mp4_optimize = 1;
+            break;
+        case 'I':
+            ipod_atom = 1;
+            break;
+        case 't':
+            titleindex = atoi( optarg );
+            break;
+        case SCAN_ONLY:
+            titlescan = 1;
+            break;
+        case MAIN_FEATURE:
+            main_feature = 1;
+            break;
+        case 'c':
+        {
+            int start, end;
+            if( sscanf( optarg, "%d-%d", &start, &end ) == 2 )
+            {
+                chapter_start = start;
+                chapter_end   = end;
+            }
+            else if( sscanf( optarg, "%d", &start ) == 1 )
+            {
+                chapter_start = start;
+                chapter_end   = chapter_start;
+            }
+            else
+            {
+                fprintf( stderr, "chapters: Invalid syntax (%s)\n",
+                         optarg );
+                return -1;
+            }
+            break;
+        }
+        case ANGLE:
+            angle = atoi( optarg );
+            break;
+        case 'm':
+            if( optarg != NULL )
+            {
+                marker_file = strdup( optarg );
+            }
+            chapter_markers = 1;
+            break;
+        case AUDIO_LANG_LIST:
+            audio_lang_list = hb_str_vsplit(optarg, ',');
+            break;
+        case SUBTITLE_LANG_LIST:
+            subtitle_lang_list = hb_str_vsplit(optarg, ',');
+            break;
+        case 'a':
+            if( optarg != NULL )
+            {
+                atracks = hb_str_vsplit(optarg, ',');
+            }
+            else
+            {
+                atracks = hb_str_vsplit("1", ',');
+            }
+            break;
+        case '6':
+            if( optarg != NULL )
+            {
+                mixdowns = hb_str_vsplit(optarg, ',');
+            }
+            break;
+        case 'D':
+            if( optarg != NULL )
+            {
+                dynamic_range_compression = hb_str_vsplit(optarg, ',');
+            }
+            break;
+        case AUDIO_GAIN:
+            if( optarg != NULL )
+            {
+                audio_gain = hb_str_vsplit(optarg, ',');
+            }
+            break;
+        case AUDIO_DITHER:
+            if (optarg != NULL)
+            {
+                audio_dither = hb_str_vsplit(optarg, ',');
+            }
+            break;
+        case NORMALIZE_MIX:
+            normalize_mix_level = hb_str_vsplit(optarg, ',');
+            break;
+        case 's':
+            subtracks = hb_str_vsplit( optarg, ',' );
+            break;
+        case 'F':
+            subforce = hb_str_vsplit( optarg, ',' );
+            break;
+        case SUB_BURNED:
+            if (optarg != NULL)
+            {
+                if (!strcasecmp(optarg, "native") ||
                         !strcasecmp(optarg, "scan"))
-                    {
-                        subburn_native = 1;
-                    }
-                    else if (!strcasecmp(optarg, "none"))
-                    {
-                        subburn = 0;
-                    }
-                    else
-                    {
-                        subburn = strtol(optarg, NULL, 0);
-                    }
+                {
+                    subburn_native = 1;
+                }
+                else if (!strcasecmp(optarg, "none"))
+                {
+                    subburn = 0;
                 }
                 else
                 {
-                    subburn = 1;
+                    subburn = strtol(optarg, NULL, 0);
                 }
-                if (subburn > 0)
-                {
-                    if (subtracks != NULL && hb_str_vlen(subtracks) >= subburn &&
+            }
+            else
+            {
+                subburn = 1;
+            }
+            if (subburn > 0)
+            {
+                if (subtracks != NULL && hb_str_vlen(subtracks) >= subburn &&
                         !strcasecmp("scan", subtracks[subburn-1]))
-                    {
-                        subburn_native = 1;
-                    }
-                }
-                break;
-            case SUB_DEFAULT:
-                if (optarg != NULL)
                 {
-                    if (!strcasecmp("none", optarg))
-                    {
-                        subdefault = -1;
-                    }
-                    else
-                    {
-                        subdefault = strtol(optarg, NULL, 0);
-                    }
+                    subburn_native = 1;
                 }
-                else
-                {
-                    subdefault = 1;
-                }
-                break;
-            case 'N':
-            {
-                const iso639_lang_t *lang = lang_lookup(optarg);
-                if (lang != NULL)
-                {
-                    native_language = strdup(lang->iso639_2);
-                }
-                else
-                {
-                    fprintf(stderr, "Invalid native language (%s)\n", optarg);
-                    return -1;
-                }
-            }   break;
-            case NATIVE_DUB:
-                native_dub = 1;
-                break;
-            case SRT_FILE:
-                srtfile = hb_str_vsplit( optarg, ',' );
-                break;
-            case SRT_CODESET:
-                srtcodeset = hb_str_vsplit( optarg, ',' );
-                break;
-            case SRT_OFFSET:
-                srtoffset = hb_str_vsplit( optarg, ',' );
-                break;
-            case SRT_LANG:
-                srtlang = hb_str_vsplit( optarg, ',' );
-                break;
-            case SRT_DEFAULT:
-                if( optarg != NULL )
-                {
-                    srtdefault = atoi( optarg );
-                }
-                else
-                {
-                    srtdefault = 1 ;
-                }
-                break;
-            case SRT_BURN:
-                if( optarg != NULL )
-                {
-                    srtburn = atoi( optarg );
-                }
-                else
-                {
-                    srtburn = 1 ;
-                }
-                break;
-            case SSA_FILE:
-                ssafile = hb_str_vsplit( optarg, ',' );
-                break;
-            case SSA_OFFSET:
-                ssaoffset = hb_str_vsplit( optarg, ',' );
-                break;
-            case SSA_LANG:
-                ssalang = hb_str_vsplit( optarg, ',' );
-                break;
-            case SSA_DEFAULT:
-                if( optarg != NULL )
-                {
-                    ssadefault = atoi( optarg );
-                }
-                else
-                {
-                    ssadefault = 1 ;
-                }
-                break;
-            case SSA_BURN:
-                if( optarg != NULL )
-                {
-                    ssaburn = atoi( optarg );
-                }
-                else
-                {
-                    ssaburn = 1 ;
-                }
-                break;
-            case '2':
-                twoPass = 1;
-                break;
-            case 'd':
-                free(deinterlace);
-                if (optarg != NULL)
-                {
-                    deinterlace = strdup(optarg);
-                }
-                else
-                {
-                    deinterlace = strdup(DEINTERLACE_DEFAULT_PRESET);
-                }
-                break;
-            case '7':
-                free(deblock);
-                if (optarg != NULL)
-                {
-                    deblock = strdup(optarg);
-                }
-                else
-                {
-                    deblock = strdup(DEBLOCK_DEFAULT_PRESET);
-                }
-                break;
-            case FILTER_DEBLOCK_TUNE:
-                free(deblock_tune);
-                deblock_tune = strdup(optarg);
-                break;
-            case '8':
-                free(hqdn3d);
-                if (optarg != NULL)
-                {
-                    hqdn3d = strdup(optarg);
-                }
-                else
-                {
-                    hqdn3d = strdup(HQDN3D_DEFAULT_PRESET);
-                }
-                break;
-            case FILTER_NLMEANS:
-                free(nlmeans);
-                if (optarg != NULL)
-                {
-                    nlmeans = strdup(optarg);
-                }
-                else
-                {
-                    nlmeans = strdup(NLMEANS_DEFAULT_PRESET);
-                }
-                break;
-            case FILTER_NLMEANS_TUNE:
-                free(nlmeans_tune);
-                nlmeans_tune = strdup(optarg);
-                break;
-            case FILTER_CHROMA_SMOOTH:
-                free(chroma_smooth);
-                if (optarg != NULL)
-                {
-                    chroma_smooth = strdup(optarg);
-                }
-                else
-                {
-                    chroma_smooth = strdup(CHROMA_SMOOTH_DEFAULT_PRESET);
-                }
-                break;
-            case FILTER_CHROMA_SMOOTH_TUNE:
-                free(chroma_smooth_tune);
-                chroma_smooth_tune = strdup(optarg);
-                break;
-            case FILTER_UNSHARP:
-                free(unsharp);
-                if (optarg != NULL)
-                {
-                    unsharp = strdup(optarg);
-                }
-                else
-                {
-                    unsharp = strdup(UNSHARP_DEFAULT_PRESET);
-                }
-                break;
-            case FILTER_UNSHARP_TUNE:
-                free(unsharp_tune);
-                unsharp_tune = strdup(optarg);
-                break;
-            case FILTER_LAPSHARP:
-                free(lapsharp);
-                if (optarg != NULL)
-                {
-                    lapsharp = strdup(optarg);
-                }
-                else
-                {
-                    lapsharp = strdup(LAPSHARP_DEFAULT_PRESET);
-                }
-                break;
-            case FILTER_LAPSHARP_TUNE:
-                free(lapsharp_tune);
-                lapsharp_tune = strdup(optarg);
-                break;
-            case '9':
-                free(detelecine);
-                if (optarg != NULL)
-                {
-                    detelecine = strdup(optarg);
-                }
-                else
-                {
-                    detelecine = strdup(DETELECINE_DEFAULT_PRESET);
-                }
-                break;
-            case FILTER_COMB_DETECT:
-                free(comb_detect);
-                if (optarg != NULL)
-                {
-                    comb_detect = strdup(optarg);
-                }
-                else
-                {
-                    comb_detect = strdup(COMB_DETECT_DEFAULT_PRESET);
-                }
-                break;
-            case '5':
-                free(decomb);
-                if (optarg != NULL)
-                {
-                    decomb = strdup(optarg);
-                }
-                else
-                {
-                    decomb = strdup(DECOMB_DEFAULT_PRESET);
-                }
-                break;
-            case 'g':
-                grayscale = 1;
-                break;
-            case ROTATE_FILTER:
-                free(rotate);
-                if (optarg != NULL)
-                {
-                    rotate = strdup(optarg);
-                }
-                else
-                {
-                    rotate = strdup(ROTATE_DEFAULT);
-                }
-                break;
-            case KEEP_DISPLAY_ASPECT:
-                if( optarg != NULL )
-                {
-                    keep_display_aspect = atoi(optarg);
-                }
-                else
-                {
-                    keep_display_aspect = 1;
-                }
-                break;
-            case DISPLAY_WIDTH:
-                if( optarg != NULL )
-                {
-                    display_width = atoi(optarg);
-                }
-                break;
-            case PIXEL_ASPECT:
-                if( optarg != NULL )
-                {
-                    sscanf(optarg, "%i:%i", &par_width, &par_height);
-                }
-                break;
-            case MODULUS:
-                if( optarg != NULL )
-                {
-                    modulus = atoi(optarg);
-                }
-                break;
-            case 'e':
-            {
-                vcodec = strdup(optarg);
-                break;
             }
-            case 'E':
-                if( optarg != NULL )
-                {
-                    acodecs = hb_str_vsplit(optarg, ',');
-                }
-                break;
-            case 'w':
-                width = atoi( optarg );
-                break;
-            case 'l':
-                height = atoi( optarg );
-                break;
-            case 'n':
+            break;
+        case SUB_DEFAULT:
+            if (optarg != NULL)
             {
-                if( optarg != NULL )
+                if (!strcasecmp("none", optarg))
                 {
-                    int    i;
-                    char * tmp = optarg;
-                    for( i = 0; i < 4; i++ )
-                    {
-                        if( !*tmp )
-                            break;
-                        crop[i] = strtol( tmp, &tmp, 0 );
-                        tmp++;
-                    }
+                    subdefault = -1;
                 }
-                break;
-            }
-            case LOOSE_CROP:
-                if (optarg != NULL)
-                    loose_crop = atoi(optarg);
                 else
-                    loose_crop = 1;
-                break;
-            case PAD:
-            {
-                free(pad);
-                pad = NULL;
-                if (optarg != NULL)
                 {
-                    pad = strdup(optarg);
+                    subdefault = strtol(optarg, NULL, 0);
                 }
-                break;
             }
-            case 'r':
+            else
             {
-                vrate = strdup(optarg);
-                if ( cfr != 1 && cfr != 2 )
-                {
-                    cfr = 2;
-                }
-                break;
+                subdefault = 1;
             }
-            case 'R':
-                arates = hb_str_vsplit( optarg, ',' );
-                break;
-            case 'b':
-                vbitrate = atoi( optarg );
-                break;
-            case 'q':
-                vquality = atof( optarg );
-                break;
-            case 'B':
-                abitrates = hb_str_vsplit( optarg, ',' );
-                break;
-            case 'Q':
-                aqualities = hb_str_vsplit( optarg, ',' );
-                break;
-            case 'C':
-                acompressions = hb_str_vsplit( optarg, ',' );
-                break;
-            case ENCODER_PRESET:
-                encoder_preset = strdup( optarg );
-                break;
-            case ENCODER_TUNE:
-                encoder_tune = strdup( optarg );
-                break;
-            case 'x':
-                advanced_opts = strdup( optarg );
-                break;
-            case ENCODER_PROFILE:
-                encoder_profile = strdup( optarg );
-                break;
-            case ENCODER_LEVEL:
-                encoder_level = strdup( optarg );
-                break;
-            case ENCODER_PRESET_LIST:
-                fprintf(stderr, "Available --encoder-preset values for '%s' encoder:\n",
-                        hb_video_encoder_get_short_name(hb_video_encoder_get_from_name(optarg)));
-                print_string_list(stderr,
-                                  hb_video_encoder_get_presets(hb_video_encoder_get_from_name(optarg)),
-                                  "    ");
-                return 1;
-            case ENCODER_TUNE_LIST:
-                fprintf(stderr, "Available --encoder-tune values for '%s' encoder:\n",
-                        hb_video_encoder_get_short_name(hb_video_encoder_get_from_name(optarg)));
-                print_string_list(stderr,
-                                  hb_video_encoder_get_tunes(hb_video_encoder_get_from_name(optarg)),
-                                  "    ");
-                return 1;
-            case ENCODER_PROFILE_LIST:
-                fprintf(stderr, "Available --encoder-profile values for '%s' encoder:\n",
-                        hb_video_encoder_get_short_name(hb_video_encoder_get_from_name(optarg)));
-                print_string_list(stderr,
-                                  hb_video_encoder_get_profiles(hb_video_encoder_get_from_name(optarg)),
-                                  "    ");
-                return 1;
-            case ENCODER_LEVEL_LIST:
-                fprintf(stderr, "Available --encoder-level values for '%s' encoder:\n",
-                        hb_video_encoder_get_short_name(hb_video_encoder_get_from_name(optarg)));
-                print_string_list(stderr,
-                                  hb_video_encoder_get_levels(hb_video_encoder_get_from_name(optarg)),
-                                  "    ");
-                return 1;
-            case 'T':
-                fastfirstpass = 1;
-                break;
-            case 'Y':
-                maxHeight = atoi( optarg );
-                break;
-            case 'X':
-                maxWidth = atoi (optarg );
-                break;
-            case 'A':
-                if( optarg != NULL )
-                {
-                    anames = hb_str_vsplit( optarg, ',' );
-                }
-                break;
-            case 'S':
-                if( optarg != NULL )
-                {
-                    subnames = hb_str_vsplit( optarg, ',' );
-                }
-                break;
-            case PREVIEWS:
-                sscanf( optarg, "%i:%i", &preview_count, &store_previews );
-                break;
-            case START_AT_PREVIEW:
-                start_at_preview = atoi( optarg );
-                break;
-            case START_AT:
+            break;
+        case 'N':
+        {
+            const iso639_lang_t *lang = lang_lookup(optarg);
+            if (lang != NULL)
             {
-                char * start_at_string = NULL;
-                char * start_at_token = NULL;
-                start_at_string = strdup( optarg );
-                start_at_token = strtok( start_at_string, ":");
-                if( !strcmp( start_at_token, "frame"  ) ||
+                native_language = strdup(lang->iso639_2);
+            }
+            else
+            {
+                fprintf(stderr, "Invalid native language (%s)\n", optarg);
+                return -1;
+            }
+        }
+        break;
+        case NATIVE_DUB:
+            native_dub = 1;
+            break;
+        case SRT_FILE:
+            srtfile = hb_str_vsplit( optarg, ',' );
+            break;
+        case SRT_CODESET:
+            srtcodeset = hb_str_vsplit( optarg, ',' );
+            break;
+        case SRT_OFFSET:
+            srtoffset = hb_str_vsplit( optarg, ',' );
+            break;
+        case SRT_LANG:
+            srtlang = hb_str_vsplit( optarg, ',' );
+            break;
+        case SRT_DEFAULT:
+            if( optarg != NULL )
+            {
+                srtdefault = atoi( optarg );
+            }
+            else
+            {
+                srtdefault = 1 ;
+            }
+            break;
+        case SRT_BURN:
+            if( optarg != NULL )
+            {
+                srtburn = atoi( optarg );
+            }
+            else
+            {
+                srtburn = 1 ;
+            }
+            break;
+        case SSA_FILE:
+            ssafile = hb_str_vsplit( optarg, ',' );
+            break;
+        case SSA_OFFSET:
+            ssaoffset = hb_str_vsplit( optarg, ',' );
+            break;
+        case SSA_LANG:
+            ssalang = hb_str_vsplit( optarg, ',' );
+            break;
+        case SSA_DEFAULT:
+            if( optarg != NULL )
+            {
+                ssadefault = atoi( optarg );
+            }
+            else
+            {
+                ssadefault = 1 ;
+            }
+            break;
+        case SSA_BURN:
+            if( optarg != NULL )
+            {
+                ssaburn = atoi( optarg );
+            }
+            else
+            {
+                ssaburn = 1 ;
+            }
+            break;
+        case '2':
+            twoPass = 1;
+            break;
+        case 'd':
+            free(deinterlace);
+            if (optarg != NULL)
+            {
+                deinterlace = strdup(optarg);
+            }
+            else
+            {
+                deinterlace = strdup(DEINTERLACE_DEFAULT_PRESET);
+            }
+            break;
+        case '7':
+            free(deblock);
+            if (optarg != NULL)
+            {
+                deblock = strdup(optarg);
+            }
+            else
+            {
+                deblock = strdup(DEBLOCK_DEFAULT_PRESET);
+            }
+            break;
+        case FILTER_DEBLOCK_TUNE:
+            free(deblock_tune);
+            deblock_tune = strdup(optarg);
+            break;
+        case '8':
+            free(hqdn3d);
+            if (optarg != NULL)
+            {
+                hqdn3d = strdup(optarg);
+            }
+            else
+            {
+                hqdn3d = strdup(HQDN3D_DEFAULT_PRESET);
+            }
+            break;
+        case FILTER_NLMEANS:
+            free(nlmeans);
+            if (optarg != NULL)
+            {
+                nlmeans = strdup(optarg);
+            }
+            else
+            {
+                nlmeans = strdup(NLMEANS_DEFAULT_PRESET);
+            }
+            break;
+        case FILTER_NLMEANS_TUNE:
+            free(nlmeans_tune);
+            nlmeans_tune = strdup(optarg);
+            break;
+        case FILTER_CHROMA_SMOOTH:
+            free(chroma_smooth);
+            if (optarg != NULL)
+            {
+                chroma_smooth = strdup(optarg);
+            }
+            else
+            {
+                chroma_smooth = strdup(CHROMA_SMOOTH_DEFAULT_PRESET);
+            }
+            break;
+        case FILTER_CHROMA_SMOOTH_TUNE:
+            free(chroma_smooth_tune);
+            chroma_smooth_tune = strdup(optarg);
+            break;
+        case FILTER_UNSHARP:
+            free(unsharp);
+            if (optarg != NULL)
+            {
+                unsharp = strdup(optarg);
+            }
+            else
+            {
+                unsharp = strdup(UNSHARP_DEFAULT_PRESET);
+            }
+            break;
+        case FILTER_UNSHARP_TUNE:
+            free(unsharp_tune);
+            unsharp_tune = strdup(optarg);
+            break;
+        case FILTER_LAPSHARP:
+            free(lapsharp);
+            if (optarg != NULL)
+            {
+                lapsharp = strdup(optarg);
+            }
+            else
+            {
+                lapsharp = strdup(LAPSHARP_DEFAULT_PRESET);
+            }
+            break;
+        case FILTER_LAPSHARP_TUNE:
+            free(lapsharp_tune);
+            lapsharp_tune = strdup(optarg);
+            break;
+        case '9':
+            free(detelecine);
+            if (optarg != NULL)
+            {
+                detelecine = strdup(optarg);
+            }
+            else
+            {
+                detelecine = strdup(DETELECINE_DEFAULT_PRESET);
+            }
+            break;
+        case FILTER_COMB_DETECT:
+            free(comb_detect);
+            if (optarg != NULL)
+            {
+                comb_detect = strdup(optarg);
+            }
+            else
+            {
+                comb_detect = strdup(COMB_DETECT_DEFAULT_PRESET);
+            }
+            break;
+        case '5':
+            free(decomb);
+            if (optarg != NULL)
+            {
+                decomb = strdup(optarg);
+            }
+            else
+            {
+                decomb = strdup(DECOMB_DEFAULT_PRESET);
+            }
+            break;
+        case 'g':
+            grayscale = 1;
+            break;
+        case ROTATE_FILTER:
+            free(rotate);
+            if (optarg != NULL)
+            {
+                rotate = strdup(optarg);
+            }
+            else
+            {
+                rotate = strdup(ROTATE_DEFAULT);
+            }
+            break;
+        case KEEP_DISPLAY_ASPECT:
+            if( optarg != NULL )
+            {
+                keep_display_aspect = atoi(optarg);
+            }
+            else
+            {
+                keep_display_aspect = 1;
+            }
+            break;
+        case DISPLAY_WIDTH:
+            if( optarg != NULL )
+            {
+                display_width = atoi(optarg);
+            }
+            break;
+        case PIXEL_ASPECT:
+            if( optarg != NULL )
+            {
+                sscanf(optarg, "%i:%i", &par_width, &par_height);
+            }
+            break;
+        case MODULUS:
+            if( optarg != NULL )
+            {
+                modulus = atoi(optarg);
+            }
+            break;
+        case 'e':
+        {
+            vcodec = strdup(optarg);
+            break;
+        }
+        case 'E':
+            if( optarg != NULL )
+            {
+                acodecs = hb_str_vsplit(optarg, ',');
+            }
+            break;
+        case 'w':
+            width = atoi( optarg );
+            break;
+        case 'l':
+            height = atoi( optarg );
+            break;
+        case 'n':
+        {
+            if( optarg != NULL )
+            {
+                int    i;
+                char * tmp = optarg;
+                for( i = 0; i < 4; i++ )
+                {
+                    if( !*tmp )
+                        break;
+                    crop[i] = strtol( tmp, &tmp, 0 );
+                    tmp++;
+                }
+            }
+            break;
+        }
+        case LOOSE_CROP:
+            if (optarg != NULL)
+                loose_crop = atoi(optarg);
+            else
+                loose_crop = 1;
+            break;
+        case PAD:
+        {
+            free(pad);
+            pad = NULL;
+            if (optarg != NULL)
+            {
+                pad = strdup(optarg);
+            }
+            break;
+        }
+        case 'r':
+        {
+            vrate = strdup(optarg);
+            if ( cfr != 1 && cfr != 2 )
+            {
+                cfr = 2;
+            }
+            break;
+        }
+        case 'R':
+            arates = hb_str_vsplit( optarg, ',' );
+            break;
+        case 'b':
+            vbitrate = atoi( optarg );
+            break;
+        case 'q':
+            vquality = atof( optarg );
+            break;
+        case 'B':
+            abitrates = hb_str_vsplit( optarg, ',' );
+            break;
+        case 'Q':
+            aqualities = hb_str_vsplit( optarg, ',' );
+            break;
+        case 'C':
+            acompressions = hb_str_vsplit( optarg, ',' );
+            break;
+        case ENCODER_PRESET:
+            encoder_preset = strdup( optarg );
+            break;
+        case ENCODER_TUNE:
+            encoder_tune = strdup( optarg );
+            break;
+        case 'x':
+            advanced_opts = strdup( optarg );
+            break;
+        case ENCODER_PROFILE:
+            encoder_profile = strdup( optarg );
+            break;
+        case ENCODER_LEVEL:
+            encoder_level = strdup( optarg );
+            break;
+        case ENCODER_PRESET_LIST:
+            fprintf(stderr, "Available --encoder-preset values for '%s' encoder:\n",
+                    hb_video_encoder_get_short_name(hb_video_encoder_get_from_name(optarg)));
+            print_string_list(stderr,
+                              hb_video_encoder_get_presets(hb_video_encoder_get_from_name(optarg)),
+                              "    ");
+            return 1;
+        case ENCODER_TUNE_LIST:
+            fprintf(stderr, "Available --encoder-tune values for '%s' encoder:\n",
+                    hb_video_encoder_get_short_name(hb_video_encoder_get_from_name(optarg)));
+            print_string_list(stderr,
+                              hb_video_encoder_get_tunes(hb_video_encoder_get_from_name(optarg)),
+                              "    ");
+            return 1;
+        case ENCODER_PROFILE_LIST:
+            fprintf(stderr, "Available --encoder-profile values for '%s' encoder:\n",
+                    hb_video_encoder_get_short_name(hb_video_encoder_get_from_name(optarg)));
+            print_string_list(stderr,
+                              hb_video_encoder_get_profiles(hb_video_encoder_get_from_name(optarg)),
+                              "    ");
+            return 1;
+        case ENCODER_LEVEL_LIST:
+            fprintf(stderr, "Available --encoder-level values for '%s' encoder:\n",
+                    hb_video_encoder_get_short_name(hb_video_encoder_get_from_name(optarg)));
+            print_string_list(stderr,
+                              hb_video_encoder_get_levels(hb_video_encoder_get_from_name(optarg)),
+                              "    ");
+            return 1;
+        case 'T':
+            fastfirstpass = 1;
+            break;
+        case 'Y':
+            maxHeight = atoi( optarg );
+            break;
+        case 'X':
+            maxWidth = atoi (optarg );
+            break;
+        case 'A':
+            if( optarg != NULL )
+            {
+                anames = hb_str_vsplit( optarg, ',' );
+            }
+            break;
+        case 'S':
+            if( optarg != NULL )
+            {
+                subnames = hb_str_vsplit( optarg, ',' );
+            }
+            break;
+        case PREVIEWS:
+            sscanf( optarg, "%i:%i", &preview_count, &store_previews );
+            break;
+        case START_AT_PREVIEW:
+            start_at_preview = atoi( optarg );
+            break;
+        case START_AT:
+        {
+            char * start_at_string = NULL;
+            char * start_at_token = NULL;
+            start_at_string = strdup( optarg );
+            start_at_token = strtok( start_at_string, ":");
+            if( !strcmp( start_at_token, "frame"  ) ||
                     !strcmp( start_at_token, "frames" ) )
-                {
-                    start_at_token = strtok( NULL, ":");
-                    start_at_frame = atoi(start_at_token);
-                }
-                else if( !strcmp( start_at_token, "pts" ) )
-                {
-                    start_at_token = strtok( NULL, ":");
-                    sscanf( start_at_token, "%"SCNd64, &start_at_pts );
-                }
-                else if( !strcmp( start_at_token, "duration" ) ||
-                         !strcmp( start_at_token, "second"   ) ||
-                         !strcmp( start_at_token, "seconds"  ) )
-                {
-                    double duration_seconds = parse_hhmmss_strtok();
-                    start_at_pts = (int64_t)(duration_seconds * 90e3);
-                }
-                free( start_at_string );
-                break;
-            }
-            case STOP_AT:
             {
-                char * stop_at_string = NULL;
-                char * stop_at_token = NULL;
-                stop_at_string = strdup( optarg );
-                stop_at_token = strtok( stop_at_string, ":");
-                if( !strcmp( stop_at_token, "frame"  ) ||
+                start_at_token = strtok( NULL, ":");
+                start_at_frame = atoi(start_at_token);
+            }
+            else if( !strcmp( start_at_token, "pts" ) )
+            {
+                start_at_token = strtok( NULL, ":");
+                sscanf( start_at_token, "%"SCNd64, &start_at_pts );
+            }
+            else if( !strcmp( start_at_token, "duration" ) ||
+                     !strcmp( start_at_token, "second"   ) ||
+                     !strcmp( start_at_token, "seconds"  ) )
+            {
+                double duration_seconds = parse_hhmmss_strtok();
+                start_at_pts = (int64_t)(duration_seconds * 90e3);
+            }
+            free( start_at_string );
+            break;
+        }
+        case STOP_AT:
+        {
+            char * stop_at_string = NULL;
+            char * stop_at_token = NULL;
+            stop_at_string = strdup( optarg );
+            stop_at_token = strtok( stop_at_string, ":");
+            if( !strcmp( stop_at_token, "frame"  ) ||
                     !strcmp( stop_at_token, "frames" ) )
-                {
-                    stop_at_token = strtok( NULL, ":");
-                    stop_at_frame = atoi(stop_at_token);
-                }
-                else if( !strcmp( stop_at_token, "pts" ) )
-                {
-                    stop_at_token = strtok( NULL, ":");
-                    sscanf( stop_at_token, "%"SCNd64, &stop_at_pts );
-                }
-                else if( !strcmp( stop_at_token, "duration" ) ||
-                         !strcmp( stop_at_token, "second"   ) ||
-                         !strcmp( stop_at_token, "seconds"  ) )
-                {
-                    double duration_seconds = parse_hhmmss_strtok();
-                    stop_at_pts = (int64_t)(duration_seconds * 90e3);
-                }
-                free( stop_at_string );
-                break;
-            }
-            case ALLOWED_AUDIO_COPY:
             {
-                audio_copy_list = hb_str_vsplit(optarg, ',');
-                break;
+                stop_at_token = strtok( NULL, ":");
+                stop_at_frame = atoi(stop_at_token);
             }
-            case AUDIO_FALLBACK:
-                acodec_fallback = strdup( optarg );
-                break;
-            case 'M':
-                if( optarg != NULL )
-                {
-                    if( !strcmp( optarg, "601" ) ||
+            else if( !strcmp( stop_at_token, "pts" ) )
+            {
+                stop_at_token = strtok( NULL, ":");
+                sscanf( stop_at_token, "%"SCNd64, &stop_at_pts );
+            }
+            else if( !strcmp( stop_at_token, "duration" ) ||
+                     !strcmp( stop_at_token, "second"   ) ||
+                     !strcmp( stop_at_token, "seconds"  ) )
+            {
+                double duration_seconds = parse_hhmmss_strtok();
+                stop_at_pts = (int64_t)(duration_seconds * 90e3);
+            }
+            free( stop_at_string );
+            break;
+        }
+        case ALLOWED_AUDIO_COPY:
+        {
+            audio_copy_list = hb_str_vsplit(optarg, ',');
+            break;
+        }
+        case AUDIO_FALLBACK:
+            acodec_fallback = strdup( optarg );
+            break;
+        case 'M':
+            if( optarg != NULL )
+            {
+                if( !strcmp( optarg, "601" ) ||
                         !strcmp( optarg, "ntsc" ) )
-                        color_matrix_code = 1;
-                    else if( !strcmp( optarg, "pal" ) )
-                        color_matrix_code = 2;
-                    else if( !strcmp( optarg, "709" ) )
-                        color_matrix_code = 3;
-                    else if( !strcmp( optarg, "2020" ) )
-                        color_matrix_code = 4;
-                } break;
-            case MIN_DURATION:
-                min_title_duration = strtol( optarg, NULL, 0 );
-                break;
+                    color_matrix_code = 1;
+                else if( !strcmp( optarg, "pal" ) )
+                    color_matrix_code = 2;
+                else if( !strcmp( optarg, "709" ) )
+                    color_matrix_code = 3;
+                else if( !strcmp( optarg, "2020" ) )
+                    color_matrix_code = 4;
+            }
+            break;
+        case MIN_DURATION:
+            min_title_duration = strtol( optarg, NULL, 0 );
+            break;
 #if HB_PROJECT_FEATURE_QSV
-            case QSV_BASELINE:
-                hb_qsv_force_workarounds();
-                break;
-            case QSV_ASYNC_DEPTH:
-                qsv_async_depth = atoi(optarg);
-                break;
-            case QSV_IMPLEMENTATION:
-                hb_qsv_impl_set_preferred(optarg);
-                break;
+        case QSV_BASELINE:
+            hb_qsv_force_workarounds();
+            break;
+        case QSV_ASYNC_DEPTH:
+            qsv_async_depth = atoi(optarg);
+            break;
+        case QSV_IMPLEMENTATION:
+            hb_qsv_impl_set_preferred(optarg);
+            break;
 #endif
-            case ':':
-                fprintf( stderr, "missing parameter (%s)\n", argv[cur_optind] );
-                return -1;
+        case ':':
+            fprintf( stderr, "missing parameter (%s)\n", argv[cur_optind] );
+            return -1;
 
-            default:
-            case '?':
-                fprintf( stderr, "unknown option (%s)\n", argv[cur_optind] );
-                return -1;
+        default:
+        case '?':
+            fprintf( stderr, "unknown option (%s)\n", argv[cur_optind] );
+            return -1;
 
         }
 
@@ -3403,7 +3408,7 @@ static int count_subtitles(char **subtracks)
         for (ii = 0; ii < count; ii++)
         {
             if (strcasecmp(subtracks[0], "scan") &&
-                strcasecmp(subtracks[0], "none"))
+                    strcasecmp(subtracks[0], "none"))
             {
                 subtitle_track_count++;
             }
@@ -3517,7 +3522,7 @@ static hb_dict_t * PreparePreset(const char *preset_name)
         if (preset == NULL)
         {
             fprintf(stderr, "Invalid preset %s\n"
-                            "Valid presets are:\n", preset_name);
+                    "Valid presets are:\n", preset_name);
             ShowPresets(NULL, 1, 1);
             return NULL;
         }
@@ -3713,17 +3718,17 @@ static hb_dict_t * PreparePreset(const char *preset_name)
 
     // Audio overrides
     if (atracks == NULL && audio_all != 1 && (
-        acodecs                   != NULL ||
-        abitrates                 != NULL ||
-        arates                    != NULL ||
-        mixdowns                  != NULL ||
-        normalize_mix_level       != NULL ||
-        audio_dither              != NULL ||
-        dynamic_range_compression != NULL ||
-        audio_gain                != NULL ||
-        aqualities                != NULL ||
-        acompressions             != NULL ||
-        anames                    != NULL))
+                acodecs                   != NULL ||
+                abitrates                 != NULL ||
+                arates                    != NULL ||
+                mixdowns                  != NULL ||
+                normalize_mix_level       != NULL ||
+                audio_dither              != NULL ||
+                dynamic_range_compression != NULL ||
+                audio_gain                != NULL ||
+                aqualities                != NULL ||
+                acompressions             != NULL ||
+                anames                    != NULL))
     {
         // No explicit audio tracks, but track settings modified.
         // Modify the presets audio settings.
@@ -3737,16 +3742,16 @@ static hb_dict_t * PreparePreset(const char *preset_name)
             hb_dict_set(preset, "AudioList", list);
         }
         int count = MAX(hb_str_vlen(mixdowns),
-                    MAX(hb_str_vlen(dynamic_range_compression),
-                    MAX(hb_str_vlen(audio_gain),
-                    MAX(hb_str_vlen(audio_dither),
-                    MAX(hb_str_vlen(normalize_mix_level),
-                    MAX(hb_str_vlen(arates),
-                    MAX(hb_str_vlen(abitrates),
-                    MAX(hb_str_vlen(aqualities),
-                    MAX(hb_str_vlen(acompressions),
-                    MAX(hb_str_vlen(acodecs),
-                        hb_str_vlen(anames)))))))))));
+                        MAX(hb_str_vlen(dynamic_range_compression),
+                            MAX(hb_str_vlen(audio_gain),
+                                MAX(hb_str_vlen(audio_dither),
+                                    MAX(hb_str_vlen(normalize_mix_level),
+                                        MAX(hb_str_vlen(arates),
+                                            MAX(hb_str_vlen(abitrates),
+                                                MAX(hb_str_vlen(aqualities),
+                                                        MAX(hb_str_vlen(acompressions),
+                                                                MAX(hb_str_vlen(acodecs),
+                                                                        hb_str_vlen(anames)))))))))));
 
         hb_dict_t *audio_dict, *last_audio_dict = NULL;
         // Add audio dict entries to list if needed
@@ -3772,11 +3777,11 @@ static hb_dict_t * PreparePreset(const char *preset_name)
         {
             int last = -1;
             for (ii = 0; acodecs[ii] != NULL &&
-                         acodecs[ii][0] != 0; ii++)
+                    acodecs[ii][0] != 0; ii++)
             {
                 audio_dict = hb_value_array_get(list, ii);
                 hb_dict_set(audio_dict, "AudioEncoder",
-                                    hb_value_string(acodecs[ii]));
+                            hb_value_string(acodecs[ii]));
                 last = ii;
             }
             if (last_audio_dict == NULL && last >= 0)
@@ -3787,7 +3792,7 @@ static hb_dict_t * PreparePreset(const char *preset_name)
                 {
                     audio_dict = hb_value_array_get(list, ii);
                     hb_dict_set(audio_dict, "AudioEncoder",
-                                        hb_value_string(acodecs[last]));
+                                hb_value_string(acodecs[last]));
                 }
             }
         }
@@ -3797,11 +3802,11 @@ static hb_dict_t * PreparePreset(const char *preset_name)
         if (hb_str_vlen(abitrates) > 0)
         {
             for (ii = 0; abitrates[ii]    != NULL &&
-                         abitrates[ii][0] != 0; ii++)
+                    abitrates[ii][0] != 0; ii++)
             {
                 audio_dict = hb_value_array_get(list, ii);
                 hb_dict_set(audio_dict, "AudioBitrate",
-                    hb_value_int(atoi(abitrates[ii])));
+                            hb_value_int(atoi(abitrates[ii])));
                 last_bitrate = ii;
             }
         }
@@ -3811,13 +3816,13 @@ static hb_dict_t * PreparePreset(const char *preset_name)
         if (hb_str_vlen(aqualities) > 0)
         {
             for (ii = 0; aqualities[ii] != NULL &&
-                         aqualities[ii][0] != 0; ii++)
+                    aqualities[ii][0] != 0; ii++)
             {
                 audio_dict = hb_value_array_get(list, ii);
                 hb_dict_set(audio_dict, "AudioTrackQualityEnable",
                             hb_value_bool(1));
                 hb_dict_set(audio_dict, "AudioTrackQuality",
-                    hb_value_double(strtod(aqualities[ii], NULL)));
+                            hb_value_double(strtod(aqualities[ii], NULL)));
                 last_quality = ii;
             }
             if (last_audio_dict == NULL)
@@ -3831,7 +3836,7 @@ static hb_dict_t * PreparePreset(const char *preset_name)
                     {
                         audio_dict = hb_value_array_get(list, ii);
                         hb_dict_set(audio_dict, "AudioBitrate",
-                            hb_value_int(atoi(abitrates[last_bitrate])));
+                                    hb_value_int(atoi(abitrates[last_bitrate])));
                     }
                 }
                 else if (last_quality >= 0)
@@ -3843,7 +3848,7 @@ static hb_dict_t * PreparePreset(const char *preset_name)
                         hb_dict_set(audio_dict, "AudioTrackQualityEnable",
                                     hb_value_bool(1));
                         hb_dict_set(audio_dict, "AudioTrackQuality",
-                            hb_value_double(strtod(aqualities[last_quality], NULL)));
+                                    hb_value_double(strtod(aqualities[last_quality], NULL)));
                     }
                 }
             }
@@ -3855,7 +3860,7 @@ static hb_dict_t * PreparePreset(const char *preset_name)
         {
             int last = -1;
             for (ii = 0; arates[ii]    != NULL &&
-                         arates[ii][0] != 0; ii++)
+                    arates[ii][0] != 0; ii++)
             {
                 audio_dict = hb_value_array_get(list, ii);
                 hb_dict_set(audio_dict, "AudioSamplerate",
@@ -3880,7 +3885,7 @@ static hb_dict_t * PreparePreset(const char *preset_name)
         {
             int last = -1;
             for (ii = 0; mixdowns[ii]    != NULL &&
-                         mixdowns[ii][0] != 0; ii++)
+                    mixdowns[ii][0] != 0; ii++)
             {
                 audio_dict = hb_value_array_get(list, ii);
                 hb_dict_set(audio_dict, "AudioMixdown",
@@ -3905,11 +3910,11 @@ static hb_dict_t * PreparePreset(const char *preset_name)
         {
             int last = -1;
             for (ii = 0; normalize_mix_level[ii]    != NULL &&
-                         normalize_mix_level[ii][0] != 0; ii++)
+                    normalize_mix_level[ii][0] != 0; ii++)
             {
                 audio_dict = hb_value_array_get(list, ii);
                 hb_dict_set(audio_dict, "AudioNormalizeMixLevel",
-                    hb_value_bool(atoi(normalize_mix_level[ii])));
+                            hb_value_bool(atoi(normalize_mix_level[ii])));
                 last = ii;
             }
             if (last_audio_dict == NULL && last >= 0)
@@ -3921,8 +3926,8 @@ static hb_dict_t * PreparePreset(const char *preset_name)
                     audio_dict = hb_value_array_get(list, ii);
                     hb_dict_set(audio_dict,
                                 "AudioNormalizeMixLevel",
-                        hb_value_bool(
-                            atoi(normalize_mix_level[last])));
+                                hb_value_bool(
+                                    atoi(normalize_mix_level[last])));
                 }
             }
         }
@@ -3931,13 +3936,13 @@ static hb_dict_t * PreparePreset(const char *preset_name)
         if (hb_str_vlen(dynamic_range_compression) > 0)
         {
             int last = -1;
-            for (ii = 0;dynamic_range_compression[ii]    != NULL &&
-                        dynamic_range_compression[ii][0] != 0; ii++)
+            for (ii = 0; dynamic_range_compression[ii]    != NULL &&
+                    dynamic_range_compression[ii][0] != 0; ii++)
             {
                 audio_dict = hb_value_array_get(list, ii);
                 hb_dict_set(audio_dict, "AudioTrackDRCSlider",
-                  hb_value_double(
-                    strtod(dynamic_range_compression[ii], NULL)));
+                            hb_value_double(
+                                strtod(dynamic_range_compression[ii], NULL)));
                 last = ii;
             }
             if (last_audio_dict == NULL && last >= 0)
@@ -3948,9 +3953,9 @@ static hb_dict_t * PreparePreset(const char *preset_name)
                 {
                     audio_dict = hb_value_array_get(list, ii);
                     hb_dict_set(audio_dict, "AudioTrackDRCSlider",
-                        hb_value_double(
-                            strtod(dynamic_range_compression[last],
-                                   NULL)));
+                                hb_value_double(
+                                    strtod(dynamic_range_compression[last],
+                                           NULL)));
                 }
             }
         }
@@ -3960,12 +3965,12 @@ static hb_dict_t * PreparePreset(const char *preset_name)
         {
             int last = -1;
             for (ii = 0; audio_gain[ii]    != NULL &&
-                         audio_gain[ii][0] != 0; ii++)
+                    audio_gain[ii][0] != 0; ii++)
             {
                 audio_dict = hb_value_array_get(list, ii);
                 hb_dict_set(audio_dict, "AudioTrackGainSlider",
-                  hb_value_double(
-                    strtod(audio_gain[ii], NULL)));
+                            hb_value_double(
+                                strtod(audio_gain[ii], NULL)));
                 last = ii;
             }
             if (last_audio_dict == NULL && last >= 0)
@@ -3976,8 +3981,8 @@ static hb_dict_t * PreparePreset(const char *preset_name)
                 {
                     audio_dict = hb_value_array_get(list, ii);
                     hb_dict_set(audio_dict, "AudioTrackGainSlider",
-                      hb_value_double(
-                        strtod(audio_gain[last], NULL)));
+                                hb_value_double(
+                                    strtod(audio_gain[last], NULL)));
                 }
             }
         }
@@ -3987,7 +3992,7 @@ static hb_dict_t * PreparePreset(const char *preset_name)
         {
             int last = -1;
             for (ii = 0; audio_dither[ii]    != NULL &&
-                         audio_dither[ii][0] != 0; ii++)
+                    audio_dither[ii][0] != 0; ii++)
             {
                 audio_dict = hb_value_array_get(list, ii);
                 hb_dict_set(audio_dict, "AudioDitherMethod",
@@ -4002,7 +4007,7 @@ static hb_dict_t * PreparePreset(const char *preset_name)
                 {
                     audio_dict = hb_value_array_get(list, ii);
                     hb_dict_set(audio_dict, "AudioDitherMethod",
-                            hb_value_string(audio_dither[last]));
+                                hb_value_string(audio_dither[last]));
                 }
             }
         }
@@ -4012,12 +4017,12 @@ static hb_dict_t * PreparePreset(const char *preset_name)
         {
             int last = -1;
             for (ii = 0; acompressions[ii]    != NULL &&
-                         acompressions[ii][0] != 0; ii++)
+                    acompressions[ii][0] != 0; ii++)
             {
                 audio_dict = hb_value_array_get(list, ii);
                 hb_dict_set(audio_dict, "AudioCompressionLevel",
-                  hb_value_double(
-                    strtod(acompressions[ii], NULL)));
+                            hb_value_double(
+                                strtod(acompressions[ii], NULL)));
                 last = ii;
             }
             if (last_audio_dict == NULL && last >= 0)
@@ -4028,8 +4033,8 @@ static hb_dict_t * PreparePreset(const char *preset_name)
                 {
                     audio_dict = hb_value_array_get(list, ii);
                     hb_dict_set(audio_dict, "AudioCompressionLevel",
-                      hb_value_double(
-                        strtod(acompressions[last], NULL)));
+                                hb_value_double(
+                                    strtod(acompressions[last], NULL)));
                 }
             }
         }
@@ -4038,11 +4043,11 @@ static hb_dict_t * PreparePreset(const char *preset_name)
         if (hb_str_vlen(anames) > 0)
         {
             for (ii = 0; anames[ii]    != NULL &&
-                         anames[ii][0] != 0; ii++)
+                    anames[ii][0] != 0; ii++)
             {
                 audio_dict = hb_value_array_get(list, ii);
                 hb_dict_set(audio_dict, "AudioTrackName",
-                                    hb_value_string(anames[ii]));
+                            hb_value_string(anames[ii]));
             }
         }
     }
@@ -4160,7 +4165,7 @@ static hb_dict_t * PreparePreset(const char *preset_name)
     if (qsv_async_depth >= 0)
     {
         hb_dict_set(preset, "VideoQSVAsyncDepth",
-                        hb_value_int(qsv_async_depth));
+                    hb_value_int(qsv_async_depth));
     }
     if (qsv_decode != -1)
     {
@@ -4494,7 +4499,7 @@ static int add_sub(hb_value_array_t *list, hb_title_t *title, int track, int out
     int force = test_sub_list(subforce, out_track);
 
     if (!burn &&
-        !hb_subtitle_can_pass(subtitle->source, mux))
+            !hb_subtitle_can_pass(subtitle->source, mux))
     {
         // Only allow one subtitle to be burned into video
         if (*one_burned)
@@ -4631,15 +4636,15 @@ PrepareJob(hb_handle_t *h, hb_title_t *title, hb_dict_t *preset_dict)
     // Now that the job is initialized, we need to find out
     // what muxer is being used.
     mux = hb_container_get_from_name(
-        hb_value_get_string(hb_dict_get(dest_dict, "Mux")));
+              hb_value_get_string(hb_dict_get(dest_dict, "Mux")));
 
     // Now set non-preset settings in the job dict
     int64_t range_start = 0, range_end = 0, range_seek_points = 0;
     const char *range_type = "chapter";
     if (chapter_start   && chapter_end    &&
-        !start_at_pts   && !stop_at_pts   &&
-        !start_at_frame && !stop_at_frame &&
-        !start_at_preview )
+            !start_at_pts   && !stop_at_pts   &&
+            !start_at_frame && !stop_at_frame &&
+            !start_at_preview )
     {
         range_type = "chapter";
         int chapter_count = hb_list_count(title->list_chapter);
@@ -4675,7 +4680,7 @@ PrepareJob(hb_handle_t *h, hb_title_t *title, hb_dict_t *preset_dict)
     if (range_start || range_end)
     {
         hb_dict_t *range_dict = hb_dict_get(
-                            hb_dict_get(job_dict, "Source"), "Range");
+                                    hb_dict_get(job_dict, "Source"), "Range");
         hb_dict_set(range_dict, "Type", hb_value_string(range_type));
         if (range_start)
             hb_dict_set(range_dict, "Start", hb_value_int(range_start));
@@ -4687,7 +4692,7 @@ PrepareJob(hb_handle_t *h, hb_title_t *title, hb_dict_t *preset_dict)
             hb_dict_remove(range_dict, "End");
         if (range_seek_points)
             hb_dict_set(range_dict, "SeekPoints",
-                    hb_value_int(range_seek_points));
+                        hb_value_int(range_seek_points));
     }
 
     if (angle)
@@ -4713,7 +4718,7 @@ PrepareJob(hb_handle_t *h, hb_title_t *title, hb_dict_t *preset_dict)
         int track_count;
         int ii;
         if (atracks != NULL && atracks[0] != NULL &&
-            strcasecmp("none", atracks[0]))
+                strcasecmp("none", atracks[0]))
         {
             // First "track" is not "none", add tracks
             for (ii = 0; atracks[ii] != NULL; ii++)
@@ -4769,8 +4774,8 @@ PrepareJob(hb_handle_t *h, hb_title_t *title, hb_dict_t *preset_dict)
                 if (acodec <= 0)
                 {
                     fprintf(stderr,
-                        "Invalid codec %s, using default for container.\n",
-                        acodecs[ii]);
+                            "Invalid codec %s, using default for container.\n",
+                            acodecs[ii]);
                     acodec = hb_audio_encoder_get_default(mux);
                 }
                 hb_dict_set(audio_dict, "Encoder", hb_value_int(acodec));
@@ -4829,10 +4834,10 @@ PrepareJob(hb_handle_t *h, hb_title_t *title, hb_dict_t *preset_dict)
         // For any tracks that we do not set the rate for, libhb will
         // assign the source audio track's rate
         if (ii == 1) for (; ii < track_count; ii++)
-        {
-            audio_dict = hb_value_array_get(audio_array, ii);
-            hb_dict_set(audio_dict, "Samplerate", hb_value_int(arate));
-        }
+            {
+                audio_dict = hb_value_array_get(audio_array, ii);
+                hb_dict_set(audio_dict, "Samplerate", hb_value_int(arate));
+            }
 
         /* Audio Mixdown */
         int mix = HB_AMIXDOWN_NONE;
@@ -4853,10 +4858,10 @@ PrepareJob(hb_handle_t *h, hb_title_t *title, hb_dict_t *preset_dict)
         // If exactly one mix was specified, apply it to the reset
         // of the tracks
         if (ii == 1) for (; ii < track_count; ii++)
-        {
-            audio_dict = hb_value_array_get(audio_array, ii);
-            hb_dict_set(audio_dict, "Mixdown", hb_value_int(mix));
-        }
+            {
+                audio_dict = hb_value_array_get(audio_array, ii);
+                hb_dict_set(audio_dict, "Mixdown", hb_value_int(mix));
+            }
 
         /* Audio Bitrate */
         int abitrate = 0;
@@ -4880,10 +4885,10 @@ PrepareJob(hb_handle_t *h, hb_title_t *title, hb_dict_t *preset_dict)
         // If exactly one bitrate was specified, apply it to the reset
         // of the tracks
         if (ii == 1) for (; ii < track_count; ii++)
-        {
-            audio_dict = hb_value_array_get(audio_array, ii);
-            hb_dict_set(audio_dict, "Bitrate", hb_value_int(abitrate));
-        }
+            {
+                audio_dict = hb_value_array_get(audio_array, ii);
+                hb_dict_set(audio_dict, "Bitrate", hb_value_int(abitrate));
+            }
 
         /* Audio Quality */
         double aquality = 0.;
@@ -4909,15 +4914,15 @@ PrepareJob(hb_handle_t *h, hb_title_t *title, hb_dict_t *preset_dict)
         // If exactly one quality was specified, apply it to the reset
         // of the tracks that do not already have the bitrate set.
         if (ii == 1) for (; ii < track_count; ii++)
-        {
-            audio_dict = hb_value_array_get(audio_array, ii);
-            abitrate = hb_value_get_int(hb_dict_get(audio_dict, "Bitrate"));
-            if (abitrate <= 0)
             {
-                hb_dict_set(audio_dict, "Quality", hb_value_double(aquality));
-                hb_dict_set(audio_dict, "Bitrate", hb_value_int(-1));
+                audio_dict = hb_value_array_get(audio_array, ii);
+                abitrate = hb_value_get_int(hb_dict_get(audio_dict, "Bitrate"));
+                if (abitrate <= 0)
+                {
+                    hb_dict_set(audio_dict, "Quality", hb_value_double(aquality));
+                    hb_dict_set(audio_dict, "Bitrate", hb_value_int(-1));
+                }
             }
-        }
 
         /* Audio Compression Level */
         double acompression;
@@ -4963,10 +4968,10 @@ PrepareJob(hb_handle_t *h, hb_title_t *title, hb_dict_t *preset_dict)
         // If exactly one DRC was specified, apply it to the reset
         // of the tracks
         if (ii == 1) for (; ii < track_count; ii++)
-        {
-            audio_dict = hb_value_array_get(audio_array, ii);
-            hb_dict_set(audio_dict, "DRC", hb_value_double(drc));
-        }
+            {
+                audio_dict = hb_value_array_get(audio_array, ii);
+                hb_dict_set(audio_dict, "DRC", hb_value_double(drc));
+            }
 
         /* Audio Gain */
         ii = 0;
@@ -4987,10 +4992,10 @@ PrepareJob(hb_handle_t *h, hb_title_t *title, hb_dict_t *preset_dict)
         // If exactly one gain was specified, apply it to the reset
         // of the tracks
         if (ii == 1) for (; ii < track_count; ii++)
-        {
-            audio_dict = hb_value_array_get(audio_array, ii);
-            hb_dict_set(audio_dict, "Gain", hb_value_double(gain));
-        }
+            {
+                audio_dict = hb_value_array_get(audio_array, ii);
+                hb_dict_set(audio_dict, "Gain", hb_value_double(gain));
+            }
 
         /* Audio Dither */
         int dither = 0;
@@ -5015,16 +5020,16 @@ PrepareJob(hb_handle_t *h, hb_title_t *title, hb_dict_t *preset_dict)
         // If exactly one dither was specified, apply it to the reset
         // of the tracks
         if (ii == 1) for (; ii < track_count; ii++)
-        {
-            int codec;
-            audio_dict = hb_value_array_get(audio_array, ii);
-            codec = hb_value_get_int(hb_dict_get(audio_dict, "Encoder"));
-            if (hb_audio_dither_is_supported(codec))
             {
-                hb_dict_set(audio_dict, "DitherMethod",
-                            hb_value_double(dither));
+                int codec;
+                audio_dict = hb_value_array_get(audio_array, ii);
+                codec = hb_value_get_int(hb_dict_get(audio_dict, "Encoder"));
+                if (hb_audio_dither_is_supported(codec))
+                {
+                    hb_dict_set(audio_dict, "DitherMethod",
+                                hb_value_double(dither));
+                }
             }
-        }
 
         /* Audio Mix Normalization */
         int norm = 0;
@@ -5048,10 +5053,10 @@ PrepareJob(hb_handle_t *h, hb_title_t *title, hb_dict_t *preset_dict)
         // If exactly one norm was specified, apply it to the reset
         // of the tracks
         if (ii == 1) for (; ii < track_count; ii++)
-        {
-            audio_dict = hb_value_array_get(audio_array, ii);
-            hb_dict_set(audio_dict, "NormalizeMixLevel", hb_value_bool(norm));
-        }
+            {
+                audio_dict = hb_value_array_get(audio_array, ii);
+                hb_dict_set(audio_dict, "NormalizeMixLevel", hb_value_bool(norm));
+            }
 
         /* Audio Track Names */
         ii = 0;
@@ -5074,10 +5079,10 @@ PrepareJob(hb_handle_t *h, hb_title_t *title, hb_dict_t *preset_dict)
         // If exactly one name was specified, apply it to the reset
         // of the tracks
         if (ii == 1 && *anames[0]) for (; ii < track_count; ii++)
-        {
-            audio_dict = hb_value_array_get(audio_array, ii);
-            hb_dict_set(audio_dict, "Name", hb_value_string(anames[0]));
-        }
+            {
+                audio_dict = hb_value_array_get(audio_array, ii);
+                hb_dict_set(audio_dict, "Name", hb_value_string(anames[0]));
+            }
     }
 
     int one_burned = 0;
@@ -5319,9 +5324,9 @@ static int is_dvd_service( io_service_t service )
 
     // Create an iterator across all parents of the service object passed in.
     kernResult = IORegistryEntryCreateIterator( service,
-                                                kIOServicePlane,
-                                                kIORegistryIterateRecursively | kIORegistryIterateParents,
-                                                &iter );
+                 kIOServicePlane,
+                 kIORegistryIterateRecursively | kIORegistryIterateParents,
+                 &iter );
     if( kernResult != KERN_SUCCESS )
     {
         return 0;
@@ -5339,7 +5344,7 @@ static int is_dvd_service( io_service_t service )
     do
     {
         if( is_whole_media_service( service ) &&
-            IOObjectConformsTo( service, kIODVDMediaClass) )
+                IOObjectConformsTo( service, kIODVDMediaClass) )
         {
             result = 1;
         }
@@ -5366,9 +5371,9 @@ static int is_whole_media_service( io_service_t service )
     if( IOObjectConformsTo( service, kIOMediaClass ) )
     {
         CFTypeRef wholeMedia = IORegistryEntryCreateCFProperty( service,
-                                                                CFSTR( kIOMediaWholeKey ),
-                                                                kCFAllocatorDefault,
-                                                                0 );
+                               CFSTR( kIOMediaWholeKey ),
+                               kCFAllocatorDefault,
+                               0 );
         if ( !wholeMedia )
         {
             return 0;
