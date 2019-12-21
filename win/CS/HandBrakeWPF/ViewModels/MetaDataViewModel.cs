@@ -1,31 +1,31 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MetaDataViewModel.cs" company="HandBrake Project (http://handbrake.fr)">
-//   This file is part of the HandBrake source code - It may be used under the terms of the GNU General Public License.
+// <copyright file="MetaDataViewModel.cs" company="HandBrake Project
+// (http://handbrake.fr)">
+//   This file is part of the HandBrake source code - It may be used under the
+//   terms of the GNU General Public License.
 // </copyright>
 // <summary>
 //   The Meta Data Tab
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace HandBrakeWPF.ViewModels
-{
-using System;
+namespace HandBrakeWPF.ViewModels {
+  using System;
 
-using Caliburn.Micro;
+  using Caliburn.Micro;
 
-using HandBrakeWPF.EventArgs;
-using HandBrakeWPF.Services.Encode.Model;
-using HandBrakeWPF.Services.Encode.Model.Models;
-using HandBrakeWPF.Services.Interfaces;
-using HandBrakeWPF.Services.Presets.Model;
-using HandBrakeWPF.Services.Scan.Model;
-using HandBrakeWPF.ViewModels.Interfaces;
+  using HandBrakeWPF.EventArgs;
+  using HandBrakeWPF.Services.Encode.Model;
+  using HandBrakeWPF.Services.Encode.Model.Models;
+  using HandBrakeWPF.Services.Interfaces;
+  using HandBrakeWPF.Services.Presets.Model;
+  using HandBrakeWPF.Services.Scan.Model;
+  using HandBrakeWPF.ViewModels.Interfaces;
 
-/// <summary>
-/// The meta data view model.
-/// </summary>
-public class MetaDataViewModel : ViewModelBase, IMetaDataViewModel
-{
+  /// <summary>
+  /// The meta data view model.
+  /// </summary>
+  public class MetaDataViewModel : ViewModelBase, IMetaDataViewModel {
     private EncodeTask task;
 
     /// <summary>
@@ -37,30 +37,26 @@ public class MetaDataViewModel : ViewModelBase, IMetaDataViewModel
     /// <param name="userSettingService">
     /// The user Setting Service.
     /// </param>
-    public MetaDataViewModel(IWindowManager windowManager, IUserSettingService userSettingService)
-    {
-        this.task = new EncodeTask();
+    public MetaDataViewModel(IWindowManager windowManager,
+                             IUserSettingService userSettingService) {
+      this.task = new EncodeTask();
     }
 
-    public event EventHandler<TabStatusEventArgs> TabStatusChanged {
-        add { } remove { }
+    public event EventHandler<TabStatusEventArgs>TabStatusChanged {
+      add {}
+      remove {}
     }
 
     /// <summary>
     /// Gets or sets the meta data.
     /// </summary>
-    public MetaData MetaData
-    {
-        get
-        {
-            return this.task.MetaData;
-        }
+    public MetaData MetaData {
+      get { return this.task.MetaData; }
 
-        set
-        {
-            this.task.MetaData = value;
-            this.NotifyOfPropertyChange(() => this.MetaData);
-        }
+      set {
+        this.task.MetaData = value;
+        this.NotifyOfPropertyChange(() => this.MetaData);
+      }
     }
 
     /// <summary>
@@ -78,12 +74,12 @@ public class MetaDataViewModel : ViewModelBase, IMetaDataViewModel
     /// <param name="encodeTask">
     /// The task.
     /// </param>
-    public void SetSource(Source source, Title selectedTitle, Preset currentPreset, EncodeTask encodeTask)
-    {
-        return; // Disabled for now.
-        // this.task = encodeTask;
-        // this.task.MetaData = new MetaData(selectedTitle.Metadata);
-        // this.NotifyOfPropertyChange(() => this.MetaData);
+    public void SetSource(Source source, Title selectedTitle,
+                          Preset currentPreset, EncodeTask encodeTask) {
+      return; // Disabled for now.
+              // this.task = encodeTask;
+              // this.task.MetaData = new MetaData(selectedTitle.Metadata);
+              // this.NotifyOfPropertyChange(() => this.MetaData);
     }
 
     /// <summary>
@@ -95,9 +91,7 @@ public class MetaDataViewModel : ViewModelBase, IMetaDataViewModel
     /// <param name="encodeTask">
     /// The task.
     /// </param>
-    public void SetPreset(Preset preset, EncodeTask encodeTask)
-    {
-    }
+    public void SetPreset(Preset preset, EncodeTask encodeTask) {}
 
     /// <summary>
     /// Update all the UI controls based on the encode task passed in.
@@ -105,15 +99,11 @@ public class MetaDataViewModel : ViewModelBase, IMetaDataViewModel
     /// <param name="encodeTask">
     /// The task.
     /// </param>
-    public void UpdateTask(EncodeTask encodeTask)
-    {
-        this.task = encodeTask;
-        this.NotifyOfPropertyChange(() => this.MetaData);
+    public void UpdateTask(EncodeTask encodeTask) {
+      this.task = encodeTask;
+      this.NotifyOfPropertyChange(() => this.MetaData);
     }
 
-    public bool MatchesPreset(Preset preset)
-    {
-        return true;
-    }
-}
+    public bool MatchesPreset(Preset preset) { return true; }
+  }
 }

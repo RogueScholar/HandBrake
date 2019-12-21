@@ -1,36 +1,36 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="HandBrakeUtils.cs" company="HandBrake Project (http://handbrake.fr)">
-//   This file is part of the HandBrake source code - It may be used under the terms of the GNU General Public License.
+// <copyright file="HandBrakeUtils.cs" company="HandBrake Project
+// (http://handbrake.fr)">
+//   This file is part of the HandBrake source code - It may be used under the
+//   terms of the GNU General Public License.
 // </copyright>
 // <summary>
 //   Defines the HandBrakeUtils type.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace HandBrake.Interop.Interop
-{
-using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Runtime.CompilerServices;
-using System.Runtime.ExceptionServices;
-using System.Runtime.InteropServices;
+namespace HandBrake.Interop.Interop {
+  using System;
+  using System.Collections.Generic;
+  using System.Linq.Expressions;
+  using System.Runtime.CompilerServices;
+  using System.Runtime.ExceptionServices;
+  using System.Runtime.InteropServices;
 
-using HandBrake.Interop.Interop.EventArgs;
-using HandBrake.Interop.Interop.HbLib;
-using HandBrake.Interop.Interop.HbLib.Wrappers.Interfaces;
-using HandBrake.Interop.Interop.Json.Anamorphic;
-using HandBrake.Interop.Interop.Json.Shared;
-using HandBrake.Interop.Interop.Providers;
-using HandBrake.Interop.Interop.Providers.Interfaces;
+  using HandBrake.Interop.Interop.EventArgs;
+  using HandBrake.Interop.Interop.HbLib;
+  using HandBrake.Interop.Interop.HbLib.Wrappers.Interfaces;
+  using HandBrake.Interop.Interop.Json.Anamorphic;
+  using HandBrake.Interop.Interop.Json.Shared;
+  using HandBrake.Interop.Interop.Providers;
+  using HandBrake.Interop.Interop.Providers.Interfaces;
 
-using Newtonsoft.Json;
+  using Newtonsoft.Json;
 
-/// <summary>
-/// HandBrake Interop Utilities
-/// </summary>
-public static class HandBrakeUtils
-{
+  /// <summary>
+  /// HandBrake Interop Utilities
+  /// </summary>
+  public static class HandBrakeUtils {
     /// <summary>
     /// The callback for log messages from HandBrake.
     /// </summary>
@@ -52,96 +52,80 @@ public static class HandBrakeUtils
     /// <summary>
     /// Fires when HandBrake has logged a message.
     /// </summary>
-    public static event EventHandler<MessageLoggedEventArgs> MessageLogged;
+    public static event EventHandler<MessageLoggedEventArgs>MessageLogged;
 
     /// <summary>
     /// Fires when HandBrake has logged an error.
     /// </summary>
-    public static event EventHandler<MessageLoggedEventArgs> ErrorLogged;
+    public static event EventHandler<MessageLoggedEventArgs>ErrorLogged;
 
     private static IHbFunctions hbFunctions;
 
-    static HandBrakeUtils()
-    {
-        IHbFunctionsProvider hbFunctionsProvider = new HbFunctionsProvider();
-        hbFunctions = hbFunctionsProvider.GetHbFunctionsWrapper();
+    static HandBrakeUtils() {
+      IHbFunctionsProvider hbFunctionsProvider = new HbFunctionsProvider();
+      hbFunctions = hbFunctionsProvider.GetHbFunctionsWrapper();
     }
 
     /// <summary>
     /// Ensures the HB global initialize method has been called.
     /// </summary>
-    public static void EnsureGlobalInit(bool initNoHardwareMode)
-    {
-        if (!globalInitialized)
-        {
-            try
-            {
-                if (initNoHardwareMode)
-                {
-                    initNoHardware = true;
-                    if (hbFunctions.hb_global_init_no_hardware() == -1)
-                    {
-                        throw new InvalidOperationException("HB global init failed.");
-                    }
-
-                    initSuccess = true;
-                }
-                else
-                {
-                    initSuccess = TryInit();
-                }
-            }
-            catch (Exception)
-            {
-                initSuccess = false;
+    public static void EnsureGlobalInit(bool initNoHardwareMode) {
+      if (!globalInitialized) {
+        try {
+          if (initNoHardwareMode) {
+            initNoHardware = true;
+            if (hbFunctions.hb_global_init_no_hardware() == -1) {
+              throw new InvalidOperationException("HB global init failed.");
             }
 
-            // Try without Hardware support. Bad drivers can sometimes cause issues.
-            if (!initSuccess)
-            {
-                if (hbFunctions.hb_global_init_no_hardware() == -1)
-                {
-                    throw new InvalidOperationException("HB global init failed.");
-                }
-            }
-
-            globalInitialized = true;
+            initSuccess = true;
+          } else {
+            initSuccess = TryInit();
+          }
+        } catch (Exception) {
+          initSuccess = false;
         }
+
+        // Try without Hardware support. Bad drivers can sometimes cause issues.
+        if (!initSuccess) {
+          if (hbFunctions.hb_global_init_no_hardware() == -1) {
+            throw new InvalidOperationException("HB global init failed.");
+          }
+        }
+
+        globalInitialized = true;
+      }
     }
 
     /// <summary>
-    /// Enables or disables LibDVDNav. If disabled libdvdread will be used instead.
+    /// Enables or disables LibDVDNav. If disabled libdvdread will be used
+    /// instead.
     /// </summary>
     /// <param name="enableDvdNav">
     /// True to enable LibDVDNav.
     /// </param>
-    public static void SetDvdNav(bool enableDvdNav)
-    {
-        hbFunctions.hb_dvd_set_dvdnav(enableDvdNav ? 1 : 0);
+    public static void SetDvdNav(bool enableDvdNav) {
+      hbFunctions.hb_dvd_set_dvdnav(enableDvdNav ? 1 : 0);
     }
 
     /// <summary>
     /// Call before app shutdown. Performs global cleanup.
     /// </summary>
-    public static void DisposeGlobal()
-    {
-        hbFunctions.hb_global_close();
-    }
+    public static void DisposeGlobal() { hbFunctions.hb_global_close(); }
 
     /// <summary>
     /// Register the logger.
     /// </summary>
-    public static void RegisterLogger()
-    {
-        // Register the logger if we have not already
-        if (loggingCallback == null)
-        {
-            // Keep the callback as a member to prevent it from being garbage collected.
-            loggingCallback = LoggingHandler;
-            errorCallback = ErrorHandler;
-            hbFunctions.hb_register_logger(loggingCallback);
-            hbFunctions.hb_register_error_handler(errorCallback);
-        }
+    public static void RegisterLogger() {
+      // Register the logger if we have not already
+      if (loggingCallback == null) {
+        // Keep the callback as a member to prevent it from being garbage
+        // collected.
+        loggingCallback = LoggingHandler;
+        errorCallback = ErrorHandler;
+        hbFunctions.hb_register_logger(loggingCallback);
+        hbFunctions.hb_register_error_handler(errorCallback);
+      }
     }
 
     /// <summary>
@@ -150,13 +134,11 @@ public static class HandBrakeUtils
     /// <param name="message">
     /// The log message (including newline).
     /// </param>
-    public static void LoggingHandler(string message)
-    {
-        message = message.TrimEnd();
-        if (!string.IsNullOrEmpty(message))
-        {
-            SendMessageEvent(message);
-        }
+    public static void LoggingHandler(string message) {
+      message = message.TrimEnd();
+      if (!string.IsNullOrEmpty(message)) {
+        SendMessageEvent(message);
+      }
     }
 
     /// <summary>
@@ -165,19 +147,18 @@ public static class HandBrakeUtils
     /// <param name="message">
     /// The error message.
     /// </param>
-    public static void ErrorHandler(string message)
-    {
-        if (!string.IsNullOrEmpty(message))
-        {
-            // These errors happen in normal operations. Log them as messages.
-            if (message == "dvd: ifoOpen failed" || message.Contains("avformat_seek_file failed") || message.Contains("nav_get_title_list"))
-            {
-                SendMessageEvent(message);
-                return;
-            }
-
-            SendErrorEvent(message);
+    public static void ErrorHandler(string message) {
+      if (!string.IsNullOrEmpty(message)) {
+        // These errors happen in normal operations. Log them as messages.
+        if (message == "dvd: ifoOpen failed" ||
+            message.Contains("avformat_seek_file failed") ||
+            message.Contains("nav_get_title_list")) {
+          SendMessageEvent(message);
+          return;
         }
+
+        SendErrorEvent(message);
+      }
     }
 
     /// <summary>
@@ -189,12 +170,12 @@ public static class HandBrakeUtils
     /// <returns>
     /// The standard x264 option name.
     /// </returns>
-    public static string SanitizeX264OptName(string name)
-    {
-        IntPtr namePtr = Marshal.StringToHGlobalAnsi(name);
-        string sanitizedName = Marshal.PtrToStringAnsi(hbFunctions.hb_x264_encopt_name(namePtr));
-        Marshal.FreeHGlobal(namePtr);
-        return sanitizedName;
+    public static string SanitizeX264OptName(string name) {
+      IntPtr namePtr = Marshal.StringToHGlobalAnsi(name);
+      string sanitizedName =
+          Marshal.PtrToStringAnsi(hbFunctions.hb_x264_encopt_name(namePtr));
+      Marshal.FreeHGlobal(namePtr);
+      return sanitizedName;
     }
 
     /// <summary>
@@ -224,16 +205,12 @@ public static class HandBrakeUtils
     /// <returns>
     /// True if the level is valid.
     /// </returns>
-    public static bool IsH264LevelValid(string level, int width, int height, int fpsNumerator, int fpsDenominator, bool interlaced, bool fakeInterlaced)
-    {
-        return hbFunctions.hb_check_h264_level(
-                   level,
-                   width,
-                   height,
-                   fpsNumerator,
-                   fpsDenominator,
-                   interlaced ? 1 : 0,
-                   fakeInterlaced ? 1 : 0) == 0;
+    public static bool IsH264LevelValid(string level, int width, int height,
+                                        int fpsNumerator, int fpsDenominator,
+                                        bool interlaced, bool fakeInterlaced) {
+      return hbFunctions.hb_check_h264_level(level, width, height, fpsNumerator,
+                                             fpsDenominator, interlaced ? 1 : 0,
+                                             fakeInterlaced ? 1 : 0) == 0;
     }
 
     /// <summary>
@@ -263,38 +240,27 @@ public static class HandBrakeUtils
     /// <returns>
     /// The full x264 options string from the given inputs.
     /// </returns>
-    public static string CreateX264OptionsString(
-        string preset,
-        IList<string> tunes,
-        string extraOptions,
-        string profile,
-        string level,
-        int width,
-        int height)
-    {
-        if (width <= 0)
-        {
-            throw new ArgumentException("width must be positive.");
-        }
+    public static string CreateX264OptionsString(string preset,
+                                                 IList<string>tunes,
+                                                 string extraOptions,
+                                                 string profile, string level,
+                                                 int width, int height) {
+      if (width <= 0) {
+        throw new ArgumentException("width must be positive.");
+      }
 
-        if (height <= 0)
-        {
-            throw new ArgumentException("height must be positive.");
-        }
+      if (height <= 0) {
+        throw new ArgumentException("height must be positive.");
+      }
 
-        IntPtr ptr = hbFunctions.hb_x264_param_unparse(
-                         8,
-                         preset,
-                         string.Join(",", tunes),
-                         extraOptions,
-                         profile,
-                         level,
-                         width,
-                         height); // TODO add bit-depth support.
+      IntPtr ptr = hbFunctions.hb_x264_param_unparse(
+          8, preset, string.Join(",", tunes), extraOptions, profile, level,
+          width,
+          height); // TODO add bit-depth support.
 
-        string x264Settings = Marshal.PtrToStringAnsi(ptr);
+      string x264Settings = Marshal.PtrToStringAnsi(ptr);
 
-        return x264Settings;
+      return x264Settings;
     }
 
     /// <summary>
@@ -302,35 +268,36 @@ public static class HandBrakeUtils
     /// </summary>
     /// <param name="anamorphicGeometry">Anamorphic inputs.</param>
     /// <returns>The final size and PAR of the video.</returns>
-    public static Geometry GetAnamorphicSize(AnamorphicGeometry anamorphicGeometry)
-    {
-        string encode = JsonConvert.SerializeObject(anamorphicGeometry, Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
-        IntPtr json = hbFunctions.hb_set_anamorphic_size_json(Marshal.StringToHGlobalAnsi(encode));
-        string result = Marshal.PtrToStringAnsi(json);
-        return JsonConvert.DeserializeObject<Geometry>(result);
+    public static Geometry
+    GetAnamorphicSize(AnamorphicGeometry anamorphicGeometry) {
+      string encode = JsonConvert.SerializeObject(
+          anamorphicGeometry, Formatting.Indented,
+          new JsonSerializerSettings{NullValueHandling =
+                                         NullValueHandling.Ignore});
+      IntPtr json = hbFunctions.hb_set_anamorphic_size_json(
+          Marshal.StringToHGlobalAnsi(encode));
+      string result = Marshal.PtrToStringAnsi(json);
+      return JsonConvert.DeserializeObject<Geometry>(result);
     }
 
-    public static void Reduce(long den, long num, out long x, out long y)
-    {
-        // find the greatest common divisor of num & den by Euclid's algorithm
-        long n = num, d = den;
-        while (d > 0)
-        {
-            long t = d;
-            d = n % d;
-            n = t;
-        }
+    public static void Reduce(long den, long num, out long x, out long y) {
+      // find the greatest common divisor of num & den by Euclid's algorithm
+      long n = num, d = den;
+      while (d > 0) {
+        long t = d;
+        d = n % d;
+        n = t;
+      }
 
-        // at this point n is the gcd. if it's non-zero remove it from num
-        // and den. Otherwise just return the original values.
-        if (n > 0)
-        {
-            num /= n;
-            den /= n;
-        }
+      // at this point n is the gcd. if it's non-zero remove it from num
+      // and den. Otherwise just return the original values.
+      if (n > 0) {
+        num /= n;
+        den /= n;
+      }
 
-        x = num;
-        y = den;
+      x = num;
+      y = den;
     }
 
     /// <summary>
@@ -339,9 +306,8 @@ public static class HandBrakeUtils
     /// <param name="message">
     /// The message to send.
     /// </param>
-    public static void SendMessageEvent(string message)
-    {
-        MessageLogged?.Invoke(null, new MessageLoggedEventArgs(message));
+    public static void SendMessageEvent(string message) {
+      MessageLogged?.Invoke(null, new MessageLoggedEventArgs(message));
     }
 
     /// <summary>
@@ -350,37 +316,26 @@ public static class HandBrakeUtils
     /// <param name="message">
     /// The message to send
     /// </param>
-    public static void SendErrorEvent(string message)
-    {
-        ErrorLogged?.Invoke(null, new MessageLoggedEventArgs(message));
+    public static void SendErrorEvent(string message) {
+      ErrorLogged?.Invoke(null, new MessageLoggedEventArgs(message));
     }
 
-    public static bool IsInitialised()
-    {
-        return initSuccess;
-    }
+    public static bool IsInitialised() { return initSuccess; }
 
-    public static bool IsInitNoHardware()
-    {
-        return initNoHardware;
-    }
+    public static bool IsInitNoHardware() { return initNoHardware; }
 
     [HandleProcessCorruptedStateExceptions]
-    private static bool TryInit()
-    {
-        try
-        {
-            if (hbFunctions.hb_global_init() == -1)
-            {
-                throw new InvalidOperationException("HB global init failed.");
-            }
+    private static bool
+    TryInit() {
+      try {
+        if (hbFunctions.hb_global_init() == -1) {
+          throw new InvalidOperationException("HB global init failed.");
         }
-        catch (Exception)
-        {
-            return false;
-        }
+      } catch (Exception) {
+        return false;
+      }
 
-        return true;
+      return true;
     }
-}
+  }
 }
