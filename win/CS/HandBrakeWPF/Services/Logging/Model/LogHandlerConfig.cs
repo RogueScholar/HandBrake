@@ -9,26 +9,38 @@
 
 namespace HandBrakeWPF.Services.Logging.Model
 {
-    public class LogHandlerConfig
+public class LogHandlerConfig
+{
+    public LogHandlerConfig(bool enableDiskLogging, string logFile, bool deleteCurrentLogFirst, string header)
     {
-        public LogHandlerConfig(bool enableDiskLogging, string logFile, bool deleteCurrentLogFirst, string header)
-        {
-            this.EnableDiskLogging = enableDiskLogging;
-            this.LogFile = logFile;
-            this.DeleteCurrentLogFirst = deleteCurrentLogFirst;
-            this.Header = header;
-        }
-
-        public LogHandlerConfig()
-        {
-        }
-
-        public bool EnableDiskLogging { get; set; }
-
-        public string LogFile { get; set; }
-
-        public bool DeleteCurrentLogFirst { get; set; }
-
-        public string Header { get; set; }
+        this.EnableDiskLogging = enableDiskLogging;
+        this.LogFile = logFile;
+        this.DeleteCurrentLogFirst = deleteCurrentLogFirst;
+        this.Header = header;
     }
+
+    public LogHandlerConfig()
+    {
+    }
+
+    public bool EnableDiskLogging {
+        get;
+        set;
+    }
+
+    public string LogFile {
+        get;
+        set;
+    }
+
+    public bool DeleteCurrentLogFirst {
+        get;
+        set;
+    }
+
+    public string Header {
+        get;
+        set;
+    }
+}
 }

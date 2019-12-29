@@ -9,26 +9,26 @@
 
 namespace HandBrake.Worker.Logging.Interfaces
 {
-    using System.Collections.Generic;
+using System.Collections.Generic;
 
-    using HandBrake.Worker.Logging.Models;
+using HandBrake.Worker.Logging.Models;
 
-    public interface ILogHandler
-    {
-        string GetFullLog();
+public interface ILogHandler
+{
+    string GetFullLog();
 
-        List<LogMessage> GetLogMessages();
+    List<LogMessage> GetLogMessages();
 
-        /// <summary>
-        /// Get the log data from a given index
-        /// </summary>
-        /// <param name="index">index is zero based</param>
-        /// <returns>Full log as a string</returns>
-        List<LogMessage> GetLogMessagesFromIndex(int index);
+    /// <summary>
+    /// Get the log data from a given index
+    /// </summary>
+    /// <param name="index">index is zero based</param>
+    /// <returns>Full log as a string</returns>
+    List<LogMessage> GetLogMessagesFromIndex(int index);
 
-        /// <summary>
-        /// Empty the log cache and reset the log handler to defaults.
-        /// </summary>
-        void Reset();
-    }
+    /// <summary>
+    /// Empty the log cache and reset the log handler to defaults.
+    /// </summary>
+    void Reset();
+}
 }

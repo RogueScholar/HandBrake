@@ -9,142 +9,142 @@
 
 namespace HandBrakeWPF.Instance
 {
-    using System;
-    using System.Runtime.CompilerServices;
+using System;
+using System.Runtime.CompilerServices;
 
-    using HandBrake.Interop.Interop;
-    using HandBrake.Interop.Interop.Interfaces;
-    using HandBrake.Interop.Model;
+using HandBrake.Interop.Interop;
+using HandBrake.Interop.Interop.Interfaces;
+using HandBrake.Interop.Model;
 
-    using HandBrakeWPF.Factories;
+using HandBrakeWPF.Factories;
+
+/// <summary>
+/// The HandBrake Instance manager.
+/// Only supports scanning right now.
+/// </summary>
+public static class HandBrakeInstanceManager
+{
+    private static IEncodeInstance encodeInstance;
+    private static HandBrakeInstance scanInstance;
+    private static HandBrakeInstance previewInstance;
+    private static bool noHardware;
+
+    public static void Init(bool noHardwareMode)
+    {
+        noHardware = noHardwareMode;
+        HandBrakeUtils.RegisterLogger();
+        HandBrakeUtils.EnsureGlobalInit(noHardwareMode);
+    }
 
     /// <summary>
-    /// The HandBrake Instance manager.
-    /// Only supports scanning right now.
+    /// The get encode instance.
     /// </summary>
-    public static class HandBrakeInstanceManager
+    /// <param name="verbosity">
+    /// The verbosity.
+    /// </param>
+    /// <param name="configuration">
+    /// The configuration.
+    /// </param>
+    /// <returns>
+    /// The <see cref="IHandBrakeInstance"/>.
+    /// </returns>
+    public static IEncodeInstance GetEncodeInstance(int verbosity, HBConfiguration configuration)
     {
-        private static IEncodeInstance encodeInstance;
-        private static HandBrakeInstance scanInstance;
-        private static HandBrakeInstance previewInstance;
-        private static bool noHardware;
-
-        public static void Init(bool noHardwareMode)
+        if (!HandBrakeUtils.IsInitialised())
         {
-            noHardware = noHardwareMode;
-            HandBrakeUtils.RegisterLogger();
-            HandBrakeUtils.EnsureGlobalInit(noHardwareMode);
+            throw new Exception("Please call Init before Using!");
         }
 
-        /// <summary>
-        /// The get encode instance.
-        /// </summary>
-        /// <param name="verbosity">
-        /// The verbosity.
-        /// </param>
-        /// <param name="configuration">
-        /// The configuration.
-        /// </param>
-        /// <returns>
-        /// The <see cref="IHandBrakeInstance"/>.
-        /// </returns>
-        public static IEncodeInstance GetEncodeInstance(int verbosity, HBConfiguration configuration)
+        if (encodeInstance != null)
         {
-            if (!HandBrakeUtils.IsInitialised())
-            {
-                throw new Exception("Please call Init before Using!");
-            }
-
-            if (encodeInstance != null)
-            {
-                encodeInstance.Dispose();
-                encodeInstance = null;
-            }
-
-            IEncodeInstance newInstance;
-
-            if (configuration.RemoteServiceEnabled)
-            {
-                newInstance = new RemoteInstance(configuration.RemoteServicePort);
-            }
-            else
-            {
-                newInstance = new HandBrakeInstance();
-            }
-
-            newInstance.Initialize(verbosity, noHardware);
-
-            encodeInstance = newInstance;
-
-            HandBrakeUtils.SetDvdNav(!configuration.IsDvdNavDisabled);
-
-            return encodeInstance;
+            encodeInstance.Dispose();
+            encodeInstance = null;
         }
 
-        /// <summary>
-        /// Gets the scanInstance.
-        /// </summary>
-        /// <param name="verbosity">
-        /// The verbosity.
-        /// </param>
-        /// <param name="configuration">
-        ///  HandBrakes config
-        /// </param>
-        /// <returns>
-        /// The <see cref="IHandBrakeInstance"/>.
-        /// </returns>
-        public static IHandBrakeInstance GetScanInstance(int verbosity, HBConfiguration configuration)
+        IEncodeInstance newInstance;
+
+        if (configuration.RemoteServiceEnabled)
         {
-            if (!HandBrakeUtils.IsInitialised())
-            {
-                throw new Exception("Please call Init before Using!");
-            }
-
-            if (scanInstance != null)
-            {
-                scanInstance.Dispose();
-                scanInstance = null;
-            }
-
-            HandBrakeInstance newInstance = new HandBrakeInstance();
-            newInstance.Initialize(verbosity, noHardware);
-            scanInstance = newInstance;
-
-            return scanInstance;
+            newInstance = new RemoteInstance(configuration.RemoteServicePort);
+        }
+        else
+        {
+            newInstance = new HandBrakeInstance();
         }
 
-        /// <summary>
-        /// The get encode instance.
-        /// </summary>
-        /// <param name="verbosity">
-        /// The verbosity.
-        /// </param>
-        /// <param name="configuration">
-        /// The configuration.
-        /// </param>
-        /// <returns>
-        /// The <see cref="IHandBrakeInstance"/>.
-        /// </returns>
-        public static IHandBrakeInstance GetPreviewInstance(int verbosity, HBConfiguration configuration)
-        {
-            if (!HandBrakeUtils.IsInitialised())
-            {
-                throw new Exception("Please call Init before Using!");
-            }
+        newInstance.Initialize(verbosity, noHardware);
 
-            if (previewInstance != null)
-            {
-                previewInstance.Dispose();
-                previewInstance = null;
-            }
+        encodeInstance = newInstance;
 
-            HandBrakeInstance newInstance = new HandBrakeInstance();
-            newInstance.Initialize(verbosity, noHardware);
-            previewInstance = newInstance;
+        HandBrakeUtils.SetDvdNav(!configuration.IsDvdNavDisabled);
 
-            HandBrakeUtils.SetDvdNav(!configuration.IsDvdNavDisabled);
-
-            return previewInstance;
-        }
+        return encodeInstance;
     }
+
+    /// <summary>
+    /// Gets the scanInstance.
+    /// </summary>
+    /// <param name="verbosity">
+    /// The verbosity.
+    /// </param>
+    /// <param name="configuration">
+    ///  HandBrakes config
+    /// </param>
+    /// <returns>
+    /// The <see cref="IHandBrakeInstance"/>.
+    /// </returns>
+    public static IHandBrakeInstance GetScanInstance(int verbosity, HBConfiguration configuration)
+    {
+        if (!HandBrakeUtils.IsInitialised())
+        {
+            throw new Exception("Please call Init before Using!");
+        }
+
+        if (scanInstance != null)
+        {
+            scanInstance.Dispose();
+            scanInstance = null;
+        }
+
+        HandBrakeInstance newInstance = new HandBrakeInstance();
+        newInstance.Initialize(verbosity, noHardware);
+        scanInstance = newInstance;
+
+        return scanInstance;
+    }
+
+    /// <summary>
+    /// The get encode instance.
+    /// </summary>
+    /// <param name="verbosity">
+    /// The verbosity.
+    /// </param>
+    /// <param name="configuration">
+    /// The configuration.
+    /// </param>
+    /// <returns>
+    /// The <see cref="IHandBrakeInstance"/>.
+    /// </returns>
+    public static IHandBrakeInstance GetPreviewInstance(int verbosity, HBConfiguration configuration)
+    {
+        if (!HandBrakeUtils.IsInitialised())
+        {
+            throw new Exception("Please call Init before Using!");
+        }
+
+        if (previewInstance != null)
+        {
+            previewInstance.Dispose();
+            previewInstance = null;
+        }
+
+        HandBrakeInstance newInstance = new HandBrakeInstance();
+        newInstance.Initialize(verbosity, noHardware);
+        previewInstance = newInstance;
+
+        HandBrakeUtils.SetDvdNav(!configuration.IsDvdNavDisabled);
+
+        return previewInstance;
+    }
+}
 }

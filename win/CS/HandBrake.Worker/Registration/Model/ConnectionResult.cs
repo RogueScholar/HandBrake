@@ -9,23 +9,32 @@
 
 namespace HandBrake.Worker.Registration.Model
 {
-    public class ConnectionResult
+public class ConnectionResult
+{
+    public ConnectionResult()
     {
-        public ConnectionResult()
-        {
-        }
-
-        public ConnectionResult(bool isSuccessfulConnection, string token, string error)
-        {
-            this.IsSuccessfulConnection = isSuccessfulConnection;
-            this.Token = token;
-            this.Error = error;
-        }
-
-        public bool IsSuccessfulConnection { get; set; }
-        
-        public string Token { get; set; }
-
-        public string Error { get; set; }
     }
+
+    public ConnectionResult(bool isSuccessfulConnection, string token, string error)
+    {
+        this.IsSuccessfulConnection = isSuccessfulConnection;
+        this.Token = token;
+        this.Error = error;
+    }
+
+    public bool IsSuccessfulConnection {
+        get;
+        set;
+    }
+
+    public string Token {
+        get;
+        set;
+    }
+
+    public string Error {
+        get;
+        set;
+    }
+}
 }

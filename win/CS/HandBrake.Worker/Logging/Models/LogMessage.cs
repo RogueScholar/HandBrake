@@ -9,16 +9,22 @@
 
 namespace HandBrake.Worker.Logging.Models
 {
-    public class LogMessage
+public class LogMessage
+{
+    public LogMessage(string content, int messageIndex)
     {
-        public LogMessage(string content, int messageIndex)
-        {
-            this.Content = content;
-            this.MessageIndex = messageIndex;
-        }
-
-        public string Content { get; private set; }
-
-        public int MessageIndex { get; private set; }
+        this.Content = content;
+        this.MessageIndex = messageIndex;
     }
+
+    public string Content {
+        get;
+        private set;
+    }
+
+    public int MessageIndex {
+        get;
+        private set;
+    }
+}
 }

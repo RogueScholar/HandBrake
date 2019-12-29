@@ -9,37 +9,37 @@
 
 namespace HandBrakeWPF.Model
 {
-    using HandBrake.Interop.Attributes;
+using HandBrake.Interop.Attributes;
 
-    using HandBrakeWPF.Properties;
+using HandBrakeWPF.Properties;
 
-    /// <summary>
-    /// A enum representing each tab on the options screen.
-    /// </summary>
-    public enum OptionsTab
-    {
-        [DisplayName(typeof(Resources), "Options_General")]
-        General = 0,
+/// <summary>
+/// A enum representing each tab on the options screen.
+/// </summary>
+public enum OptionsTab
+{
+    [DisplayName(typeof(Resources), "Options_General")]
+    General = 0,
 
-        [DisplayName(typeof(Resources), "Options_OutputFiles")]
-        OutputFiles,
+    [DisplayName(typeof(Resources), "Options_OutputFiles")]
+    OutputFiles,
 
-        [DisplayName(typeof(Resources), "Options_WhenDone")]
-        WhenDone,
+    [DisplayName(typeof(Resources), "Options_WhenDone")]
+    WhenDone,
 
-        [DisplayName(typeof(Resources), "Options_Video")]
-        Video,
+    [DisplayName(typeof(Resources), "Options_Video")]
+    Video,
 
-        [DisplayName(typeof(Resources), "Options_Advanced")]
-        Advanced,
+    [DisplayName(typeof(Resources), "Options_Advanced")]
+    Advanced,
 
-        [DisplayName(typeof(Resources), "Options_Updates")]
-        Updates,
+    [DisplayName(typeof(Resources), "Options_Updates")]
+    Updates,
 
-        [DisplayName(typeof(Resources), "Options_About")]
-        About,
+    [DisplayName(typeof(Resources), "Options_About")]
+    About,
 
-        //[DisplayName(typeof(Resources), "Options_Experimental")]
-        //Experimental,
-    }
+    //[DisplayName(typeof(Resources), "Options_Experimental")]
+    //Experimental,
+}
 }

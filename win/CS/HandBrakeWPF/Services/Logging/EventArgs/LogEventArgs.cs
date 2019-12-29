@@ -9,29 +9,32 @@
 
 namespace HandBrakeWPF.Services.Logging.EventArgs
 {
-    using System;
+using System;
 
-    using HandBrake.Worker.Logging.Models;
+using HandBrake.Worker.Logging.Models;
+
+/// <summary>
+/// The Message Logged Event Args
+/// </summary>
+public class LogEventArgs : EventArgs
+{
+    /// <summary>
+    /// Initializes a new instance of the <see cref="LogEventArgs"/> class.
+    /// </summary>
+    /// <param name="message">
+    /// The message.
+    /// </param>
+    public LogEventArgs(LogMessage message)
+    {
+        this.Log = message;
+    }
 
     /// <summary>
-    /// The Message Logged Event Args
+    /// Gets the Message.
     /// </summary>
-    public class LogEventArgs : EventArgs
-    {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="LogEventArgs"/> class.
-        /// </summary>
-        /// <param name="message">
-        /// The message.
-        /// </param>
-        public LogEventArgs(LogMessage message)
-        {
-            this.Log = message;
-        }
-
-        /// <summary>
-        /// Gets the Message.
-        /// </summary>
-        public LogMessage Log { get; private set; }
+    public LogMessage Log {
+        get;
+        private set;
     }
+}
 }

@@ -13,41 +13,41 @@
 
 namespace HandBrake.Worker.Registration
 {
-    using System;
-    using System.Net;
+using System;
+using System.Net;
 
-    using HandBrake.Worker.Registration.Model;
-    using HandBrake.Worker.Utilities;
+using HandBrake.Worker.Registration.Model;
+using HandBrake.Worker.Utilities;
 
-    using Newtonsoft.Json;
+using Newtonsoft.Json;
 
-    public class ConnectionRegistrar
+public class ConnectionRegistrar
+{
+    private readonly JsonSerializerSettings jsonNetSettings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
+    private string token;
+
+    public ConnectionRegistrar()
     {
-        private readonly JsonSerializerSettings jsonNetSettings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
-        private string token;
-
-        public ConnectionRegistrar()
-        {
-        }
-
-        public string Pair(HttpListenerRequest request)
-        {
-            string tokenKey = HttpUtilities.GetRequestPostData(request);
-
-
-            if (!string.IsNullOrEmpty(token))
-            {
-                return JsonConvert.SerializeObject(new ConnectionResult(false, null, "Already Paired"), Formatting.Indented, this.jsonNetSettings);
-            }
-
-            this.token = tokenKey;
-
-            return JsonConvert.SerializeObject(new ConnectionResult(true, tokenKey, null), Formatting.Indented, this.jsonNetSettings);
-        }
-
-        public string GetToken(HttpListenerRequest request)
-        { 
-            return this.token;
-        }
     }
+
+    public string Pair(HttpListenerRequest request)
+    {
+        string tokenKey = HttpUtilities.GetRequestPostData(request);
+
+
+        if (!string.IsNullOrEmpty(token))
+        {
+            return JsonConvert.SerializeObject(new ConnectionResult(false, null, "Already Paired"), Formatting.Indented, this.jsonNetSettings);
+        }
+
+        this.token = tokenKey;
+
+        return JsonConvert.SerializeObject(new ConnectionResult(true, tokenKey, null), Formatting.Indented, this.jsonNetSettings);
+    }
+
+    public string GetToken(HttpListenerRequest request)
+    {
+        return this.token;
+    }
+}
 }

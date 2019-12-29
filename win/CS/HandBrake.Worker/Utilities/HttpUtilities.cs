@@ -9,25 +9,25 @@
 
 namespace HandBrake.Worker.Utilities
 {
-    using System.IO;
-    using System.Net;
+using System.IO;
+using System.Net;
 
-    public class HttpUtilities
+public class HttpUtilities
+{
+    public static string GetRequestPostData(HttpListenerRequest request)
     {
-        public static string GetRequestPostData(HttpListenerRequest request)
+        if (!request.HasEntityBody)
         {
-            if (!request.HasEntityBody)
-            {
-                return null;
-            }
+            return null;
+        }
 
-            using (Stream inputStream = request.InputStream)
+        using (Stream inputStream = request.InputStream)
+        {
+            using (StreamReader streamReader = new StreamReader(inputStream, request.ContentEncoding))
             {
-                using (StreamReader streamReader = new StreamReader(inputStream, request.ContentEncoding))
-                {
-                    return streamReader.ReadToEnd();
-                }
+                return streamReader.ReadToEnd();
             }
         }
     }
+}
 }
