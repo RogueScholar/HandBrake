@@ -472,4 +472,3 @@
 /* Queue Edit Alert -> stop and edit informative text
    Queue Stop Alert -> stop and remove informative text */
 "Your movie will be lost if you don't continue encoding." = "Ваш фильм будет потерян если вы не продолжите кодирование.";
-
