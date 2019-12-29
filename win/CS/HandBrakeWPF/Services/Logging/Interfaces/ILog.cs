@@ -1,33 +1,32 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="ILog.cs" company="HandBrake Project (http://handbrake.fr)">
-//   This file is part of the HandBrake source code - It may be used under the terms of the GNU General Public License.
+//   This file is part of the HandBrake source code - It may be used under the
+//   terms of the GNU General Public License.
 // </copyright>
 // <summary>
 //   Defines the ILog type.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace HandBrakeWPF.Services.Logging.Interfaces
-{
-using System;
-using System.Collections.Generic;
+namespace HandBrakeWPF.Services.Logging.Interfaces {
+  using System;
+  using System.Collections.Generic;
 
-using HandBrake.Worker.Logging.Interfaces;
-using HandBrake.Worker.Logging.Models;
+  using HandBrake.Worker.Logging.Interfaces;
+  using HandBrake.Worker.Logging.Models;
 
-using HandBrakeWPF.Services.Logging.Model;
+  using HandBrakeWPF.Services.Logging.Model;
 
-using LogEventArgs = HandBrakeWPF.Services.Logging.EventArgs.LogEventArgs;
+  using LogEventArgs = HandBrakeWPF.Services.Logging.EventArgs.LogEventArgs;
 
-/// <summary>
-/// The Log interface.
-/// </summary>
-public interface ILog : ILogHandler
-{
+  /// <summary>
+  /// The Log interface.
+  /// </summary>
+  public interface ILog : ILogHandler {
     /// <summary>
     /// The message logged.
     /// </summary>
-    event EventHandler<LogEventArgs> MessageLogged;
+    event EventHandler<LogEventArgs>MessageLogged;
 
     /// <summary>
     /// The log reset event
@@ -52,5 +51,5 @@ public interface ILog : ILogHandler
     /// The content of the log message,
     /// </param>
     void LogMessage(string content);
-}
+  }
 }
