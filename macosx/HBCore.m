@@ -191,8 +191,8 @@ typedef void (^HBCoreCleanupHandler)(void);
     if (![[NSFileManager defaultManager] fileExistsAtPath:url.path]) {
         if (error) {
             *error = [NSError errorWithDomain:@"HBErrorDomain"
-                                         code:100
-                                     userInfo:@{ NSLocalizedDescriptionKey: @"Unable to find the file at the specified URL" }];
+                              code:100
+                              userInfo:@ { NSLocalizedDescriptionKey: @"Unable to find the file at the specified URL" }];
         }
 
         return NO;
@@ -241,8 +241,8 @@ typedef void (^HBCoreCleanupHandler)(void);
 
             if (error) {
                 *error = [NSError errorWithDomain:@"HBErrorDomain"
-                                             code:101
-                                         userInfo:@{ NSLocalizedDescriptionKey: @"library not found for decrypting physical disc" }];
+                                  code:101
+                                  userInfo:@ { NSLocalizedDescriptionKey: @"library not found for decrypting physical disc" }];
             }
         }
     }
@@ -261,7 +261,7 @@ typedef void (^HBCoreCleanupHandler)(void);
 
 #ifdef __SANDBOX_ENABLED__
     __block HBSecurityAccessToken *token = [HBSecurityAccessToken tokenWithObject:url];
-    self.cleanupHandler = ^{ token = nil; };
+    self.cleanupHandler = ^ { token = nil; };
 #endif
 
     // Reset the titles array
@@ -332,11 +332,11 @@ typedef void (^HBCoreCleanupHandler)(void);
 #pragma mark - Preview images
 
 - (CGImageRef)copyImageAtIndex:(NSUInteger)index
-                      forTitle:(HBTitle *)title
-                  pictureFrame:(HBPicture *)frame
-                   deinterlace:(BOOL)deinterlace
-                        rotate:(int)angle
-                       flipped:(BOOL)flipped CF_RETURNS_RETAINED
+    forTitle:(HBTitle *)title
+    pictureFrame:(HBPicture *)frame
+    deinterlace:(BOOL)deinterlace
+    rotate:(int)angle
+    flipped:(BOOL)flipped CF_RETURNS_RETAINED
 {
     CGImageRef img = NULL;
 
@@ -379,8 +379,8 @@ typedef void (^HBCoreCleanupHandler)(void);
 
         CGBitmapInfo bitmapInfo = kCGBitmapByteOrderDefault | kCGImageAlphaNone;
         CGColorSpaceRef colorSpace = copyColorSpace(title.hb_title->color_prim,
-                                                    title.hb_title->color_transfer,
-                                                    title.hb_title->color_matrix);
+                                     title.hb_title->color_transfer,
+                                     title.hb_title->color_matrix);
 
         img = CGImageCreate(image->width,
                             image->height,
@@ -432,7 +432,7 @@ typedef void (^HBCoreCleanupHandler)(void);
 #ifdef __SANDBOX_ENABLED__
     HBJob *jobCopy = [job copy];
     __block HBSecurityAccessToken *token = [HBSecurityAccessToken tokenWithObject:jobCopy];
-    self.cleanupHandler = ^{ token = nil; };
+    self.cleanupHandler = ^ { token = nil; };
 #endif
 
     // Add the job to libhb
@@ -475,18 +475,18 @@ typedef void (^HBCoreCleanupHandler)(void);
     HBCoreResult result = HBCoreResultDone;
     switch (_hb_state->param.working.error)
     {
-        case HB_ERROR_NONE:
-            result = HBCoreResultDone;
-            [HBUtilities writeToActivityLog:"%s work done", self.name.UTF8String];
-            break;
-        case HB_ERROR_CANCELED:
-            result = HBCoreResultCanceled;
-            [HBUtilities writeToActivityLog:"%s work canceled", self.name.UTF8String];
-            break;
-        default:
-            result = HBCoreResultFailed;
-            [HBUtilities writeToActivityLog:"%s work failed", self.name.UTF8String];
-            break;
+    case HB_ERROR_NONE:
+        result = HBCoreResultDone;
+        [HBUtilities writeToActivityLog:"%s work done", self.name.UTF8String];
+        break;
+    case HB_ERROR_CANCELED:
+        result = HBCoreResultCanceled;
+        [HBUtilities writeToActivityLog:"%s work canceled", self.name.UTF8String];
+        break;
+    default:
+        result = HBCoreResultFailed;
+        [HBUtilities writeToActivityLog:"%s work failed", self.name.UTF8String];
+        break;
     }
     return result;
 }
@@ -517,7 +517,7 @@ typedef void (^HBCoreCleanupHandler)(void);
 {
     if (fileURL)
     {
-        NSDictionary *userInfo = @{NSProgressFileURLKey : fileURL};
+        NSDictionary *userInfo = @ {NSProgressFileURLKey : fileURL};
 
         self.progress = [[NSProgress alloc] initWithParent:nil userInfo:userInfo];
         self.progress.totalUnitCount = 100;
@@ -551,7 +551,7 @@ typedef void (^HBCoreCleanupHandler)(void);
         if (timer)
         {
             dispatch_source_set_timer(timer, dispatch_walltime(NULL, 0), (uint64_t)(seconds * NSEC_PER_SEC), (uint64_t)(seconds * NSEC_PER_SEC / 10));
-            dispatch_source_set_event_handler(timer, ^{
+            dispatch_source_set_event_handler(timer, ^ {
                 [self updateState];
             });
             dispatch_resume(timer);
@@ -629,7 +629,7 @@ typedef void (^HBCoreCleanupHandler)(void);
         self.progressHandler(self.state, progress, info);
 
         if (state.state != HB_STATE_SEARCHING &&
-            self.progress.completedUnitCount < progress.percent * 100)
+                self.progress.completedUnitCount < progress.percent * 100)
         {
             self.progress.completedUnitCount = progress.percent * 100;
         }

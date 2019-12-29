@@ -46,7 +46,7 @@ static void *HandBrakeXPCServiceContext = &HandBrakeXPCServiceContext;
 
 - (void)setDVDNav:(BOOL)enabled
 {
-    dispatch_sync(_queue, ^{
+    dispatch_sync(_queue, ^ {
         [HBCore setDVDNav:enabled];
     });
 }
@@ -70,8 +70,8 @@ static void *HandBrakeXPCServiceContext = &HandBrakeXPCServiceContext;
 
     // Set up observers
     [self.core addObserver:self forKeyPath:@"state"
-                   options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionInitial
-                   context:HandBrakeXPCServiceContext];
+               options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionInitial
+               context:HandBrakeXPCServiceContext];
 
     [NSProcessInfo.processInfo disableAutomaticTermination:@"Core started"];
 }
@@ -85,14 +85,14 @@ static void *HandBrakeXPCServiceContext = &HandBrakeXPCServiceContext;
 
 - (void)setLogLevel:(NSInteger)logLevel
 {
-    dispatch_sync(_queue, ^{
+    dispatch_sync(_queue, ^ {
         self.core.logLevel = logLevel;
     });
 }
 
 - (void)provideResourceAccessWithBookmarks:(NSArray<NSData *> *)bookmarks
 {
-    dispatch_sync(_queue, ^{
+    dispatch_sync(_queue, ^ {
         NSMutableArray<NSURL *> *urls = [NSMutableArray array];
         for (NSData *bookmark in bookmarks)
         {
@@ -120,7 +120,7 @@ static void *HandBrakeXPCServiceContext = &HandBrakeXPCServiceContext;
 
 - (void)scanURL:(NSURL *)url titleIndex:(NSUInteger)index previews:(NSUInteger)previewsNum minDuration:(NSUInteger)seconds keepPreviews:(BOOL)keepPreviews withReply:(void (^)(HBCoreResult))reply
 {
-    dispatch_sync(_queue, ^{
+    dispatch_sync(_queue, ^ {
         void (^progressHandler)(HBState state, HBProgress progress, NSString *info) = ^(HBState state, HBProgress progress, NSString *info)
         {
             [self.connection.remoteObjectProxy updateProgress:progress.percent hours:progress.hours minutes:progress.minutes seconds:progress.seconds state:state info:info];
@@ -129,21 +129,21 @@ static void *HandBrakeXPCServiceContext = &HandBrakeXPCServiceContext;
         self.reply = reply;
 
         [self.core scanURL:url titleIndex:index previews:previewsNum minDuration:seconds keepPreviews:keepPreviews
-           progressHandler:self.progressHandler
-         completionHandler:self.completionHandler];
+                   progressHandler:self.progressHandler
+                   completionHandler:self.completionHandler];
     });
 }
 
 - (void)cancelScan
 {
-    dispatch_sync(_queue, ^{
+    dispatch_sync(_queue, ^ {
         [self.core cancelScan];
     });
 }
 
- - (void)encodeJob:(HBJob *)job withReply:(void (^)(HBCoreResult))reply
+- (void)encodeJob:(HBJob *)job withReply:(void (^)(HBCoreResult))reply
 {
-    dispatch_sync(_queue, ^{
+    dispatch_sync(_queue, ^ {
         void (^progressHandler)(HBState state, HBProgress progress, NSString *info) = ^(HBState state, HBProgress progress, NSString *info)
         {
             [self.connection.remoteObjectProxy updateProgress:progress.percent hours:progress.hours minutes:progress.minutes seconds:progress.seconds state:state info:info];
@@ -154,28 +154,28 @@ static void *HandBrakeXPCServiceContext = &HandBrakeXPCServiceContext;
         // Reset the title in the job.
         job.title = self.core.titles.firstObject;
         [self.core encodeJob:job
-             progressHandler:self.progressHandler
-           completionHandler:self.completionHandler];
+                   progressHandler:self.progressHandler
+                   completionHandler:self.completionHandler];
     });
 }
 
 - (void)cancelEncode
 {
-    dispatch_sync(_queue, ^{
+    dispatch_sync(_queue, ^ {
         [self.core cancelEncode];
     });
 }
 
 - (void)pauseEncode
 {
-    dispatch_sync(_queue, ^{
+    dispatch_sync(_queue, ^ {
         [self.core pause];
     });
 }
 
 - (void)resumeEncode
 {
-    dispatch_sync(_queue, ^{
+    dispatch_sync(_queue, ^ {
         [self.core resume];
     });
 }

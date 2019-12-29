@@ -53,21 +53,21 @@
 
     __weak HBRemoteCore *weakSelf = self;
 
-    _connection.interruptionHandler = ^{
+    _connection.interruptionHandler = ^ {
         dispatch_sync(dispatch_get_main_queue(), ^{
             [weakSelf handleInterruption];
         });
     };
 
-    _connection.invalidationHandler = ^{
+    _connection.invalidationHandler = ^ {
         dispatch_sync(dispatch_get_main_queue(), ^{
             [weakSelf forwardError:@"XPC: Service connection was invalidated\n"];
         });
     };
 
     _proxy = [_connection remoteObjectProxyWithErrorHandler:^(NSError * _Nonnull error) {
-        dispatch_sync(dispatch_get_main_queue(), ^{
-            [self forwardError:@"XPC: Service did report an error\n"];
+                    dispatch_sync(dispatch_get_main_queue(), ^ {
+                        [self forwardError:@"XPC: Service did report an error\n"];
             [HBUtilities writeErrorToActivityLog:error];
         });
     }];
@@ -117,7 +117,7 @@
 }
 
 - (void)updateState:(HBState)state {
-    dispatch_sync(dispatch_get_main_queue(), ^{
+    dispatch_sync(dispatch_get_main_queue(), ^ {
         self.state = state;
     });
 }
@@ -139,7 +139,7 @@
     CFStringRef reasonForActivity= CFSTR("HandBrake is currently scanning and/or encoding");
 
     IOReturn success = IOPMAssertionCreateWithName(kIOPMAssertPreventUserIdleSystemSleep,
-                                                   kIOPMAssertionLevelOn, reasonForActivity, &_assertionID);
+                       kIOPMAssertionLevelOn, reasonForActivity, &_assertionID);
 
     if (success != kIOReturnSuccess)
     {
@@ -201,12 +201,12 @@
     __weak HBRemoteCore *weakSelf = self;
 
     [_proxy scanURL:url titleIndex:index previews:previewsNum minDuration:seconds keepPreviews:keepPreviews withReply:^(HBCoreResult result) {
-        dispatch_sync(dispatch_get_main_queue(), ^{
-            HBCoreCompletionHandler handler = weakSelf.completionHandler;
-            weakSelf.completionHandler = nil;
-            weakSelf.progressHandler = nil;
+               dispatch_sync(dispatch_get_main_queue(), ^ {
+                   HBCoreCompletionHandler handler = weakSelf.completionHandler;
+                   weakSelf.completionHandler = nil;
+                   weakSelf.progressHandler = nil;
 #ifdef __SANDBOX_ENABLED__
-            token = nil;
+                   token = nil;
 #endif
             [weakSelf allowAutoSleep];
             handler(result);
@@ -258,12 +258,12 @@
     __weak HBRemoteCore *weakSelf = self;
 
     [_proxy encodeJob:job withReply:^(HBCoreResult result) {
-        dispatch_sync(dispatch_get_main_queue(), ^{
-            HBCoreCompletionHandler handler = weakSelf.completionHandler;
-            weakSelf.completionHandler = nil;
-            weakSelf.progressHandler = nil;
+               dispatch_sync(dispatch_get_main_queue(), ^ {
+                   HBCoreCompletionHandler handler = weakSelf.completionHandler;
+                   weakSelf.completionHandler = nil;
+                   weakSelf.progressHandler = nil;
 #ifdef __SANDBOX_ENABLED__
-            token = nil;
+                   token = nil;
 #endif
             [weakSelf allowAutoSleep];
             handler(result);
@@ -280,8 +280,8 @@
 
     __weak HBRemoteCore *weakSelf = self;
 
-    dispatch_sync(dispatch_get_main_queue(), ^{
-        HBProgress progress = {currentProgress , hours, minutes, seconds};
+    dispatch_sync(dispatch_get_main_queue(), ^ {
+        HBProgress progress = {currentProgress, hours, minutes, seconds};
         weakSelf.state = state;
         weakSelf.progressHandler(state, progress, info);
     });
