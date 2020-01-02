@@ -25,10 +25,10 @@
 
 #include "values.h"
 
-GhbValue* ghb_get_title_settings(GhbValue *settings);
-GhbValue* ghb_get_title_audio_list(GhbValue *settings);
+GhbValue *ghb_get_title_settings(GhbValue *settings);
+GhbValue *ghb_get_title_audio_list(GhbValue *settings);
 GhbValue *ghb_get_title_audio_track(GhbValue *settings, int track);
-GhbValue* ghb_get_title_subtitle_list(GhbValue *settings);
+GhbValue *ghb_get_title_subtitle_list(GhbValue *settings);
 GhbValue *ghb_get_title_subtitle_track(GhbValue *settings, int track);
 
 #endif // _TITLEDICT_H_

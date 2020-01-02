@@ -22,14 +22,11 @@
 
 #include "ghbcompat.h"
 
-G_MODULE_EXPORT gboolean
-ghb_widget_hide_on_close(
-    GtkWidget *widget,
+G_MODULE_EXPORT gboolean ghb_widget_hide_on_close(GtkWidget *widget,
 #if !GTK_CHECK_VERSION(3, 90, 0)
-    GdkEvent *event,
+                                                  GdkEvent *event,
 #endif
-    gpointer *ud)
-{
-    gtk_widget_set_visible(widget, FALSE);
-    return TRUE;
+                                                  gpointer *ud) {
+  gtk_widget_set_visible(widget, FALSE);
+  return TRUE;
 }

@@ -4,7 +4,8 @@
    This file is part of the HandBrake source code
    Homepage: <http://handbrake.fr/>.
    It may be used under the terms of the GNU General Public License v2.
-   For full terms see the file COPYING file or visit http://www.gnu.org/licenses/gpl-2.0.html
+   For full terms see the file COPYING file or visit
+   http://www.gnu.org/licenses/gpl-2.0.html
  */
 
 #ifndef HANDBRAKE_TYPES_H
@@ -22,7 +23,7 @@ typedef struct hb_rational_s hb_rational_t;
 typedef struct hb_geometry_s hb_geometry_t;
 typedef struct hb_geometry_settings_s hb_geometry_settings_t;
 typedef struct hb_image_s hb_image_t;
-typedef struct hb_job_s  hb_job_t;
+typedef struct hb_job_s hb_job_t;
 typedef struct hb_title_set_s hb_title_set_t;
 typedef struct hb_title_s hb_title_t;
 typedef struct hb_chapter_s hb_chapter_t;
@@ -34,11 +35,11 @@ typedef struct hb_attachment_s hb_attachment_t;
 typedef struct hb_metadata_s hb_metadata_t;
 typedef struct hb_coverart_s hb_coverart_t;
 typedef struct hb_state_s hb_state_t;
-typedef struct hb_esconfig_s     hb_esconfig_t;
+typedef struct hb_esconfig_s hb_esconfig_t;
 typedef struct hb_work_private_s hb_work_private_t;
-typedef struct hb_work_object_s  hb_work_object_t;
+typedef struct hb_work_object_s hb_work_object_t;
 typedef struct hb_filter_private_s hb_filter_private_t;
-typedef struct hb_filter_object_s  hb_filter_object_t;
+typedef struct hb_filter_object_s hb_filter_object_t;
 typedef struct hb_buffer_settings_s hb_buffer_settings_t;
 typedef struct hb_image_format_s hb_image_format_t;
 typedef struct hb_fifo_s hb_fifo_t;

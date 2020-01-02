@@ -26,6 +26,6 @@
 #include "settings.h"
 
 void ghb_dvd_set_current(const gchar *name, signal_user_data_t *ud);
-gchar* ghb_resolve_symlink(const gchar *name);
+gchar *ghb_resolve_symlink(const gchar *name);
 
 #endif // _GHB_DVD_H_

@@ -24,8 +24,8 @@
 #if !defined(_SUBTITLEHANDLER_H_)
 #define _SUBTITLEHANDLER_H_
 
-#include "values.h"
 #include "settings.h"
+#include "values.h"
 
 void ghb_set_subtitle(signal_user_data_t *ud, gint track, GhbValue *settings);
 void ghb_subtitle_prune(signal_user_data_t *ud);
@@ -37,7 +37,7 @@ void ghb_subtitle_set_pref_lang(GhbValue *settings);
 void ghb_clear_subtitle_selection(GtkBuilder *builder);
 GhbValue *ghb_get_subtitle_list(GhbValue *settings);
 GhbValue *ghb_get_subtitle_settings(GhbValue *settings);
-char * ghb_subtitle_short_description(const GhbValue *subsource,
-                                      const GhbValue *subsettings);
+char *ghb_subtitle_short_description(const GhbValue *subsource,
+                                     const GhbValue *subsettings);
 
 #endif // _SUBTITLEHANDLER_H_

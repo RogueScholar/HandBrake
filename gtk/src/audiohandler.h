@@ -24,19 +24,21 @@
 #if !defined(_AUDIOHANDLER_H_)
 #define _AUDIOHANDLER_H_
 
-#include "values.h"
 #include "settings.h"
+#include "values.h"
 
 GhbValue *ghb_get_audio_settings(GhbValue *settings);
 GhbValue *ghb_get_audio_list(GhbValue *settings);
 void ghb_sanitize_audio_track_settings(GhbValue *settings);
-const gchar* ghb_get_user_audio_lang(GhbValue *settings, const hb_title_t *title, gint track);
+const gchar *ghb_get_user_audio_lang(GhbValue *settings,
+                                     const hb_title_t *title, gint track);
 void ghb_audio_list_refresh_selected(signal_user_data_t *ud);
-gint ghb_select_audio_codec(gint mux, guint32 in_codec, gint acodec, gint fallback_acodec, gint copy_mask);
-int ghb_select_fallback( GhbValue *settings, int acodec );
+gint ghb_select_audio_codec(gint mux, guint32 in_codec, gint acodec,
+                            gint fallback_acodec, gint copy_mask);
+int ghb_select_fallback(GhbValue *settings, int acodec);
 int ghb_get_copy_mask(GhbValue *settings);
 void ghb_audio_list_refresh_all(signal_user_data_t *ud);
-char * ghb_format_quality( const char *prefix, int codec, double quality );
+char *ghb_format_quality(const char *prefix, int codec, double quality);
 void ghb_init_audio_defaults_ui(signal_user_data_t *ud);
 void ghb_audio_defaults_to_ui(signal_user_data_t *ud);
 gboolean ghb_find_lang_row(GtkTreeModel *model, GtkTreeIter *iter, int idx);
