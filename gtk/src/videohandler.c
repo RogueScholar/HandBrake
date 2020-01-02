@@ -193,7 +193,7 @@ update_adv_settings_tooltip(signal_user_data_t *ud)
             level = "";
         }
         new_opts = hb_x264_param_unparse(hb_video_encoder_get_depth(encoder),
-                        preset, tunes, opts, profile, level, w, h);
+                                         preset, tunes, opts, profile, level, w, h);
 
         GtkWidget *eo = GTK_WIDGET(GHB_WIDGET(ud->builder, "VideoOptionExtra"));
 
@@ -319,57 +319,59 @@ format_vquality_cb(GtkScale *scale, gdouble val, signal_user_data_t *ud)
     vqname = hb_video_quality_get_name(vcodec);
     switch (vcodec)
     {
-        case HB_VCODEC_FFMPEG_MPEG4:
-        case HB_VCODEC_FFMPEG_MPEG2:
-        case HB_VCODEC_FFMPEG_VP8:
-        case HB_VCODEC_FFMPEG_VP9:
-        case HB_VCODEC_THEORA:
-        {
-            // When the range of a slider changes, GTK used to sample all the
-            // possible values to determine the correct amount of screen space to
-            // allocate for the value strings. Some *genius* decided it would be
-            // more effecient to just sample the first and last value which means
-            // that if certain characters are wider than others and the middle
-            // values happen to use those characters, the space allocated is
-            // too small and the string wraps to the next line or is truncated.
-            //
-            // So, we have to randomly add some extra space to the first and
-            // last value string in order for the string to be displayed properly.
-            // WTF guys!
-            if (val <= vqmin || val >= vqmax)
-                result = g_strdup_printf("%s: %d   ", vqname, (int)val);
-            else
-                result = g_strdup_printf("%s: %d", vqname, (int)val);
-        } break;
+    case HB_VCODEC_FFMPEG_MPEG4:
+    case HB_VCODEC_FFMPEG_MPEG2:
+    case HB_VCODEC_FFMPEG_VP8:
+    case HB_VCODEC_FFMPEG_VP9:
+    case HB_VCODEC_THEORA:
+    {
+        // When the range of a slider changes, GTK used to sample all the
+        // possible values to determine the correct amount of screen space to
+        // allocate for the value strings. Some *genius* decided it would be
+        // more effecient to just sample the first and last value which means
+        // that if certain characters are wider than others and the middle
+        // values happen to use those characters, the space allocated is
+        // too small and the string wraps to the next line or is truncated.
+        //
+        // So, we have to randomly add some extra space to the first and
+        // last value string in order for the string to be displayed properly.
+        // WTF guys!
+        if (val <= vqmin || val >= vqmax)
+            result = g_strdup_printf("%s: %d   ", vqname, (int)val);
+        else
+            result = g_strdup_printf("%s: %d", vqname, (int)val);
+    }
+    break;
 
-        case HB_VCODEC_X264_8BIT:
+    case HB_VCODEC_X264_8BIT:
+    {
+        if (val == 0.0)
         {
-            if (val == 0.0)
-            {
-                result = g_strdup_printf(_("%s: %.4g (Warning: lossless)"),
-                                       vqname, val);
-                break;
-            }
-        } // Falls through to default
-        case HB_VCODEC_X264_10BIT:
-        default:
-        {
-            // When the range of a slider changes, GTK used to sample all the
-            // possible values to determine the correct amount of screen space to
-            // allocate for the value strings. Some *genius* decided it would be
-            // more effecient to just sample the first and last value which means
-            // that if certain characters are wider than others and the middle
-            // values happen to use those characters, the space allocated is
-            // too small and the string wraps to the next line or is truncated.
-            //
-            // So, we have to randomly add some extra space to the first and
-            // last value string in order for the string to be displayed properly.
-            // WTF guys!
-            if (val <= vqmin || val >= vqmax)
-                result = g_strdup_printf("%s: %.4g   ", vqname, val);
-            else
-                result = g_strdup_printf("%s: %.4g", vqname, val);
-        } break;
+            result = g_strdup_printf(_("%s: %.4g (Warning: lossless)"),
+                                     vqname, val);
+            break;
+        }
+    } // Falls through to default
+    case HB_VCODEC_X264_10BIT:
+    default:
+    {
+        // When the range of a slider changes, GTK used to sample all the
+        // possible values to determine the correct amount of screen space to
+        // allocate for the value strings. Some *genius* decided it would be
+        // more effecient to just sample the first and last value which means
+        // that if certain characters are wider than others and the middle
+        // values happen to use those characters, the space allocated is
+        // too small and the string wraps to the next line or is truncated.
+        //
+        // So, we have to randomly add some extra space to the first and
+        // last value string in order for the string to be displayed properly.
+        // WTF guys!
+        if (val <= vqmin || val >= vqmax)
+            result = g_strdup_printf("%s: %.4g   ", vqname, val);
+        else
+            result = g_strdup_printf("%s: %.4g", vqname, val);
+    }
+    break;
     }
 
     return result;
@@ -389,7 +391,7 @@ framerate_changed_cb(GtkWidget *widget, signal_user_data_t *ud)
         }
     }
     if (ghb_settings_video_framerate_rate(ud->settings, "VideoFramerate") == 0 &&
-        ghb_dict_get_bool(ud->settings, "VideoFrameratePFR"))
+            ghb_dict_get_bool(ud->settings, "VideoFrameratePFR"))
     {
         ghb_ui_update(ud, "VideoFramerateVFR", ghb_boolean_value(TRUE));
     }

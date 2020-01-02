@@ -45,8 +45,10 @@ static const char *aspect_to_string(hb_rational_t *dar)
     double aspect = (double)dar->num / dar->den;
     switch ( (int)(aspect * 9.) )
     {
-        case 9 * 4 / 3:    return "4:3";
-        case 9 * 16 / 9:   return "16:9";
+    case 9 * 4 / 3:
+        return "4:3";
+    case 9 * 16 / 9:
+        return "16:9";
     }
     static char arstr[32];
     if (aspect >= 1)
@@ -110,7 +112,7 @@ static void ScanFunc( void * _data )
             /* Scan this title only */
             hb_list_add( data->title_set->list_title,
                          hb_bd_title_scan( data->bd,
-                         data->title_index, 0 ) );
+                                           data->title_index, 0 ) );
         }
         else
         {
@@ -120,7 +122,7 @@ static void ScanFunc( void * _data )
                 UpdateState1(data, i + 1);
                 hb_list_add( data->title_set->list_title,
                              hb_bd_title_scan( data->bd,
-                             i + 1, data->min_title_duration ) );
+                                               i + 1, data->min_title_duration ) );
             }
             feature = hb_bd_main_feature( data->bd,
                                           data->title_set->list_title );
@@ -135,7 +137,7 @@ static void ScanFunc( void * _data )
             /* Scan this title only */
             hb_list_add( data->title_set->list_title,
                          hb_dvd_title_scan( data->dvd,
-                            data->title_index, 0 ) );
+                                            data->title_index, 0 ) );
         }
         else
         {
@@ -145,7 +147,7 @@ static void ScanFunc( void * _data )
                 UpdateState1(data, i + 1);
                 hb_list_add( data->title_set->list_title,
                              hb_dvd_title_scan( data->dvd,
-                            i + 1, data->min_title_duration ) );
+                                                i + 1, data->min_title_duration ) );
             }
             feature = hb_dvd_main_feature( data->dvd,
                                            data->title_set->list_title );
@@ -276,7 +278,7 @@ static void ScanFunc( void * _data )
         {
             hb_subtitle_t *subtitle = hb_list_item(title->list_subtitle, j);
             if ((subtitle->source == VOBSUB || subtitle->source == PGSSUB) &&
-                (subtitle->width <= 0 || subtitle->height <= 0))
+                    (subtitle->width <= 0 || subtitle->height <= 0))
             {
                 subtitle->width  = title->geometry.width;
                 subtitle->height = title->geometry.height;
@@ -499,7 +501,7 @@ static int has_resolution_change( info_list_t *info_list )
     for ( i = 1; info_list[i].count; ++i )
     {
         if (w != info_list[i].info.geometry.width ||
-            h != info_list[i].info.geometry.height)
+                h != info_list[i].info.geometry.height)
             return 1;
     }
     return 0;
@@ -629,16 +631,16 @@ static int DecodePreviews( hb_scan_t * data, hb_title_t * title, int flush )
         if (data->bd)
         {
             if( !hb_bd_seek( data->bd, (float) ( i + 1 ) / ( data->preview_count + 1.0 ) ) )
-          {
-              continue;
-          }
+            {
+                continue;
+            }
         }
         if (data->dvd)
         {
             if( !hb_dvd_seek( data->dvd, (float) ( i + 1 ) / ( data->preview_count + 1.0 ) ) )
-          {
-              continue;
-          }
+            {
+                continue;
+            }
         }
         else if (stream)
         {
@@ -697,7 +699,7 @@ static int DecodePreviews( hb_scan_t * data, hb_title_t * title, int flush )
         int packets = 0;
         vid_decoder->frame_count = 0;
         while (vid_decoder->frame_count < PREVIEW_READ_THRESH ||
-              (!AllAudioOK(title) && packets < 10000))
+                (!AllAudioOK(title) && packets < 10000))
         {
             if ((buf = read_buf(data, stream)) == NULL)
             {
@@ -746,7 +748,7 @@ static int DecodePreviews( hb_scan_t * data, hb_title_t * title, int flush )
                         if (vid_decoder->info(vid_decoder, &vid_info))
                         {
                             if (is_close_to(vid_info.rate.den, 900900, 100) &&
-                                (vid_buf->s.flags & PIC_FLAG_REPEAT_FIRST_FIELD))
+                                    (vid_buf->s.flags & PIC_FLAG_REPEAT_FIRST_FIELD))
                             {
                                 /* Potentially soft telecine material */
                                 pulldown_count++;
@@ -827,7 +829,7 @@ static int DecodePreviews( hb_scan_t * data, hb_title_t * title, int flush )
         }
 
         if (vid_info.geometry.width  != vid_buf->f.width ||
-            vid_info.geometry.height != vid_buf->f.height)
+                vid_info.geometry.height != vid_buf->f.height)
         {
             hb_log( "scan: video geometry information does not match buffer" );
             hb_buffer_close( &vid_buf );
@@ -1027,8 +1029,8 @@ skip_preview:
         // from the PAR is different from the container's aspect we use
         // the container's aspect & recompute the PAR from it.
         if (data->dvd &&
-            (title->dar.num != title->container_dar.num ||
-             title->dar.den != title->container_dar.den))
+                (title->dar.num != title->container_dar.num ||
+                 title->dar.den != title->container_dar.den))
         {
             hb_log("scan: content PAR gives wrong aspect %d:%d; "
                    "using container aspect %d:%d",
@@ -1089,9 +1091,9 @@ skip_preview:
     hb_buffer_list_close(&list_es);
 
     if (data->bd)
-      hb_bd_stop( data->bd );
+        hb_bd_stop( data->bd );
     if (data->dvd)
-      hb_dvd_stop( data->dvd );
+        hb_dvd_stop( data->dvd );
 
     return npreviews;
 }
@@ -1204,49 +1206,49 @@ static void LookForAudio(hb_scan_t *scan, hb_title_t * title, hb_buffer_t * b)
             // use our own capitalization for the most common codecs
             switch (audio->config.in.codec_param)
             {
-                case AV_CODEC_ID_AAC:
-                    codec_name = "AAC";
-                    break;
-                case AV_CODEC_ID_AC3:
-                    codec_name = "AC3";
-                    break;
-                case AV_CODEC_ID_EAC3:
-                    codec_name = "E-AC3";
-                    break;
-                case AV_CODEC_ID_TRUEHD:
-                    codec_name = "TrueHD";
-                    break;
-                case AV_CODEC_ID_DTS:
-                    if (profile_name == NULL &&
+            case AV_CODEC_ID_AAC:
+                codec_name = "AAC";
+                break;
+            case AV_CODEC_ID_AC3:
+                codec_name = "AC3";
+                break;
+            case AV_CODEC_ID_EAC3:
+                codec_name = "E-AC3";
+                break;
+            case AV_CODEC_ID_TRUEHD:
+                codec_name = "TrueHD";
+                break;
+            case AV_CODEC_ID_DTS:
+                if (profile_name == NULL &&
                         audio->config.in.codec == HB_ACODEC_DCA_HD)
-                        codec_name = "DTS-HD";
-                    else
-                        codec_name = "DTS";
-                    break;
-                case AV_CODEC_ID_FLAC:
-                    codec_name = "FLAC";
-                    break;
-                case AV_CODEC_ID_MP2:
-                    codec_name = "MPEG";
-                    break;
-                case AV_CODEC_ID_MP3:
-                    codec_name = "MP3";
-                    break;
-                case AV_CODEC_ID_PCM_BLURAY:
-                    codec_name = "BD LPCM";
-                    break;
-                case AV_CODEC_ID_OPUS:
-                    codec_name = "Opus";
-                    break;
-                case AV_CODEC_ID_VORBIS:
-                    codec_name = "Vorbis";
-                    break;
-                default:
-                    codec_name = codec->name;
-                    break;
+                    codec_name = "DTS-HD";
+                else
+                    codec_name = "DTS";
+                break;
+            case AV_CODEC_ID_FLAC:
+                codec_name = "FLAC";
+                break;
+            case AV_CODEC_ID_MP2:
+                codec_name = "MPEG";
+                break;
+            case AV_CODEC_ID_MP3:
+                codec_name = "MP3";
+                break;
+            case AV_CODEC_ID_PCM_BLURAY:
+                codec_name = "BD LPCM";
+                break;
+            case AV_CODEC_ID_OPUS:
+                codec_name = "Opus";
+                break;
+            case AV_CODEC_ID_VORBIS:
+                codec_name = "Vorbis";
+                break;
+            default:
+                codec_name = codec->name;
+                break;
             }
             if (profile_name != NULL && codec_name != NULL &&
-                strstr(profile_name, codec_name) != NULL)
+                    strstr(profile_name, codec_name) != NULL)
             {
                 codec_name = NULL;
             }
@@ -1255,33 +1257,33 @@ static void LookForAudio(hb_scan_t *scan, hb_title_t * title, hb_buffer_t * b)
         {
             switch (audio->config.in.codec)
             {
-                case HB_ACODEC_AC3:
-                    codec_name = "AC3";
-                    break;
-                case HB_ACODEC_FFEAC3:
-                    codec_name = "E-AC3";
-                    break;
-                case HB_ACODEC_FFTRUEHD:
-                    codec_name = "TrueHD";
-                    break;
-                case HB_ACODEC_DCA:
-                    codec_name = "DTS";
-                    break;
-                case HB_ACODEC_DCA_HD:
-                    codec_name = "DTS-HD";
-                    break;
-                case HB_ACODEC_FFAAC:
-                    codec_name = "AAC";
-                    break;
-                case HB_ACODEC_FFFLAC:
-                    codec_name = "FLAC";
-                    break;
-                case HB_ACODEC_MP3:
-                    codec_name = "MP3";
-                    break;
-                default:
-                    codec_name = "Unknown (libav)";
-                    break;
+            case HB_ACODEC_AC3:
+                codec_name = "AC3";
+                break;
+            case HB_ACODEC_FFEAC3:
+                codec_name = "E-AC3";
+                break;
+            case HB_ACODEC_FFTRUEHD:
+                codec_name = "TrueHD";
+                break;
+            case HB_ACODEC_DCA:
+                codec_name = "DTS";
+                break;
+            case HB_ACODEC_DCA_HD:
+                codec_name = "DTS-HD";
+                break;
+            case HB_ACODEC_FFAAC:
+                codec_name = "AAC";
+                break;
+            case HB_ACODEC_FFFLAC:
+                codec_name = "FLAC";
+                break;
+            case HB_ACODEC_MP3:
+                codec_name = "MP3";
+                break;
+            default:
+                codec_name = "Unknown (libav)";
+                break;
             }
         }
     }
@@ -1289,31 +1291,31 @@ static void LookForAudio(hb_scan_t *scan, hb_title_t * title, hb_buffer_t * b)
     {
         switch (audio->config.in.codec)
         {
-            case HB_ACODEC_AC3:
-                codec_name = "AC3";
-                break;
-            case HB_ACODEC_LPCM:
-                codec_name = "LPCM";
-                break;
-            default:
-                codec_name = "Unknown";
-                break;
+        case HB_ACODEC_AC3:
+            codec_name = "AC3";
+            break;
+        case HB_ACODEC_LPCM:
+            codec_name = "LPCM";
+            break;
+        default:
+            codec_name = "Unknown";
+            break;
         }
     }
     if (codec_name != NULL && profile_name != NULL)
     {
         snprintf(audio->config.lang.description, sizeof(audio->config.lang.description),
-                "%s (%s %s)", audio->config.lang.simple, codec_name, profile_name);
+                 "%s (%s %s)", audio->config.lang.simple, codec_name, profile_name);
     }
     else if (codec_name != NULL)
     {
         snprintf(audio->config.lang.description, sizeof(audio->config.lang.description),
-                "%s (%s)", audio->config.lang.simple, codec_name);
+                 "%s (%s)", audio->config.lang.simple, codec_name);
     }
     else if (profile_name != NULL)
     {
         snprintf(audio->config.lang.description, sizeof(audio->config.lang.description),
-                "%s (%s)", audio->config.lang.simple, profile_name);
+                 "%s (%s)", audio->config.lang.simple, profile_name);
     }
 
     if (audio->config.lang.attributes & HB_AUDIO_ATTR_VISUALLY_IMPAIRED)
@@ -1347,40 +1349,40 @@ static void LookForAudio(hb_scan_t *scan, hb_title_t * title, hb_buffer_t * b)
                         !!(audio->config.in.channel_layout & AV_CH_LOW_FREQUENCY_2));
         int channels = av_get_channel_layout_nb_channels(audio->config.in.channel_layout);
         char *desc   = audio->config.lang.description +
-                        strlen(audio->config.lang.description);
+                       strlen(audio->config.lang.description);
         sprintf(desc, " (%d.%d ch)", channels - lfes, lfes);
 
         // describe the matrix encoding mode, if any
         switch (audio->config.in.matrix_encoding)
         {
-            case AV_MATRIX_ENCODING_DOLBY:
-                if (audio->config.in.codec       == HB_ACODEC_AC3    ||
+        case AV_MATRIX_ENCODING_DOLBY:
+            if (audio->config.in.codec       == HB_ACODEC_AC3    ||
                     audio->config.in.codec_param == AV_CODEC_ID_AC3  ||
                     audio->config.in.codec_param == AV_CODEC_ID_EAC3 ||
                     audio->config.in.codec_param == AV_CODEC_ID_TRUEHD)
-                {
-                    strcat(audio->config.lang.description, " (Dolby Surround)");
-                    break;
-                }
-                strcat(audio->config.lang.description, " (Lt/Rt)");
+            {
+                strcat(audio->config.lang.description, " (Dolby Surround)");
                 break;
-            case AV_MATRIX_ENCODING_DPLII:
-                strcat(audio->config.lang.description, " (Dolby Pro Logic II)");
-                break;
-            case AV_MATRIX_ENCODING_DPLIIX:
-                strcat(audio->config.lang.description, " (Dolby Pro Logic IIx)");
-                break;
-            case AV_MATRIX_ENCODING_DPLIIZ:
-                strcat(audio->config.lang.description, " (Dolby Pro Logic IIz)");
-                break;
-            case AV_MATRIX_ENCODING_DOLBYEX:
-                strcat(audio->config.lang.description, " (Dolby Digital EX)");
-                break;
-            case AV_MATRIX_ENCODING_DOLBYHEADPHONE:
-                strcat(audio->config.lang.description, " (Dolby Headphone)");
-                break;
-            default:
-                break;
+            }
+            strcat(audio->config.lang.description, " (Lt/Rt)");
+            break;
+        case AV_MATRIX_ENCODING_DPLII:
+            strcat(audio->config.lang.description, " (Dolby Pro Logic II)");
+            break;
+        case AV_MATRIX_ENCODING_DPLIIX:
+            strcat(audio->config.lang.description, " (Dolby Pro Logic IIx)");
+            break;
+        case AV_MATRIX_ENCODING_DPLIIZ:
+            strcat(audio->config.lang.description, " (Dolby Pro Logic IIz)");
+            break;
+        case AV_MATRIX_ENCODING_DOLBYEX:
+            strcat(audio->config.lang.description, " (Dolby Digital EX)");
+            break;
+        case AV_MATRIX_ENCODING_DOLBYHEADPHONE:
+            strcat(audio->config.lang.description, " (Dolby Headphone)");
+            break;
+        default:
+            break;
         }
     }
 
@@ -1407,7 +1409,7 @@ static void LookForAudio(hb_scan_t *scan, hb_title_t * title, hb_buffer_t * b)
     // wasn't something it could handle. Delete the item from the title's
     // audio list so we won't keep reading packets while trying to get its
     // bitstream info.
- drop_audio:
+drop_audio:
     if ( w )
         free( w );
 
@@ -1449,7 +1451,7 @@ static void UpdateState1(hb_scan_t *scan, int title)
     p.title_count = scan->dvd ? hb_dvd_title_count( scan->dvd ) :
                     scan->bd ? hb_bd_title_count( scan->bd ) :
                     scan->batch ? hb_batch_title_count( scan->batch ) :
-                               hb_list_count(scan->title_set->list_title);
+                    hb_list_count(scan->title_set->list_title);
     p.preview_cur = 0;
     p.preview_count = 1;
     p.progress = 0.5 * ((float)p.title_cur + ((float)p.preview_cur / p.preview_count)) / p.title_count;

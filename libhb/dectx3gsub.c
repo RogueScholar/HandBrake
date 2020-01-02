@@ -68,11 +68,11 @@ static int write_ssa_markup(char *dst, StyleRecord *style)
         return strlen(dst);
     }
     sprintf(dst, "{\\i%d\\b%d\\u%d\\1c&H%X&\\1a&H%02X&}",
-        !!(style->faceStyleFlags & ITALIC),
-        !!(style->faceStyleFlags & BOLD),
-        !!(style->faceStyleFlags & UNDERLINE),
-        HB_RGB_TO_BGR(style->textColorRGBA >> 8),
-        255 - (style->textColorRGBA & 0xFF)); // SSA alpha is inverted 0==opaque
+            !!(style->faceStyleFlags & ITALIC),
+            !!(style->faceStyleFlags & BOLD),
+            !!(style->faceStyleFlags & UNDERLINE),
+            HB_RGB_TO_BGR(style->textColorRGBA >> 8),
+            255 - (style->textColorRGBA & 0xFF)); // SSA alpha is inverted 0==opaque
 
     return strlen(dst);
 }
@@ -179,7 +179,7 @@ static hb_buffer_t *tx3g_decode_to_ssa(hb_work_private_t *pv, hb_buffer_t *in)
             if (styleRecords[styleIndex].endChar == charIndex)
             {
                 if (styleIndex + 1 >= numStyleRecords ||
-                    styleRecords[styleIndex+1].startChar > charIndex)
+                        styleRecords[styleIndex+1].startChar > charIndex)
                 {
                     dst += write_ssa_markup((char*)dst, NULL);
                 }

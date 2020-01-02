@@ -124,14 +124,18 @@ static void chroma_smooth(const uint8_t *src,
 
             for (z = 0; z < steps * 2; z += 2)
             {
-                Tmp2 = SR[z + 0] + Tmp1; SR[z + 0] = Tmp1;
-                Tmp1 = SR[z + 1] + Tmp2; SR[z + 1] = Tmp2;
+                Tmp2 = SR[z + 0] + Tmp1;
+                SR[z + 0] = Tmp1;
+                Tmp1 = SR[z + 1] + Tmp2;
+                SR[z + 1] = Tmp2;
             }
 
             for (z = 0; z < steps * 2; z += 2)
             {
-                Tmp2 = SC[z + 0][x + steps] + Tmp1; SC[z + 0][x + steps] = Tmp1;
-                Tmp1 = SC[z + 1][x + steps] + Tmp2; SC[z + 1][x + steps] = Tmp2;
+                Tmp2 = SC[z + 0][x + steps] + Tmp1;
+                SC[z + 0][x + steps] = Tmp1;
+                Tmp1 = SC[z + 1][x + steps] + Tmp2;
+                SC[z + 1][x + steps] = Tmp2;
             }
 
             if (x >= steps && y >= steps)
@@ -140,7 +144,7 @@ static void chroma_smooth(const uint8_t *src,
                 uint8_t       * dsx = dst - steps * stride + x - steps;
 
                 res = (int32_t)*srx - ((((int32_t)*srx -
-                      (int32_t)((Tmp1 + halfscale) >> scalebits)) * amount) >> 16);
+                                         (int32_t)((Tmp1 + halfscale) >> scalebits)) * amount) >> 16);
                 *dsx = res > 240 ? 240 : res < 16 ? 16 : (uint8_t)res;
             }
         }

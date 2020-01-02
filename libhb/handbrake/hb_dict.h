@@ -54,20 +54,20 @@ int               hb_dict_extract_int(int *dst,
                                       const hb_dict_t * dict,
                                       const char * key);
 int               hb_dict_extract_double(double *dst,
-                                         const hb_dict_t * dict,
-                                         const char * key);
+        const hb_dict_t * dict,
+        const char * key);
 int               hb_dict_extract_bool(int *dst,
                                        const hb_dict_t * dict,
                                        const char * key);
 int               hb_dict_extract_string(char **dst,
-                                         const hb_dict_t * dict,
-                                         const char * key);
+        const hb_dict_t * dict,
+        const char * key);
 int               hb_dict_extract_rational(hb_rational_t *dst,
-                                           const hb_dict_t * dict,
-                                           const char * key);
+        const hb_dict_t * dict,
+        const char * key);
 int               hb_dict_extract_int_array(int *dst, int count,
-                                            const hb_dict_t * dict,
-                                            const char * key);
+        const hb_dict_t * dict,
+        const char * key);
 
 /* dict iterator
  * hb_dict_iter_init(dict) returns an iter to the first key/value in the dict
@@ -96,10 +96,10 @@ void               hb_value_array_set(hb_value_array_t *array, int index,
 /* insert value at index in array.  values move up.
  * array takes ownership of new value */
 void               hb_value_array_insert(hb_value_array_t *array, int index,
-                                         hb_value_t *value);
+        hb_value_t *value);
 /* append value to array.  array takes ownership of new value */
 void               hb_value_array_append(hb_value_array_t *array,
-                                         hb_value_t *value);
+        hb_value_t *value);
 /* remove value from array.  releases reference to value */
 void               hb_value_array_remove(hb_value_array_t *array, int index);
 /* clears dst and performs a deep copy */
@@ -108,7 +108,7 @@ void               hb_value_array_copy(hb_value_array_t *dst,
 /* appends copy of value to array.  if value is an array, appends a copy of
  * each element to array */
 void               hb_value_array_concat(hb_value_array_t *array,
-                                         hb_value_t *value);
+        hb_value_t *value);
 size_t             hb_value_array_len(const hb_value_array_t *array);
 
 /* hb_value_t */

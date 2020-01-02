@@ -73,7 +73,7 @@ hb_audio_remap_t* hb_audio_remap_init(enum AVSampleFormat sample_fmt,
  * Must be called at least once before remapping.
  */
 void              hb_audio_remap_set_channel_layout(hb_audio_remap_t *remap,
-                                                    uint64_t channel_layout);
+        uint64_t channel_layout);
 
 /*
  * Free an hb_audio_remap_t.
@@ -97,8 +97,8 @@ void              hb_audio_remap(hb_audio_remap_t *remap, uint8_t **samples,
  * remap_table is allocated by the caller.
  */
 void              hb_audio_remap_build_table(hb_chan_map_t *channel_map_out,
-                                             hb_chan_map_t *channel_map_in,
-                                             uint64_t channel_layout,
-                                             int *remap_table);
+        hb_chan_map_t *channel_map_in,
+        uint64_t channel_layout,
+        int *remap_table);
 
 #endif /* HANDBRAKE_AUDIO_REMAP_H */

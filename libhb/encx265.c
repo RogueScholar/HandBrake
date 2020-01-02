@@ -85,7 +85,7 @@ int apply_h265_level(hb_work_private_t *pv,  x265_param *param,
                      const char *h265_level)
 {
     if (h265_level == NULL ||
-        !strcasecmp(h265_level, hb_h265_level_names[0]))
+            !strcasecmp(h265_level, hb_h265_level_names[0]))
     {
         return 0;
     }
@@ -94,10 +94,10 @@ int apply_h265_level(hb_work_private_t *pv,  x265_param *param,
     for (i = 1; hb_h265_level_values[i]; i++)
     {
         if (!strcmp(hb_h265_level_names[i], h265_level) ||
-            !strcmp(hb_h265_level_names2[i], h265_level))
+                !strcmp(hb_h265_level_names2[i], h265_level))
         {
             return param_parse(pv, param, "level-idc",
-                    hb_h265_level_names2[i]);
+                               hb_h265_level_names2[i]);
         }
     }
 
@@ -173,7 +173,7 @@ int encx265Init(hb_work_object_t *w, hb_job_t *job)
     param->fpsNum      = job->orig_vrate.num;
     param->fpsDenom    = job->orig_vrate.den;
     param->keyframeMin = (double)job->orig_vrate.num / job->orig_vrate.den +
-                                 0.5;
+                         0.5;
     param->keyframeMax = param->keyframeMin * 10;
 
     /*
@@ -188,8 +188,8 @@ int encx265Init(hb_work_object_t *w, hb_job_t *job)
     snprintf(colormatrix, sizeof(colormatrix), "%d", hb_output_color_matrix(job));
 
     if (param_parse(pv, param, "colorprim",   colorprim)   ||
-        param_parse(pv, param, "transfer",    transfer)    ||
-        param_parse(pv, param, "colormatrix", colormatrix))
+            param_parse(pv, param, "transfer",    transfer)    ||
+            param_parse(pv, param, "colormatrix", colormatrix))
     {
         goto fail;
     }
@@ -200,8 +200,8 @@ int encx265Init(hb_work_object_t *w, hb_job_t *job)
 
     hb_dict_iter_t iter;
     for (iter  = hb_dict_iter_init(x265_opts);
-         iter != HB_DICT_ITER_DONE;
-         iter  = hb_dict_iter_next(x265_opts, iter))
+            iter != HB_DICT_ITER_DONE;
+            iter  = hb_dict_iter_next(x265_opts, iter))
     {
         const char *key = hb_dict_iter_key(iter);
         hb_value_t *value = hb_dict_iter_value(iter);
@@ -251,14 +251,14 @@ int encx265Init(hb_work_object_t *w, hb_job_t *job)
         param->rc.rateControlMode = X265_RC_ABR;
         param->rc.bitrate         = job->vbitrate;
         if (job->pass_id == HB_PASS_ENCODE_1ST ||
-            job->pass_id == HB_PASS_ENCODE_2ND)
+                job->pass_id == HB_PASS_ENCODE_2ND)
         {
             char * stats_file;
             char   pass[2];
             snprintf(pass, sizeof(pass), "%d", job->pass_id);
             stats_file = hb_get_temporary_filename("x265.log");
             if (param_parse(pv, param, "stats", stats_file) ||
-                param_parse(pv, param, "pass", pass))
+                    param_parse(pv, param, "pass", pass))
             {
                 free(stats_file);
                 goto fail;
@@ -293,8 +293,8 @@ int encx265Init(hb_work_object_t *w, hb_job_t *job)
 
     /* Apply profile and level settings last. */
     if (job->encoder_profile                                      != NULL &&
-        strcasecmp(job->encoder_profile, profile_names[0])        != 0    &&
-        pv->api->param_apply_profile(param, job->encoder_profile) < 0)
+            strcasecmp(job->encoder_profile, profile_names[0])        != 0    &&
+            pv->api->param_apply_profile(param, job->encoder_profile) < 0)
     {
         goto fail;
     }
@@ -305,7 +305,7 @@ int encx265Init(hb_work_object_t *w, hb_job_t *job)
 
     /* we should now know whether B-frames are enabled */
     job->areBframes = (param->bframes > 0) + (param->bframes   > 0 &&
-                                              param->bBPyramid > 0);
+                      param->bBPyramid > 0);
 
     /* Reset global variables before opening a new encoder */
     pv->api->cleanup();
@@ -423,27 +423,27 @@ static hb_buffer_t* nal_encode(hb_work_object_t *w,
 
     switch (pic_out->sliceType)
     {
-        case X265_TYPE_IDR:
-            buf->s.flags |= HB_FLAG_FRAMETYPE_REF;
-            buf->s.flags |= HB_FLAG_FRAMETYPE_KEY;
-            buf->s.frametype = HB_FRAME_IDR;
-            break;
-        case X265_TYPE_P:
-            buf->s.flags |= HB_FLAG_FRAMETYPE_REF;
-            buf->s.frametype = HB_FRAME_P;
-            break;
-        case X265_TYPE_B:
-            buf->s.frametype = HB_FRAME_B;
-            break;
-        case X265_TYPE_BREF:
-            buf->s.flags |= HB_FLAG_FRAMETYPE_REF;
-            buf->s.frametype = HB_FRAME_BREF;
-            break;
-        case X265_TYPE_I:
-        default:
-            buf->s.flags |= HB_FLAG_FRAMETYPE_REF;
-            buf->s.frametype = HB_FRAME_I;
-            break;
+    case X265_TYPE_IDR:
+        buf->s.flags |= HB_FLAG_FRAMETYPE_REF;
+        buf->s.flags |= HB_FLAG_FRAMETYPE_KEY;
+        buf->s.frametype = HB_FRAME_IDR;
+        break;
+    case X265_TYPE_P:
+        buf->s.flags |= HB_FLAG_FRAMETYPE_REF;
+        buf->s.frametype = HB_FRAME_P;
+        break;
+    case X265_TYPE_B:
+        buf->s.frametype = HB_FRAME_B;
+        break;
+    case X265_TYPE_BREF:
+        buf->s.flags |= HB_FLAG_FRAMETYPE_REF;
+        buf->s.frametype = HB_FRAME_BREF;
+        break;
+    case X265_TYPE_I:
+    default:
+        buf->s.flags |= HB_FLAG_FRAMETYPE_REF;
+        buf->s.frametype = HB_FRAME_I;
+        break;
     }
 
     if (buf->s.flags & HB_FLAG_FRAMETYPE_KEY)

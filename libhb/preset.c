@@ -92,7 +92,7 @@ static int preset_cmp_idx(hb_value_t *preset, int idx,
     int  ii, len;
 
     if (type != HB_PRESET_TYPE_ALL &&
-        type != hb_value_get_int(hb_dict_get(preset, "Type")))
+            type != hb_value_get_int(hb_dict_get(preset, "Type")))
     {
         return PRESET_DO_NEXT;
     }
@@ -201,7 +201,7 @@ static int do_clear_default(hb_value_t *preset, preset_do_context_t *ctx)
 static int do_find_default(hb_value_t *preset, preset_do_context_t *ctx)
 {
     if (!hb_value_get_bool(hb_dict_get(preset, "Folder")) &&
-        hb_value_get_bool(hb_dict_get(preset, "Default")))
+            hb_value_get_bool(hb_dict_get(preset, "Default")))
     {
         return PRESET_DO_SUCCESS;
     }
@@ -297,7 +297,7 @@ void hb_preset_index_append(hb_preset_index_t *dst,
 {
     int ii;
     for (ii = 0; ii < src->depth &&
-                 dst->depth < HB_MAX_PRESET_FOLDER_DEPTH; ii++, dst->depth++)
+            dst->depth < HB_MAX_PRESET_FOLDER_DEPTH; ii++, dst->depth++)
     {
         dst->index[dst->depth] = src->index[ii];
     }
@@ -314,7 +314,7 @@ static int get_job_mux(hb_dict_t *job_dict)
         mux = hb_container_get_from_name(hb_value_get_string(mux_value));
         if (mux == 0)
             mux = hb_container_get_from_extension(
-                                                hb_value_get_string(mux_value));
+                      hb_value_get_string(mux_value));
     }
     else
     {
@@ -374,7 +374,7 @@ static hb_value_t* get_audio_copy_mask(const hb_dict_t * preset, int *mask)
                 codec = hb_value_get_int(value);
             }
             hb_value_array_append(out_copy_mask, hb_value_string(
-                hb_audio_encoder_get_short_name(codec)));
+                                      hb_audio_encoder_get_short_name(codec)));
             copy_mask |= codec;
         }
     }
@@ -416,10 +416,10 @@ static int find_audio_track(const hb_title_t *title,
         // When behavior is "all" matching tracks,
         // allow any audio track type
         if ((behavior == 2 ||
-             audio->lang.attributes == HB_AUDIO_ATTR_NONE ||
-             (audio->lang.attributes & HB_AUDIO_ATTR_REGULAR_MASK)) &&
-            (!strcmp(lang, audio->lang.iso639_2) ||
-             !strcmp(lang, lang_any->iso639_2)))
+                audio->lang.attributes == HB_AUDIO_ATTR_NONE ||
+                (audio->lang.attributes & HB_AUDIO_ATTR_REGULAR_MASK)) &&
+                (!strcmp(lang, audio->lang.iso639_2) ||
+                 !strcmp(lang, lang_any->iso639_2)))
         {
             return ii;
         }
@@ -476,8 +476,8 @@ static int validate_audio_encoders(const hb_dict_t *preset)
         {
             const char *str = hb_value_get_string(value);
             if (!strcasecmp(str, "source") ||
-                !strcasecmp(str, "auto")   ||
-                !strcasecmp(str, "same as source"))
+                    !strcasecmp(str, "auto")   ||
+                    !strcasecmp(str, "same as source"))
             {
                 sr = 0;
             }
@@ -522,7 +522,7 @@ static int sanitize_audio_codec(int in_codec, int out_codec,
     while ((encoder = hb_audio_encoder_get_next(encoder)) != NULL)
     {
         if (encoder->codec == codec && codec != HB_ACODEC_NONE &&
-            !(encoder->muxers & mux))
+                !(encoder->muxers & mux))
         {
             codec = hb_audio_encoder_get_default(mux);
             break;
@@ -671,7 +671,7 @@ static void add_audio_for_lang(hb_value_array_t *list, const hb_dict_t *preset,
             // Save the encoder value before sanitizing.  This value is
             // useful to the frontends.
             hb_dict_set(audio_dict, "PresetEncoder",
-                hb_value_string(hb_audio_encoder_get_short_name(out_codec)));
+                        hb_value_string(hb_audio_encoder_get_short_name(out_codec)));
 
             hb_audio_config_t *aconfig;
             aconfig = hb_list_audio_config_item(title->list_audio, track);
@@ -684,7 +684,7 @@ static void add_audio_for_lang(hb_value_array_t *list, const hb_dict_t *preset,
             }
             hb_dict_set(audio_dict, "Track", hb_value_int(track));
             hb_dict_set(audio_dict, "Encoder", hb_value_string(
-                        hb_audio_encoder_get_short_name(out_codec)));
+                            hb_audio_encoder_get_short_name(out_codec)));
             const char * name = hb_dict_get_string(encoder_dict, "AudioTrackName");
             if (name != NULL && name[0] != 0)
             {
@@ -699,27 +699,27 @@ static void add_audio_for_lang(hb_value_array_t *list, const hb_dict_t *preset,
                 if (hb_dict_get(encoder_dict, "AudioTrackGainSlider") != NULL)
                 {
                     hb_dict_set(audio_dict, "Gain", hb_value_dup(
-                        hb_dict_get(encoder_dict, "AudioTrackGainSlider")));
+                                    hb_dict_get(encoder_dict, "AudioTrackGainSlider")));
                 }
                 if (hb_dict_get(encoder_dict, "AudioTrackDRCSlider") != NULL)
                 {
                     hb_dict_set(audio_dict, "DRC", hb_value_dup(
-                        hb_dict_get(encoder_dict, "AudioTrackDRCSlider")));
+                                    hb_dict_get(encoder_dict, "AudioTrackDRCSlider")));
                 }
                 if (hb_dict_get(encoder_dict, "AudioMixdown") != NULL)
                 {
                     hb_dict_set(audio_dict, "Mixdown", hb_value_dup(
-                        hb_dict_get(encoder_dict, "AudioMixdown")));
+                                    hb_dict_get(encoder_dict, "AudioMixdown")));
                 }
                 if (hb_dict_get(encoder_dict, "AudioNormalizeMixLevel") != NULL)
                 {
                     hb_dict_set(audio_dict, "NormalizeMixLevel", hb_value_dup(
-                        hb_dict_get(encoder_dict, "AudioNormalizeMixLevel")));
+                                    hb_dict_get(encoder_dict, "AudioNormalizeMixLevel")));
                 }
                 if (hb_dict_get(encoder_dict, "AudioDitherMethod") != NULL)
                 {
                     hb_dict_set(audio_dict, "DitherMethod", hb_value_dup(
-                        hb_dict_get(encoder_dict, "AudioDitherMethod")));
+                                    hb_dict_get(encoder_dict, "AudioDitherMethod")));
                 }
                 if (hb_dict_get(encoder_dict, "AudioSamplerate") != NULL)
                 {
@@ -738,20 +738,20 @@ static void add_audio_for_lang(hb_value_array_t *list, const hb_dict_t *preset,
                 if (hb_dict_get(encoder_dict, "AudioCompressionLevel") != NULL)
                 {
                     hb_dict_set(audio_dict, "CompressionLevel", hb_value_dup(
-                        hb_dict_get(encoder_dict, "AudioCompressionLevel")));
+                                    hb_dict_get(encoder_dict, "AudioCompressionLevel")));
                 }
                 if (hb_value_get_bool(hb_dict_get(encoder_dict,
                                                   "AudioTrackQualityEnable")))
                 {
                     hb_dict_set(audio_dict, "Quality", hb_value_xform(
-                            hb_dict_get(encoder_dict, "AudioTrackQuality"),
-                            HB_VALUE_TYPE_DOUBLE));
+                                    hb_dict_get(encoder_dict, "AudioTrackQuality"),
+                                    HB_VALUE_TYPE_DOUBLE));
                 }
                 else
                 {
                     hb_dict_set(audio_dict, "Bitrate", hb_value_xform(
-                        hb_dict_get(encoder_dict, "AudioBitrate"),
-                        HB_VALUE_TYPE_INT));
+                                    hb_dict_get(encoder_dict, "AudioBitrate"),
+                                    HB_VALUE_TYPE_INT));
                 }
             }
 
@@ -887,7 +887,7 @@ static int find_subtitle_track(const hb_title_t *title,
     {
         subtitle = hb_list_item(title->list_subtitle, ii);
         if (!strcmp(lang, subtitle->iso639_2) ||
-            !strcmp(lang, lang_any->iso639_2))
+                !strcmp(lang, lang_any->iso639_2))
         {
             return ii;
         }
@@ -946,8 +946,8 @@ static void add_subtitle_for_lang(hb_value_array_t *list, hb_title_t *title,
 {
     int t;
     for (t = find_subtitle_track(title, lang, 0);
-         t >= 0;
-         t = behavior->one ? -1 : find_subtitle_track(title, lang, t + 1))
+            t >= 0;
+            t = behavior->one ? -1 : find_subtitle_track(title, lang, t + 1))
     {
         if (behavior->used[t])
         {
@@ -1081,18 +1081,18 @@ int hb_preset_job_add_subtitles(hb_handle_t *h, int title_index,
     }
 
     behavior.burn_dvd = hb_value_get_int(hb_dict_get(preset,
-                                                     "SubtitleBurnDVDSub"));
+                                         "SubtitleBurnDVDSub"));
     behavior.burn_bd  = hb_value_get_int(hb_dict_get(preset,
-                                                     "SubtitleBurnBDSub"));
+                                         "SubtitleBurnBDSub"));
 
     burn_foreign        = burn_behavior == 1 || burn_behavior == 3;
     behavior.burn_first = burn_behavior == 2 || burn_behavior == 3;
 
     int foreign_audio_search, foreign_first_audio;
     foreign_audio_search = hb_value_get_bool(hb_dict_get(preset,
-                                            "SubtitleAddForeignAudioSearch"));
+                           "SubtitleAddForeignAudioSearch"));
     foreign_first_audio  = hb_value_get_bool(hb_dict_get(preset,
-                                            "SubtitleAddForeignAudioSubtitle"));
+                           "SubtitleAddForeignAudioSubtitle"));
 
 
     // Add tracks for all languages in the language list
@@ -1120,7 +1120,7 @@ int hb_preset_job_add_subtitles(hb_handle_t *h, int title_index,
 
     int track;
     if (first_audio_lang != NULL &&
-        foreign_first_audio && strncmp(first_audio_lang, pref_lang, 4))
+            foreign_first_audio && strncmp(first_audio_lang, pref_lang, 4))
     {
         // First audio lang does not match the preferred subittle lang.
         // Preset says to add pref lang subtitle.
@@ -1140,7 +1140,7 @@ int hb_preset_job_add_subtitles(hb_handle_t *h, int title_index,
         hb_dict_set(subtitle_dict, "Search", search_dict);
     }
     if (first_audio_lang != NULL &&
-        foreign_audio_search && !strncmp(first_audio_lang, pref_lang, 4))
+            foreign_audio_search && !strncmp(first_audio_lang, pref_lang, 4))
     {
         // First audio lang matches the preferred subtitle lang.
         // Preset says to add search for foreign audio subtitles.
@@ -1212,8 +1212,8 @@ static int get_video_framerate(hb_value_t *rate_value)
         int rate = 0;
         const char *rate_name = hb_value_get_string(rate_value);
         if (!strcasecmp(rate_name, "source") ||
-            !strcasecmp(rate_name, "auto") ||
-            !strcasecmp(rate_name, "same as source"))
+                !strcasecmp(rate_name, "auto") ||
+                !strcasecmp(rate_name, "same as source"))
         {
             return rate;
         }
@@ -1269,9 +1269,9 @@ int hb_preset_apply_filters(const hb_dict_t *preset, hb_dict_t *job_dict)
     {
         const char *custom;
         custom = hb_value_get_string(hb_dict_get(preset,
-                                                "PictureDetelecineCustom"));
+                                     "PictureDetelecineCustom"));
         filter_settings = hb_generate_filter_settings(
-            HB_FILTER_DETELECINE, hb_value_get_string(detel_val), NULL, custom);
+                              HB_FILTER_DETELECINE, hb_value_get_string(detel_val), NULL, custom);
 
         if (filter_settings == NULL)
         {
@@ -1302,7 +1302,7 @@ int hb_preset_apply_filters(const hb_dict_t *preset, hb_dict_t *job_dict)
         comb_custom = hb_value_get_string(hb_dict_get(preset,
                                           "PictureCombDetectCustom"));
         filter_settings = hb_generate_filter_settings(HB_FILTER_COMB_DETECT,
-                                                comb_preset, NULL, comb_custom);
+                          comb_preset, NULL, comb_custom);
         if (filter_settings == NULL)
         {
             hb_error("Invalid comb detect filter preset (%s)", comb_preset);
@@ -1324,13 +1324,13 @@ int hb_preset_apply_filters(const hb_dict_t *preset, hb_dict_t *job_dict)
     // Decomb or deinterlace filters
     const char *deint_filter, *deint_preset, *deint_custom;
     deint_filter = hb_value_get_string(hb_dict_get(preset,
-                                                   "PictureDeinterlaceFilter"));
+                                       "PictureDeinterlaceFilter"));
     deint_preset = hb_value_get_string(hb_dict_get(preset,
-                                                   "PictureDeinterlacePreset"));
+                                       "PictureDeinterlacePreset"));
     deint_custom = hb_value_get_string(hb_dict_get(preset,
-                                                   "PictureDeinterlaceCustom"));
+                                       "PictureDeinterlaceCustom"));
     if (deint_filter != NULL && deint_preset != NULL &&
-        strcasecmp(deint_filter, "off"))
+            strcasecmp(deint_filter, "off"))
     {
         int filter_id;
         if (!strcasecmp(deint_filter, "decomb"))
@@ -1347,7 +1347,7 @@ int hb_preset_apply_filters(const hb_dict_t *preset, hb_dict_t *job_dict)
             return -1;
         }
         filter_settings = hb_generate_filter_settings(
-                        filter_id, deint_preset, NULL, deint_custom);
+                              filter_id, deint_preset, NULL, deint_custom);
         if (filter_settings == NULL)
         {
             hb_error("Invalid deinterlace filter preset (%s)", deint_preset);
@@ -1370,25 +1370,25 @@ int hb_preset_apply_filters(const hb_dict_t *preset, hb_dict_t *job_dict)
     int denoise;
     hb_value_t *denoise_value = hb_dict_get(preset, "PictureDenoiseFilter");
     denoise = hb_value_type(denoise_value) == HB_VALUE_TYPE_STRING ? (
-        !strcasecmp(hb_value_get_string(denoise_value), "off") ? 0 :
-        !strcasecmp(hb_value_get_string(denoise_value), "nlmeans") ? 1 : 2) :
-        hb_value_get_int(denoise_value);
+                  !strcasecmp(hb_value_get_string(denoise_value), "off") ? 0 :
+                  !strcasecmp(hb_value_get_string(denoise_value), "nlmeans") ? 1 : 2) :
+              hb_value_get_int(denoise_value);
 
     if (denoise != 0)
     {
         int filter_id = denoise == 1 ? HB_FILTER_NLMEANS : HB_FILTER_HQDN3D;
         const char *denoise_preset, *denoise_tune, *denoise_custom;
         denoise_preset = hb_value_get_string(
-                            hb_dict_get(preset, "PictureDenoisePreset"));
+                             hb_dict_get(preset, "PictureDenoisePreset"));
         if (denoise_preset != NULL)
         {
             denoise_tune   = hb_value_get_string(
-                        hb_dict_get(preset, "PictureDenoiseTune"));
+                                 hb_dict_get(preset, "PictureDenoiseTune"));
             denoise_custom = hb_value_get_string(
-                        hb_dict_get(preset, "PictureDenoiseCustom"));
+                                 hb_dict_get(preset, "PictureDenoiseCustom"));
 
             filter_settings = hb_generate_filter_settings(filter_id,
-                                denoise_preset, denoise_tune, denoise_custom);
+                              denoise_preset, denoise_tune, denoise_custom);
             if (filter_settings == NULL)
             {
                 hb_error("Invalid denoise filter settings (%s%s%s)",
@@ -1414,17 +1414,17 @@ int hb_preset_apply_filters(const hb_dict_t *preset, hb_dict_t *job_dict)
     // Chroma Smooth filter
     const char *chroma_smooth_preset, *chroma_smooth_tune, *chroma_smooth_custom;
     chroma_smooth_preset = hb_value_get_string(hb_dict_get(preset,
-                                                   "PictureChromaSmoothPreset"));
+                           "PictureChromaSmoothPreset"));
     chroma_smooth_tune   = hb_value_get_string(hb_dict_get(preset,
-                                                   "PictureChromaSmoothTune"));
+                           "PictureChromaSmoothTune"));
     chroma_smooth_custom = hb_value_get_string(hb_dict_get(preset,
-                                                   "PictureChromaSmoothCustom"));
+                           "PictureChromaSmoothCustom"));
     if (chroma_smooth_preset != NULL &&
-        strcasecmp(chroma_smooth_preset, "off"))
+            strcasecmp(chroma_smooth_preset, "off"))
     {
         int filter_id = HB_FILTER_CHROMA_SMOOTH;
         filter_settings = hb_generate_filter_settings(filter_id,
-                            chroma_smooth_preset, chroma_smooth_tune, chroma_smooth_custom);
+                          chroma_smooth_preset, chroma_smooth_tune, chroma_smooth_custom);
         if (filter_settings == NULL)
         {
             hb_error("Invalid chroma smooth filter settings (%s%s%s)",
@@ -1449,15 +1449,15 @@ int hb_preset_apply_filters(const hb_dict_t *preset, hb_dict_t *job_dict)
     // Sharpen filter
     const char *sharpen_filter, *sharpen_preset, *sharpen_tune, *sharpen_custom;
     sharpen_filter = hb_value_get_string(hb_dict_get(preset,
-                                                   "PictureSharpenFilter"));
+                                         "PictureSharpenFilter"));
     sharpen_preset = hb_value_get_string(hb_dict_get(preset,
-                                                   "PictureSharpenPreset"));
+                                         "PictureSharpenPreset"));
     sharpen_tune   = hb_value_get_string(hb_dict_get(preset,
-                                                   "PictureSharpenTune"));
+                                         "PictureSharpenTune"));
     sharpen_custom = hb_value_get_string(hb_dict_get(preset,
-                                                   "PictureSharpenCustom"));
+                                         "PictureSharpenCustom"));
     if (sharpen_filter != NULL && sharpen_preset != NULL &&
-        strcasecmp(sharpen_filter, "off"))
+            strcasecmp(sharpen_filter, "off"))
     {
         int filter_id;
         if (!strcasecmp(sharpen_filter, "lapsharp"))
@@ -1474,7 +1474,7 @@ int hb_preset_apply_filters(const hb_dict_t *preset, hb_dict_t *job_dict)
             return -1;
         }
         filter_settings = hb_generate_filter_settings(filter_id,
-                            sharpen_preset, sharpen_tune, sharpen_custom);
+                          sharpen_preset, sharpen_tune, sharpen_custom);
         if (filter_settings == NULL)
         {
             hb_error("Invalid sharpen filter settings (%s%s%s)",
@@ -1498,15 +1498,15 @@ int hb_preset_apply_filters(const hb_dict_t *preset, hb_dict_t *job_dict)
 
     // Deblock filter
     const char * deblock = hb_value_get_string(
-                                hb_dict_get(preset, "PictureDeblockPreset"));
+                               hb_dict_get(preset, "PictureDeblockPreset"));
     if (deblock != NULL)
     {
         const char * deblock_tune   = hb_value_get_string(
-                                hb_dict_get(preset, "PictureDeblockTune"));
+                                          hb_dict_get(preset, "PictureDeblockTune"));
         const char * deblock_custom = hb_value_get_string(
-                                hb_dict_get(preset, "PictureDeblockCustom"));
+                                          hb_dict_get(preset, "PictureDeblockCustom"));
         filter_settings = hb_generate_filter_settings(HB_FILTER_DEBLOCK,
-                                    deblock, deblock_tune, deblock_custom);
+                          deblock, deblock_tune, deblock_custom);
         if (filter_settings == NULL)
         {
             hb_error("Invalid deblock filter settings (%s)", deblock);
@@ -1527,11 +1527,11 @@ int hb_preset_apply_filters(const hb_dict_t *preset, hb_dict_t *job_dict)
 
     // Rotate filter
     char *rotate = hb_value_get_string_xform(
-                        hb_dict_get(preset, "PictureRotate"));
+                       hb_dict_get(preset, "PictureRotate"));
     if (rotate != NULL)
     {
         filter_settings = hb_generate_filter_settings(HB_FILTER_ROTATE,
-                                                      NULL, NULL, rotate);
+                          NULL, NULL, rotate);
         if (filter_settings == NULL)
         {
             hb_error("Invalid rotate filter settings (%s)", rotate);
@@ -1564,7 +1564,7 @@ int hb_preset_apply_filters(const hb_dict_t *preset, hb_dict_t *job_dict)
     if (pad != NULL)
     {
         filter_settings = hb_generate_filter_settings(HB_FILTER_PAD,
-                                                      NULL, NULL, pad);
+                          NULL, NULL, pad);
         if (filter_settings == NULL)
         {
             hb_error("Invalid pad filter settings (%s)", pad);
@@ -1597,9 +1597,9 @@ int hb_preset_apply_filters(const hb_dict_t *preset, hb_dict_t *job_dict)
     int fr_mode;
     hb_value_t *fr_mode_value = hb_dict_get(preset, "VideoFramerateMode");
     fr_mode = hb_value_type(fr_mode_value) == HB_VALUE_TYPE_STRING ? (
-        !strcasecmp(hb_value_get_string(fr_mode_value), "cfr") ? 1 :
-        !strcasecmp(hb_value_get_string(fr_mode_value), "pfr") ? 2 : 0) :
-        hb_value_get_int(fr_mode_value);
+                  !strcasecmp(hb_value_get_string(fr_mode_value), "cfr") ? 1 :
+                  !strcasecmp(hb_value_get_string(fr_mode_value), "pfr") ? 2 : 0) :
+              hb_value_get_int(fr_mode_value);
 
     filter_settings = hb_dict_init();
     if (vrate_den == 0)
@@ -1636,12 +1636,12 @@ int hb_preset_apply_video(const hb_dict_t *preset, hb_dict_t *job_dict)
 
     dest_dict    = hb_dict_get(job_dict, "Destination");
     mux          = hb_container_get_from_name(hb_value_get_string(
-                                                hb_dict_get(dest_dict, "Mux")));
+                       hb_dict_get(dest_dict, "Mux")));
     vcodec_value = hb_dict_get(preset, "VideoEncoder");
     if (hb_value_type(vcodec_value) == HB_VALUE_TYPE_STRING)
     {
         vcodec = hb_video_encoder_get_from_name(
-                    hb_value_get_string(vcodec_value));
+                     hb_value_get_string(vcodec_value));
     }
     else
     {
@@ -1658,8 +1658,8 @@ int hb_preset_apply_video(const hb_dict_t *preset, hb_dict_t *job_dict)
     if (!(encoder->muxers & mux))
     {
         hb_error("Incompatible video encoder (%s) for muxer (%s)",
-                  hb_video_encoder_get_name(vcodec),
-                  hb_container_get_name(mux));
+                 hb_video_encoder_get_name(vcodec),
+                 hb_container_get_name(mux));
         return -1;
     }
 
@@ -1673,31 +1673,31 @@ int hb_preset_apply_video(const hb_dict_t *preset, hb_dict_t *job_dict)
 
         switch (color_matrix_code)
         {
-            case 4:
-                // ITU BT.2020 UHD content
-                color_prim      = HB_COLR_PRI_BT2020;
-                color_transfer  = HB_COLR_TRA_BT709;
-                color_matrix    = HB_COLR_MAT_BT2020_NCL;
-                break;
-            case 3:
-                // ITU BT.709 HD content
-                color_prim      = HB_COLR_PRI_BT709;
-                color_transfer  = HB_COLR_TRA_BT709;
-                color_matrix    = HB_COLR_MAT_BT709;
-                break;
-            case 2:
-                // ITU BT.601 DVD or SD TV content (PAL)
-                color_prim      = HB_COLR_PRI_EBUTECH;
-                color_transfer  = HB_COLR_TRA_BT709;
-                color_matrix    = HB_COLR_MAT_SMPTE170M;
-                break;
-            case 1:
-            default:
-                // ITU BT.601 DVD or SD TV content (NTSC)
-                color_prim      = HB_COLR_PRI_SMPTEC;
-                color_transfer  = HB_COLR_TRA_BT709;
-                color_matrix    = HB_COLR_MAT_SMPTE170M;
-                break;
+        case 4:
+            // ITU BT.2020 UHD content
+            color_prim      = HB_COLR_PRI_BT2020;
+            color_transfer  = HB_COLR_TRA_BT709;
+            color_matrix    = HB_COLR_MAT_BT2020_NCL;
+            break;
+        case 3:
+            // ITU BT.709 HD content
+            color_prim      = HB_COLR_PRI_BT709;
+            color_transfer  = HB_COLR_TRA_BT709;
+            color_matrix    = HB_COLR_MAT_BT709;
+            break;
+        case 2:
+            // ITU BT.601 DVD or SD TV content (PAL)
+            color_prim      = HB_COLR_PRI_EBUTECH;
+            color_transfer  = HB_COLR_TRA_BT709;
+            color_matrix    = HB_COLR_MAT_SMPTE170M;
+            break;
+        case 1:
+        default:
+            // ITU BT.601 DVD or SD TV content (NTSC)
+            color_prim      = HB_COLR_PRI_SMPTEC;
+            color_transfer  = HB_COLR_TRA_BT709;
+            color_matrix    = HB_COLR_MAT_SMPTE170M;
+            break;
         }
 
         hb_dict_set(video_dict, "ColorPrimariesOverride",
@@ -1710,7 +1710,7 @@ int hb_preset_apply_video(const hb_dict_t *preset, hb_dict_t *job_dict)
     hb_dict_set(video_dict, "Encoder", hb_value_dup(vcodec_value));
 
     if ((vcodec & HB_VCODEC_X264_MASK) &&
-        hb_value_get_bool(hb_dict_get(preset, "x264UseAdvancedOptions")))
+            hb_value_get_bool(hb_dict_get(preset, "x264UseAdvancedOptions")))
     {
         hb_dict_set(video_dict, "Options",
                     hb_value_dup(hb_dict_get(preset, "x264Option")));
@@ -1789,7 +1789,7 @@ int hb_preset_apply_video(const hb_dict_t *preset, hb_dict_t *job_dict)
         hb_dict_set(qsv, "LowPower",
                     hb_value_xform(value, HB_VALUE_TYPE_BOOL));
     }
-     if ((value = hb_dict_get(preset, "VideoQSVAsyncDepth")) != NULL)
+    if ((value = hb_dict_get(preset, "VideoQSVAsyncDepth")) != NULL)
     {
         hb_dict_set(qsv, "AsyncDepth",
                     hb_value_xform(value, HB_VALUE_TYPE_INT));
@@ -1807,7 +1807,7 @@ int hb_preset_apply_mux(const hb_dict_t *preset, hb_dict_t *job_dict)
         mux = hb_container_get_from_name(hb_value_get_string(mux_value));
         if (mux == 0)
             mux = hb_container_get_from_extension(
-                                            hb_value_get_string(mux_value));
+                      hb_value_get_string(mux_value));
     }
     else
     {
@@ -1925,8 +1925,8 @@ int hb_preset_apply_title(hb_handle_t *h, int title_index,
     }
     keep_aspect = hb_value_get_bool(hb_dict_get(preset, "PictureKeepRatio"));
     if (geo.mode == HB_ANAMORPHIC_STRICT ||
-        geo.mode == HB_ANAMORPHIC_LOOSE  ||
-        geo.mode == HB_ANAMORPHIC_AUTO)
+            geo.mode == HB_ANAMORPHIC_LOOSE  ||
+            geo.mode == HB_ANAMORPHIC_AUTO)
     {
         keep_aspect = 1;
     }
@@ -2079,8 +2079,8 @@ dict_clean(hb_value_t *dict, hb_value_t *template)
     // Remove keys that are not in the template and translate compatible
     // data types to the types used in the template.
     for (iter = hb_dict_iter_init(tmp);
-         iter != HB_DICT_ITER_DONE;
-         iter = hb_dict_iter_next(tmp, iter))
+            iter != HB_DICT_ITER_DONE;
+            iter = hb_dict_iter_next(tmp, iter))
     {
         key = hb_dict_iter_key(iter);
         val = hb_dict_iter_value(iter);
@@ -2097,9 +2097,9 @@ dict_clean(hb_value_t *dict, hb_value_t *template)
         else if (val_type != template_type)
         {
             if (val_type      == HB_VALUE_TYPE_DICT  ||
-                val_type      == HB_VALUE_TYPE_ARRAY ||
-                template_type == HB_VALUE_TYPE_DICT  ||
-                template_type == HB_VALUE_TYPE_ARRAY)
+                    val_type      == HB_VALUE_TYPE_ARRAY ||
+                    template_type == HB_VALUE_TYPE_DICT  ||
+                    template_type == HB_VALUE_TYPE_ARRAY)
             {
                 hb_error("Preset %s: Incompatible value types for key %s. "
                          "Dropping.", preset_name, key);
@@ -2156,8 +2156,8 @@ dict_clean(hb_value_t *dict, hb_value_t *template)
     {
         // Add key/value pairs that are in the template but not in the dict.
         for (iter = hb_dict_iter_init(template);
-             iter != HB_DICT_ITER_DONE;
-             iter = hb_dict_iter_next(template, iter))
+                iter != HB_DICT_ITER_DONE;
+                iter = hb_dict_iter_next(template, iter))
         {
             key          = hb_dict_iter_key(iter);
             template_val = hb_dict_iter_value(iter);
@@ -2355,7 +2355,7 @@ static char * fix_name_collisions(hb_value_t * list, const char * name)
 }
 
 static void import_folder_hierarchy_29_0_0(const char * name,
-                                    hb_value_t * new_list, hb_value_t * folder)
+        hb_value_t * new_list, hb_value_t * folder)
 {
     hb_value_t * list = hb_dict_get(folder, "ChildrenArray");
     int          ii, count;
@@ -2409,7 +2409,7 @@ static hb_value_t * import_hierarchy_29_0_0(hb_value_t *presets)
     int          ii, count;
 
     if (hb_value_type(presets) == HB_VALUE_TYPE_DICT &&
-        hb_dict_get(presets, "VersionMajor") != NULL)
+            hb_dict_get(presets, "VersionMajor") != NULL)
     {
         // A packaged preset list
         list = hb_dict_get(presets, "PresetList");
@@ -2503,7 +2503,7 @@ static hb_value_t * import_hierarchy_29_0_0(hb_value_t *presets)
     }
 
     if (hb_value_type(presets) == HB_VALUE_TYPE_DICT &&
-        hb_dict_get(presets, "VersionMajor") != NULL)
+            hb_dict_get(presets, "VersionMajor") != NULL)
     {
         // A packaged preset list
         hb_dict_set(presets, "PresetList", new_list);
@@ -2902,18 +2902,18 @@ static void import_deint_10_0_0(hb_value_t *preset)
         if (decomb_or_deint)
         {
             deint_preset = hb_value_get_string(
-                                hb_dict_get(preset, "PictureDecomb"));
+                               hb_dict_get(preset, "PictureDecomb"));
         }
         else
         {
             deint_preset = hb_value_get_string(
-                                hb_dict_get(preset, "PictureDeinterlace"));
+                               hb_dict_get(preset, "PictureDeinterlace"));
         }
         if (deint_preset != NULL && strcasecmp(deint_preset, "off"))
         {
             hb_dict_set(preset, "PictureDeinterlaceFilter",
                         decomb_or_deint ? hb_value_string("decomb")
-                                        : hb_value_string("deinterlace"));
+                        : hb_value_string("deinterlace"));
             hb_dict_set(preset, "PictureDeinterlacePreset",
                         hb_value_string(deint_preset));
         }
@@ -3036,19 +3036,19 @@ static void import_pic_0_0_0(hb_value_t *preset)
         int pic_par = hb_value_get_int(val);
         switch (pic_par)
         {
-            default:
-            case 0:
-                s = "off";
-                break;
-            case 1:
-                s = "strict";
-                break;
-            case 2:
-                s = "loose";
-                break;
-            case 3:
-                s = "custom";
-                break;
+        default:
+        case 0:
+            s = "off";
+            break;
+        case 1:
+            s = "strict";
+            break;
+        case 2:
+            s = "loose";
+            break;
+        case 3:
+            s = "custom";
+            break;
         }
         hb_dict_set(preset, "PicturePAR", hb_value_string(s));
     }
@@ -3062,28 +3062,28 @@ static void import_pic_0_0_0(hb_value_t *preset)
         {
             switch (pic_par)
             {
-                default:
-                case 2:
-                    s = "loose";
-                    break;
-                case 0:
-                    s = "off";
-                    break;
-                case 1:
-                    s = "strict";
-                    break;
-                case 3:
-                    s = "custom";
-                    break;
+            default:
+            case 2:
+                s = "loose";
+                break;
+            case 0:
+                s = "off";
+                break;
+            case 1:
+                s = "strict";
+                break;
+            case 3:
+                s = "custom";
+                break;
             }
             hb_dict_set(preset, "PicturePAR", hb_value_string(s));
         }
         else
         {
             if (strcasecmp(v, "off") &&
-                strcasecmp(v, "strict") &&
-                strcasecmp(v, "loose") &&
-                strcasecmp(v, "custom"))
+                    strcasecmp(v, "strict") &&
+                    strcasecmp(v, "loose") &&
+                    strcasecmp(v, "custom"))
             {
                 hb_dict_set(preset, "PicturePAR", hb_value_string("loose"));
             }
@@ -3122,13 +3122,13 @@ static void import_video_0_0_0(hb_value_t *preset)
     hb_value_t *val;
 
     if ((val = hb_dict_get(preset, "x264Preset")) != NULL)
-         hb_dict_set(preset, "VideoPreset", hb_value_dup(val));
+        hb_dict_set(preset, "VideoPreset", hb_value_dup(val));
     if ((val = hb_dict_get(preset, "x264Tune")) != NULL)
-         hb_dict_set(preset, "VideoTune", hb_value_dup(val));
+        hb_dict_set(preset, "VideoTune", hb_value_dup(val));
     if ((val = hb_dict_get(preset, "h264Profile")) != NULL)
-         hb_dict_set(preset, "VideoProfile", hb_value_dup(val));
+        hb_dict_set(preset, "VideoProfile", hb_value_dup(val));
     if ((val = hb_dict_get(preset, "h264Level")) != NULL)
-         hb_dict_set(preset, "VideoLevel", hb_value_dup(val));
+        hb_dict_set(preset, "VideoLevel", hb_value_dup(val));
     if ((val = hb_dict_get(preset, "x264OptionExtra")) != NULL)
         hb_dict_set(preset, "VideoOptionExtra", hb_value_dup(val));
 
@@ -3325,7 +3325,9 @@ static int preset_import(hb_value_t *preset, int major, int minor, int micro)
 
 int hb_presets_version(hb_value_t *preset, int *major, int *minor, int *micro)
 {
-    *major = 0; *minor = 0; *micro = 0;
+    *major = 0;
+    *minor = 0;
+    *micro = 0;
     if (hb_value_type(preset) == HB_VALUE_TYPE_DICT)
     {
         // Is this a single preset or a packaged collection of presets?
@@ -3464,7 +3466,7 @@ static hb_value_t * presets_package(const hb_value_t *presets)
 {
     hb_dict_t *packaged_presets;
     if (hb_value_type(presets) != HB_VALUE_TYPE_DICT ||
-        hb_dict_get(presets, "VersionMajor") == NULL)
+            hb_dict_get(presets, "VersionMajor") == NULL)
     {
         // Preset is not packaged
         packaged_presets = hb_dict_init();
@@ -3501,11 +3503,11 @@ void hb_presets_builtin_init(void)
     hb_value_t * dict = hb_value_json(hb_builtin_presets_json);
     hb_value_t * template = hb_dict_get(dict, "PresetTemplate");
     hb_preset_version_major = hb_value_get_int(
-                              hb_dict_get(template, "VersionMajor"));
+                                  hb_dict_get(template, "VersionMajor"));
     hb_preset_version_minor = hb_value_get_int(
-                              hb_dict_get(template, "VersionMinor"));
+                                  hb_dict_get(template, "VersionMinor"));
     hb_preset_version_micro = hb_value_get_int(
-                              hb_dict_get(template, "VersionMicro"));
+                                  hb_dict_get(template, "VersionMicro"));
     hb_preset_template = hb_value_dup(hb_dict_get(template, "Preset"));
 
     hb_presets_builtin = hb_value_dup(hb_dict_get(dict, "PresetBuiltin"));
@@ -3594,7 +3596,7 @@ char * hb_presets_builtin_get_json(void)
 //
 // A reference to the preset is returned
 static hb_preset_index_t * preset_lookup_path(const char *name,
-                                              int recurse, int type)
+        int recurse, int type)
 {
     preset_search_context_t ctx;
     int result;
@@ -3623,7 +3625,7 @@ static hb_preset_index_t * preset_lookup_path(const char *name,
 //
 // A copy of the preset is returned
 hb_preset_index_t * hb_preset_search_index(const char *name,
-                                           int recurse, int type)
+        int recurse, int type)
 {
     return preset_lookup_path(name, recurse, type);
 }

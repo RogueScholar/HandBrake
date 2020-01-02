@@ -56,7 +56,7 @@ bit_nclear(uint32_t *bit_map, int start_pos, int stop_pos)
     {
 
         bit_map[start_word] &= ( ( 0x7FFFFFFF >> ( 31 - (start_pos & 0x1F ) ) )
-                             |  ( 0xFFFFFFFE << ( stop_pos & 0x1F ) ) );
+                                 |  ( 0xFFFFFFFE << ( stop_pos & 0x1F ) ) );
     }
     else
     {
@@ -76,7 +76,7 @@ bit_nset(uint32_t *bit_map, int start_pos, int stop_pos)
     if ( start_word == stop_word )
     {
         bit_map[start_word] |= ( ( 0xFFFFFFFF << ( start_pos & 0x1F ) )
-                             &  ( 0xFFFFFFFF >> ( 31 - ( stop_pos & 0x1F ) ) ) );
+                                 &  ( 0xFFFFFFFF >> ( 31 - ( stop_pos & 0x1F ) ) ) );
     }
     else
     {

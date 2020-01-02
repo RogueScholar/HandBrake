@@ -177,8 +177,8 @@ static int hb_grayscale_init( hb_filter_object_t * filter,
     pv->grayscale_arguments = malloc(sizeof(grayscale_arguments_t) *
                                      pv->cpu_count);
     if (pv->grayscale_arguments == NULL ||
-        taskset_init( &pv->grayscale_taskset, pv->cpu_count,
-                      sizeof( grayscale_thread_arg_t ) ) == 0)
+            taskset_init( &pv->grayscale_taskset, pv->cpu_count,
+                          sizeof( grayscale_thread_arg_t ) ) == 0)
     {
         hb_error( "grayscale could not initialize taskset" );
     }

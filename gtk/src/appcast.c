@@ -112,22 +112,24 @@ start_element(
     g_queue_push_head(pd->tag_stack, id.pid);
     switch (id.id)
     {
-        case A_ITEM:
-        {
-            pd->item = TRUE;
-        } break;
-        case A_ENCLOSURE:
-        {
-            const gchar *build, *version;
-            build = lookup_attr_value(
-                        "sparkle:version", attr_names, attr_values);
-            version = lookup_attr_value(
-                        "sparkle:shortVersionString", attr_names, attr_values);
-            if (build)
-                pd->build = g_strdup(build);
-            if (version)
-                pd->version = g_strdup(version);
-        } break;
+    case A_ITEM:
+    {
+        pd->item = TRUE;
+    }
+    break;
+    case A_ENCLOSURE:
+    {
+        const gchar *build, *version;
+        build = lookup_attr_value(
+                    "sparkle:version", attr_names, attr_values);
+        version = lookup_attr_value(
+                      "sparkle:shortVersionString", attr_names, attr_values);
+        if (build)
+            pd->build = g_strdup(build);
+        if (version)
+            pd->version = g_strdup(version);
+    }
+    break;
     }
 }
 
@@ -165,13 +167,14 @@ end_element(
         g_warning("start tag != end tag: (%s %d) %d", tag, start_id.id, id);
     switch (id)
     {
-        case A_ITEM:
-        {
-            pd->item = FALSE;
-        } break;
-        default:
-        {
-        } break;
+    case A_ITEM:
+    {
+        pd->item = FALSE;
+    }
+    break;
+    default:
+    {
+    } break;
     }
 
 }
@@ -194,18 +197,20 @@ text_data(
     start_id.pid = g_queue_peek_head(pd->tag_stack);
     switch (start_id.id)
     {
-        case A_DESCRIPTION:
+    case A_DESCRIPTION:
+    {
+        if (pd->item)
         {
-            if (pd->item)
-            {
-                g_string_append(pd->description, text);
-            }
-        } break;
-        default:
-        {
-            if (pd->value) g_free(pd->value);
-            pd->value = g_strdup(text);
-        } break;
+            g_string_append(pd->description, text);
+        }
+    }
+    break;
+    default:
+    {
+        if (pd->value) g_free(pd->value);
+        pd->value = g_strdup(text);
+    }
+    break;
     }
 }
 
@@ -231,7 +236,7 @@ parse_error(GMarkupParseContext *ctx, GError *error, gpointer ud)
 // This is required or the parser crashes
 static void
 destroy_notify(gpointer data)
-{ // Do nothing
+{   // Do nothing
     //g_debug("destroy parser");
 }
 
@@ -263,7 +268,7 @@ ghb_appcast_parse(gchar *buf, gchar **desc, gchar **build, gchar **version)
     parser.passthrough = passthrough;
     parser.error = parse_error;
     ctx = g_markup_parse_context_new(
-            &parser, G_MARKUP_TREAT_CDATA_AS_TEXT, &pd, destroy_notify);
+              &parser, G_MARKUP_TREAT_CDATA_AS_TEXT, &pd, destroy_notify);
 
     g_markup_parse_context_parse(ctx, start, len, &err);
     g_markup_parse_context_end_parse(ctx, &err);

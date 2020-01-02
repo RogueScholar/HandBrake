@@ -130,18 +130,18 @@ static int ssa_update_style(const char *ssa, hb_subtitle_style_context_t *ctx)
             int val = strtol(ssa + pos + 1, NULL, 0);
             switch (ssa[pos])
             {
-                case 'i':
-                    style->flags = (style->flags & ~HB_STYLE_FLAG_ITALIC) |
-                                   !!val * HB_STYLE_FLAG_ITALIC;
-                    break;
-                case 'b':
-                    style->flags = (style->flags & ~HB_STYLE_FLAG_BOLD) |
-                                   !!val * HB_STYLE_FLAG_BOLD;
-                    break;
-                case 'u':
-                    style->flags = (style->flags & ~HB_STYLE_FLAG_UNDERLINE) |
-                                   !!val * HB_STYLE_FLAG_UNDERLINE;
-                    break;
+            case 'i':
+                style->flags = (style->flags & ~HB_STYLE_FLAG_ITALIC) |
+                               !!val * HB_STYLE_FLAG_ITALIC;
+                break;
+            case 'b':
+                style->flags = (style->flags & ~HB_STYLE_FLAG_BOLD) |
+                               !!val * HB_STYLE_FLAG_BOLD;
+                break;
+            case 'u':
+                style->flags = (style->flags & ~HB_STYLE_FLAG_UNDERLINE) |
+                               !!val * HB_STYLE_FLAG_UNDERLINE;
+                break;
             }
         }
         if (ssa[pos] == 'r')
@@ -162,27 +162,27 @@ static int ssa_update_style(const char *ssa, hb_subtitle_style_context_t *ctx)
             {
                 switch (index)
                 {
-                    case -1:
-                    case 1:
-                        style->fg_rgb = HB_BGR_TO_RGB(bgr);
-                        break;
-                    case 2:
-                        style->alt_rgb = HB_BGR_TO_RGB(bgr);
-                        break;
-                    case 3:
-                        style->ol_rgb = HB_BGR_TO_RGB(bgr);
-                        break;
-                    case 4:
-                        style->bg_rgb = HB_BGR_TO_RGB(bgr);
-                        break;
-                    default:
-                        // Unknown color index, ignore
-                        break;
+                case -1:
+                case 1:
+                    style->fg_rgb = HB_BGR_TO_RGB(bgr);
+                    break;
+                case 2:
+                    style->alt_rgb = HB_BGR_TO_RGB(bgr);
+                    break;
+                case 3:
+                    style->ol_rgb = HB_BGR_TO_RGB(bgr);
+                    break;
+                case 4:
+                    style->bg_rgb = HB_BGR_TO_RGB(bgr);
+                    break;
+                default:
+                    // Unknown color index, ignore
+                    break;
                 }
             }
         }
         if ((ssa[pos] == 'a' && ssa[pos+1] == '&' && ssa[pos+2] == 'H') ||
-            (!strcmp(ssa+pos, "alpha") && ssa[pos+5] == '&' && ssa[pos+6] == 'H'))
+                (!strcmp(ssa+pos, "alpha") && ssa[pos+5] == '&' && ssa[pos+6] == 'H'))
         {
             // Font alpha markup
             char *endptr;
@@ -199,22 +199,22 @@ static int ssa_update_style(const char *ssa, hb_subtitle_style_context_t *ctx)
                 alpha = 255 - alpha;
                 switch (index)
                 {
-                    case -1:
-                    case 1:
-                        style->fg_alpha = alpha;
-                        break;
-                    case 2:
-                        style->alt_alpha = alpha;
-                        break;
-                    case 3:
-                        style->ol_alpha = alpha;
-                        break;
-                    case 4:
-                        style->bg_alpha = alpha;
-                        break;
-                    default:
-                        // Unknown alpha index, ignore
-                        break;
+                case -1:
+                case 1:
+                    style->fg_alpha = alpha;
+                    break;
+                case 2:
+                    style->alt_alpha = alpha;
+                    break;
+                case 3:
+                    style->ol_alpha = alpha;
+                    break;
+                case 4:
+                    style->bg_alpha = alpha;
+                    break;
+                default:
+                    // Unknown alpha index, ignore
+                    break;
                 }
             }
         }
@@ -247,19 +247,19 @@ static char * ssa_to_text(const char *in, int *consumed,
             in_pos++;
             switch (in[in_pos])
             {
-                case '\0':
-                    in_pos--;
-                    break;
-                case 'N':
-                case 'n':
-                    out[out_pos++] = '\n';
-                    break;
-                case 'h':
-                    out[out_pos++] = ' ';
-                    break;
-                default:
-                    out[out_pos++] = in[in_pos];
-                    break;
+            case '\0':
+                in_pos--;
+                break;
+            case 'N':
+            case 'n':
+                out[out_pos++] = '\n';
+                break;
+            case 'h':
+                out[out_pos++] = ' ';
+                break;
+            default:
+                out[out_pos++] = in[in_pos];
+                break;
             }
         }
         else
@@ -412,7 +412,7 @@ static void fill_field_indicies(char **fields, ssa_style_indicies_t * indices)
 }
 
 static int add_style(hb_subtitle_style_context_t *ctx,
-                      char ** style, ssa_style_indicies_t *field_indices)
+                     char ** style, ssa_style_indicies_t *field_indices)
 {
     const char * name;
     const char * value;
@@ -737,9 +737,9 @@ static int tx3g_update_style(hb_tx3g_style_context_t *ctx, int utf8_end_pos)
 
     // do we need to add a style atom?
     if (((ctx->out_style.flags  ^ style->flags) & TX3G_STYLES) ||
-          ctx->out_style.fg_rgb   != style->fg_rgb             ||
-          ctx->out_style.fg_alpha != style->fg_alpha           ||
-          ctx->flush)
+            ctx->out_style.fg_rgb   != style->fg_rgb             ||
+            ctx->out_style.fg_alpha != style->fg_alpha           ||
+            ctx->flush)
     {
         if (ctx->style_start < utf8_end_pos)
         {

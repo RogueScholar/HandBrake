@@ -192,38 +192,38 @@ hb_audio_remap_t* hb_audio_remap_init(enum AVSampleFormat sample_fmt,
     // sample format
     switch (sample_fmt)
     {
-        case AV_SAMPLE_FMT_U8P:
-        case AV_SAMPLE_FMT_S16P:
-        case AV_SAMPLE_FMT_S32P:
-        case AV_SAMPLE_FMT_FLTP:
-        case AV_SAMPLE_FMT_DBLP:
-            remap->remap = &remap_planar;
-            break;
+    case AV_SAMPLE_FMT_U8P:
+    case AV_SAMPLE_FMT_S16P:
+    case AV_SAMPLE_FMT_S32P:
+    case AV_SAMPLE_FMT_FLTP:
+    case AV_SAMPLE_FMT_DBLP:
+        remap->remap = &remap_planar;
+        break;
 
-        case AV_SAMPLE_FMT_U8:
-            remap->remap = &remap_u8_interleaved;
-            break;
+    case AV_SAMPLE_FMT_U8:
+        remap->remap = &remap_u8_interleaved;
+        break;
 
-        case AV_SAMPLE_FMT_S16:
-            remap->remap = &remap_s16_interleaved;
-            break;
+    case AV_SAMPLE_FMT_S16:
+        remap->remap = &remap_s16_interleaved;
+        break;
 
-        case AV_SAMPLE_FMT_S32:
-            remap->remap = &remap_s32_interleaved;
-            break;
+    case AV_SAMPLE_FMT_S32:
+        remap->remap = &remap_s32_interleaved;
+        break;
 
-        case AV_SAMPLE_FMT_FLT:
-            remap->remap = &remap_flt_interleaved;
-            break;
+    case AV_SAMPLE_FMT_FLT:
+        remap->remap = &remap_flt_interleaved;
+        break;
 
-        case AV_SAMPLE_FMT_DBL:
-            remap->remap = &remap_dbl_interleaved;
-            break;
+    case AV_SAMPLE_FMT_DBL:
+        remap->remap = &remap_dbl_interleaved;
+        break;
 
-        default:
-            hb_error("hb_audio_remap_init: unsupported sample format '%s'",
-                     av_get_sample_fmt_name(sample_fmt));
-            goto fail;
+    default:
+        hb_error("hb_audio_remap_init: unsupported sample format '%s'",
+                 av_get_sample_fmt_name(sample_fmt));
+        goto fail;
     }
 
     // input/output channel order

@@ -85,12 +85,12 @@
 
 typedef enum
 {
-     HB_ERROR_NONE         = 0,
-     HB_ERROR_CANCELED     = 1,
-     HB_ERROR_WRONG_INPUT  = 2,
-     HB_ERROR_INIT         = 3,
-     HB_ERROR_UNKNOWN      = 4,
-     HB_ERROR_READ         = 5
+    HB_ERROR_NONE         = 0,
+    HB_ERROR_CANCELED     = 1,
+    HB_ERROR_WRONG_INPUT  = 2,
+    HB_ERROR_INIT         = 3,
+    HB_ERROR_UNKNOWN      = 4,
+    HB_ERROR_READ         = 5
 } hb_error_code;
 
 #include "ports.h"
@@ -168,8 +168,8 @@ hb_list_t *hb_subtitle_list_copy(const hb_list_t *src);
 void hb_subtitle_close( hb_subtitle_t **sub );
 int hb_subtitle_add(const hb_job_t * job, const hb_subtitle_config_t * subtitlecfg, int track);
 int hb_import_subtitle_add( const hb_job_t * job,
-                const hb_subtitle_config_t * subtitlecfg,
-                const char *lang_code, int source );
+                            const hb_subtitle_config_t * subtitlecfg,
+                            const char *lang_code, int source );
 int hb_srt_add(const hb_job_t * job, const hb_subtitle_config_t * subtitlecfg,
                const char *lang);
 int hb_subtitle_can_force( int source );
@@ -348,18 +348,18 @@ const char*      hb_video_framerate_sanitize_name(const char *name);
 void             hb_video_framerate_get_limits(int *low, int *high, int *clock);
 const hb_rate_t* hb_video_framerate_get_next(const hb_rate_t *last);
 int              hb_video_framerate_get_close(hb_rational_t *framerate,
-                                              double thresh);
+        double thresh);
 
 int              hb_audio_samplerate_is_supported(int samplerate,
-                                                  uint32_t codec);
+        uint32_t codec);
 int              hb_audio_samplerate_find_closest(int samplerate,
-                                                  uint32_t codec);
+        uint32_t codec);
 int              hb_audio_samplerate_get_sr_shift(int samplerate);
 int              hb_audio_samplerate_get_from_name(const char *name);
 const char*      hb_audio_samplerate_get_name(int samplerate);
 const hb_rate_t* hb_audio_samplerate_get_next(const hb_rate_t *last);
 const hb_rate_t* hb_audio_samplerate_get_next_for_codec(const hb_rate_t *last,
-                                                        uint32_t codec);
+        uint32_t codec);
 
 int              hb_audio_bitrate_get_best(uint32_t codec, int bitrate, int samplerate, int mixdown);
 int              hb_audio_bitrate_get_default(uint32_t codec, int samplerate, int mixdown);
@@ -543,7 +543,7 @@ struct hb_job_s
 #define HB_VCODEC_X265_MASK    0x000F000
 #define HB_VCODEC_H265_MASK    (HB_VCODEC_X265_MASK|HB_VCODEC_QSV_H265_MASK|HB_VCODEC_FFMPEG_VCE_H265|HB_VCODEC_FFMPEG_NVENC_H265|HB_VCODEC_FFMPEG_VT_H265)
 
-/* define an invalid CQ value compatible with all CQ-capable codecs */
+    /* define an invalid CQ value compatible with all CQ-capable codecs */
 #define HB_INVALID_VIDEO_QUALITY (-1000.)
 
     int             vcodec;
@@ -655,7 +655,7 @@ struct hb_job_s
 #define HB_MUX_MASK_AV   0x620000
 #define HB_MUX_MASK_WEBM 0x400000
 
-/* default muxer for each container */
+    /* default muxer for each container */
 #define HB_MUX_MP4       HB_MUX_AV_MP4
 #define HB_MUX_MKV       HB_MUX_AV_MKV
 #define HB_MUX_WEBM      HB_MUX_AV_WEBM
@@ -664,18 +664,18 @@ struct hb_job_s
     char          * file;
 
     int             inline_parameter_sets;
-                                        // Put h.264/h.265 SPS and PPS
-                                        // inline in the stream. This
-                                        // is necessary when constructing
-                                        // adaptive streaming dash files.
+    // Put h.264/h.265 SPS and PPS
+    // inline in the stream. This
+    // is necessary when constructing
+    // adaptive streaming dash files.
     int             align_av_start;     // align A/V stream start times.
-                                        // This is used to work around mp4
-                                        // players that do not support edit
-                                        // lists. When this option is used
-                                        // the resulting stream is not a
-                                        // faithful reproduction of the source
-                                        // stream and may have blank frames
-                                        // added or initial frames dropped.
+    // This is used to work around mp4
+    // players that do not support edit
+    // lists. When this option is used
+    // the resulting stream is not a
+    // faithful reproduction of the source
+    // stream and may have blank frames
+    // added or initial frames dropped.
     int             mp4_optimize;
     int             ipod_atom;
 
@@ -685,16 +685,16 @@ struct hb_job_s
     int             angle;              // dvd angle to encode
     int             frame_to_start;     // declare eof when we hit this frame
     int64_t         pts_to_start;       // drop frames until  we pass this pts
-                                        //  in the time-linearized input stream
+    //  in the time-linearized input stream
     int             frame_to_stop;      // declare eof when we hit this frame
     int64_t         pts_to_stop;        // declare eof when we pass this pts in
-                                        //  the time-linearized input stream
+    //  the time-linearized input stream
     int             start_at_preview;   // if non-zero, encoding will start
-                                        //  at the position of preview n
+    //  at the position of preview n
     int             seek_points;        //  out of N previews
     uint32_t        frames_to_skip;     // decode but discard this many frames
-                                        //  initially (for frame accurate positioning
-                                        //  to non-I frames).
+    //  initially (for frame accurate positioning
+    //  to non-I frames).
     PRIVATE int use_decomb;
     PRIVATE int use_detelecine;
 
@@ -740,8 +740,8 @@ struct hb_job_s
     hb_mux_data_t * mux_data;
 
     int64_t         reader_pts_offset; // Reader can discard some video.
-                                       // Other pipeline stages need to know
-                                       // this.  E.g. sync and decsrtsub
+    // Other pipeline stages need to know
+    // this.  E.g. sync and decsrtsub
 #endif
 };
 
@@ -968,7 +968,8 @@ struct hb_subtitle_s
     enum subtype { PICTURESUB, TEXTSUB } format;
     enum subsource { VOBSUB, CC608SUB, /*unused*/CC708SUB,
                      UTF8SUB, TX3GSUB, SSASUB, PGSSUB,
-                     IMPORTSRT, IMPORTSSA, SRTSUB = IMPORTSRT } source;
+                     IMPORTSRT, IMPORTSSA, SRTSUB = IMPORTSRT
+                   } source;
     const char * name;
     char         lang[1024];
     char         iso639_2[4];
@@ -1103,7 +1104,7 @@ struct hb_title_s
     hb_list_t     * list_attachment;
 
     uint32_t        flags;
-                // set if video stream doesn't have IDR frames
+    // set if video stream doesn't have IDR frames
 #define         HBTF_NO_IDR (1 << 0)
 #define         HBTF_SCAN_COMPLETE (1 << 1)
 #define         HBTF_RAW_VIDEO (1 << 2)
@@ -1177,7 +1178,7 @@ typedef struct hb_work_info_s
     union
     {
         struct
-        {    // info only valid for video decoders
+        {   // info only valid for video decoders
             hb_geometry_t geometry;
             int           pix_fmt;
             int           color_prim;
@@ -1187,7 +1188,7 @@ typedef struct hb_work_info_s
             int           video_decode_support;
         };
         struct
-        {    // info only valid for audio decoders
+        {   // info only valid for audio decoders
             uint64_t channel_layout;
             hb_chan_map_t * channel_map;
             int samples_per_frame;
@@ -1395,9 +1396,9 @@ void                 hb_filter_info_close( hb_filter_info_t ** );
 hb_dict_t          * hb_parse_filter_settings(const char * settings);
 char               * hb_parse_filter_settings_json(const char * settings_str);
 char               * hb_filter_settings_string(int filter_id,
-                                               hb_value_t * value);
+        hb_value_t * value);
 char               * hb_filter_settings_string_json(int filter_id,
-                                                    const char * json);
+        const char * json);
 
 typedef void hb_error_handler_t( const char *errmsg );
 

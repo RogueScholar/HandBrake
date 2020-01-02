@@ -81,7 +81,7 @@ hb_filter_object_t hb_filter_unsharp =
 };
 
 static void unsharp(const uint8_t *src,
-                          uint8_t *dst,
+                    uint8_t *dst,
                     const int width,
                     const int height,
                     const int stride,
@@ -130,14 +130,18 @@ static void unsharp(const uint8_t *src,
 
             for (z = 0; z < steps * 2; z += 2)
             {
-                Tmp2 = SR[z + 0] + Tmp1; SR[z + 0] = Tmp1;
-                Tmp1 = SR[z + 1] + Tmp2; SR[z + 1] = Tmp2;
+                Tmp2 = SR[z + 0] + Tmp1;
+                SR[z + 0] = Tmp1;
+                Tmp1 = SR[z + 1] + Tmp2;
+                SR[z + 1] = Tmp2;
             }
 
             for (z = 0; z < steps * 2; z += 2)
             {
-                Tmp2 = SC[z + 0][x + steps] + Tmp1; SC[z + 0][x + steps] = Tmp1;
-                Tmp1 = SC[z + 1][x + steps] + Tmp2; SC[z + 1][x + steps] = Tmp2;
+                Tmp2 = SC[z + 0][x + steps] + Tmp1;
+                SC[z + 0][x + steps] = Tmp1;
+                Tmp1 = SC[z + 1][x + steps] + Tmp2;
+                SC[z + 1][x + steps] = Tmp2;
             }
 
             if (x >= steps && y >= steps)
@@ -146,7 +150,7 @@ static void unsharp(const uint8_t *src,
                 uint8_t       * dsx = dst - steps * stride + x - steps;
 
                 res = (int32_t)*srx + ((((int32_t)*srx -
-                     (int32_t)((Tmp1 + halfscale) >> scalebits)) * amount) >> 16);
+                                         (int32_t)((Tmp1 + halfscale) >> scalebits)) * amount) >> 16);
                 *dsx = res > 255 ? 255 : res < 0 ? 0 : (uint8_t)res;
             }
         }
@@ -214,12 +218,12 @@ static int unsharp_init(hb_filter_object_t *filter,
         if (ctx->strength == -1)
         {
             ctx->strength = c ? UNSHARP_STRENGTH_CHROMA_DEFAULT :
-                                UNSHARP_STRENGTH_LUMA_DEFAULT;
+                            UNSHARP_STRENGTH_LUMA_DEFAULT;
         }
         if (ctx->size     == -1)
         {
             ctx->size     = c ? UNSHARP_SIZE_CHROMA_DEFAULT :
-                                UNSHARP_SIZE_LUMA_DEFAULT;
+                            UNSHARP_SIZE_LUMA_DEFAULT;
         }
 
         // Sanitize

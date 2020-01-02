@@ -22,13 +22,13 @@ typedef struct hb_tx3g_style_context_s hb_tx3g_style_context_t;
 
 hb_subtitle_style_context_t * hb_subtitle_style_init(const char * ssa_header);
 hb_tx3g_style_context_t     * hb_tx3g_style_init(
-                                        int height, const char * ssa_header);
+    int height, const char * ssa_header);
 void hb_subtitle_style_close(hb_subtitle_style_context_t ** ctx);
 void hb_tx3g_style_close(hb_tx3g_style_context_t ** ctx);
 
 void hb_muxmp4_process_subtitle_style(
-        hb_tx3g_style_context_t * ctx,
-        uint8_t  * input, uint8_t  ** output,
-        uint8_t ** style, uint16_t  * stylesize);
+    hb_tx3g_style_context_t * ctx,
+    uint8_t  * input, uint8_t  ** output,
+    uint8_t ** style, uint16_t  * stylesize);
 
 #endif // HANDBRAKE_SSAUTIL_H

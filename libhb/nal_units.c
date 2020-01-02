@@ -94,7 +94,7 @@ uint8_t* hb_annexb_find_next_nalu(const uint8_t *start, size_t *size)
 }
 
 hb_buffer_t* hb_nal_bitstream_annexb_to_mp4(const uint8_t *data,
-                                            const size_t size)
+        const size_t size)
 {
     hb_buffer_t *out;
     uint8_t *buf, *end;
@@ -148,8 +148,8 @@ static size_t mp4_nal_unit_length(const uint8_t *data,
 }
 
 hb_buffer_t* hb_nal_bitstream_mp4_to_annexb(const uint8_t *data,
-                                            const size_t size,
-                                            const uint8_t nal_length_size)
+        const size_t size,
+        const uint8_t nal_length_size)
 {
     hb_buffer_t *out;
     uint8_t *buf, *end;

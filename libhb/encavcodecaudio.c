@@ -56,7 +56,7 @@ static int encavcodecaInit(hb_work_object_t *w, hb_job_t *job)
     // channel count, layout and matrix encoding
     int matrix_encoding;
     uint64_t channel_layout   = hb_ff_mixdown_xlat(audio->config.out.mixdown,
-                                                   &matrix_encoding);
+                                &matrix_encoding);
     pv->out_discrete_channels =
         hb_mixdown_get_discrete_channel_count(audio->config.out.mixdown);
 
@@ -71,79 +71,79 @@ static int encavcodecaInit(hb_work_object_t *w, hb_job_t *job)
     // override with encoder-specific values
     switch (audio->config.out.codec)
     {
-        case HB_ACODEC_AC3:
-            codec_id = AV_CODEC_ID_AC3;
-            if (matrix_encoding != AV_MATRIX_ENCODING_NONE)
-                av_dict_set(&av_opts, "dsur_mode", "on", 0);
-            break;
+    case HB_ACODEC_AC3:
+        codec_id = AV_CODEC_ID_AC3;
+        if (matrix_encoding != AV_MATRIX_ENCODING_NONE)
+            av_dict_set(&av_opts, "dsur_mode", "on", 0);
+        break;
 
-        case HB_ACODEC_FFEAC3:
-            codec_id = AV_CODEC_ID_EAC3;
-            if (matrix_encoding != AV_MATRIX_ENCODING_NONE)
-                av_dict_set(&av_opts, "dsur_mode", "on", 0);
-            break;
+    case HB_ACODEC_FFEAC3:
+        codec_id = AV_CODEC_ID_EAC3;
+        if (matrix_encoding != AV_MATRIX_ENCODING_NONE)
+            av_dict_set(&av_opts, "dsur_mode", "on", 0);
+        break;
 
-        case HB_ACODEC_FDK_AAC:
+    case HB_ACODEC_FDK_AAC:
+    case HB_ACODEC_FDK_HAAC:
+        codec_name          = "libfdk_aac";
+        sample_fmt          = AV_SAMPLE_FMT_S16;
+        bits_per_raw_sample = 16;
+        switch (audio->config.out.codec)
+        {
         case HB_ACODEC_FDK_HAAC:
-            codec_name          = "libfdk_aac";
+            profile = FF_PROFILE_AAC_HE;
+            break;
+        default:
+            profile = FF_PROFILE_AAC_LOW;
+            break;
+        }
+        // FFmpeg's libfdk-aac wrapper expects back channels for 5.1
+        // audio, and will error out unless we translate the layout
+        if (channel_layout == AV_CH_LAYOUT_5POINT1)
+            channel_layout  = AV_CH_LAYOUT_5POINT1_BACK;
+        break;
+
+    case HB_ACODEC_FFAAC:
+        codec_name = "aac";
+        // Use 5.1 back for AAC because 5.1 side uses a
+        // not-so-universally supported feature to signal the
+        // non-standard layout
+        if (channel_layout == AV_CH_LAYOUT_5POINT1)
+            channel_layout  = AV_CH_LAYOUT_5POINT1_BACK;
+        break;
+
+    case HB_ACODEC_FFFLAC:
+    case HB_ACODEC_FFFLAC24:
+        codec_id = AV_CODEC_ID_FLAC;
+        switch (audio->config.out.codec)
+        {
+        case HB_ACODEC_FFFLAC24:
+            sample_fmt          = AV_SAMPLE_FMT_S32;
+            bits_per_raw_sample = 24;
+            break;
+        default:
             sample_fmt          = AV_SAMPLE_FMT_S16;
             bits_per_raw_sample = 16;
-            switch (audio->config.out.codec)
-            {
-                case HB_ACODEC_FDK_HAAC:
-                    profile = FF_PROFILE_AAC_HE;
-                    break;
-                default:
-                    profile = FF_PROFILE_AAC_LOW;
-                    break;
-            }
-            // FFmpeg's libfdk-aac wrapper expects back channels for 5.1
-            // audio, and will error out unless we translate the layout
-            if (channel_layout == AV_CH_LAYOUT_5POINT1)
-                channel_layout  = AV_CH_LAYOUT_5POINT1_BACK;
             break;
+        }
+        break;
 
-        case HB_ACODEC_FFAAC:
-            codec_name = "aac";
-            // Use 5.1 back for AAC because 5.1 side uses a
-            // not-so-universally supported feature to signal the
-            // non-standard layout
-            if (channel_layout == AV_CH_LAYOUT_5POINT1)
-                channel_layout  = AV_CH_LAYOUT_5POINT1_BACK;
-            break;
+    case HB_ACODEC_LAME:
+        codec_name = "libmp3lame";
+        break;
 
-        case HB_ACODEC_FFFLAC:
-        case HB_ACODEC_FFFLAC24:
-            codec_id = AV_CODEC_ID_FLAC;
-            switch (audio->config.out.codec)
-            {
-                case HB_ACODEC_FFFLAC24:
-                    sample_fmt          = AV_SAMPLE_FMT_S32;
-                    bits_per_raw_sample = 24;
-                    break;
-                default:
-                    sample_fmt          = AV_SAMPLE_FMT_S16;
-                    bits_per_raw_sample = 16;
-                    break;
-            }
-            break;
+    case HB_ACODEC_OPUS:
+        codec_name = "libopus";
+        // FFmpeg's libopus wrapper expects back channels for 5.1
+        // audio, and will error out unless we translate the layout
+        if (channel_layout == AV_CH_LAYOUT_5POINT1)
+            channel_layout  = AV_CH_LAYOUT_5POINT1_BACK;
+        break;
 
-        case HB_ACODEC_LAME:
-            codec_name = "libmp3lame";
-            break;
-
-        case HB_ACODEC_OPUS:
-            codec_name = "libopus";
-            // FFmpeg's libopus wrapper expects back channels for 5.1
-            // audio, and will error out unless we translate the layout
-            if (channel_layout == AV_CH_LAYOUT_5POINT1)
-                channel_layout  = AV_CH_LAYOUT_5POINT1_BACK;
-            break;
-
-        default:
-            hb_error("encavcodecaInit: unsupported codec (0x%x)",
-                     audio->config.out.codec);
-            return 1;
+    default:
+        hb_error("encavcodecaInit: unsupported codec (0x%x)",
+                 audio->config.out.codec);
+        return 1;
     }
     if (codec_name != NULL)
     {
@@ -173,7 +173,9 @@ static int encavcodecaInit(hb_work_object_t *w, hb_job_t *job)
     context->channel_layout      = channel_layout;
     context->channels            = pv->out_discrete_channels;
     context->sample_rate         = audio->config.out.samplerate;
-    context->time_base           = (AVRational){1, 90000};
+    context->time_base           = (AVRational) {
+        1, 90000
+    };
 
     if (audio->config.out.bitrate > 0)
     {
@@ -184,7 +186,7 @@ static int encavcodecaInit(hb_work_object_t *w, hb_job_t *job)
         context->global_quality = audio->config.out.quality * FF_QP2LAMBDA;
         context->flags |= AV_CODEC_FLAG_QSCALE;
         if (audio->config.out.codec == HB_ACODEC_FDK_AAC ||
-            audio->config.out.codec == HB_ACODEC_FDK_HAAC)
+                audio->config.out.codec == HB_ACODEC_FDK_HAAC)
         {
             char vbr[8];
             snprintf(vbr, 8, "%.1g", audio->config.out.quality);
@@ -222,7 +224,7 @@ static int encavcodecaInit(hb_work_object_t *w, hb_job_t *job)
 
     pv->context           = context;
     audio->config.out.samples_per_frame =
-    pv->samples_per_frame = context->frame_size;
+        pv->samples_per_frame = context->frame_size;
     pv->input_samples     = context->frame_size * context->channels;
     pv->input_buf         = malloc(pv->input_samples * sizeof(float));
     // Some encoders in libav (e.g. fdk-aac) fail if the output buffer
@@ -380,9 +382,11 @@ static void get_packets( hb_work_object_t * w, hb_buffer_list_t * list )
             // The output pts from libav is in context->time_base. Convert it
             // back to our timebase.
             out->s.start = av_rescale_q(pkt.pts, pv->context->time_base,
-                                        (AVRational){1, 90000});
+            (AVRational) {
+                1, 90000
+            });
             out->s.duration  = (double)90000 * pv->samples_per_frame /
-                                               audio->config.out.samplerate;
+                               audio->config.out.samplerate;
             out->s.stop      = out->s.start + out->s.duration;
             out->s.type      = AUDIO_BUF;
             out->s.frametype = HB_FRAME_AUDIO;
@@ -424,7 +428,7 @@ static void Encode(hb_work_object_t *w, hb_buffer_list_t *list)
 
             out_samples = swr_convert(pv->swresample,
                                       frame.extended_data, frame.nb_samples,
-                    (const uint8_t **)&pv->input_buf,      frame.nb_samples);
+                                      (const uint8_t **)&pv->input_buf,      frame.nb_samples);
             if (out_samples != pv->samples_per_frame)
             {
                 // we're not doing sample rate conversion,
@@ -435,11 +439,13 @@ static void Encode(hb_work_object_t *w, hb_buffer_list_t *list)
         }
 
         frame.pts = pts + (90000LL * pos / (sizeof(float) *
-                                          pv->out_discrete_channels *
-                                          audio->config.out.samplerate));
+                                            pv->out_discrete_channels *
+                                            audio->config.out.samplerate));
 
-        frame.pts = av_rescale_q(frame.pts, (AVRational){1, 90000},
-                                 pv->context->time_base);
+        frame.pts = av_rescale_q(frame.pts, (AVRational) {
+            1, 90000
+        },
+        pv->context->time_base);
 
         // Encode
         ret = avcodec_send_frame(pv->context, &frame);
@@ -466,7 +472,7 @@ static void Flush( hb_work_object_t * w, hb_buffer_list_t * list )
  *
  **********************************************************************/
 static int encavcodecaWork( hb_work_object_t * w, hb_buffer_t ** buf_in,
-                    hb_buffer_t ** buf_out )
+                            hb_buffer_t ** buf_out )
 {
     hb_work_private_t * pv = w->private_data;
     hb_buffer_t       * in = *buf_in;

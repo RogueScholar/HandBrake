@@ -311,10 +311,10 @@ ghb_resolve_symlink(const gchar *name)
 
     gfile = g_file_new_for_path(name);
     info = g_file_query_info(gfile,
-        G_FILE_ATTRIBUTE_STANDARD_NAME ","
-        G_FILE_ATTRIBUTE_STANDARD_SYMLINK_TARGET ","
-        G_FILE_ATTRIBUTE_STANDARD_IS_SYMLINK,
-        G_FILE_QUERY_INFO_NONE, NULL, NULL);
+                             G_FILE_ATTRIBUTE_STANDARD_NAME ","
+                             G_FILE_ATTRIBUTE_STANDARD_SYMLINK_TARGET ","
+                             G_FILE_ATTRIBUTE_STANDARD_IS_SYMLINK,
+                             G_FILE_QUERY_INFO_NONE, NULL, NULL);
     while ((info != NULL) && g_file_info_get_is_symlink(info))
     {
         GFile *parent;
@@ -328,10 +328,10 @@ ghb_resolve_symlink(const gchar *name)
 
         g_object_unref(info);
         info = g_file_query_info(gfile,
-            G_FILE_ATTRIBUTE_STANDARD_NAME ","
-            G_FILE_ATTRIBUTE_STANDARD_SYMLINK_TARGET ","
-            G_FILE_ATTRIBUTE_STANDARD_IS_SYMLINK,
-            G_FILE_QUERY_INFO_NONE, NULL, NULL);
+                                 G_FILE_ATTRIBUTE_STANDARD_NAME ","
+                                 G_FILE_ATTRIBUTE_STANDARD_SYMLINK_TARGET ","
+                                 G_FILE_ATTRIBUTE_STANDARD_IS_SYMLINK,
+                                 G_FILE_QUERY_INFO_NONE, NULL, NULL);
     }
     if (info != NULL)
     {
@@ -361,8 +361,8 @@ ghb_dvd_set_current(const gchar *name, signal_user_data_t *ud)
     }
     gfile = g_file_new_for_path(resolved);
     info = g_file_query_info(gfile,
-        G_FILE_ATTRIBUTE_STANDARD_TYPE,
-        G_FILE_QUERY_INFO_NONE, NULL, NULL);
+                             G_FILE_ATTRIBUTE_STANDARD_TYPE,
+                             G_FILE_QUERY_INFO_NONE, NULL, NULL);
     if (info != NULL)
     {
         if (g_file_info_get_file_type(info) == G_FILE_TYPE_SPECIAL)

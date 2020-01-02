@@ -130,49 +130,52 @@ start_element(
     GhbValue *current = g_queue_peek_head(pd->stack);
     switch (id.id)
     {
-        case P_PLIST:
-        { // Ignore
-        } break;
-        case P_KEY:
-        {
-            if (pd->key) g_free(pd->key);
-            pd->key = NULL;
-        } break;
-        case P_DICT:
-        {
-            gval = ghb_dict_new();
-            g_queue_push_head(pd->stack, gval);
-        } break;
-        case P_ARRAY:
-        {
-            gval = ghb_array_new();
-            g_queue_push_head(pd->stack, gval);
-        } break;
-        case P_INTEGER:
-        {
-        } break;
-        case P_REAL:
-        {
-        } break;
-        case P_STRING:
-        {
-        } break;
-        case P_DATE:
-        {
-        } break;
-        case P_TRUE:
-        {
-        } break;
-        case P_FALSE:
-        {
-        } break;
-        case P_DATA:
-        {
-        } break;
+    case P_PLIST:
+    {   // Ignore
+    } break;
+    case P_KEY:
+    {
+        if (pd->key) g_free(pd->key);
+        pd->key = NULL;
+    }
+    break;
+    case P_DICT:
+    {
+        gval = ghb_dict_new();
+        g_queue_push_head(pd->stack, gval);
+    }
+    break;
+    case P_ARRAY:
+    {
+        gval = ghb_array_new();
+        g_queue_push_head(pd->stack, gval);
+    }
+    break;
+    case P_INTEGER:
+    {
+    } break;
+    case P_REAL:
+    {
+    } break;
+    case P_STRING:
+    {
+    } break;
+    case P_DATE:
+    {
+    } break;
+    case P_TRUE:
+    {
+    } break;
+    case P_FALSE:
+    {
+    } break;
+    case P_DATA:
+    {
+    } break;
     }
     // Add the element to the current container
     if (gval)
-    { // There's an element to add
+    {   // There's an element to add
         if (current == NULL)
         {
             pd->plist = gval;
@@ -245,49 +248,58 @@ end_element(
     GhbType gtype = 0;
     switch (id)
     {
-        case P_PLIST:
-        { // Ignore
-        } break;
-        case P_KEY:
-        {
-            if (pd->key) g_free(pd->key);
-            pd->key = g_strdup(pd->value);
-            return;
-        } break;
-        case P_DICT:
-        {
-            g_queue_pop_head(pd->stack);
-        } break;
-        case P_ARRAY:
-        {
-            g_queue_pop_head(pd->stack);
-        } break;
-        case P_INTEGER:
-        {
-            gint64 val = g_strtod(pd->value, NULL);
-            gval = ghb_int_value_new(val);
-        } break;
-        case P_REAL:
-        {
-            gdouble val = g_strtod(pd->value, NULL);
-            gval = ghb_double_value_new(val);
-        } break;
-        case P_STRING:
-        {
-            gval = ghb_string_value_new(pd->value);
-        } break;
-        case P_TRUE:
-        {
-            gval = ghb_bool_value_new(TRUE);
-        } break;
-        case P_FALSE:
-        {
-            gval = ghb_bool_value_new(FALSE);
-        } break;
-        default:
-        {
-            g_message("Unhandled plist type %d", id);
-        } break;
+    case P_PLIST:
+    {   // Ignore
+    } break;
+    case P_KEY:
+    {
+        if (pd->key) g_free(pd->key);
+        pd->key = g_strdup(pd->value);
+        return;
+    }
+    break;
+    case P_DICT:
+    {
+        g_queue_pop_head(pd->stack);
+    }
+    break;
+    case P_ARRAY:
+    {
+        g_queue_pop_head(pd->stack);
+    }
+    break;
+    case P_INTEGER:
+    {
+        gint64 val = g_strtod(pd->value, NULL);
+        gval = ghb_int_value_new(val);
+    }
+    break;
+    case P_REAL:
+    {
+        gdouble val = g_strtod(pd->value, NULL);
+        gval = ghb_double_value_new(val);
+    }
+    break;
+    case P_STRING:
+    {
+        gval = ghb_string_value_new(pd->value);
+    }
+    break;
+    case P_TRUE:
+    {
+        gval = ghb_bool_value_new(TRUE);
+    }
+    break;
+    case P_FALSE:
+    {
+        gval = ghb_bool_value_new(FALSE);
+    }
+    break;
+    default:
+    {
+        g_message("Unhandled plist type %d", id);
+    }
+    break;
     }
     if (gval)
     {
@@ -360,7 +372,7 @@ parse_error(GMarkupParseContext *ctx, GError *error, gpointer ud)
 // This is required or the parser crashes
 static void
 destroy_notify(gpointer data)
-{ // Do nothing
+{   // Do nothing
     //g_debug("destroy parser");
 }
 

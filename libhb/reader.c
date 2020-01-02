@@ -107,7 +107,7 @@ static int hb_reader_open( hb_work_private_t * r )
             // XXX code from DecodePreviews - should go into its own routine
             hb_bd_seek(r->bd, (float)r->job->start_at_preview /
                        (r->job->seek_points ? (r->job->seek_points + 1.0)
-                                            : 11.0));
+                        : 11.0));
         }
         else if (r->job->pts_to_start)
         {
@@ -145,7 +145,7 @@ static int hb_reader_open( hb_work_private_t * r )
         {
             hb_dvd_seek(r->dvd, (float)r->job->start_at_preview /
                         (r->job->seek_points ? (r->job->seek_points + 1.0)
-                                             : 11.0));
+                         : 11.0));
         }
         // libdvdnav doesn't have a seek to timestamp function.
         // So we will have to decode frames until we find the correct time
@@ -162,7 +162,7 @@ static int hb_reader_open( hb_work_private_t * r )
             // First try seeking to PTS title duration / (seek_points + 1)
             float frac = (float)(r->job->start_at_preview - 1) /
                          (r->job->seek_points ? (r->job->seek_points + 1.0)
-                                              : 11.0);
+                          : 11.0);
             int64_t start = r->title->duration * frac;
             if (hb_stream_seek_ts(r->stream, start) >= 0)
             {
@@ -274,7 +274,7 @@ static int reader_init( hb_work_object_t * w, hb_job_t * job )
     {
         int frames = job->frame_to_start + job->frame_to_stop;
         r->duration = (int64_t)frames * job->title->vrate.den * 90000 /
-                                        job->title->vrate.num;
+                      job->title->vrate.num;
     }
     else
     {
@@ -467,7 +467,7 @@ static int reader_work( hb_work_object_t * w, hb_buffer_t ** buf_in,
     if( chapter > r->chapter_end )
     {
         hb_log("reader: end of chapter %d (media %d) reached at media chapter %d",
-                r->job->chapter_end, r->chapter_end, chapter);
+               r->job->chapter_end, r->chapter_end, chapter);
         reader_send_eof(r);
         return HB_WORK_DONE;
     }
@@ -515,7 +515,7 @@ static int reader_work( hb_work_object_t * w, hb_buffer_t ** buf_in,
             // prior to the seek point.  So only make the adjustment to
             // pts_to_start after we see the next video buffer.
             if (buf->s.id != r->job->title->video_id ||
-                buf->s.start == AV_NOPTS_VALUE)
+                    buf->s.start == AV_NOPTS_VALUE)
             {
                 hb_buffer_close(&buf);
                 continue;
@@ -528,7 +528,7 @@ static int reader_work( hb_work_object_t * w, hb_buffer_t ** buf_in,
         }
 
         if (buf->s.start   != AV_NOPTS_VALUE &&
-            r->scr_changes != r->demux.scr_changes)
+                r->scr_changes != r->demux.scr_changes)
         {
             // First valid timestamp after an SCR change.  Update
             // the per-stream scr sequence number

@@ -283,26 +283,26 @@ static int hb_video_encoder_is_enabled(int encoder, int disable_hardware)
         }
 #endif
 
-        switch (encoder){
+        switch (encoder) {
 #if HB_PROJECT_FEATURE_VCE
-            case HB_VCODEC_FFMPEG_VCE_H264:
-               return hb_vce_h264_available();
-            case HB_VCODEC_FFMPEG_VCE_H265:
-                return hb_vce_h265_available();
+        case HB_VCODEC_FFMPEG_VCE_H264:
+            return hb_vce_h264_available();
+        case HB_VCODEC_FFMPEG_VCE_H265:
+            return hb_vce_h265_available();
 #endif
 
 #if HB_PROJECT_FEATURE_NVENC
-            case HB_VCODEC_FFMPEG_NVENC_H264:
-                return hb_nvenc_h264_available();
-            case HB_VCODEC_FFMPEG_NVENC_H265:
-                return hb_nvenc_h265_available();
+        case HB_VCODEC_FFMPEG_NVENC_H264:
+            return hb_nvenc_h264_available();
+        case HB_VCODEC_FFMPEG_NVENC_H265:
+            return hb_nvenc_h265_available();
 #endif
 
 #ifdef __APPLE__
-            case HB_VCODEC_FFMPEG_VT_H264:
-                return hb_vt_h264_is_available();
-            case HB_VCODEC_FFMPEG_VT_H265:
-                return hb_vt_h265_is_available();
+        case HB_VCODEC_FFMPEG_VT_H264:
+            return hb_vt_h264_is_available();
+        case HB_VCODEC_FFMPEG_VT_H265:
+            return hb_vt_h265_is_available();
 #endif
         }
     }
@@ -310,36 +310,36 @@ static int hb_video_encoder_is_enabled(int encoder, int disable_hardware)
     // Software Encoders
     switch (encoder)
     {
-        // the following encoders are always enabled
-        case HB_VCODEC_THEORA:
-        case HB_VCODEC_FFMPEG_MPEG4:
-        case HB_VCODEC_FFMPEG_MPEG2:
-        case HB_VCODEC_FFMPEG_VP8:
-        case HB_VCODEC_FFMPEG_VP9:
-            return 1;
+    // the following encoders are always enabled
+    case HB_VCODEC_THEORA:
+    case HB_VCODEC_FFMPEG_MPEG4:
+    case HB_VCODEC_FFMPEG_MPEG2:
+    case HB_VCODEC_FFMPEG_VP8:
+    case HB_VCODEC_FFMPEG_VP9:
+        return 1;
 
 #if HB_PROJECT_FEATURE_X265
-        case HB_VCODEC_X265_8BIT:
-        case HB_VCODEC_X265_10BIT:
-        case HB_VCODEC_X265_12BIT:
-        case HB_VCODEC_X265_16BIT:
-        {
-            const x265_api *api;
-            api = x265_api_query(hb_video_encoder_get_depth(encoder), X265_BUILD, NULL);
-            return (api != NULL);
-        };
+    case HB_VCODEC_X265_8BIT:
+    case HB_VCODEC_X265_10BIT:
+    case HB_VCODEC_X265_12BIT:
+    case HB_VCODEC_X265_16BIT:
+    {
+        const x265_api *api;
+        api = x265_api_query(hb_video_encoder_get_depth(encoder), X265_BUILD, NULL);
+        return (api != NULL);
+    };
 #endif
 
-        case HB_VCODEC_X264_8BIT:
-        case HB_VCODEC_X264_10BIT:
-        {
-            const x264_api_t *api;
-            api = hb_x264_api_get(hb_video_encoder_get_depth(encoder));
-            return (api != NULL);
-        }
+    case HB_VCODEC_X264_8BIT:
+    case HB_VCODEC_X264_10BIT:
+    {
+        const x264_api_t *api;
+        api = hb_x264_api_get(hb_video_encoder_get_depth(encoder));
+        return (api != NULL);
+    }
 
-        default:
-            return 0;
+    default:
+        return 0;
     }
 }
 
@@ -394,41 +394,41 @@ static int hb_audio_encoder_is_enabled(int encoder)
     switch (encoder)
     {
 #ifdef __APPLE__
-        case HB_ACODEC_CA_AAC:
-        case HB_ACODEC_CA_HAAC:
-            return 1;
+    case HB_ACODEC_CA_AAC:
+    case HB_ACODEC_CA_HAAC:
+        return 1;
 #endif
 
 #if HB_PROJECT_FEATURE_FFMPEG_AAC
-        case HB_ACODEC_FFAAC:
-            return avcodec_find_encoder_by_name("aac") != NULL;
+    case HB_ACODEC_FFAAC:
+        return avcodec_find_encoder_by_name("aac") != NULL;
 #endif
 
-        case HB_ACODEC_FDK_AAC:
-        case HB_ACODEC_FDK_HAAC:
-            return avcodec_find_encoder_by_name("libfdk_aac") != NULL;
+    case HB_ACODEC_FDK_AAC:
+    case HB_ACODEC_FDK_HAAC:
+        return avcodec_find_encoder_by_name("libfdk_aac") != NULL;
 
-        case HB_ACODEC_AC3:
-            return avcodec_find_encoder(AV_CODEC_ID_AC3) != NULL;
+    case HB_ACODEC_AC3:
+        return avcodec_find_encoder(AV_CODEC_ID_AC3) != NULL;
 
-        case HB_ACODEC_FFEAC3:
-            return avcodec_find_encoder(AV_CODEC_ID_EAC3) != NULL;
+    case HB_ACODEC_FFEAC3:
+        return avcodec_find_encoder(AV_CODEC_ID_EAC3) != NULL;
 
-        case HB_ACODEC_FFFLAC:
-        case HB_ACODEC_FFFLAC24:
-            return avcodec_find_encoder(AV_CODEC_ID_FLAC) != NULL;
+    case HB_ACODEC_FFFLAC:
+    case HB_ACODEC_FFFLAC24:
+        return avcodec_find_encoder(AV_CODEC_ID_FLAC) != NULL;
 
-        case HB_ACODEC_OPUS:
-            return avcodec_find_encoder(AV_CODEC_ID_OPUS) != NULL;
+    case HB_ACODEC_OPUS:
+        return avcodec_find_encoder(AV_CODEC_ID_OPUS) != NULL;
 
-        // the following encoders are always enabled
-        case HB_ACODEC_LAME:
-        case HB_ACODEC_VORBIS:
-        case HB_ACODEC_NONE:
-            return 1;
+    // the following encoders are always enabled
+    case HB_ACODEC_LAME:
+    case HB_ACODEC_VORBIS:
+    case HB_ACODEC_NONE:
+        return 1;
 
-        default:
-            return 0;
+    default:
+        return 0;
     }
 }
 
@@ -459,13 +459,13 @@ static int hb_container_is_enabled(int format)
 {
     switch (format)
     {
-        case HB_MUX_AV_MP4:
-        case HB_MUX_AV_MKV:
-        case HB_MUX_AV_WEBM:
-            return 1;
+    case HB_MUX_AV_MP4:
+    case HB_MUX_AV_MKV:
+    case HB_MUX_AV_WEBM:
+        return 1;
 
-        default:
-            return 0;
+    default:
+        return 0;
     }
 }
 
@@ -601,7 +601,7 @@ void hb_common_global_init(int disable_hardware)
         if (!hb_video_encoders[i].enabled)
         {
             if ((hb_video_encoders[i].item.codec & HB_VCODEC_MASK) &&
-                (hb_video_encoder_is_enabled(hb_video_encoders[i].item.codec, disable_hardware)))
+                    (hb_video_encoder_is_enabled(hb_video_encoders[i].item.codec, disable_hardware)))
             {
                 // we have a specific fallback and it's enabled
                 continue;
@@ -609,7 +609,7 @@ void hb_common_global_init(int disable_hardware)
             for (j = 0; j < hb_video_encoders_count; j++)
             {
                 if (hb_video_encoders[j].enabled &&
-                    hb_video_encoders[j].gid == hb_video_encoders[i].gid)
+                        hb_video_encoders[j].gid == hb_video_encoders[i].gid)
                 {
                     hb_video_encoders[i].item.codec = hb_video_encoders[j].item.codec;
                     break;
@@ -647,7 +647,7 @@ void hb_common_global_init(int disable_hardware)
         if (!hb_audio_encoders[i].enabled)
         {
             if ((hb_audio_encoders[i].item.codec & HB_ACODEC_MASK) &&
-                (hb_audio_encoder_is_enabled(hb_audio_encoders[i].item.codec)))
+                    (hb_audio_encoder_is_enabled(hb_audio_encoders[i].item.codec)))
             {
                 // we have a specific fallback and it's enabled
                 continue;
@@ -655,7 +655,7 @@ void hb_common_global_init(int disable_hardware)
             for (j = 0; j < hb_audio_encoders_count; j++)
             {
                 if (hb_audio_encoders[j].enabled &&
-                    hb_audio_encoders[j].gid == hb_audio_encoders[i].gid)
+                        hb_audio_encoders[j].gid == hb_audio_encoders[i].gid)
                 {
                     hb_audio_encoders[i].item.codec = hb_audio_encoders[j].item.codec;
                     break;
@@ -667,7 +667,7 @@ void hb_common_global_init(int disable_hardware)
                 for (j = 0; j < hb_audio_encoders_count; j++)
                 {
                     if (hb_audio_encoders[j].enabled &&
-                        hb_audio_encoders[j].gid == HB_GID_ACODEC_AAC)
+                            hb_audio_encoders[j].gid == HB_GID_ACODEC_AAC)
                     {
                         hb_audio_encoders[i].item.codec = hb_audio_encoders[j].item.codec;
                         break;
@@ -706,7 +706,7 @@ void hb_common_global_init(int disable_hardware)
         if (!hb_containers[i].enabled)
         {
             if ((hb_containers[i].item.format & HB_MUX_MASK) &&
-                (hb_container_is_enabled(hb_containers[i].item.format)))
+                    (hb_container_is_enabled(hb_containers[i].item.format)))
             {
                 // we have a specific fallback and it's enabled
                 continue;
@@ -714,7 +714,7 @@ void hb_common_global_init(int disable_hardware)
             for (j = 0; j < hb_containers_count; j++)
             {
                 if (hb_containers[j].enabled &&
-                    hb_containers[j].gid == hb_containers[i].gid)
+                        hb_containers[j].gid == hb_containers[i].gid)
                 {
                     hb_containers[i].item.format = hb_containers[j].item.format;
                     break;
@@ -748,7 +748,7 @@ fail:
 const char* hb_video_framerate_get_name(int framerate)
 {
     if (framerate > hb_video_rates_first_item->rate ||
-        framerate < hb_video_rates_last_item ->rate)
+            framerate < hb_video_rates_last_item ->rate)
         goto fail;
 
     const hb_rate_t *video_framerate = NULL;
@@ -809,38 +809,38 @@ int hb_audio_samplerate_is_supported(int samplerate, uint32_t codec)
 {
     switch (codec)
     {
-        case HB_ACODEC_AC3:
-        case HB_ACODEC_FFEAC3:
-        case HB_ACODEC_CA_HAAC:
-            // ca_haac can't do samplerates < 32 kHz
-            // libav's E-AC-3 encoder can't do samplerates < 32 kHz
-            // AC-3 < 32 kHz suffers from poor hardware compatibility
-            if (samplerate < 32000)
-                return 0;
-            else
-                return 1;
-        case HB_ACODEC_FDK_HAAC:
-            // fdk_haac can't do samplerates < 16 kHz
-            if (samplerate < 16000)
-                return 0;
-             else
-                return 1;
-        case HB_ACODEC_OPUS:
-            switch (samplerate)
-            {
-                // Opus only supports samplerates 8kHz, 12kHz, 16kHz,
-                // 24kHz, 48kHz
-                case 8000:
-                case 12000:
-                case 16000:
-                case 24000:
-                case 48000:
-                    return 1;
-                default:
-                    return 0;
-            }
-        default:
+    case HB_ACODEC_AC3:
+    case HB_ACODEC_FFEAC3:
+    case HB_ACODEC_CA_HAAC:
+        // ca_haac can't do samplerates < 32 kHz
+        // libav's E-AC-3 encoder can't do samplerates < 32 kHz
+        // AC-3 < 32 kHz suffers from poor hardware compatibility
+        if (samplerate < 32000)
+            return 0;
+        else
             return 1;
+    case HB_ACODEC_FDK_HAAC:
+        // fdk_haac can't do samplerates < 16 kHz
+        if (samplerate < 16000)
+            return 0;
+        else
+            return 1;
+    case HB_ACODEC_OPUS:
+        switch (samplerate)
+        {
+        // Opus only supports samplerates 8kHz, 12kHz, 16kHz,
+        // 24kHz, 48kHz
+        case 8000:
+        case 12000:
+        case 16000:
+        case 24000:
+        case 48000:
+            return 1;
+        default:
+            return 0;
+        }
+    default:
+        return 1;
     }
 }
 
@@ -874,7 +874,7 @@ int hb_audio_samplerate_get_from_name(const char *name)
     // maybe the samplerate was specified in Hz
     i = atoi(name);
     if (i >= hb_audio_rates_first_item->rate &&
-        i <= hb_audio_rates_last_item ->rate)
+            i <= hb_audio_rates_last_item ->rate)
     {
         return hb_audio_samplerate_find_closest(i, HB_ACODEC_INVALID);
     }
@@ -886,7 +886,7 @@ fail:
 const char* hb_audio_samplerate_get_name(int samplerate)
 {
     if (samplerate < hb_audio_rates_first_item->rate ||
-        samplerate > hb_audio_rates_last_item ->rate)
+            samplerate > hb_audio_rates_last_item ->rate)
         goto fail;
 
     const hb_rate_t *audio_samplerate = NULL;
@@ -912,7 +912,7 @@ const hb_rate_t* hb_audio_samplerate_get_next(const hb_rate_t *last)
 }
 
 const hb_rate_t* hb_audio_samplerate_get_next_for_codec(const hb_rate_t *last,
-                                                        uint32_t codec)
+        uint32_t codec)
 {
     while ((last = hb_audio_samplerate_get_next(last)) != NULL)
         if (hb_audio_samplerate_is_supported(last->rate, codec))
@@ -1010,39 +1010,40 @@ int hb_audio_bitrate_get_default(uint32_t codec, int samplerate, int mixdown)
 
     switch (codec)
     {
-        case HB_ACODEC_FFFLAC:
-        case HB_ACODEC_FFFLAC24:
-            goto fail;
+    case HB_ACODEC_FFFLAC:
+    case HB_ACODEC_FFFLAC24:
+        goto fail;
 
-        // 96, 224, 640 Kbps
-        case HB_ACODEC_AC3:
-            bitrate = (nchannels * 128) - (32 * (nchannels < 5));
-            break;
+    // 96, 224, 640 Kbps
+    case HB_ACODEC_AC3:
+        bitrate = (nchannels * 128) - (32 * (nchannels < 5));
+        break;
 
-        // Our E-AC-3 encoder is pretty similar to our AC-3 encoder but it does
-        // allow for higher bitrates, should some users want a bit more quality
-        // at the expense of compression efficiency - still, let's remain
-        // compatible with passthru over S/PDIF by default: 384, 768, 1536 Kbps
-        case HB_ACODEC_FFEAC3:
-            bitrate = (nchannels * 384) - (128 * (nchannels - 2) * (nchannels > 2));
-            break;
+    // Our E-AC-3 encoder is pretty similar to our AC-3 encoder but it does
+    // allow for higher bitrates, should some users want a bit more quality
+    // at the expense of compression efficiency - still, let's remain
+    // compatible with passthru over S/PDIF by default: 384, 768, 1536 Kbps
+    case HB_ACODEC_FFEAC3:
+        bitrate = (nchannels * 384) - (128 * (nchannels - 2) * (nchannels > 2));
+        break;
 
-        case HB_ACODEC_CA_HAAC:
-        case HB_ACODEC_FDK_HAAC:
-            bitrate = nchannels * 32;
-            break;
+    case HB_ACODEC_CA_HAAC:
+    case HB_ACODEC_FDK_HAAC:
+        bitrate = nchannels * 32;
+        break;
 
-        case HB_ACODEC_OPUS:
-        {
-            int coupled = mixdown_get_opus_coupled_stream_count(mixdown);
-            int uncoupled = nchannels + nlfe - 2 * coupled;
+    case HB_ACODEC_OPUS:
+    {
+        int coupled = mixdown_get_opus_coupled_stream_count(mixdown);
+        int uncoupled = nchannels + nlfe - 2 * coupled;
 
-            bitrate = coupled * 96 + uncoupled * 64;
-        } break;
+        bitrate = coupled * 96 + uncoupled * 64;
+    }
+    break;
 
-        default:
-            bitrate = nchannels * 80;
-            break;
+    default:
+        bitrate = nchannels * 80;
+        break;
     }
     // sample_rate adjustment
     bitrate >>= sr_shift;
@@ -1196,112 +1197,113 @@ void hb_audio_bitrate_get_limits(uint32_t codec, int samplerate, int mixdown,
 
     switch (codec)
     {
-        // Bitrates don't apply to "lossless" audio
-        case HB_ACODEC_FFFLAC:
-        case HB_ACODEC_FFFLAC24:
-            *low = *high = -1;
-            return;
+    // Bitrates don't apply to "lossless" audio
+    case HB_ACODEC_FFFLAC:
+    case HB_ACODEC_FFFLAC24:
+        *low = *high = -1;
+        return;
 
-        case HB_ACODEC_AC3:
-            *low  = 224 * nchannels / 5;
-            *high = 640;
-            break;
+    case HB_ACODEC_AC3:
+        *low  = 224 * nchannels / 5;
+        *high = 640;
+        break;
 
-        case HB_ACODEC_FFEAC3:
-            *low  = 224 * nchannels  /    5;
-            *high = 128 * samplerate / 1000;
-            break;
+    case HB_ACODEC_FFEAC3:
+        *low  = 224 * nchannels  /    5;
+        *high = 128 * samplerate / 1000;
+        break;
 
-        case HB_ACODEC_CA_AAC:
+    case HB_ACODEC_CA_AAC:
+    {
+        switch (samplerate)
         {
-            switch (samplerate)
-            {
-                case 8000:
-                    *low  = nchannels *  8;
-                    *high = nchannels * 24;
-                    break;
-
-                case 11025:
-                case 12000:
-                    *low  = nchannels * 12;
-                    *high = nchannels * 32;
-                    break;
-
-                case 16000:
-                    *low  = nchannels * 12;
-                    *high = nchannels * 48;
-                    break;
-
-                case 22050:
-                case 24000:
-                    *low  = nchannels * 16;
-                    *high = nchannels * 64;
-                    break;
-
-                case 32000:
-                    *low  = nchannels * 24;
-                    *high = nchannels * 96;
-                    break;
-
-                case 44100:
-                case 48000:
-                default:
-                    *low  = nchannels * 32;
-                    *high = nchannels * (160 + (96 * (nchannels == 1)));
-                    break;
-            } break;
-        }
-
-        case HB_ACODEC_CA_HAAC:
-            *low  = nchannels * (12 + (4 * (samplerate >= 44100)));
-            *high = nchannels * 40;
+        case 8000:
+            *low  = nchannels *  8;
+            *high = nchannels * 24;
             break;
 
-        case HB_ACODEC_FDK_AAC:
-            *low  = nchannels * samplerate * 2 / 3000;
-            *high = nchannels * samplerate * 6 / 1000;
+        case 11025:
+        case 12000:
+            *low  = nchannels * 12;
+            *high = nchannels * 32;
             break;
 
-        case HB_ACODEC_FDK_HAAC:
-            *low  = (nchannels * (12 + (4 * (samplerate >= 44100))));
-            *high = (nchannels - (nchannels > 2)) * (48 +
-                                                     (16 *
-                                                      (samplerate >= 22050)));
+        case 16000:
+            *low  = nchannels * 12;
+            *high = nchannels * 48;
             break;
 
-        case HB_ACODEC_FFAAC:
-            *low  = ((nchannels + lfe_count) * 32);
-            *high = ((nchannels + lfe_count) *
-                     ((192 + (64 * ((samplerate << sr_shift) >= 44100)))
-                      >> sr_shift));
+        case 22050:
+        case 24000:
+            *low  = nchannels * 16;
+            *high = nchannels * 64;
             break;
 
-        case HB_ACODEC_LAME:
-            *low  =  8 + (24 * (sr_shift < 1));
-            *high = 64 + (96 * (sr_shift < 2)) + (160 * (sr_shift < 1));
+        case 32000:
+            *low  = nchannels * 24;
+            *high = nchannels * 96;
             break;
 
-        case HB_ACODEC_VORBIS:
-            *low  = (nchannels + lfe_count) * (14 +
-                                               (8 * (sr_shift < 2)) +
-                                               (6 * (sr_shift < 1)));
-            *high = (nchannels + lfe_count) * (32 +
-                                               ( 54 * (sr_shift < 2)) +
-                                               (104 * (sr_shift < 1)) +
-                                               ( 50 * (samplerate >= 44100)));
-            break;
-
-        case HB_ACODEC_OPUS:
-            *low  = (nchannels + lfe_count) * 6;
-            *high = (nchannels + lfe_count) * 256;
-            break;
-
-        // Bitrates don't apply to passthrough audio, but may apply if we
-        // fall back to an encoder when the source can't be passed through.
+        case 44100:
+        case 48000:
         default:
-            *low  = hb_audio_bitrates_first_item->rate;
-            *high = hb_audio_bitrates_last_item ->rate;
+            *low  = nchannels * 32;
+            *high = nchannels * (160 + (96 * (nchannels == 1)));
             break;
+        }
+        break;
+    }
+
+    case HB_ACODEC_CA_HAAC:
+        *low  = nchannels * (12 + (4 * (samplerate >= 44100)));
+        *high = nchannels * 40;
+        break;
+
+    case HB_ACODEC_FDK_AAC:
+        *low  = nchannels * samplerate * 2 / 3000;
+        *high = nchannels * samplerate * 6 / 1000;
+        break;
+
+    case HB_ACODEC_FDK_HAAC:
+        *low  = (nchannels * (12 + (4 * (samplerate >= 44100))));
+        *high = (nchannels - (nchannels > 2)) * (48 +
+                (16 *
+                 (samplerate >= 22050)));
+        break;
+
+    case HB_ACODEC_FFAAC:
+        *low  = ((nchannels + lfe_count) * 32);
+        *high = ((nchannels + lfe_count) *
+                 ((192 + (64 * ((samplerate << sr_shift) >= 44100)))
+                  >> sr_shift));
+        break;
+
+    case HB_ACODEC_LAME:
+        *low  =  8 + (24 * (sr_shift < 1));
+        *high = 64 + (96 * (sr_shift < 2)) + (160 * (sr_shift < 1));
+        break;
+
+    case HB_ACODEC_VORBIS:
+        *low  = (nchannels + lfe_count) * (14 +
+                                           (8 * (sr_shift < 2)) +
+                                           (6 * (sr_shift < 1)));
+        *high = (nchannels + lfe_count) * (32 +
+                                           ( 54 * (sr_shift < 2)) +
+                                           (104 * (sr_shift < 1)) +
+                                           ( 50 * (samplerate >= 44100)));
+        break;
+
+    case HB_ACODEC_OPUS:
+        *low  = (nchannels + lfe_count) * 6;
+        *high = (nchannels + lfe_count) * 256;
+        break;
+
+    // Bitrates don't apply to passthrough audio, but may apply if we
+    // fall back to an encoder when the source can't be passed through.
+    default:
+        *low  = hb_audio_bitrates_first_item->rate;
+        *high = hb_audio_bitrates_last_item ->rate;
+        break;
     }
 
     // sanitize max. bitrate
@@ -1340,74 +1342,74 @@ void hb_video_quality_get_limits(uint32_t codec, float *low, float *high,
 
     switch (codec)
     {
-        /*
-         * H.264/H.265: *low
-         * = 51 - (QP_MAX_SPEC)
-         * = 51 - (51 + QP_BD_OFFSET)
-         * =  0 - (QP_BD_OFFSET)
-         * =  0 - (6*(BIT_DEPTH-8))     (libx264)
-         * =  0 - (6*(X265_DEPTH-8))    (libx265)
-         */
-        case HB_VCODEC_X264_8BIT:
-        case HB_VCODEC_X265_8BIT:
-        case HB_VCODEC_FFMPEG_NVENC_H264:
-        case HB_VCODEC_FFMPEG_NVENC_H265:
-            *direction   = 1;
-            *granularity = 0.1;
-            *low         = 0.;
-            *high        = 51.;
-            break;
-        case HB_VCODEC_X264_10BIT:
-        case HB_VCODEC_X265_10BIT:
-            *direction   = 1;
-            *granularity = 0.1;
-            *low         = -12.;
-            *high        = 51.;
-            break;
-        case HB_VCODEC_X265_12BIT:
-            *direction   = 1;
-            *granularity = 0.1;
-            *low         = -24.;
-            *high        = 51.;
-            break;
-        case HB_VCODEC_X265_16BIT:
-            *direction   = 1;
-            *granularity = 0.1;
-            *low         = -48.;
-            *high        = 51.;
-            break;
+    /*
+     * H.264/H.265: *low
+     * = 51 - (QP_MAX_SPEC)
+     * = 51 - (51 + QP_BD_OFFSET)
+     * =  0 - (QP_BD_OFFSET)
+     * =  0 - (6*(BIT_DEPTH-8))     (libx264)
+     * =  0 - (6*(X265_DEPTH-8))    (libx265)
+     */
+    case HB_VCODEC_X264_8BIT:
+    case HB_VCODEC_X265_8BIT:
+    case HB_VCODEC_FFMPEG_NVENC_H264:
+    case HB_VCODEC_FFMPEG_NVENC_H265:
+        *direction   = 1;
+        *granularity = 0.1;
+        *low         = 0.;
+        *high        = 51.;
+        break;
+    case HB_VCODEC_X264_10BIT:
+    case HB_VCODEC_X265_10BIT:
+        *direction   = 1;
+        *granularity = 0.1;
+        *low         = -12.;
+        *high        = 51.;
+        break;
+    case HB_VCODEC_X265_12BIT:
+        *direction   = 1;
+        *granularity = 0.1;
+        *low         = -24.;
+        *high        = 51.;
+        break;
+    case HB_VCODEC_X265_16BIT:
+        *direction   = 1;
+        *granularity = 0.1;
+        *low         = -48.;
+        *high        = 51.;
+        break;
 
-        case HB_VCODEC_THEORA:
-            *direction   = 0;
-            *granularity = 1.;
-            *low         = 0.;
-            *high        = 63.;
-            break;
+    case HB_VCODEC_THEORA:
+        *direction   = 0;
+        *granularity = 1.;
+        *low         = 0.;
+        *high        = 63.;
+        break;
 
-        case HB_VCODEC_FFMPEG_VP8:
-        case HB_VCODEC_FFMPEG_VP9:
-            *direction   = 1;
-            *granularity = 1.;
-            *low         = 0.;
-            *high        = 63.;
-            break;
+    case HB_VCODEC_FFMPEG_VP8:
+    case HB_VCODEC_FFMPEG_VP9:
+        *direction   = 1;
+        *granularity = 1.;
+        *low         = 0.;
+        *high        = 63.;
+        break;
 
-        case HB_VCODEC_FFMPEG_VT_H264:
-        case HB_VCODEC_FFMPEG_VT_H265:
-            *direction   = 1;
-            *granularity = 0.1;
-            *low         = 0.;
-            *high        = 0.;
-            break;
+    case HB_VCODEC_FFMPEG_VT_H264:
+    case HB_VCODEC_FFMPEG_VT_H265:
+        *direction   = 1;
+        *granularity = 0.1;
+        *low         = 0.;
+        *high        = 0.;
+        break;
 
-        case HB_VCODEC_FFMPEG_MPEG2:
-        case HB_VCODEC_FFMPEG_MPEG4:
-        default:
-            *direction   = 1;
-            *granularity = 1.;
-            *low         = 1.;
-            *high        = 31.;
-            break;
+    case HB_VCODEC_FFMPEG_MPEG2:
+    case HB_VCODEC_FFMPEG_MPEG4:
+    default:
+        *direction   = 1;
+        *granularity = 1.;
+        *low         = 1.;
+        *high        = 31.;
+        break;
     }
 }
 
@@ -1422,22 +1424,22 @@ const char* hb_video_quality_get_name(uint32_t codec)
 
     switch (codec)
     {
-        case HB_VCODEC_X264_8BIT:
-        case HB_VCODEC_X264_10BIT:
-        case HB_VCODEC_X265_8BIT:
-        case HB_VCODEC_X265_10BIT:
-        case HB_VCODEC_X265_12BIT:
-        case HB_VCODEC_X265_16BIT:
-            return "RF";
+    case HB_VCODEC_X264_8BIT:
+    case HB_VCODEC_X264_10BIT:
+    case HB_VCODEC_X265_8BIT:
+    case HB_VCODEC_X265_10BIT:
+    case HB_VCODEC_X265_12BIT:
+    case HB_VCODEC_X265_16BIT:
+        return "RF";
 
-        case HB_VCODEC_FFMPEG_VP8:
-        case HB_VCODEC_FFMPEG_VP9:
-        case HB_VCODEC_FFMPEG_NVENC_H264:
-        case HB_VCODEC_FFMPEG_NVENC_H265:
-            return "CQ";
+    case HB_VCODEC_FFMPEG_VP8:
+    case HB_VCODEC_FFMPEG_VP9:
+    case HB_VCODEC_FFMPEG_NVENC_H264:
+    case HB_VCODEC_FFMPEG_NVENC_H265:
+        return "CQ";
 
-        default:
-            return "QP";
+    default:
+        return "QP";
     }
 }
 
@@ -1446,17 +1448,17 @@ int hb_video_encoder_get_depth(int encoder)
     switch (encoder)
     {
 #if HB_PROJECT_FEATURE_QSV
-        case HB_VCODEC_QSV_H265_10BIT:
+    case HB_VCODEC_QSV_H265_10BIT:
 #endif
-        case HB_VCODEC_X264_10BIT:
-        case HB_VCODEC_X265_10BIT:
-            return 10;
-        case HB_VCODEC_X265_12BIT:
-            return 12;
-        case HB_VCODEC_X265_16BIT:
-            return 16;
-        default:
-            return 8;
+    case HB_VCODEC_X264_10BIT:
+    case HB_VCODEC_X265_10BIT:
+        return 10;
+    case HB_VCODEC_X265_12BIT:
+        return 12;
+    case HB_VCODEC_X265_16BIT:
+        return 16;
+    default:
+        return 8;
     }
 }
 
@@ -1476,19 +1478,19 @@ const char* const* hb_video_encoder_get_presets(int encoder)
 
     switch (encoder)
     {
-        case HB_VCODEC_X264_8BIT:
-        case HB_VCODEC_X264_10BIT:
-            return x264_preset_names;
+    case HB_VCODEC_X264_8BIT:
+    case HB_VCODEC_X264_10BIT:
+        return x264_preset_names;
 
 #if HB_PROJECT_FEATURE_X265
-        case HB_VCODEC_X265_8BIT:
-        case HB_VCODEC_X265_10BIT:
-        case HB_VCODEC_X265_12BIT:
-        case HB_VCODEC_X265_16BIT:
-            return x265_preset_names;
+    case HB_VCODEC_X265_8BIT:
+    case HB_VCODEC_X265_10BIT:
+    case HB_VCODEC_X265_12BIT:
+    case HB_VCODEC_X265_16BIT:
+        return x265_preset_names;
 #endif
-        default:
-            return NULL;
+    default:
+        return NULL;
     }
 }
 
@@ -1496,19 +1498,19 @@ const char* const* hb_video_encoder_get_tunes(int encoder)
 {
     switch (encoder)
     {
-        case HB_VCODEC_X264_8BIT:
-        case HB_VCODEC_X264_10BIT:
-            return x264_tune_names;
+    case HB_VCODEC_X264_8BIT:
+    case HB_VCODEC_X264_10BIT:
+        return x264_tune_names;
 
 #if HB_PROJECT_FEATURE_X265
-        case HB_VCODEC_X265_8BIT:
-        case HB_VCODEC_X265_10BIT:
-        case HB_VCODEC_X265_12BIT:
-        case HB_VCODEC_X265_16BIT:
-            return x265_tune_names;
+    case HB_VCODEC_X265_8BIT:
+    case HB_VCODEC_X265_10BIT:
+    case HB_VCODEC_X265_12BIT:
+    case HB_VCODEC_X265_16BIT:
+        return x265_tune_names;
 #endif
-        default:
-            return NULL;
+    default:
+        return NULL;
     }
 }
 
@@ -1523,34 +1525,34 @@ const char* const* hb_video_encoder_get_profiles(int encoder)
 
     switch (encoder)
     {
-        case HB_VCODEC_X264_8BIT:
-            return hb_h264_profile_names_8bit;
-        case HB_VCODEC_X264_10BIT:
-            return hb_h264_profile_names_10bit;
+    case HB_VCODEC_X264_8BIT:
+        return hb_h264_profile_names_8bit;
+    case HB_VCODEC_X264_10BIT:
+        return hb_h264_profile_names_10bit;
 
-        case HB_VCODEC_X265_8BIT:
-            return hb_h265_profile_names_8bit;
-        case HB_VCODEC_X265_10BIT:
-            return hb_h265_profile_names_10bit;
-        case HB_VCODEC_X265_12BIT:
-            return hb_h265_profile_names_12bit;
-        case HB_VCODEC_X265_16BIT:
-            return hb_h265_profile_names_16bit;
+    case HB_VCODEC_X265_8BIT:
+        return hb_h265_profile_names_8bit;
+    case HB_VCODEC_X265_10BIT:
+        return hb_h265_profile_names_10bit;
+    case HB_VCODEC_X265_12BIT:
+        return hb_h265_profile_names_12bit;
+    case HB_VCODEC_X265_16BIT:
+        return hb_h265_profile_names_16bit;
 
 #if HB_PROJECT_FEATURE_VCE
-        case HB_VCODEC_FFMPEG_VCE_H264:
-            return hb_vce_h264_profile_names;
-        case HB_VCODEC_FFMPEG_VCE_H265:
-            return hb_vce_h265_profile_names;
+    case HB_VCODEC_FFMPEG_VCE_H264:
+        return hb_vce_h264_profile_names;
+    case HB_VCODEC_FFMPEG_VCE_H265:
+        return hb_vce_h265_profile_names;
 #endif
 
-        case HB_VCODEC_FFMPEG_NVENC_H264:
-        case HB_VCODEC_FFMPEG_NVENC_H265:
-        case HB_VCODEC_FFMPEG_VT_H264:
-        case HB_VCODEC_FFMPEG_VT_H265:
-            return hb_av_profile_get_names(encoder);
-        default:
-            return NULL;
+    case HB_VCODEC_FFMPEG_NVENC_H264:
+    case HB_VCODEC_FFMPEG_NVENC_H265:
+    case HB_VCODEC_FFMPEG_VT_H264:
+    case HB_VCODEC_FFMPEG_VT_H265:
+        return hb_av_profile_get_names(encoder);
+    default:
+        return NULL;
     }
 }
 
@@ -1565,32 +1567,32 @@ const char* const* hb_video_encoder_get_levels(int encoder)
 
     switch (encoder)
     {
-        case HB_VCODEC_X264_8BIT:
-        case HB_VCODEC_X264_10BIT:
-        case HB_VCODEC_FFMPEG_NVENC_H264:
-        case HB_VCODEC_FFMPEG_VT_H264:
-            return hb_h264_level_names;
+    case HB_VCODEC_X264_8BIT:
+    case HB_VCODEC_X264_10BIT:
+    case HB_VCODEC_FFMPEG_NVENC_H264:
+    case HB_VCODEC_FFMPEG_VT_H264:
+        return hb_h264_level_names;
 
 #if HB_PROJECT_FEATURE_VCE
-     case HB_VCODEC_FFMPEG_VCE_H264:
-            return hb_vce_h264_level_names; // Not quite the same as x264
+    case HB_VCODEC_FFMPEG_VCE_H264:
+        return hb_vce_h264_level_names; // Not quite the same as x264
 #endif
 
-        case HB_VCODEC_X265_8BIT:
-        case HB_VCODEC_X265_10BIT:
-        case HB_VCODEC_X265_12BIT:
-        case HB_VCODEC_X265_16BIT:
-        case HB_VCODEC_FFMPEG_NVENC_H265:
-        case HB_VCODEC_FFMPEG_VCE_H265:
-            return hb_h265_level_names;
+    case HB_VCODEC_X265_8BIT:
+    case HB_VCODEC_X265_10BIT:
+    case HB_VCODEC_X265_12BIT:
+    case HB_VCODEC_X265_16BIT:
+    case HB_VCODEC_FFMPEG_NVENC_H265:
+    case HB_VCODEC_FFMPEG_VCE_H265:
+        return hb_h265_level_names;
 
 #ifdef __APPLE__
-        case HB_VCODEC_FFMPEG_VT_H265:
-            return hb_vt_h265_level_names;
+    case HB_VCODEC_FFMPEG_VT_H265:
+        return hb_vt_h265_level_names;
 #endif
 
-        default:
-            return NULL;
+    default:
+        return NULL;
     }
 }
 
@@ -1606,47 +1608,47 @@ void hb_audio_quality_get_limits(uint32_t codec, float *low, float *high,
 {
     switch (codec)
     {
-        case HB_ACODEC_FFAAC:
-            *direction   = 0;
-            *granularity = 1.;
-            *low         = 1.;
-            *high        = 10.;
-            break;
+    case HB_ACODEC_FFAAC:
+        *direction   = 0;
+        *granularity = 1.;
+        *low         = 1.;
+        *high        = 10.;
+        break;
 
-        case HB_ACODEC_FDK_HAAC:
-        case HB_ACODEC_FDK_AAC:
-            *direction   = 0;
-            *granularity = 1.;
-            *low         = 1.;
-            *high        = 5.;
-            break;
+    case HB_ACODEC_FDK_HAAC:
+    case HB_ACODEC_FDK_AAC:
+        *direction   = 0;
+        *granularity = 1.;
+        *low         = 1.;
+        *high        = 5.;
+        break;
 
-        case HB_ACODEC_LAME:
-            *direction   = 1;
-            *granularity = 0.5;
-            *low         = 0.;
-            *high        = 10.;
-            break;
+    case HB_ACODEC_LAME:
+        *direction   = 1;
+        *granularity = 0.5;
+        *low         = 0.;
+        *high        = 10.;
+        break;
 
-        case HB_ACODEC_VORBIS:
-            *direction   = 0;
-            *granularity = 0.5;
-            *low         = -2.;
-            *high        = 10.;
-            break;
+    case HB_ACODEC_VORBIS:
+        *direction   = 0;
+        *granularity = 0.5;
+        *low         = -2.;
+        *high        = 10.;
+        break;
 
-        case HB_ACODEC_CA_AAC:
-            *direction   = 0;
-            *granularity = 9.;
-            *low         = 1.;
-            *high        = 127.;
-            break;
+    case HB_ACODEC_CA_AAC:
+        *direction   = 0;
+        *granularity = 9.;
+        *low         = 1.;
+        *high        = 127.;
+        break;
 
-        default:
-            *direction   = 0;
-            *granularity = 1.;
-            *low = *high = HB_INVALID_AUDIO_QUALITY;
-            break;
+    default:
+        *direction   = 0;
+        *granularity = 1.;
+        *low = *high = HB_INVALID_AUDIO_QUALITY;
+        break;
     }
 }
 
@@ -1666,24 +1668,24 @@ float hb_audio_quality_get_default(uint32_t codec)
 {
     switch (codec)
     {
-        case HB_ACODEC_FFAAC:
-            return 5.;
+    case HB_ACODEC_FFAAC:
+        return 5.;
 
-        case HB_ACODEC_FDK_HAAC:
-        case HB_ACODEC_FDK_AAC:
-            return 3.;
+    case HB_ACODEC_FDK_HAAC:
+    case HB_ACODEC_FDK_AAC:
+        return 3.;
 
-        case HB_ACODEC_LAME:
-            return 2.;
+    case HB_ACODEC_LAME:
+        return 2.;
 
-        case HB_ACODEC_VORBIS:
-            return 5.;
+    case HB_ACODEC_VORBIS:
+        return 5.;
 
-        case HB_ACODEC_CA_AAC:
-            return 91.;
+    case HB_ACODEC_CA_AAC:
+        return 91.;
 
-        default:
-            return HB_INVALID_AUDIO_QUALITY;
+    default:
+        return HB_INVALID_AUDIO_QUALITY;
     }
 }
 
@@ -1699,33 +1701,33 @@ void hb_audio_compression_get_limits(uint32_t codec, float *low, float *high,
 {
     switch (codec)
     {
-        case HB_ACODEC_FFFLAC:
-        case HB_ACODEC_FFFLAC24:
-            *direction   = 0;
-            *granularity = 1.;
-            *high        = 12.;
-            *low         = 0.;
-            break;
+    case HB_ACODEC_FFFLAC:
+    case HB_ACODEC_FFFLAC24:
+        *direction   = 0;
+        *granularity = 1.;
+        *high        = 12.;
+        *low         = 0.;
+        break;
 
-        case HB_ACODEC_LAME:
-            *direction   = 1;
-            *granularity = 1.;
-            *high        = 9.;
-            *low         = 0.;
-            break;
+    case HB_ACODEC_LAME:
+        *direction   = 1;
+        *granularity = 1.;
+        *high        = 9.;
+        *low         = 0.;
+        break;
 
-        case HB_ACODEC_OPUS:
-            *direction   = 0;
-            *granularity = 1.;
-            *high        = 10.;
-            *low         = 0.;
-            break;
+    case HB_ACODEC_OPUS:
+        *direction   = 0;
+        *granularity = 1.;
+        *high        = 10.;
+        *low         = 0.;
+        break;
 
-        default:
-            *direction   = 0;
-            *granularity = 1.;
-            *low = *high = -1.;
-            break;
+    default:
+        *direction   = 0;
+        *granularity = 1.;
+        *low = *high = -1.;
+        break;
     }
 }
 
@@ -1745,18 +1747,18 @@ float hb_audio_compression_get_default(uint32_t codec)
 {
     switch (codec)
     {
-        case HB_ACODEC_FFFLAC:
-        case HB_ACODEC_FFFLAC24:
-            return 5.;
+    case HB_ACODEC_FFFLAC:
+    case HB_ACODEC_FFFLAC24:
+        return 5.;
 
-        case HB_ACODEC_LAME:
-            return 2.;
+    case HB_ACODEC_LAME:
+        return 2.;
 
-        case HB_ACODEC_OPUS:
-            return 10.;
+    case HB_ACODEC_OPUS:
+        return 10.;
 
-        default:
-            return -1.;
+    default:
+        return -1.;
     }
 }
 
@@ -1790,7 +1792,7 @@ int hb_audio_dither_get_from_name(const char *name)
     for ( i = 0; i < hb_audio_dithers_count; i++)
     {
         if (!strcasecmp(hb_audio_dithers[i].item.short_name,  name) ||
-            !strcasecmp(hb_audio_dithers[i].item.description, name))
+                !strcasecmp(hb_audio_dithers[i].item.description, name))
         {
             return hb_audio_dithers[i].item.method;
         }
@@ -1803,7 +1805,7 @@ fail:
 const char* hb_audio_dither_get_description(int method)
 {
     if (method < hb_audio_dithers_first_item->method ||
-        method > hb_audio_dithers_last_item ->method)
+            method > hb_audio_dithers_last_item ->method)
         goto fail;
 
     const hb_dither_t *audio_dither = NULL;
@@ -1832,27 +1834,27 @@ static int mixdown_get_opus_coupled_stream_count(int mixdown)
 {
     switch (mixdown)
     {
-        case HB_AMIXDOWN_7POINT1:
-        case HB_AMIXDOWN_6POINT1:
-            return 3;
+    case HB_AMIXDOWN_7POINT1:
+    case HB_AMIXDOWN_6POINT1:
+        return 3;
 
-        case HB_AMIXDOWN_5POINT1:
-            return 2;
+    case HB_AMIXDOWN_5POINT1:
+        return 2;
 
-        case HB_AMIXDOWN_MONO:
-        case HB_AMIXDOWN_LEFT:
-        case HB_AMIXDOWN_RIGHT:
-            return 0;
+    case HB_AMIXDOWN_MONO:
+    case HB_AMIXDOWN_LEFT:
+    case HB_AMIXDOWN_RIGHT:
+        return 0;
 
-        case HB_AMIXDOWN_NONE:
-        case HB_INVALID_AMIXDOWN:
-        case HB_AMIXDOWN_5_2_LFE:
-            // The 5F/2R/LFE configuration is currently not supported by Opus,
-            // so don't set coupled streams.
-            return 0;
+    case HB_AMIXDOWN_NONE:
+    case HB_INVALID_AMIXDOWN:
+    case HB_AMIXDOWN_5_2_LFE:
+        // The 5F/2R/LFE configuration is currently not supported by Opus,
+        // so don't set coupled streams.
+        return 0;
 
-        default:
-            return 1;
+    default:
+        return 1;
     }
 }
 
@@ -1874,25 +1876,25 @@ int hb_mixdown_has_codec_support(int mixdown, uint32_t codec)
 
     switch (codec)
     {
-        case HB_ACODEC_VORBIS:
-        case HB_ACODEC_FFFLAC:
-        case HB_ACODEC_FFFLAC24:
-        case HB_ACODEC_OPUS:
-        case HB_ACODEC_CA_AAC:
-        case HB_ACODEC_CA_HAAC:
-        case HB_ACODEC_FFAAC:
-            return (mixdown <= HB_AMIXDOWN_7POINT1);
+    case HB_ACODEC_VORBIS:
+    case HB_ACODEC_FFFLAC:
+    case HB_ACODEC_FFFLAC24:
+    case HB_ACODEC_OPUS:
+    case HB_ACODEC_CA_AAC:
+    case HB_ACODEC_CA_HAAC:
+    case HB_ACODEC_FFAAC:
+        return (mixdown <= HB_AMIXDOWN_7POINT1);
 
-        case HB_ACODEC_LAME:
-            return (mixdown <= HB_AMIXDOWN_DOLBYPLII);
+    case HB_ACODEC_LAME:
+        return (mixdown <= HB_AMIXDOWN_DOLBYPLII);
 
-        case HB_ACODEC_FDK_AAC:
-        case HB_ACODEC_FDK_HAAC:
-            return ((mixdown <= HB_AMIXDOWN_5POINT1) ||
-                    (mixdown == HB_AMIXDOWN_7POINT1));
+    case HB_ACODEC_FDK_AAC:
+    case HB_ACODEC_FDK_HAAC:
+        return ((mixdown <= HB_AMIXDOWN_5POINT1) ||
+                (mixdown == HB_AMIXDOWN_7POINT1));
 
-        default:
-            return (mixdown <= HB_AMIXDOWN_5POINT1);
+    default:
+        return (mixdown <= HB_AMIXDOWN_5POINT1);
     }
 }
 
@@ -1908,57 +1910,57 @@ int hb_mixdown_has_remix_support(int mixdown, uint64_t layout)
     }
     switch (mixdown)
     {
-        // stereo + front left/right of center
-        case HB_AMIXDOWN_5_2_LFE:
-            return ((layout & AV_CH_FRONT_LEFT_OF_CENTER) &&
-                    (layout & AV_CH_FRONT_RIGHT_OF_CENTER) &&
-                    (layout & AV_CH_LAYOUT_STEREO) == AV_CH_LAYOUT_STEREO);
+    // stereo + front left/right of center
+    case HB_AMIXDOWN_5_2_LFE:
+        return ((layout & AV_CH_FRONT_LEFT_OF_CENTER) &&
+                (layout & AV_CH_FRONT_RIGHT_OF_CENTER) &&
+                (layout & AV_CH_LAYOUT_STEREO) == AV_CH_LAYOUT_STEREO);
 
-        // 7.0 or better
-        case HB_AMIXDOWN_7POINT1:
-            return ((layout & AV_CH_LAYOUT_7POINT0) == AV_CH_LAYOUT_7POINT0);
+    // 7.0 or better
+    case HB_AMIXDOWN_7POINT1:
+        return ((layout & AV_CH_LAYOUT_7POINT0) == AV_CH_LAYOUT_7POINT0);
 
-        // 6.0 or better
-        case HB_AMIXDOWN_6POINT1:
-            return ((layout & AV_CH_LAYOUT_7POINT0) == AV_CH_LAYOUT_7POINT0 ||
-                    (layout & AV_CH_LAYOUT_6POINT0) == AV_CH_LAYOUT_6POINT0 ||
-                    (layout & AV_CH_LAYOUT_HEXAGONAL) == AV_CH_LAYOUT_HEXAGONAL);
+    // 6.0 or better
+    case HB_AMIXDOWN_6POINT1:
+        return ((layout & AV_CH_LAYOUT_7POINT0) == AV_CH_LAYOUT_7POINT0 ||
+                (layout & AV_CH_LAYOUT_6POINT0) == AV_CH_LAYOUT_6POINT0 ||
+                (layout & AV_CH_LAYOUT_HEXAGONAL) == AV_CH_LAYOUT_HEXAGONAL);
 
-        // stereo + either of front center, side or back left/right, back center
-        case HB_AMIXDOWN_5POINT1:
-            return ((layout & AV_CH_LAYOUT_2_1) == AV_CH_LAYOUT_2_1 ||
-                    (layout & AV_CH_LAYOUT_2_2) == AV_CH_LAYOUT_2_2 ||
-                    (layout & AV_CH_LAYOUT_QUAD) == AV_CH_LAYOUT_QUAD ||
-                    (layout & AV_CH_LAYOUT_SURROUND) == AV_CH_LAYOUT_SURROUND);
+    // stereo + either of front center, side or back left/right, back center
+    case HB_AMIXDOWN_5POINT1:
+        return ((layout & AV_CH_LAYOUT_2_1) == AV_CH_LAYOUT_2_1 ||
+                (layout & AV_CH_LAYOUT_2_2) == AV_CH_LAYOUT_2_2 ||
+                (layout & AV_CH_LAYOUT_QUAD) == AV_CH_LAYOUT_QUAD ||
+                (layout & AV_CH_LAYOUT_SURROUND) == AV_CH_LAYOUT_SURROUND);
 
-        // stereo + either of side or back left/right, back center
-        // also, allow Dolby Surround output if the input is already Dolby
-        case HB_AMIXDOWN_DOLBY:
-        case HB_AMIXDOWN_DOLBYPLII:
-            return ((layout & AV_CH_LAYOUT_2_1) == AV_CH_LAYOUT_2_1 ||
-                    (layout & AV_CH_LAYOUT_2_2) == AV_CH_LAYOUT_2_2 ||
-                    (layout & AV_CH_LAYOUT_QUAD) == AV_CH_LAYOUT_QUAD ||
-                    (layout == AV_CH_LAYOUT_STEREO_DOWNMIX &&
-                     mixdown == HB_AMIXDOWN_DOLBY));
+    // stereo + either of side or back left/right, back center
+    // also, allow Dolby Surround output if the input is already Dolby
+    case HB_AMIXDOWN_DOLBY:
+    case HB_AMIXDOWN_DOLBYPLII:
+        return ((layout & AV_CH_LAYOUT_2_1) == AV_CH_LAYOUT_2_1 ||
+                (layout & AV_CH_LAYOUT_2_2) == AV_CH_LAYOUT_2_2 ||
+                (layout & AV_CH_LAYOUT_QUAD) == AV_CH_LAYOUT_QUAD ||
+                (layout == AV_CH_LAYOUT_STEREO_DOWNMIX &&
+                 mixdown == HB_AMIXDOWN_DOLBY));
 
-        // more than 1 channel
-        case HB_AMIXDOWN_STEREO:
-            return (av_get_channel_layout_nb_channels(layout) > 1);
+    // more than 1 channel
+    case HB_AMIXDOWN_STEREO:
+        return (av_get_channel_layout_nb_channels(layout) > 1);
 
-        // regular stereo (not Dolby)
-        case HB_AMIXDOWN_LEFT:
-        case HB_AMIXDOWN_RIGHT:
-            return (layout & AV_CH_LAYOUT_STEREO);
+    // regular stereo (not Dolby)
+    case HB_AMIXDOWN_LEFT:
+    case HB_AMIXDOWN_RIGHT:
+        return (layout & AV_CH_LAYOUT_STEREO);
 
-        // mono remix always supported
-        // HB_AMIXDOWN_NONE always supported (for Passthru)
-        case HB_AMIXDOWN_MONO:
-        case HB_AMIXDOWN_NONE:
-            return 1;
+    // mono remix always supported
+    // HB_AMIXDOWN_NONE always supported (for Passthru)
+    case HB_AMIXDOWN_MONO:
+    case HB_AMIXDOWN_NONE:
+        return 1;
 
-        // unknown mixdown, should never happen
-        default:
-            return 0;
+    // unknown mixdown, should never happen
+    default:
+        return 0;
     }
 }
 
@@ -1966,26 +1968,26 @@ int hb_mixdown_get_discrete_channel_count(int amixdown)
 {
     switch (amixdown)
     {
-        case HB_AMIXDOWN_5_2_LFE:
-        case HB_AMIXDOWN_7POINT1:
-            return 8;
+    case HB_AMIXDOWN_5_2_LFE:
+    case HB_AMIXDOWN_7POINT1:
+        return 8;
 
-        case HB_AMIXDOWN_6POINT1:
-            return 7;
+    case HB_AMIXDOWN_6POINT1:
+        return 7;
 
-        case HB_AMIXDOWN_5POINT1:
-            return 6;
+    case HB_AMIXDOWN_5POINT1:
+        return 6;
 
-        case HB_AMIXDOWN_MONO:
-        case HB_AMIXDOWN_LEFT:
-        case HB_AMIXDOWN_RIGHT:
-            return 1;
+    case HB_AMIXDOWN_MONO:
+    case HB_AMIXDOWN_LEFT:
+    case HB_AMIXDOWN_RIGHT:
+        return 1;
 
-        case HB_AMIXDOWN_NONE:
-            return 0;
+    case HB_AMIXDOWN_NONE:
+        return 0;
 
-        default:
-            return 2;
+    default:
+        return 2;
     }
 }
 
@@ -1993,14 +1995,14 @@ int hb_mixdown_get_low_freq_channel_count(int amixdown)
 {
     switch (amixdown)
     {
-        case HB_AMIXDOWN_5POINT1:
-        case HB_AMIXDOWN_6POINT1:
-        case HB_AMIXDOWN_7POINT1:
-        case HB_AMIXDOWN_5_2_LFE:
-            return 1;
+    case HB_AMIXDOWN_5POINT1:
+    case HB_AMIXDOWN_6POINT1:
+    case HB_AMIXDOWN_7POINT1:
+    case HB_AMIXDOWN_5_2_LFE:
+        return 1;
 
-        default:
-            return 0;
+    default:
+        return 0;
     }
 }
 
@@ -2017,7 +2019,7 @@ int hb_mixdown_get_best(uint32_t codec, uint64_t layout, int mixdown)
     while ((audio_mixdown = hb_mixdown_get_next(audio_mixdown)) != NULL)
     {
         if ((mixdown == HB_INVALID_AMIXDOWN || audio_mixdown->amixdown <= mixdown) &&
-            (hb_mixdown_is_supported(audio_mixdown->amixdown, codec, layout)))
+                (hb_mixdown_is_supported(audio_mixdown->amixdown, codec, layout)))
         {
             best_mixdown = audio_mixdown->amixdown;
         }
@@ -2030,28 +2032,28 @@ int hb_mixdown_get_default(uint32_t codec, uint64_t layout)
     int mixdown;
     switch (codec)
     {
-        // the FLAC encoder defaults to the best mixdown up to 7.1
-        case HB_ACODEC_FFFLAC:
-        case HB_ACODEC_FFFLAC24:
-        case HB_ACODEC_OPUS:
-        case HB_ACODEC_CA_AAC:
-        case HB_ACODEC_CA_HAAC:
-        case HB_ACODEC_FFAAC:
-        case HB_ACODEC_FDK_AAC:
-        case HB_ACODEC_FDK_HAAC:
-            mixdown = HB_AMIXDOWN_7POINT1;
-            break;
+    // the FLAC encoder defaults to the best mixdown up to 7.1
+    case HB_ACODEC_FFFLAC:
+    case HB_ACODEC_FFFLAC24:
+    case HB_ACODEC_OPUS:
+    case HB_ACODEC_CA_AAC:
+    case HB_ACODEC_CA_HAAC:
+    case HB_ACODEC_FFAAC:
+    case HB_ACODEC_FDK_AAC:
+    case HB_ACODEC_FDK_HAAC:
+        mixdown = HB_AMIXDOWN_7POINT1;
+        break;
 
-        // the (E-)AC-3 encoder defaults to the best mixdown up to 5.1
-        case HB_ACODEC_AC3:
-        case HB_ACODEC_FFEAC3:
-            mixdown = HB_AMIXDOWN_5POINT1;
-            break;
+    // the (E-)AC-3 encoder defaults to the best mixdown up to 5.1
+    case HB_ACODEC_AC3:
+    case HB_ACODEC_FFEAC3:
+        mixdown = HB_AMIXDOWN_5POINT1;
+        break;
 
-        // other encoders default to the best mixdown up to DPLII
-        default:
-            mixdown = HB_AMIXDOWN_DOLBYPLII;
-            break;
+    // other encoders default to the best mixdown up to DPLII
+    default:
+        mixdown = HB_AMIXDOWN_DOLBYPLII;
+        break;
     }
 
     // return the best available mixdown up to the selected default
@@ -2081,7 +2083,7 @@ int hb_mixdown_get_from_name(const char *name)
     for (i = 0; i < hb_audio_mixdowns_count; i++)
     {
         if (!strcasecmp(hb_audio_mixdowns[i].item.name,       name) ||
-            !strcasecmp(hb_audio_mixdowns[i].item.short_name, name))
+                !strcasecmp(hb_audio_mixdowns[i].item.short_name, name))
         {
             return hb_audio_mixdowns[i].item.amixdown;
         }
@@ -2094,7 +2096,7 @@ fail:
 const char* hb_mixdown_get_name(int mixdown)
 {
     if (mixdown < hb_audio_mixdowns_first_item->amixdown ||
-        mixdown > hb_audio_mixdowns_last_item ->amixdown)
+            mixdown > hb_audio_mixdowns_last_item ->amixdown)
         goto fail;
 
     const hb_mixdown_t *audio_mixdown = NULL;
@@ -2113,7 +2115,7 @@ fail:
 const char* hb_mixdown_get_short_name(int mixdown)
 {
     if (mixdown < hb_audio_mixdowns_first_item->amixdown ||
-        mixdown > hb_audio_mixdowns_last_item ->amixdown)
+            mixdown > hb_audio_mixdowns_last_item ->amixdown)
         goto fail;
 
     const hb_mixdown_t *audio_mixdown = NULL;
@@ -2200,7 +2202,7 @@ int hb_video_encoder_get_from_name(const char *name)
     for (i = 0; i < hb_video_encoders_count; i++)
     {
         if (!strcasecmp(hb_video_encoders[i].item.name,       name) ||
-            !strcasecmp(hb_video_encoders[i].item.short_name, name))
+                !strcasecmp(hb_video_encoders[i].item.short_name, name))
         {
             return hb_video_encoders[i].item.codec;
         }
@@ -2286,29 +2288,29 @@ int hb_audio_encoder_get_fallback_for_passthru(int passthru)
     const hb_encoder_t *audio_encoder = NULL;
     switch (passthru)
     {
-        case HB_ACODEC_AAC_PASS:
-            gid = HB_GID_ACODEC_AAC;
-            break;
+    case HB_ACODEC_AAC_PASS:
+        gid = HB_GID_ACODEC_AAC;
+        break;
 
-        case HB_ACODEC_AC3_PASS:
-            gid = HB_GID_ACODEC_AC3;
-            break;
+    case HB_ACODEC_AC3_PASS:
+        gid = HB_GID_ACODEC_AC3;
+        break;
 
-        case HB_ACODEC_EAC3_PASS:
-            gid = HB_GID_ACODEC_EAC3;
-            break;
+    case HB_ACODEC_EAC3_PASS:
+        gid = HB_GID_ACODEC_EAC3;
+        break;
 
-        case HB_ACODEC_FLAC_PASS:
-            gid = HB_GID_ACODEC_FLAC;
-            break;
+    case HB_ACODEC_FLAC_PASS:
+        gid = HB_GID_ACODEC_FLAC;
+        break;
 
-        case HB_ACODEC_MP3_PASS:
-            gid = HB_GID_ACODEC_MP3;
-            break;
+    case HB_ACODEC_MP3_PASS:
+        gid = HB_GID_ACODEC_MP3;
+        break;
 
-        default:
-            return HB_ACODEC_INVALID;
-            break;
+    default:
+        return HB_ACODEC_INVALID;
+        break;
     }
     while ((audio_encoder = hb_audio_encoder_get_next(audio_encoder)) != NULL)
     {
@@ -2336,7 +2338,7 @@ int hb_audio_encoder_get_default(int muxer)
     {
         // default encoder should not be passthru
         if ((audio_encoder->muxers & muxer) &&
-            (audio_encoder->codec  & HB_ACODEC_PASS_FLAG) == 0)
+                (audio_encoder->codec  & HB_ACODEC_PASS_FLAG) == 0)
         {
             codec = audio_encoder->codec;
             break;
@@ -2382,7 +2384,7 @@ int hb_audio_encoder_get_from_name(const char *name)
     for (i = 0; i < hb_audio_encoders_count; i++)
     {
         if (!strcasecmp(hb_audio_encoders[i].item.name,       name) ||
-            !strcasecmp(hb_audio_encoders[i].item.short_name, name))
+                !strcasecmp(hb_audio_encoders[i].item.short_name, name))
         {
             return hb_audio_encoders[i].item.codec;
         }
@@ -2473,11 +2475,11 @@ void hb_autopassthru_apply_settings(hb_job_t *job)
                 hb_autopassthru_print_settings(job);
             already_printed = 1;
             audio->config.out.codec = hb_autopassthru_get_encoder(audio->config.in.codec,
-                                                                  job->acodec_copy_mask,
-                                                                  job->acodec_fallback,
-                                                                  job->mux);
+                                      job->acodec_copy_mask,
+                                      job->acodec_fallback,
+                                      job->mux);
             if (audio->config.out.codec == HB_ACODEC_NONE ||
-                audio->config.out.codec == HB_ACODEC_INVALID)
+                    audio->config.out.codec == HB_ACODEC_INVALID)
             {
                 hb_log("Auto Passthru: passthru not possible and no valid fallback specified, dropping track %d",
                        audio->config.out.track );
@@ -2509,7 +2511,7 @@ void hb_autopassthru_apply_settings(hb_job_t *job)
                         audio->config.out.samplerate, audio->config.out.codec);
                 int quality_not_allowed =
                     hb_audio_quality_get_default(audio->config.out.codec)
-                            == HB_INVALID_AUDIO_QUALITY;
+                    == HB_INVALID_AUDIO_QUALITY;
                 if (audio->config.out.bitrate > 0)
                 {
                     // Use best bitrate
@@ -2525,8 +2527,8 @@ void hb_autopassthru_apply_settings(hb_job_t *job)
                     // Use default bitrate
                     audio->config.out.bitrate =
                         hb_audio_bitrate_get_default(audio->config.out.codec,
-                                                 audio->config.out.samplerate,
-                                                 audio->config.out.mixdown);
+                                                     audio->config.out.samplerate,
+                                                     audio->config.out.mixdown);
                 }
                 else
                 {
@@ -2539,13 +2541,13 @@ void hb_autopassthru_apply_settings(hb_job_t *job)
                 {
                     audio->config.out.compression_level =
                         hb_audio_compression_get_default(
-                                        audio->config.out.codec);
+                            audio->config.out.codec);
                 }
                 else
                 {
                     audio->config.out.compression_level =
                         hb_audio_compression_get_best(audio->config.out.codec,
-                                        audio->config.out.compression_level);
+                                                      audio->config.out.compression_level);
                 }
             }
             else
@@ -2578,9 +2580,9 @@ void hb_autopassthru_print_settings(hb_job_t *job)
     while ((audio_encoder = hb_audio_encoder_get_next(audio_encoder)) != NULL)
     {
         if ((audio_encoder->codec &  HB_ACODEC_PASS_FLAG) &&
-            (audio_encoder->codec != HB_ACODEC_AUTO_PASS) &&
-            (audio_encoder->codec & (job->acodec_copy_mask &
-                                     HB_ACODEC_PASS_MASK)))
+                (audio_encoder->codec != HB_ACODEC_AUTO_PASS) &&
+                (audio_encoder->codec & (job->acodec_copy_mask &
+                                         HB_ACODEC_PASS_MASK)))
         {
             if (mask != NULL)
             {
@@ -2648,7 +2650,7 @@ int hb_autopassthru_get_encoder(int in_codec, int copy_mask, int fallback,
         }
     }
     return (out_codec_result != HB_ACODEC_INVALID) ? out_codec_result :
-                                                     fallback_result;
+           fallback_result;
 }
 
 const char* hb_audio_decoder_get_name(int codec, int codec_param)
@@ -2667,10 +2669,10 @@ const char* hb_audio_decoder_get_name(int codec, int codec_param)
     {
         switch (codec)
         {
-            case HB_ACODEC_LPCM:
-                return "pcm_dvd";
-            default:
-                break;
+        case HB_ACODEC_LPCM:
+            return "pcm_dvd";
+        default:
+            break;
         }
     }
     return "unknown";
@@ -2699,7 +2701,7 @@ int hb_container_get_from_name(const char *name)
     for (i = 0; i < hb_containers_count; i++)
     {
         if (!strcasecmp(hb_containers[i].item.name,       name) ||
-            !strcasecmp(hb_containers[i].item.short_name, name))
+                !strcasecmp(hb_containers[i].item.short_name, name))
         {
             return hb_containers[i].item.format;
         }
@@ -3374,7 +3376,7 @@ void hb_list_getbytes( hb_list_t * l, uint8_t * dst, int size,
     uint8_t       has_pts;
 
     /* So we won't have to deal with NULL pointers */
-     uint64_t dummy1, dummy2;
+    uint64_t dummy1, dummy2;
 
     if( !pts ) pts = &dummy1;
     if( !pos ) pos = &dummy2;
@@ -3471,7 +3473,7 @@ void hb_valog( hb_debug_level_t level, const char * prefix, const char * log, va
     {
         // limit the prefix length
         snprintf( preamble, 361, "[%02d:%02d:%02d] %s %s\n",
-                 now->tm_hour, now->tm_min, now->tm_sec, prefix, log );
+                  now->tm_hour, now->tm_min, now->tm_sec, prefix, log );
     }
     else
     {
@@ -4100,99 +4102,99 @@ hb_filter_object_t * hb_filter_get( int filter_id )
     hb_filter_object_t * filter;
     switch( filter_id )
     {
-        case HB_FILTER_DETELECINE:
-            filter = &hb_filter_detelecine;
-            break;
+    case HB_FILTER_DETELECINE:
+        filter = &hb_filter_detelecine;
+        break;
 
-        case HB_FILTER_COMB_DETECT:
-            filter = &hb_filter_comb_detect;
-            break;
+    case HB_FILTER_COMB_DETECT:
+        filter = &hb_filter_comb_detect;
+        break;
 
-        case HB_FILTER_DECOMB:
-            filter = &hb_filter_decomb;
-            break;
+    case HB_FILTER_DECOMB:
+        filter = &hb_filter_decomb;
+        break;
 
-        case HB_FILTER_DEINTERLACE:
-            filter = &hb_filter_deinterlace;
-            break;
+    case HB_FILTER_DEINTERLACE:
+        filter = &hb_filter_deinterlace;
+        break;
 
-        case HB_FILTER_COLORSPACE:
-            filter = &hb_filter_colorspace;
-            break;
+    case HB_FILTER_COLORSPACE:
+        filter = &hb_filter_colorspace;
+        break;
 
-        case HB_FILTER_VFR:
-            filter = &hb_filter_vfr;
-            break;
+    case HB_FILTER_VFR:
+        filter = &hb_filter_vfr;
+        break;
 
-        case HB_FILTER_DEBLOCK:
-            filter = &hb_filter_deblock;
-            break;
+    case HB_FILTER_DEBLOCK:
+        filter = &hb_filter_deblock;
+        break;
 
-        case HB_FILTER_DENOISE:
-            filter = &hb_filter_denoise;
-            break;
+    case HB_FILTER_DENOISE:
+        filter = &hb_filter_denoise;
+        break;
 
-        case HB_FILTER_NLMEANS:
-            filter = &hb_filter_nlmeans;
-            break;
+    case HB_FILTER_NLMEANS:
+        filter = &hb_filter_nlmeans;
+        break;
 
-        case HB_FILTER_CHROMA_SMOOTH:
-            filter = &hb_filter_chroma_smooth;
-            break;
+    case HB_FILTER_CHROMA_SMOOTH:
+        filter = &hb_filter_chroma_smooth;
+        break;
 
-        case HB_FILTER_RENDER_SUB:
-            filter = &hb_filter_render_sub;
-            break;
+    case HB_FILTER_RENDER_SUB:
+        filter = &hb_filter_render_sub;
+        break;
 
-        case HB_FILTER_CROP_SCALE:
-            filter = &hb_filter_crop_scale;
-            break;
+    case HB_FILTER_CROP_SCALE:
+        filter = &hb_filter_crop_scale;
+        break;
 
-        case HB_FILTER_LAPSHARP:
-            filter = &hb_filter_lapsharp;
-            break;
+    case HB_FILTER_LAPSHARP:
+        filter = &hb_filter_lapsharp;
+        break;
 
-        case HB_FILTER_UNSHARP:
-            filter = &hb_filter_unsharp;
-            break;
+    case HB_FILTER_UNSHARP:
+        filter = &hb_filter_unsharp;
+        break;
 
-        case HB_FILTER_AVFILTER:
-            filter = &hb_filter_avfilter;
-            break;
+    case HB_FILTER_AVFILTER:
+        filter = &hb_filter_avfilter;
+        break;
 
-        case HB_FILTER_PAD:
-            filter = &hb_filter_pad;
-            break;
+    case HB_FILTER_PAD:
+        filter = &hb_filter_pad;
+        break;
 
-        case HB_FILTER_ROTATE:
-            filter = &hb_filter_rotate;
-            break;
+    case HB_FILTER_ROTATE:
+        filter = &hb_filter_rotate;
+        break;
 
-        case HB_FILTER_GRAYSCALE:
-            filter = &hb_filter_grayscale;
-            break;
+    case HB_FILTER_GRAYSCALE:
+        filter = &hb_filter_grayscale;
+        break;
 
 #if HB_PROJECT_FEATURE_QSV
-        case HB_FILTER_QSV:
-            filter = &hb_filter_qsv;
-            break;
+    case HB_FILTER_QSV:
+        filter = &hb_filter_qsv;
+        break;
 
-        case HB_FILTER_QSV_PRE:
-            filter = &hb_filter_qsv_pre;
-            break;
+    case HB_FILTER_QSV_PRE:
+        filter = &hb_filter_qsv_pre;
+        break;
 
-        case HB_FILTER_QSV_POST:
-            filter = &hb_filter_qsv_post;
-            break;
+    case HB_FILTER_QSV_POST:
+        filter = &hb_filter_qsv_post;
+        break;
 #endif
 
-        case HB_FILTER_MT_FRAME:
-            filter = &hb_filter_mt_frame;
-            break;
+    case HB_FILTER_MT_FRAME:
+        filter = &hb_filter_mt_frame;
+        break;
 
-        default:
-            filter = NULL;
-            break;
+    default:
+        filter = NULL;
+        break;
     }
     return filter;
 }
@@ -4201,21 +4203,22 @@ hb_filter_object_t * hb_filter_init( int filter_id )
 {
     switch (filter_id)
     {
-        case HB_FILTER_UNSHARP:
-        case HB_FILTER_LAPSHARP:
-        case HB_FILTER_CHROMA_SMOOTH:
-        {
-            hb_filter_object_t * wrapper;
+    case HB_FILTER_UNSHARP:
+    case HB_FILTER_LAPSHARP:
+    case HB_FILTER_CHROMA_SMOOTH:
+    {
+        hb_filter_object_t * wrapper;
 
-            wrapper = hb_filter_copy(hb_filter_get(HB_FILTER_MT_FRAME));
-            wrapper->sub_filter = hb_filter_copy(hb_filter_get(filter_id));
-            wrapper->id = filter_id;
-            wrapper->name = wrapper->sub_filter->name;
-            return wrapper;
-        } break;
+        wrapper = hb_filter_copy(hb_filter_get(HB_FILTER_MT_FRAME));
+        wrapper->sub_filter = hb_filter_copy(hb_filter_get(filter_id));
+        wrapper->id = filter_id;
+        wrapper->name = wrapper->sub_filter->name;
+        return wrapper;
+    }
+    break;
 
-        default:
-            return hb_filter_copy(hb_filter_get(filter_id));
+    default:
+        return hb_filter_copy(hb_filter_get(filter_id));
     }
 }
 
@@ -4345,8 +4348,8 @@ static char * stringify_dict(int filter_id, hb_dict_t * dict)
         hb_value_t *num_val = hb_dict_get(dict, "Num");
         hb_value_t *den_val = hb_dict_get(dict, "Den");
         if (num_val != NULL && den_val != NULL &&
-            hb_value_type(num_val) == HB_VALUE_TYPE_INT &&
-            hb_value_type(den_val) == HB_VALUE_TYPE_INT)
+                hb_value_type(num_val) == HB_VALUE_TYPE_INT &&
+                hb_value_type(den_val) == HB_VALUE_TYPE_INT)
         {
             int num = hb_value_get_int(num_val);
             int den = hb_value_get_int(den_val);
@@ -4939,8 +4942,8 @@ int hb_subtitle_add(const hb_job_t * job, const hb_subtitle_config_t * subtitlec
 }
 
 int hb_import_subtitle_add( const hb_job_t * job,
-                const hb_subtitle_config_t * subtitlecfg,
-                const char *lang_code, int source )
+                            const hb_subtitle_config_t * subtitlecfg,
+                            const char *lang_code, int source )
 {
     hb_subtitle_t *subtitle;
     iso639_lang_t *lang = NULL;
@@ -5009,49 +5012,51 @@ int hb_subtitle_can_pass( int source, int mux )
 {
     switch (mux)
     {
-        case HB_MUX_AV_MKV:
-            switch( source )
-            {
-                case PGSSUB:
-                case VOBSUB:
-                case SSASUB:
-                case UTF8SUB:
-                case TX3GSUB:
-                case CC608SUB:
-                case CC708SUB:
-                case IMPORTSRT:
-                case IMPORTSSA:
-                    return 1;
+    case HB_MUX_AV_MKV:
+        switch( source )
+        {
+        case PGSSUB:
+        case VOBSUB:
+        case SSASUB:
+        case UTF8SUB:
+        case TX3GSUB:
+        case CC608SUB:
+        case CC708SUB:
+        case IMPORTSRT:
+        case IMPORTSSA:
+            return 1;
 
-                default:
-                    return 0;
-            } break;
-
-        case HB_MUX_AV_MP4:
-            switch( source )
-            {
-                case VOBSUB:
-                case SSASUB:
-                case UTF8SUB:
-                case TX3GSUB:
-                case CC608SUB:
-                case CC708SUB:
-                case IMPORTSRT:
-                case IMPORTSSA:
-                    return 1;
-
-                default:
-                    return 0;
-            } break;
-
-        // webm can't support subtitles unless they're burned.
-        // there's ambiguity in the spec about WebVTT... TODO
-        case HB_MUX_AV_WEBM:
-            return 0;
         default:
-            // Internal error. Should never get here.
-            hb_error("internal error.  Bad mux %d\n", mux);
             return 0;
+        }
+        break;
+
+    case HB_MUX_AV_MP4:
+        switch( source )
+        {
+        case VOBSUB:
+        case SSASUB:
+        case UTF8SUB:
+        case TX3GSUB:
+        case CC608SUB:
+        case CC708SUB:
+        case IMPORTSRT:
+        case IMPORTSSA:
+            return 1;
+
+        default:
+            return 0;
+        }
+        break;
+
+    // webm can't support subtitles unless they're burned.
+    // there's ambiguity in the spec about WebVTT... TODO
+    case HB_MUX_AV_WEBM:
+        return 0;
+    default:
+        // Internal error. Should never get here.
+        hb_error("internal error.  Bad mux %d\n", mux);
+        return 0;
     }
 }
 
@@ -5161,7 +5166,7 @@ hb_metadata_t *hb_metadata_copy( const hb_metadata_t *src )
             {
                 hb_coverart_t *art = hb_list_item( src->list_coverart, ii );
                 hb_metadata_add_coverart(
-                        metadata, art->data, art->size, art->type );
+                    metadata, art->data, art->size, art->type );
             }
         }
     }
@@ -5548,25 +5553,25 @@ const char * hb_subsource_name( int source )
 {
     switch (source)
     {
-        case VOBSUB:
-            return "VOBSUB";
-        case IMPORTSRT:
-            return "SRT";
-        case CC608SUB:
-            return "CC608";
-        case CC708SUB:
-            return "CC708";
-        case UTF8SUB:
-            return "UTF-8";
-        case TX3GSUB:
-            return "TX3G";
-        case IMPORTSSA:
-        case SSASUB:
-            return "SSA";
-        case PGSSUB:
-            return "PGS";
-        default:
-            return "Unknown";
+    case VOBSUB:
+        return "VOBSUB";
+    case IMPORTSRT:
+        return "SRT";
+    case CC608SUB:
+        return "CC608";
+    case CC708SUB:
+        return "CC708";
+    case UTF8SUB:
+        return "UTF-8";
+    case TX3GSUB:
+        return "TX3G";
+    case IMPORTSSA:
+    case SSASUB:
+        return "SSA";
+    case PGSSUB:
+        return "PGS";
+    default:
+        return "Unknown";
     }
 }
 
@@ -5805,26 +5810,26 @@ const char * hb_get_format_name(int format)
 {
     switch (format)
     {
-        case AV_PIX_FMT_YUV420P:
-            return "yuv420p";
-        case AV_PIX_FMT_YUV420P10:
-            return "yuv420p10";
-        case AV_PIX_FMT_YUV420P12:
-            return "yuv420p12";
-        case AV_PIX_FMT_YUV422P:
-            return "yuv422p";
-        case AV_PIX_FMT_YUV422P10:
-            return "yuv422p10";
-        case AV_PIX_FMT_YUV422P12:
-            return "yuv422p12";
-        case AV_PIX_FMT_YUV444P:
-            return "yuv444p";
-        case AV_PIX_FMT_YUV444P10:
-            return "yuv444p10";
-        case AV_PIX_FMT_YUV444P12:
-            return "yuv444p12";
-        default:
-            return NULL;
+    case AV_PIX_FMT_YUV420P:
+        return "yuv420p";
+    case AV_PIX_FMT_YUV420P10:
+        return "yuv420p10";
+    case AV_PIX_FMT_YUV420P12:
+        return "yuv420p12";
+    case AV_PIX_FMT_YUV422P:
+        return "yuv422p";
+    case AV_PIX_FMT_YUV422P10:
+        return "yuv422p10";
+    case AV_PIX_FMT_YUV422P12:
+        return "yuv422p12";
+    case AV_PIX_FMT_YUV444P:
+        return "yuv444p";
+    case AV_PIX_FMT_YUV444P10:
+        return "yuv444p10";
+    case AV_PIX_FMT_YUV444P12:
+        return "yuv444p12";
+    default:
+        return NULL;
     }
 }
 
@@ -5833,30 +5838,30 @@ const char * hb_get_primaries_name(int primaries)
 {
     switch (primaries)
     {
-        case HB_COLR_PRI_BT709:
-            return "bt709";
-        case HB_COLR_PRI_BT470M:
-            return "bt470m";
-        case HB_COLR_PRI_EBUTECH:
-            return "bt470bg";
-        case HB_COLR_PRI_SMPTEC:
-            return "smpte170m";
-        case HB_COLR_PRI_SMPTE240M:
-            return "smpte240m";
-        case HB_COLR_PRI_SMPTE428:
-            return "smpte428";
-        case HB_COLR_PRI_FILM:
-            return "film";
-        case HB_COLR_PRI_SMPTE431:
-            return "smpte431";
-        case HB_COLR_PRI_SMPTE432:
-            return "smpte432";
-        case HB_COLR_PRI_BT2020:
-            return "bt2020";
-        case HB_COLR_PRI_JEDEC_P22:
-            return "jedec-p22";
-        default:
-            return NULL;
+    case HB_COLR_PRI_BT709:
+        return "bt709";
+    case HB_COLR_PRI_BT470M:
+        return "bt470m";
+    case HB_COLR_PRI_EBUTECH:
+        return "bt470bg";
+    case HB_COLR_PRI_SMPTEC:
+        return "smpte170m";
+    case HB_COLR_PRI_SMPTE240M:
+        return "smpte240m";
+    case HB_COLR_PRI_SMPTE428:
+        return "smpte428";
+    case HB_COLR_PRI_FILM:
+        return "film";
+    case HB_COLR_PRI_SMPTE431:
+        return "smpte431";
+    case HB_COLR_PRI_SMPTE432:
+        return "smpte432";
+    case HB_COLR_PRI_BT2020:
+        return "bt2020";
+    case HB_COLR_PRI_JEDEC_P22:
+        return "jedec-p22";
+    default:
+        return NULL;
     }
 }
 
@@ -5865,26 +5870,26 @@ const char * hb_get_transfer_name(int transfer)
 {
     switch (transfer)
     {
-        case HB_COLR_TRA_BT709:
-            return "bt709";
-        case HB_COLR_TRA_GAMMA22:
-            return "gamma22";
-        case HB_COLR_TRA_GAMMA28:
-            return "gamma28";
-        case HB_COLR_TRA_SMPTE170M:
-            return "smpte170m";
-        case HB_COLR_TRA_SMPTE240M:
-            return "smpte240m";
-        case HB_COLR_TRA_IEC61966_2_1:
-            return "iec61966-2-1";
-        case HB_COLR_TRA_IEC61966_2_4:
-            return "iec61966-2-4";
-        case HB_COLR_TRA_BT2020_10:
-            return "bt2020-10";
-        case HB_COLR_TRA_BT2020_12:
-            return "bt2020-12";
-        default:
-            return NULL;
+    case HB_COLR_TRA_BT709:
+        return "bt709";
+    case HB_COLR_TRA_GAMMA22:
+        return "gamma22";
+    case HB_COLR_TRA_GAMMA28:
+        return "gamma28";
+    case HB_COLR_TRA_SMPTE170M:
+        return "smpte170m";
+    case HB_COLR_TRA_SMPTE240M:
+        return "smpte240m";
+    case HB_COLR_TRA_IEC61966_2_1:
+        return "iec61966-2-1";
+    case HB_COLR_TRA_IEC61966_2_4:
+        return "iec61966-2-4";
+    case HB_COLR_TRA_BT2020_10:
+        return "bt2020-10";
+    case HB_COLR_TRA_BT2020_12:
+        return "bt2020-12";
+    default:
+        return NULL;
     }
 }
 
@@ -5893,24 +5898,24 @@ const char * hb_get_matrix_name(int matrix)
 {
     switch (matrix)
     {
-        case HB_COLR_MAT_BT709:
-            return "bt709";
-        case HB_COLR_MAT_FCC:
-            return "fcc";
-        case HB_COLR_MAT_BT470BG:
-            return "bt470bg";
-        case HB_COLR_MAT_SMPTE170M:
-            return "smpte170m";
-        case HB_COLR_MAT_SMPTE240M:
-            return "smpte240m";
-        case HB_COLR_MAT_YCGCO:
-            return "ycgco";
-        case HB_COLR_MAT_RGB:
-            return "gbr";
-        case HB_COLR_MAT_BT2020_NCL:
-            return "bt2020ncl";
-        default:
-            return NULL;
+    case HB_COLR_MAT_BT709:
+        return "bt709";
+    case HB_COLR_MAT_FCC:
+        return "fcc";
+    case HB_COLR_MAT_BT470BG:
+        return "bt470bg";
+    case HB_COLR_MAT_SMPTE170M:
+        return "smpte170m";
+    case HB_COLR_MAT_SMPTE240M:
+        return "smpte240m";
+    case HB_COLR_MAT_YCGCO:
+        return "ycgco";
+    case HB_COLR_MAT_RGB:
+        return "gbr";
+    case HB_COLR_MAT_BT2020_NCL:
+        return "bt2020ncl";
+    default:
+        return NULL;
     }
 }
 
@@ -5919,11 +5924,11 @@ const char * hb_get_color_range_name(int range)
 {
     switch (range)
     {
-        case AVCOL_RANGE_MPEG:
-            return "mpeg";
-        case AVCOL_RANGE_JPEG:
-            return "jpeg";
-        default:
-            return "mpeg";
+    case AVCOL_RANGE_MPEG:
+        return "mpeg";
+    case AVCOL_RANGE_JPEG:
+        return "jpeg";
+    default:
+        return "mpeg";
     }
 }

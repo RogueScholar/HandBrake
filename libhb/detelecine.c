@@ -139,7 +139,8 @@ static int pullup_diff_y( unsigned char  *a, unsigned char * b, int s )
         {
             diff += PULLUP_ABS( a[j]-b[j] );
         }
-        a+=s; b+=s;
+        a+=s;
+        b+=s;
     }
     return diff;
 }
@@ -152,9 +153,10 @@ static int pullup_licomb_y( unsigned char * a, unsigned char * b, int s )
         for( j = 0; j < 8; j++ )
         {
             diff += PULLUP_ABS( (a[j]<<1) - b[j-s] - b[j] )
-                  + PULLUP_ABS( (b[j]<<1) - a[j] - a[j+s] );
+                    + PULLUP_ABS( (b[j]<<1) - a[j] - a[j+s] );
         }
-        a+=s; b+=s;
+        a+=s;
+        b+=s;
     }
     return diff;
 }
@@ -168,7 +170,8 @@ static int pullup_var_y( unsigned char * a, unsigned char * b, int s )
         {
             var += PULLUP_ABS( a[j]-a[j+s] );
         }
-        a+=s; b+=s;
+        a+=s;
+        b+=s;
     }
     return 4*var;
 }
@@ -185,7 +188,7 @@ static void pullup_compute_metric( struct pullup_context * c,
                                    struct pullup_field * fa, int pa,
                                    struct pullup_field * fb, int pb,
                                    int (* func)( unsigned char *,
-                                                 unsigned char *, int),
+                                           unsigned char *, int),
                                    int * dest )
 {
     unsigned char *a, *b;
@@ -214,12 +217,13 @@ static void pullup_compute_metric( struct pullup_context * c,
         {
             *dest++ = func( a + x, b + x, s );
         }
-        a += ystep; b += ystep;
+        a += ystep;
+        b += ystep;
     }
 }
 
 static struct pullup_field * pullup_make_field_queue( struct pullup_context * c,
-                                                      int len )
+        int len )
 {
     struct pullup_field * head, * f;
     f = head = calloc( 1, sizeof(struct pullup_field) );
@@ -287,7 +291,7 @@ static int pullup_find_first_break( struct pullup_field * f, int max )
     for( i = 0; i < max; i++ )
     {
         if( f->breaks & PULLUP_BREAK_RIGHT ||
-            f->next->breaks & PULLUP_BREAK_LEFT )
+                f->next->breaks & PULLUP_BREAK_LEFT )
         {
             return i+1;
         }
@@ -419,72 +423,72 @@ static int pullup_decide_frame_length( struct pullup_context * c )
 
     switch (l)
     {
-        case 1:
-            if ( c->strict_breaks < 1 &&
-                 f0->affinity == 1 &&
-                 f1->affinity == -1 )
-            {
-                return 2;
-            }
-            else
-            {
-                return 1;
-            }
+    case 1:
+        if ( c->strict_breaks < 1 &&
+                f0->affinity == 1 &&
+                f1->affinity == -1 )
+        {
+            return 2;
+        }
+        else
+        {
+            return 1;
+        }
 
-        case 2:
-            /* FIXME: strictly speaking, f0->prev is no longer valid... :) */
-            if( c->strict_pairs &&
+    case 2:
+        /* FIXME: strictly speaking, f0->prev is no longer valid... :) */
+        if( c->strict_pairs &&
                 (f0->prev->breaks & PULLUP_BREAK_RIGHT) &&
                 (f2->breaks & PULLUP_BREAK_LEFT) &&
                 (f0->affinity != 1 || f1->affinity != -1) )
-            {
-                return 1;
-            }
-            if( f1->affinity == 1 )
-            {
-                return 1;
-            }
-            else
-            {
-                return 2;
-            }
+        {
+            return 1;
+        }
+        if( f1->affinity == 1 )
+        {
+            return 1;
+        }
+        else
+        {
+            return 2;
+        }
 
-        case 3:
-            if( f2->affinity == 1 )
-            {
-                return 2;
-            }
-            else
+    case 3:
+        if( f2->affinity == 1 )
+        {
+            return 2;
+        }
+        else
+        {
+            return 3;
+        }
+
+    default:
+        /* 9 possibilities covered before switch */
+        if( f1->affinity == 1 )
+        {
+            return 1; /* covers 6 */
+        }
+        else if( f1->affinity == -1 )
+        {
+            return 2; /* covers 6 */
+        }
+        else if( f2->affinity == -1 )
+        {
+            /* covers 2 */
+            if( f0->affinity == 1 )
             {
                 return 3;
             }
-
-        default:
-            /* 9 possibilities covered before switch */
-            if( f1->affinity == 1 )
-            {
-                return 1; /* covers 6 */
-            }
-            else if( f1->affinity == -1 )
-            {
-                return 2; /* covers 6 */
-            }
-            else if( f2->affinity == -1 )
-            {
-                /* covers 2 */
-                if( f0->affinity == 1 )
-                {
-                    return 3;
-                }
-                else
-                {
-                    return 1;
-                }
-            }
             else
             {
-                return 2; /* the remaining 6 */
+                return 1;
             }
+        }
+        else
+        {
+            return 2; /* the remaining 6 */
+        }
     }
 }
 
@@ -614,7 +618,7 @@ static void pullup_alloc_buffer( struct pullup_context * c,
 }
 
 struct pullup_buffer * pullup_lock_buffer( struct pullup_buffer * b,
-                                           int parity )
+        int parity )
 {
     if( !b ) return 0;
     if( (parity+1) & 1 ) b->lock[0]++;
@@ -632,15 +636,15 @@ void pullup_release_buffer( struct pullup_buffer * b,
 }
 
 struct pullup_buffer * pullup_get_buffer( struct pullup_context * c,
-                                          int parity )
+        int parity )
 {
     int i;
 
     /* Try first to get the sister buffer for the previous field */
     if( parity < 2 &&
-        c->last &&
-        parity != c->last->parity &&
-        !c->last->buffer->lock[parity])
+            c->last &&
+            parity != c->last->parity &&
+            !c->last->buffer->lock[parity])
     {
         pullup_alloc_buffer( c, c->last->buffer );
         return pullup_lock_buffer( c->last->buffer, parity );
@@ -1043,10 +1047,10 @@ output_frame:
 
     return HB_FILTER_OK;
 
-/* This and all discard_frame calls shown above are
-   the result of me restoring the functionality in
-   pullup that huevos_rancheros disabled because
-   HB couldn't handle it.                           */
+    /* This and all discard_frame calls shown above are
+       the result of me restoring the functionality in
+       pullup that huevos_rancheros disabled because
+       HB couldn't handle it.                           */
 discard_frame:
     return HB_FILTER_OK;
 

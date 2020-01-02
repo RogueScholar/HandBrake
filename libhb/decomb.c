@@ -194,24 +194,24 @@ hb_filter_object_t hb_filter_decomb =
 #define times1024(x) times4(times4(times4(times4(times4(x)))))
 
 static const uint8_t hb_crop_table[256 + 2 * 1024] = {
-times1024(0x00),
-0x00,0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08,0x09,0x0A,0x0B,0x0C,0x0D,0x0E,0x0F,
-0x10,0x11,0x12,0x13,0x14,0x15,0x16,0x17,0x18,0x19,0x1A,0x1B,0x1C,0x1D,0x1E,0x1F,
-0x20,0x21,0x22,0x23,0x24,0x25,0x26,0x27,0x28,0x29,0x2A,0x2B,0x2C,0x2D,0x2E,0x2F,
-0x30,0x31,0x32,0x33,0x34,0x35,0x36,0x37,0x38,0x39,0x3A,0x3B,0x3C,0x3D,0x3E,0x3F,
-0x40,0x41,0x42,0x43,0x44,0x45,0x46,0x47,0x48,0x49,0x4A,0x4B,0x4C,0x4D,0x4E,0x4F,
-0x50,0x51,0x52,0x53,0x54,0x55,0x56,0x57,0x58,0x59,0x5A,0x5B,0x5C,0x5D,0x5E,0x5F,
-0x60,0x61,0x62,0x63,0x64,0x65,0x66,0x67,0x68,0x69,0x6A,0x6B,0x6C,0x6D,0x6E,0x6F,
-0x70,0x71,0x72,0x73,0x74,0x75,0x76,0x77,0x78,0x79,0x7A,0x7B,0x7C,0x7D,0x7E,0x7F,
-0x80,0x81,0x82,0x83,0x84,0x85,0x86,0x87,0x88,0x89,0x8A,0x8B,0x8C,0x8D,0x8E,0x8F,
-0x90,0x91,0x92,0x93,0x94,0x95,0x96,0x97,0x98,0x99,0x9A,0x9B,0x9C,0x9D,0x9E,0x9F,
-0xA0,0xA1,0xA2,0xA3,0xA4,0xA5,0xA6,0xA7,0xA8,0xA9,0xAA,0xAB,0xAC,0xAD,0xAE,0xAF,
-0xB0,0xB1,0xB2,0xB3,0xB4,0xB5,0xB6,0xB7,0xB8,0xB9,0xBA,0xBB,0xBC,0xBD,0xBE,0xBF,
-0xC0,0xC1,0xC2,0xC3,0xC4,0xC5,0xC6,0xC7,0xC8,0xC9,0xCA,0xCB,0xCC,0xCD,0xCE,0xCF,
-0xD0,0xD1,0xD2,0xD3,0xD4,0xD5,0xD6,0xD7,0xD8,0xD9,0xDA,0xDB,0xDC,0xDD,0xDE,0xDF,
-0xE0,0xE1,0xE2,0xE3,0xE4,0xE5,0xE6,0xE7,0xE8,0xE9,0xEA,0xEB,0xEC,0xED,0xEE,0xEF,
-0xF0,0xF1,0xF2,0xF3,0xF4,0xF5,0xF6,0xF7,0xF8,0xF9,0xFA,0xFB,0xFC,0xFD,0xFE,0xFF,
-times1024(0xFF)
+    times1024(0x00),
+    0x00,0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08,0x09,0x0A,0x0B,0x0C,0x0D,0x0E,0x0F,
+    0x10,0x11,0x12,0x13,0x14,0x15,0x16,0x17,0x18,0x19,0x1A,0x1B,0x1C,0x1D,0x1E,0x1F,
+    0x20,0x21,0x22,0x23,0x24,0x25,0x26,0x27,0x28,0x29,0x2A,0x2B,0x2C,0x2D,0x2E,0x2F,
+    0x30,0x31,0x32,0x33,0x34,0x35,0x36,0x37,0x38,0x39,0x3A,0x3B,0x3C,0x3D,0x3E,0x3F,
+    0x40,0x41,0x42,0x43,0x44,0x45,0x46,0x47,0x48,0x49,0x4A,0x4B,0x4C,0x4D,0x4E,0x4F,
+    0x50,0x51,0x52,0x53,0x54,0x55,0x56,0x57,0x58,0x59,0x5A,0x5B,0x5C,0x5D,0x5E,0x5F,
+    0x60,0x61,0x62,0x63,0x64,0x65,0x66,0x67,0x68,0x69,0x6A,0x6B,0x6C,0x6D,0x6E,0x6F,
+    0x70,0x71,0x72,0x73,0x74,0x75,0x76,0x77,0x78,0x79,0x7A,0x7B,0x7C,0x7D,0x7E,0x7F,
+    0x80,0x81,0x82,0x83,0x84,0x85,0x86,0x87,0x88,0x89,0x8A,0x8B,0x8C,0x8D,0x8E,0x8F,
+    0x90,0x91,0x92,0x93,0x94,0x95,0x96,0x97,0x98,0x99,0x9A,0x9B,0x9C,0x9D,0x9E,0x9F,
+    0xA0,0xA1,0xA2,0xA3,0xA4,0xA5,0xA6,0xA7,0xA8,0xA9,0xAA,0xAB,0xAC,0xAD,0xAE,0xAF,
+    0xB0,0xB1,0xB2,0xB3,0xB4,0xB5,0xB6,0xB7,0xB8,0xB9,0xBA,0xBB,0xBC,0xBD,0xBE,0xBF,
+    0xC0,0xC1,0xC2,0xC3,0xC4,0xC5,0xC6,0xC7,0xC8,0xC9,0xCA,0xCB,0xCC,0xCD,0xCE,0xCF,
+    0xD0,0xD1,0xD2,0xD3,0xD4,0xD5,0xD6,0xD7,0xD8,0xD9,0xDA,0xDB,0xDC,0xDD,0xDE,0xDF,
+    0xE0,0xE1,0xE2,0xE3,0xE4,0xE5,0xE6,0xE7,0xE8,0xE9,0xEA,0xEB,0xEC,0xED,0xEE,0xEF,
+    0xF0,0xF1,0xF2,0xF3,0xF4,0xF5,0xF6,0xF7,0xF8,0xF9,0xFA,0xFB,0xFC,0xFD,0xFE,0xFF,
+    times1024(0xFF)
 };
 
 static inline int cubic_interpolate_pixel( int y0, int y1, int y2, int y3 )
@@ -224,12 +224,12 @@ static inline int cubic_interpolate_pixel( int y0, int y1, int y2, int y3 )
 }
 
 static void cubic_interpolate_line(
-        uint8_t *dst,
-        uint8_t *cur,
-        int width,
-        int height,
-        int stride,
-        int y)
+    uint8_t *dst,
+    uint8_t *cur,
+    int width,
+    int height,
+    int stride,
+    int y)
 {
     int w = width;
     int x;
@@ -308,12 +308,12 @@ static inline int blend_filter_pixel(filter_param_t *filter, int up2, int up1, i
 }
 
 static void blend_filter_line(filter_param_t *filter,
-                               uint8_t *dst,
-                               uint8_t *cur,
-                               int width,
-                               int height,
-                               int stride,
-                               int y)
+                              uint8_t *dst,
+                              uint8_t *cur,
+                              int width,
+                              int height,
+                              int stride,
+                              int y)
 {
     int w = width;
     int x;
@@ -398,8 +398,8 @@ static void eedi2_interpolate_plane( hb_filter_private_t * pv, int plane )
 
     // edge mask
     eedi2_build_edge_mask( mskp, pitch, srcp, pitch,
-                     pv->magnitude_threshold, pv->variance_threshold, pv->laplacian_threshold,
-                     half_height, width );
+                           pv->magnitude_threshold, pv->variance_threshold, pv->laplacian_threshold,
+                           half_height, width );
     eedi2_erode_edge_mask( mskp, pitch, tmpp, pitch, pv->erosion_threshold, half_height, width );
     eedi2_dilate_edge_mask( tmpp, pitch, mskp, pitch, pv->dilation_threshold, half_height, width );
     eedi2_erode_edge_mask( mskp, pitch, tmpp, pitch, pv->erosion_threshold, half_height, width );
@@ -407,8 +407,8 @@ static void eedi2_interpolate_plane( hb_filter_private_t * pv, int plane )
 
     // direction mask
     eedi2_calc_directions( plane, mskp, pitch, srcp, pitch, tmpp, pitch,
-                     pv->maximum_search_distance, pv->noise_threshold,
-                     half_height, width );
+                           pv->maximum_search_distance, pv->noise_threshold,
+                           half_height, width );
     eedi2_filter_dir_map( mskp, pitch, tmpp, pitch, dstp, pitch, half_height, width );
     eedi2_expand_dir_map( mskp, pitch, dstp, pitch, tmpp, pitch, half_height, width );
     eedi2_filter_map( mskp, pitch, tmpp, pitch, dstp, pitch, half_height, width );
@@ -427,7 +427,7 @@ static void eedi2_interpolate_plane( hb_filter_private_t * pv, int plane )
 
     // interpolate a full-size plane
     eedi2_interpolate_lattice( plane, tmp2p, pitch, dst2p, pitch, tmp2p2, pitch, pv->tff,
-                         pv->noise_threshold, height, width );
+                               pv->noise_threshold, height, width );
 
     if( pv->post_processing == 1 || pv->post_processing == 3 )
     {
@@ -505,8 +505,8 @@ static void eedi2_planer( hb_filter_private_t * pv )
         int start_line = !pv->tff;
 
         eedi2_fill_half_height_buffer_plane(
-                &pv->ref[1]->plane[pp].data[pitch * start_line],
-                pv->eedi_half[SRCPF]->plane[pp].data, pitch, height );
+            &pv->ref[1]->plane[pp].data[pitch * start_line],
+            pv->eedi_half[SRCPF]->plane[pp].data, pitch, height );
     }
 
     /*
@@ -551,17 +551,17 @@ static void eedi2_planer( hb_filter_private_t * pv )
             }\
 
 static void yadif_filter_line(
-       hb_filter_private_t * pv,
-       uint8_t             * dst,
-       uint8_t             * prev,
-       uint8_t             * cur,
-       uint8_t             * next,
-       int                   plane,
-       int                   width,
-       int                   height,
-       int                   stride,
-       int                   parity,
-       int                   y)
+    hb_filter_private_t * pv,
+    uint8_t             * dst,
+    uint8_t             * prev,
+    uint8_t             * cur,
+    uint8_t             * next,
+    int                   plane,
+    int                   width,
+    int                   height,
+    int                   stride,
+    int                   parity,
+    int                   y)
 {
     /* While prev and next point to the previous and next frames,
        prev2 and next2 will shift depending on the parity, usually 1.
@@ -617,7 +617,7 @@ static void yadif_filter_line(
         {
             /* SAD of how the pixel-1, the pixel, and the pixel+1 change from the line above to below. */
             int spatial_score  = ABS(cur[-stride-1] - cur[+stride-1]) + ABS(cur[-stride]-cur[+stride]) +
-                                         ABS(cur[-stride+1] - cur[+stride+1]) - 1;
+                                 ABS(cur[-stride+1] - cur[+stride+1]) - 1;
 
             /* Spatial pred is either a bilinear or cubic vertical interpolation. */
             if( ( pv->mode & MODE_DECOMB_CUBIC ) && !vertical_edge)
@@ -640,44 +640,52 @@ static void yadif_filter_line(
             {
                 YADIF_CHECK(-1)
                 if (x >= margin + 1 && x <= width - (margin + 2))
-                    YADIF_CHECK(-2) }} }}
-            }
-            if (x >= margin && x <= width - (margin + 1))
-            {
-                YADIF_CHECK(1)
-                if (x >= margin + 1 && x <= width - (margin + 2))
-                    YADIF_CHECK(2) }} }}
-            }
+                    YADIF_CHECK(-2)
+                }
         }
-
-        /* Temporally adjust the spatial prediction by
-           comparing against lines in the adjacent fields. */
-        int b = (prev2[-2*stride] + next2[-2*stride])>>1;
-        int f = (prev2[+2*stride] + next2[+2*stride])>>1;
-
-        /* Find the median value */
-        int max = MAX3(d-e, d-c, MIN(b-c, f-e));
-        int min = MIN3(d-e, d-c, MAX(b-c, f-e));
-        diff = MAX3( diff, min, -max );
-
-        if( spatial_pred > d + diff )
-        {
-            spatial_pred = d + diff;
-        }
-        else if( spatial_pred < d - diff )
-        {
-            spatial_pred = d - diff;
-        }
-
-        dst[0] = spatial_pred;
-
-        dst++;
-        cur++;
-        prev++;
-        next++;
-        prev2++;
-        next2++;
     }
+}
+}
+if (x >= margin && x <= width - (margin + 1))
+{
+    YADIF_CHECK(1)
+    if (x >= margin + 1 && x <= width - (margin + 2))
+        YADIF_CHECK(2)
+    }
+}
+}
+}
+}
+}
+
+/* Temporally adjust the spatial prediction by
+   comparing against lines in the adjacent fields. */
+int b = (prev2[-2*stride] + next2[-2*stride])>>1;
+int f = (prev2[+2*stride] + next2[+2*stride])>>1;
+
+/* Find the median value */
+int max = MAX3(d-e, d-c, MIN(b-c, f-e));
+int min = MIN3(d-e, d-c, MAX(b-c, f-e));
+diff = MAX3( diff, min, -max );
+
+if( spatial_pred > d + diff )
+{
+    spatial_pred = d + diff;
+}
+else if( spatial_pred < d - diff )
+{
+    spatial_pred = d - diff;
+}
+
+dst[0] = spatial_pred;
+
+dst++;
+cur++;
+prev++;
+next++;
+prev2++;
+next2++;
+}
 }
 
 /*
@@ -1006,14 +1014,14 @@ static int hb_decomb_init( hb_filter_object_t * filter,
         for( ii = 0; ii < 4; ii++ )
         {
             pv->eedi_half[ii] = hb_frame_buffer_init(
-                init->pix_fmt, init->geometry.width, init->geometry.height / 2);
+                                    init->pix_fmt, init->geometry.width, init->geometry.height / 2);
         }
 
         /* Allocate full-height eedi2 buffers */
         for( ii = 0; ii < 5; ii++ )
         {
             pv->eedi_full[ii] = hb_frame_buffer_init(
-                init->pix_fmt, init->geometry.width, init->geometry.height);
+                                    init->pix_fmt, init->geometry.width, init->geometry.height);
         }
     }
 
@@ -1022,8 +1030,8 @@ static int hb_decomb_init( hb_filter_object_t * filter,
      */
     pv->yadif_arguments = malloc( sizeof( yadif_arguments_t ) * pv->cpu_count );
     if( pv->yadif_arguments == NULL ||
-        taskset_init( &pv->yadif_taskset, pv->cpu_count,
-                      sizeof( yadif_thread_arg_t ) ) == 0 )
+            taskset_init( &pv->yadif_taskset, pv->cpu_count,
+                          sizeof( yadif_thread_arg_t ) ) == 0 )
     {
         hb_error( "yadif could not initialize taskset" );
     }
@@ -1053,16 +1061,16 @@ static int hb_decomb_init( hb_filter_object_t * filter,
                  */
                 thread_args->segment_height[pp] =
                     ((hb_image_height(init->pix_fmt, init->geometry.height, pp)
-                     + 3) & ~3) - thread_args->segment_start[pp];
+                      + 3) & ~3) - thread_args->segment_start[pp];
             } else {
                 thread_args->segment_height[pp] = pv->segment_height[pp];
             }
         }
         pv->yadif_arguments[ii].dst = NULL;
         if( taskset_thread_spawn( &pv->yadif_taskset, ii,
-                                 "yadif_filter_segment",
-                                 yadif_decomb_filter_thread,
-                                 HB_NORMAL_PRIORITY ) == 0 )
+                                  "yadif_filter_segment",
+                                  yadif_decomb_filter_thread,
+                                  HB_NORMAL_PRIORITY ) == 0 )
         {
             hb_error( "yadif could not spawn thread" );
         }
@@ -1086,16 +1094,16 @@ static int hb_decomb_init( hb_filter_object_t * filter,
             stride = hb_image_stride(init->pix_fmt, init->geometry.width, 0);
 
             pv->cx2 = (int*)eedi2_aligned_malloc(
-                    init->geometry.height * stride * sizeof(int), 16);
+                          init->geometry.height * stride * sizeof(int), 16);
 
             pv->cy2 = (int*)eedi2_aligned_malloc(
-                    init->geometry.height * stride * sizeof(int), 16);
+                          init->geometry.height * stride * sizeof(int), 16);
 
             pv->cxy = (int*)eedi2_aligned_malloc(
-                    init->geometry.height * stride * sizeof(int), 16);
+                          init->geometry.height * stride * sizeof(int), 16);
 
             pv->tmpc = (int*)eedi2_aligned_malloc(
-                    init->geometry.height * stride * sizeof(int), 16);
+                           init->geometry.height * stride * sizeof(int), 16);
 
             if( !pv->cx2 || !pv->cy2 || !pv->cxy || !pv->tmpc )
                 hb_error("EEDI2: failed to malloc derivative arrays");
@@ -1212,7 +1220,7 @@ static void fill_stride(hb_buffer_t * buf)
 static void process_frame( hb_filter_private_t * pv )
 {
     if ((pv->mode & MODE_DECOMB_SELECTIVE) &&
-        pv->ref[1]->s.combed == HB_COMB_NONE)
+            pv->ref[1]->s.combed == HB_COMB_NONE)
     {
         // Input buffer is not combed.  Just make a dup of it.
         hb_buffer_t * buf = hb_buffer_dup(pv->ref[1]);

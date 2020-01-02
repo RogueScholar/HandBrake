@@ -91,32 +91,32 @@ taskset_init( taskset_t *ts, int thread_count, size_t arg_size )
 fail:
     switch (init_step)
     {
-        default:
-            hb_cond_close( &ts->task_complete );
-            /* FALL THROUGH */
-        case 7:
-            hb_cond_close( &ts->task_begin );
-            /* FALL THROUGH */
-        case 6:
-            hb_lock_close( &ts->task_cond_lock );
-            /* FALL THROUGH */
-        case 5:
-            free( ts->task_stop_bitmap );
-            /* FALL THROUGH */
-        case 4:
-            free( ts->task_complete_bitmap );
-            /* FALL THROUGH */
-        case 3:
-            free( ts->task_begin_bitmap );
-            /* FALL THROUGH */
-        case 2:
-            free( ts->task_threads_args );
-            /* FALL THROUGH */
-        case 1:
-            free( ts->task_threads );
-            /* FALL THROUGH */
-        case 0:
-            break;
+    default:
+        hb_cond_close( &ts->task_complete );
+    /* FALL THROUGH */
+    case 7:
+        hb_cond_close( &ts->task_begin );
+    /* FALL THROUGH */
+    case 6:
+        hb_lock_close( &ts->task_cond_lock );
+    /* FALL THROUGH */
+    case 5:
+        free( ts->task_stop_bitmap );
+    /* FALL THROUGH */
+    case 4:
+        free( ts->task_complete_bitmap );
+    /* FALL THROUGH */
+    case 3:
+        free( ts->task_begin_bitmap );
+    /* FALL THROUGH */
+    case 2:
+        free( ts->task_threads_args );
+    /* FALL THROUGH */
+    case 1:
+        free( ts->task_threads );
+    /* FALL THROUGH */
+    case 0:
+        break;
     }
     return (0);
 }
@@ -126,8 +126,8 @@ taskset_thread_spawn( taskset_t *ts, int thr_idx, const char *descr,
                       thread_func_t *func, int priority )
 {
     ts->task_threads[thr_idx] = hb_thread_init( descr, func,
-                                                taskset_thread_args( ts, thr_idx ),
-                                                priority);
+                                taskset_thread_args( ts, thr_idx ),
+                                priority);
     return( ts->task_threads[thr_idx] != NULL );
 }
 

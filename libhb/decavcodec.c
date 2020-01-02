@@ -230,36 +230,36 @@ static int decavcodecaInit( hb_work_object_t * w, hb_job_t * job )
         int avcodec_downmix = 0;
         switch (w->codec_param)
         {
-            case AV_CODEC_ID_AC3:
-            case AV_CODEC_ID_EAC3:
-                avcodec_downmix = w->audio->config.out.normalize_mix_level != 0;
-                break;
-            case AV_CODEC_ID_DTS:
-                avcodec_downmix = w->audio->config.out.normalize_mix_level == 0;
-                break;
-            case AV_CODEC_ID_TRUEHD:
-                avcodec_downmix = (w->audio->config.out.normalize_mix_level == 0     ||
-                                   w->audio->config.out.mixdown == HB_AMIXDOWN_MONO  ||
-                                   w->audio->config.out.mixdown == HB_AMIXDOWN_DOLBY ||
-                                   w->audio->config.out.mixdown == HB_AMIXDOWN_DOLBYPLII);
-                break;
-            default:
-                break;
+        case AV_CODEC_ID_AC3:
+        case AV_CODEC_ID_EAC3:
+            avcodec_downmix = w->audio->config.out.normalize_mix_level != 0;
+            break;
+        case AV_CODEC_ID_DTS:
+            avcodec_downmix = w->audio->config.out.normalize_mix_level == 0;
+            break;
+        case AV_CODEC_ID_TRUEHD:
+            avcodec_downmix = (w->audio->config.out.normalize_mix_level == 0     ||
+                               w->audio->config.out.mixdown == HB_AMIXDOWN_MONO  ||
+                               w->audio->config.out.mixdown == HB_AMIXDOWN_DOLBY ||
+                               w->audio->config.out.mixdown == HB_AMIXDOWN_DOLBYPLII);
+            break;
+        default:
+            break;
         }
         if (avcodec_downmix)
         {
             switch (w->audio->config.out.mixdown)
             {
-                // request 5.1 before downmixing to dpl1/dpl2
-                case HB_AMIXDOWN_DOLBY:
-                case HB_AMIXDOWN_DOLBYPLII:
-                    pv->context->request_channel_layout = AV_CH_LAYOUT_5POINT1;
-                    break;
-                // request the layout corresponding to the selected mixdown
-                default:
-                    pv->context->request_channel_layout =
-                        hb_ff_mixdown_xlat(w->audio->config.out.mixdown, NULL);
-                    break;
+            // request 5.1 before downmixing to dpl1/dpl2
+            case HB_AMIXDOWN_DOLBY:
+            case HB_AMIXDOWN_DOLBYPLII:
+                pv->context->request_channel_layout = AV_CH_LAYOUT_5POINT1;
+                break;
+            // request the layout corresponding to the selected mixdown
+            default:
+                pv->context->request_channel_layout =
+                    hb_ff_mixdown_xlat(w->audio->config.out.mixdown, NULL);
+                break;
             }
         }
     }
@@ -267,7 +267,7 @@ static int decavcodecaInit( hb_work_object_t * w, hb_job_t * job )
     // libavcodec can't decode TrueHD Mono (bug #356)
     // work around it by requesting Stereo and downmixing
     if (w->codec_param                     == AV_CODEC_ID_TRUEHD &&
-        w->audio->config.in.channel_layout == AV_CH_LAYOUT_MONO)
+            w->audio->config.in.channel_layout == AV_CH_LAYOUT_MONO)
     {
         pv->context->request_channel_layout = AV_CH_LAYOUT_STEREO;
     }
@@ -278,8 +278,8 @@ static int decavcodecaInit( hb_work_object_t * w, hb_job_t * job )
 
     // Dynamic Range Compression
     if (w->audio->config.out.dynamic_range_compression >= 0.0f &&
-        hb_audio_can_apply_drc(w->audio->config.in.codec,
-                               w->audio->config.in.codec_param, 0))
+            hb_audio_can_apply_drc(w->audio->config.in.codec,
+                                   w->audio->config.in.codec_param, 0))
     {
         float drc_scale_max = 1.0f;
         /*
@@ -325,7 +325,7 @@ static int decavcodecaInit( hb_work_object_t * w, hb_job_t * job )
     AVDictionaryEntry *t = NULL;
     while ((t = av_dict_get(av_opts, "", t, AV_DICT_IGNORE_SUFFIX)) != NULL)
     {
-            hb_log("decavcodecaInit: unknown option '%s'", t->key);
+        hb_log("decavcodecaInit: unknown option '%s'", t->key);
     }
     av_dict_free( &av_opts );
 
@@ -430,8 +430,8 @@ static void audioParserFlush(hb_work_object_t * w)
         if (pv->parser)
         {
             av_parser_parse2(pv->parser, pv->context, &pout, &pout_len,
-                                   NULL, 0,
-                                   AV_NOPTS_VALUE, AV_NOPTS_VALUE, 0 );
+                             NULL, 0,
+                             AV_NOPTS_VALUE, AV_NOPTS_VALUE, 0 );
             parser_pts = pv->parser->pts;
         }
 
@@ -632,7 +632,7 @@ static int parse_adts_extradata( hb_audio_t * audio, AVCodecContext * context,
 }
 
 static int decavcodecaBSInfo( hb_work_object_t *w, const hb_buffer_t *buf,
-                             hb_work_info_t *info )
+                              hb_work_info_t *info )
 {
     hb_work_private_t *pv = w->private_data;
     int result = 0, done = 0;
@@ -706,9 +706,9 @@ static int decavcodecaBSInfo( hb_work_object_t *w, const hb_buffer_t *buf,
             if (parser != NULL)
             {
                 parse_len = av_parser_parse2(parser, context,
-                                &parse_buffer, &parse_buffer_size,
-                                buf->data + parse_pos, buf->size - parse_pos,
-                                buf->s.start, buf->s.start, 0);
+                                             &parse_buffer, &parse_buffer_size,
+                                             buf->data + parse_pos, buf->size - parse_pos,
+                                             buf->s.start, buf->s.start, 0);
             }
             else
             {
@@ -725,7 +725,7 @@ static int decavcodecaBSInfo( hb_work_object_t *w, const hb_buffer_t *buf,
             // libavcodec can't decode TrueHD Mono (bug #356)
             // work around it by requesting Stereo before decoding
             if (context->codec_id == AV_CODEC_ID_TRUEHD &&
-                context->channel_layout == AV_CH_LAYOUT_MONO)
+                    context->channel_layout == AV_CH_LAYOUT_MONO)
             {
                 truehd_mono                     = 1;
                 context->request_channel_layout = AV_CH_LAYOUT_STEREO;
@@ -777,7 +777,7 @@ static int decavcodecaBSInfo( hb_work_object_t *w, const hb_buffer_t *buf,
                     if (frame->channel_layout != 0)
                     {
                         channels = av_get_channel_layout_nb_channels(
-                                                        frame->channel_layout);
+                                       frame->channel_layout);
                     }
                     else
                     {
@@ -806,8 +806,8 @@ static int decavcodecaBSInfo( hb_work_object_t *w, const hb_buffer_t *buf,
                     {
                         AVFrameSideData *side_data;
                         if ((side_data =
-                             av_frame_get_side_data(frame,
-                                                    AV_FRAME_DATA_MATRIXENCODING)) != NULL)
+                                    av_frame_get_side_data(frame,
+                                                           AV_FRAME_DATA_MATRIXENCODING)) != NULL)
                         {
                             info->matrix_encoding = *side_data->data;
                         }
@@ -816,7 +816,7 @@ static int decavcodecaBSInfo( hb_work_object_t *w, const hb_buffer_t *buf,
                             info->matrix_encoding = AV_MATRIX_ENCODING_NONE;
                         }
                         if (info->matrix_encoding == AV_MATRIX_ENCODING_DOLBY ||
-                            info->matrix_encoding == AV_MATRIX_ENCODING_DPLII)
+                                info->matrix_encoding == AV_MATRIX_ENCODING_DPLII)
                         {
                             info->channel_layout = AV_CH_LAYOUT_STEREO_DOWNMIX;
                         }
@@ -830,10 +830,10 @@ static int decavcodecaBSInfo( hb_work_object_t *w, const hb_buffer_t *buf,
                         // Channel layout was not set.  Guess a layout based
                         // on number of channels.
                         info->channel_layout = av_get_default_channel_layout(
-                                                            frame->channels);
+                                                   frame->channels);
                     }
                     if (context->codec_id == AV_CODEC_ID_AC3 ||
-                        context->codec_id == AV_CODEC_ID_EAC3)
+                            context->codec_id == AV_CODEC_ID_EAC3)
                     {
                         if (context->audio_service_type == AV_AUDIO_SERVICE_TYPE_KARAOKE)
                         {
@@ -982,14 +982,16 @@ static hb_buffer_t *copy_frame( hb_work_private_t *pv )
 #if HB_PROJECT_FEATURE_QSV
     // no need to copy the frame data when decoding with QSV to opaque memory
     if (pv->qsv.decode &&
-        pv->qsv.config.io_pattern == MFX_IOPATTERN_OUT_VIDEO_MEMORY)
+            pv->qsv.config.io_pattern == MFX_IOPATTERN_OUT_VIDEO_MEMORY)
     {
         out = hb_qsv_copy_frame(pv->frame, pv->job->qsv.ctx);
     }
     else
 #endif
     {
-        out = hb_avframe_to_video_buffer(pv->frame, (AVRational){1,1});
+        out = hb_avframe_to_video_buffer(pv->frame, (AVRational) {
+            1,1
+        });
     }
 
     if (pv->frame->pts != AV_NOPTS_VALUE)
@@ -1039,8 +1041,8 @@ static hb_buffer_t *copy_frame( hb_work_private_t *pv )
     // by the decoder.  So also check if the output buffer is after
     // the new_chap in the timeline.
     if (pv->new_chap > 0 &&
-        (out->s.scr_sequence > pv->chap_scr ||
-         (out->s.scr_sequence == pv->chap_scr && out->s.start > pv->chap_time)))
+            (out->s.scr_sequence > pv->chap_scr ||
+             (out->s.scr_sequence == pv->chap_scr && out->s.start > pv->chap_time)))
     {
         out->s.new_chap = pv->new_chap;
         pv->new_chap    = 0;
@@ -1095,7 +1097,7 @@ static hb_buffer_t *copy_frame( hb_work_private_t *pv )
                 snprintf(subtitle->lang, sizeof(subtitle->lang),
                          "%s, Closed Caption [%s]",
                          strlen(lang->native_name) ? lang->native_name :
-                                                     lang->eng_name,
+                         lang->eng_name,
                          hb_subsource_name(subtitle->source));
                 snprintf(subtitle->iso639_2, sizeof(subtitle->iso639_2),
                          "%s", lang->iso639_2);
@@ -1130,7 +1132,7 @@ int reinit_video_filters(hb_work_private_t * pv)
 
 #if HB_PROJECT_FEATURE_QSV
     if (pv->qsv.decode &&
-        pv->qsv.config.io_pattern == MFX_IOPATTERN_OUT_VIDEO_MEMORY)
+            pv->qsv.config.io_pattern == MFX_IOPATTERN_OUT_VIDEO_MEMORY)
     {
         // Can't use software filters when decoding with QSV opaque memory
         return 0;
@@ -1148,7 +1150,7 @@ int reinit_video_filters(hb_work_private_t * pv)
     else
     {
         if (pv->title->rotation == HB_ROTATION_90 ||
-            pv->title->rotation == HB_ROTATION_270)
+                pv->title->rotation == HB_ROTATION_270)
         {
             orig_width = pv->job->title->geometry.height;
             orig_height = pv->job->title->geometry.width;
@@ -1162,9 +1164,9 @@ int reinit_video_filters(hb_work_private_t * pv)
     }
 
     if (pix_fmt            == pv->frame->format  &&
-        orig_width         == pv->frame->width   &&
-        orig_height        == pv->frame->height  &&
-        HB_ROTATION_0      == pv->title->rotation)
+            orig_width         == pv->frame->width   &&
+            orig_height        == pv->frame->height  &&
+            HB_ROTATION_0      == pv->title->rotation)
     {
         // No filtering required.
         close_video_filters(pv);
@@ -1172,9 +1174,9 @@ int reinit_video_filters(hb_work_private_t * pv)
     }
 
     if (pv->video_filters.graph   != NULL              &&
-        pv->video_filters.width   == pv->frame->width  &&
-        pv->video_filters.height  == pv->frame->height &&
-        pv->video_filters.pix_fmt == pv->frame->format)
+            pv->video_filters.width   == pv->frame->width  &&
+            pv->video_filters.height  == pv->frame->height &&
+            pv->video_filters.pix_fmt == pv->frame->format)
     {
         // Current filter settings are good
         return 0;
@@ -1196,8 +1198,8 @@ int reinit_video_filters(hb_work_private_t * pv)
 
     filters = hb_value_array_init();
     if (pix_fmt            != pv->frame->format ||
-        orig_width         != pv->frame->width  ||
-        orig_height        != pv->frame->height)
+            orig_width         != pv->frame->width  ||
+            orig_height        != pv->frame->height)
     {
 
         settings = hb_dict_init();
@@ -1214,22 +1216,22 @@ int reinit_video_filters(hb_work_private_t * pv)
     {
         switch (pv->title->rotation)
         {
-            case HB_ROTATION_90:
-                settings = hb_dict_init();
-                hb_dict_set(settings, "dir", hb_value_string("cclock"));
-                hb_avfilter_append_dict(filters, "transpose", settings);
-                break;
-            case HB_ROTATION_180:
-                hb_avfilter_append_dict(filters, "hflip", hb_value_null());
-                hb_avfilter_append_dict(filters, "vflip", hb_value_null());
-                break;
-            case HB_ROTATION_270:
-                settings = hb_dict_init();
-                hb_dict_set(settings, "dir", hb_value_string("clock"));
-                hb_avfilter_append_dict(filters, "transpose", settings);
-                break;
-            default:
-                hb_log("reinit_video_filters: Unknown rotation, failed");
+        case HB_ROTATION_90:
+            settings = hb_dict_init();
+            hb_dict_set(settings, "dir", hb_value_string("cclock"));
+            hb_avfilter_append_dict(filters, "transpose", settings);
+            break;
+        case HB_ROTATION_180:
+            hb_avfilter_append_dict(filters, "hflip", hb_value_null());
+            hb_avfilter_append_dict(filters, "vflip", hb_value_null());
+            break;
+        case HB_ROTATION_270:
+            settings = hb_dict_init();
+            hb_dict_set(settings, "dir", hb_value_string("clock"));
+            hb_avfilter_append_dict(filters, "transpose", settings);
+            break;
+        default:
+            hb_log("reinit_video_filters: Unknown rotation, failed");
         }
     }
 
@@ -1472,11 +1474,11 @@ static int decavcodecvInit( hb_work_object_t * w, hb_job_t * job )
         AVFormatContext *ic = (AVFormatContext*)pv->title->opaque_priv;
 
         avcodec_parameters_to_context(pv->context,
-                                  ic->streams[pv->title->video_id]->codecpar);
+                                      ic->streams[pv->title->video_id]->codecpar);
 
 #if HB_PROJECT_FEATURE_QSV
         if (pv->qsv.decode &&
-            pv->qsv.config.io_pattern == MFX_IOPATTERN_OUT_VIDEO_MEMORY)
+                pv->qsv.config.io_pattern == MFX_IOPATTERN_OUT_VIDEO_MEMORY)
         {
             // assign callbacks
             pv->context->get_format = hb_qsv_get_format;
@@ -1536,7 +1538,7 @@ static int decavcodecvInit( hb_work_object_t * w, hb_job_t * job )
         while ((subtitle = hb_list_item(job->list_subtitle, i++)) != NULL)
         {
             if (subtitle->source == CC608SUB &&
-                subtitle->id == HB_SUBTITLE_EMBEDDED_CC_TAG)
+                    subtitle->id == HB_SUBTITLE_EMBEDDED_CC_TAG)
             {
                 if (pv->list_subtitle == NULL)
                 {
@@ -1559,7 +1561,7 @@ static int setup_extradata( hb_work_private_t * pv, AVCodecContext * context )
     if (context->extradata == NULL)
     {
         if (pv->parser == NULL || pv->parser->parser == NULL ||
-            pv->parser->parser->split == NULL)
+                pv->parser->parser->split == NULL)
         {
             return 0;
         }
@@ -1572,7 +1574,7 @@ static int setup_extradata( hb_work_private_t * pv, AVCodecContext * context )
             {
                 context->extradata_size = size;
                 context->extradata =
-                                av_malloc(size + AV_INPUT_BUFFER_PADDING_SIZE);
+                    av_malloc(size + AV_INPUT_BUFFER_PADDING_SIZE);
                 if (context->extradata == NULL)
                     return 1;
                 memcpy(context->extradata, pv->packet_info.data, size);
@@ -1612,7 +1614,7 @@ static int decodePacket( hb_work_object_t * w )
 
 #if HB_PROJECT_FEATURE_QSV
         if (pv->qsv.decode &&
-            pv->qsv.config.io_pattern == MFX_IOPATTERN_OUT_VIDEO_MEMORY)
+                pv->qsv.config.io_pattern == MFX_IOPATTERN_OUT_VIDEO_MEMORY)
         {
             // set the QSV configuration before opening the decoder
             pv->context->hwaccel_context = &pv->qsv.config;
@@ -1662,8 +1664,8 @@ static void videoParserFlush(hb_work_object_t * w)
         if (pv->parser)
         {
             av_parser_parse2(pv->parser, pv->context, &pout, &pout_len,
-                                   NULL, 0,
-                                   AV_NOPTS_VALUE, AV_NOPTS_VALUE, 0 );
+                             NULL, 0,
+                             AV_NOPTS_VALUE, AV_NOPTS_VALUE, 0 );
             parser_pts = pv->parser->pts;
             parser_dts = pv->parser->dts;
         }
@@ -1872,7 +1874,7 @@ static void compute_frame_duration( hb_work_private_t *pv )
             // in the range 8fps - 64fps.
             AVRational *tb = NULL;
             if ( st->avg_frame_rate.den * 64LL > st->avg_frame_rate.num &&
-                 st->avg_frame_rate.num > st->avg_frame_rate.den * 8LL )
+                    st->avg_frame_rate.num > st->avg_frame_rate.den * 8LL )
             {
                 tb = &(st->avg_frame_rate);
                 duration =  (double)tb->den / (double)tb->num;
@@ -1885,8 +1887,8 @@ static void compute_frame_duration( hb_work_private_t *pv )
             }
         }
         if ( !duration &&
-             pv->context->time_base.num * max_fps > pv->context->time_base.den &&
-             pv->context->time_base.den > pv->context->time_base.num * 8LL )
+                pv->context->time_base.num * max_fps > pv->context->time_base.den &&
+                pv->context->time_base.den > pv->context->time_base.num * 8LL )
         {
             duration =  (double)pv->context->time_base.num /
                         (double)pv->context->time_base.den;
@@ -1901,10 +1903,10 @@ static void compute_frame_duration( hb_work_private_t *pv )
     else
     {
         if ( pv->context->time_base.num * max_fps > pv->context->time_base.den &&
-             pv->context->time_base.den > pv->context->time_base.num * 8LL )
+                pv->context->time_base.den > pv->context->time_base.num * 8LL )
         {
             duration =  (double)pv->context->time_base.num /
-                            (double)pv->context->time_base.den;
+                        (double)pv->context->time_base.den;
             if ( pv->context->ticks_per_frame > 1 )
             {
                 // for ffmpeg 0.5 & later, the H.264 & MPEG-2 time base is
@@ -1930,40 +1932,40 @@ static int get_color_prim(int color_primaries, hb_geometry_t geometry, hb_ration
 {
     switch (color_primaries)
     {
-        case AVCOL_PRI_BT709:
-            return HB_COLR_PRI_BT709;
-        case AVCOL_PRI_BT470M:
-            return HB_COLR_PRI_BT470M;
-        case AVCOL_PRI_BT470BG:
-            return HB_COLR_PRI_EBUTECH;
-        case AVCOL_PRI_SMPTE170M:
-        case AVCOL_PRI_SMPTE240M:
-            return HB_COLR_PRI_SMPTEC;
-        case AVCOL_PRI_FILM:
-            return HB_COLR_PRI_FILM;
-        case AVCOL_PRI_SMPTE428:
-            return HB_COLR_PRI_SMPTE428;
-        case AVCOL_PRI_SMPTE431:
-            return HB_COLR_PRI_SMPTE431;
-        case AVCOL_PRI_SMPTE432:
-            return HB_COLR_PRI_SMPTE432;
-        case AVCOL_PRI_JEDEC_P22:
-            return HB_COLR_PRI_JEDEC_P22;
-        case AVCOL_PRI_BT2020:
-            return HB_COLR_PRI_BT2020;
-        default:
-        {
-            if ((geometry.width >= 1280 || geometry.height >= 720)||
+    case AVCOL_PRI_BT709:
+        return HB_COLR_PRI_BT709;
+    case AVCOL_PRI_BT470M:
+        return HB_COLR_PRI_BT470M;
+    case AVCOL_PRI_BT470BG:
+        return HB_COLR_PRI_EBUTECH;
+    case AVCOL_PRI_SMPTE170M:
+    case AVCOL_PRI_SMPTE240M:
+        return HB_COLR_PRI_SMPTEC;
+    case AVCOL_PRI_FILM:
+        return HB_COLR_PRI_FILM;
+    case AVCOL_PRI_SMPTE428:
+        return HB_COLR_PRI_SMPTE428;
+    case AVCOL_PRI_SMPTE431:
+        return HB_COLR_PRI_SMPTE431;
+    case AVCOL_PRI_SMPTE432:
+        return HB_COLR_PRI_SMPTE432;
+    case AVCOL_PRI_JEDEC_P22:
+        return HB_COLR_PRI_JEDEC_P22;
+    case AVCOL_PRI_BT2020:
+        return HB_COLR_PRI_BT2020;
+    default:
+    {
+        if ((geometry.width >= 1280 || geometry.height >= 720)||
                 (geometry.width >   720 && geometry.height >  576 ))
-                // ITU BT.709 HD content
-                return HB_COLR_PRI_BT709;
-            else if (rate.den == 1080000)
-                // ITU BT.601 DVD or SD TV content (PAL)
-                return HB_COLR_PRI_EBUTECH;
-            else
-                // ITU BT.601 DVD or SD TV content (NTSC)
-                return HB_COLR_PRI_SMPTEC;
-        }
+            // ITU BT.709 HD content
+            return HB_COLR_PRI_BT709;
+        else if (rate.den == 1080000)
+            // ITU BT.601 DVD or SD TV content (PAL)
+            return HB_COLR_PRI_EBUTECH;
+        else
+            // ITU BT.601 DVD or SD TV content (NTSC)
+            return HB_COLR_PRI_SMPTEC;
+    }
     }
 }
 
@@ -1971,37 +1973,37 @@ static int get_color_transfer(int color_trc)
 {
     switch (color_trc)
     {
-        case AVCOL_TRC_GAMMA22:
-            return HB_COLR_TRA_GAMMA22;
-        case AVCOL_TRC_GAMMA28:
-            return HB_COLR_TRA_GAMMA28;
-        case AVCOL_TRC_SMPTE170M:
-            return HB_COLR_TRA_SMPTE170M;
-        case AVCOL_TRC_LINEAR:
-            return HB_COLR_TRA_LINEAR;
-        case AVCOL_TRC_LOG:
-            return HB_COLR_TRA_LOG;
-        case AVCOL_TRC_LOG_SQRT:
-            return HB_COLR_TRA_LOG_SQRT;
-        case AVCOL_TRC_IEC61966_2_4:
-            return HB_COLR_TRA_IEC61966_2_4;
-        case AVCOL_TRC_BT1361_ECG:
-            return HB_COLR_TRA_BT1361_ECG;
-        case AVCOL_TRC_IEC61966_2_1:
-            return HB_COLR_TRA_IEC61966_2_1;
-        case AVCOL_TRC_SMPTE240M:
-            return HB_COLR_TRA_SMPTE240M;
-        case AVCOL_TRC_SMPTEST2084:
-            return HB_COLR_TRA_SMPTEST2084;
-        case AVCOL_TRC_ARIB_STD_B67:
-            return HB_COLR_TRA_ARIB_STD_B67;
-        case AVCOL_TRC_BT2020_10:
-            return HB_COLR_TRA_BT2020_10;
-        case AVCOL_TRC_BT2020_12:
-            return HB_COLR_TRA_BT2020_12;
-        default:
-            // ITU BT.601, BT.709, anything else
-            return HB_COLR_TRA_BT709;
+    case AVCOL_TRC_GAMMA22:
+        return HB_COLR_TRA_GAMMA22;
+    case AVCOL_TRC_GAMMA28:
+        return HB_COLR_TRA_GAMMA28;
+    case AVCOL_TRC_SMPTE170M:
+        return HB_COLR_TRA_SMPTE170M;
+    case AVCOL_TRC_LINEAR:
+        return HB_COLR_TRA_LINEAR;
+    case AVCOL_TRC_LOG:
+        return HB_COLR_TRA_LOG;
+    case AVCOL_TRC_LOG_SQRT:
+        return HB_COLR_TRA_LOG_SQRT;
+    case AVCOL_TRC_IEC61966_2_4:
+        return HB_COLR_TRA_IEC61966_2_4;
+    case AVCOL_TRC_BT1361_ECG:
+        return HB_COLR_TRA_BT1361_ECG;
+    case AVCOL_TRC_IEC61966_2_1:
+        return HB_COLR_TRA_IEC61966_2_1;
+    case AVCOL_TRC_SMPTE240M:
+        return HB_COLR_TRA_SMPTE240M;
+    case AVCOL_TRC_SMPTEST2084:
+        return HB_COLR_TRA_SMPTEST2084;
+    case AVCOL_TRC_ARIB_STD_B67:
+        return HB_COLR_TRA_ARIB_STD_B67;
+    case AVCOL_TRC_BT2020_10:
+        return HB_COLR_TRA_BT2020_10;
+    case AVCOL_TRC_BT2020_12:
+        return HB_COLR_TRA_BT2020_12;
+    default:
+        // ITU BT.601, BT.709, anything else
+        return HB_COLR_TRA_BT709;
     }
 }
 
@@ -2009,41 +2011,41 @@ static int get_color_matrix(int colorspace, hb_geometry_t geometry)
 {
     switch (colorspace)
     {
-        case AVCOL_SPC_RGB:
-            return HB_COLR_MAT_RGB;
-        case AVCOL_SPC_BT709:
-            return HB_COLR_MAT_BT709;
-        case AVCOL_SPC_FCC:
-            return HB_COLR_MAT_FCC;
-        case AVCOL_SPC_BT470BG:
-            return HB_COLR_MAT_BT470BG;
-        case AVCOL_SPC_SMPTE170M:
-            return HB_COLR_MAT_SMPTE170M;
-        case AVCOL_SPC_SMPTE240M:
-            return HB_COLR_MAT_SMPTE240M;
-        case AVCOL_SPC_YCGCO:
-            return HB_COLR_MAT_YCGCO;
-        case AVCOL_SPC_BT2020_NCL:
-            return HB_COLR_MAT_BT2020_NCL;
-        case AVCOL_SPC_BT2020_CL:
-            return HB_COLR_MAT_BT2020_CL;
-        case AVCOL_SPC_CHROMA_DERIVED_NCL:
-            return HB_COLR_MAT_CD_NCL;
-        case AVCOL_SPC_CHROMA_DERIVED_CL:
-            return HB_COLR_MAT_CD_CL;
-        case AVCOL_SPC_ICTCP:
-            return HB_COLR_MAT_ICTCP;
-        default:
-        {
-            if ((geometry.width >= 1280 || geometry.height >= 720)||
+    case AVCOL_SPC_RGB:
+        return HB_COLR_MAT_RGB;
+    case AVCOL_SPC_BT709:
+        return HB_COLR_MAT_BT709;
+    case AVCOL_SPC_FCC:
+        return HB_COLR_MAT_FCC;
+    case AVCOL_SPC_BT470BG:
+        return HB_COLR_MAT_BT470BG;
+    case AVCOL_SPC_SMPTE170M:
+        return HB_COLR_MAT_SMPTE170M;
+    case AVCOL_SPC_SMPTE240M:
+        return HB_COLR_MAT_SMPTE240M;
+    case AVCOL_SPC_YCGCO:
+        return HB_COLR_MAT_YCGCO;
+    case AVCOL_SPC_BT2020_NCL:
+        return HB_COLR_MAT_BT2020_NCL;
+    case AVCOL_SPC_BT2020_CL:
+        return HB_COLR_MAT_BT2020_CL;
+    case AVCOL_SPC_CHROMA_DERIVED_NCL:
+        return HB_COLR_MAT_CD_NCL;
+    case AVCOL_SPC_CHROMA_DERIVED_CL:
+        return HB_COLR_MAT_CD_CL;
+    case AVCOL_SPC_ICTCP:
+        return HB_COLR_MAT_ICTCP;
+    default:
+    {
+        if ((geometry.width >= 1280 || geometry.height >= 720)||
                 (geometry.width >   720 && geometry.height >  576 ))
-                // ITU BT.709 HD content
-                return HB_COLR_MAT_BT709;
-            else
-                // ITU BT.601 DVD or SD TV content (PAL)
-                // ITU BT.601 DVD or SD TV content (NTSC)
-                return HB_COLR_MAT_SMPTE170M;
-        }
+            // ITU BT.709 HD content
+            return HB_COLR_MAT_BT709;
+        else
+            // ITU BT.601 DVD or SD TV content (PAL)
+            // ITU BT.601 DVD or SD TV content (NTSC)
+            return HB_COLR_MAT_SMPTE170M;
+    }
     }
 }
 
@@ -2062,7 +2064,7 @@ static int decavcodecvInfo( hb_work_object_t *w, hb_work_info_t *info )
 
     info->bitrate = pv->context->bit_rate;
     if (w->title->rotation == HB_ROTATION_90 ||
-        w->title->rotation == HB_ROTATION_270)
+            w->title->rotation == HB_ROTATION_270)
     {
         // HandBrake's video pipeline uses yuv420 color.  This means all
         // dimensions must be even.  So we must adjust the dimensions
@@ -2108,18 +2110,18 @@ static int decavcodecvInfo( hb_work_object_t *w, hb_work_info_t *info )
     {
         switch (pv->context->codec_id)
         {
-            case AV_CODEC_ID_HEVC:
-            case AV_CODEC_ID_H264:
-                if (pv->context->pix_fmt == AV_PIX_FMT_YUV420P  ||
+        case AV_CODEC_ID_HEVC:
+        case AV_CODEC_ID_H264:
+            if (pv->context->pix_fmt == AV_PIX_FMT_YUV420P  ||
                     pv->context->pix_fmt == AV_PIX_FMT_YUVJ420P ||
                     pv->context->pix_fmt == AV_PIX_FMT_YUV420P10LE)
-                {
-                    info->video_decode_support |= HB_DECODE_SUPPORT_QSV;
-                }
-                break;
+            {
+                info->video_decode_support |= HB_DECODE_SUPPORT_QSV;
+            }
+            break;
 
-            default:
-                break;
+        default:
+            break;
         }
     }
 #endif
@@ -2179,8 +2181,8 @@ static void decodeAudio(hb_work_private_t *pv, packet_info_t * packet_info)
     // libav does not supply timestamps for wmapro audio (possibly others)
     // if there is an input timestamp, initialize next_pts
     if (pv->next_pts     == (int64_t)AV_NOPTS_VALUE &&
-        packet_info      != NULL &&
-        packet_info->pts != AV_NOPTS_VALUE)
+            packet_info      != NULL &&
+            packet_info->pts != AV_NOPTS_VALUE)
     {
         pv->next_pts = packet_info->pts;
     }
@@ -2248,15 +2250,15 @@ static void decodeAudio(hb_work_private_t *pv, packet_info_t * packet_info)
             AVFrameSideData *side_data;
             uint64_t         channel_layout;
             if ((side_data =
-                 av_frame_get_side_data(pv->frame,
-                                AV_FRAME_DATA_DOWNMIX_INFO)) != NULL)
+                        av_frame_get_side_data(pv->frame,
+                                               AV_FRAME_DATA_DOWNMIX_INFO)) != NULL)
             {
                 double          surround_mix_level, center_mix_level;
                 AVDownmixInfo * downmix_info;
 
                 downmix_info = (AVDownmixInfo*)side_data->data;
                 if (pv->audio->config.out.mixdown == HB_AMIXDOWN_DOLBY ||
-                    pv->audio->config.out.mixdown == HB_AMIXDOWN_DOLBYPLII)
+                        pv->audio->config.out.mixdown == HB_AMIXDOWN_DOLBYPLII)
                 {
                     surround_mix_level = downmix_info->surround_mix_level_ltrt;
                     center_mix_level   = downmix_info->center_mix_level_ltrt;
@@ -2275,13 +2277,13 @@ static void decodeAudio(hb_work_private_t *pv, packet_info_t * packet_info)
             if (channel_layout == 0)
             {
                 channel_layout = av_get_default_channel_layout(
-                                                        pv->frame->channels);
+                                     pv->frame->channels);
             }
             hb_audio_resample_set_channel_layout(pv->resample, channel_layout);
             hb_audio_resample_set_sample_fmt(pv->resample,
                                              pv->frame->format);
             hb_audio_resample_set_sample_rate(pv->resample,
-                                             pv->frame->sample_rate);
+                                              pv->frame->sample_rate);
             if (hb_audio_resample_update(pv->resample))
             {
                 hb_log("decavcodec: hb_audio_resample_update() failed");
@@ -2296,7 +2298,7 @@ static void decodeAudio(hb_work_private_t *pv, packet_info_t * packet_info)
             {
                 /* drop audio samples that are part of the encoder delay */
                 int channels = hb_mixdown_get_discrete_channel_count(
-                                                pv->audio->config.out.mixdown);
+                                   pv->audio->config.out.mixdown);
                 int sample_size = channels * sizeof(float);
                 int samples = out->size / sample_size;
                 if (samples <= pv->drop_samples)

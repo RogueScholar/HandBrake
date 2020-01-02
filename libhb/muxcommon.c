@@ -317,7 +317,7 @@ static hb_buffer_t *mf_pull( hb_mux_t * mux, int tk )
 static hb_buffer_t *mf_peek( hb_track_t *track )
 {
     return track->mf.out == track->mf.in ?
-                NULL : track->mf.fifo[track->mf.out & (track->mf.flen - 1)];
+           NULL : track->mf.fifo[track->mf.out & (track->mf.flen - 1)];
 }
 
 static void MoveToInternalFifos( int tk, hb_mux_t *mux, hb_buffer_t * buf )
@@ -350,7 +350,7 @@ static void OutputTrackChunk( hb_mux_t *mux, int tk, hb_mux_object_t *m )
 }
 
 static int muxWork( hb_work_object_t * w, hb_buffer_t ** buf_in,
-                     hb_buffer_t ** buf_out )
+                    hb_buffer_t ** buf_out )
 {
     hb_work_private_t * pv = w->private_data;
     hb_job_t    * job = pv->job;
@@ -386,7 +386,7 @@ static int muxWork( hb_work_object_t * w, hb_buffer_t ** buf_in,
     *buf_in = NULL;
 
     if (!hb_bitvec_and_cmp(mux->rdy, mux->allRdy, mux->allRdy) &&
-        !hb_bitvec_and_cmp(mux->eof, mux->allEof, mux->allEof))
+            !hb_bitvec_and_cmp(mux->eof, mux->allEof, mux->allEof))
     {
         hb_unlock( mux->mutex );
         return HB_WORK_OK;
@@ -399,7 +399,7 @@ static int muxWork( hb_work_object_t * w, hb_buffer_t ** buf_in,
     // all that we can in 'interleave' size chunks.
     while ((hb_bitvec_and_cmp(mux->rdy, mux->allRdy, mux->allRdy) &&
             hb_bitvec_any(more) && mux->buffered_size > MIN_BUFFERING ) ||
-           (hb_bitvec_cmp(mux->eof, mux->allEof)))
+            (hb_bitvec_cmp(mux->eof, mux->allEof)))
     {
         hb_bitvec_zero(more);
         for ( i = 0; i < mux->ntracks; ++i )
@@ -418,8 +418,8 @@ static int muxWork( hb_work_object_t * w, hb_buffer_t ** buf_in,
             // our next interleave point then leave it marked as rdy.
             // Otherwise clear rdy.
             if (hb_bitvec_bit(mux->eof, i) &&
-                (track->mf.out == track->mf.in ||
-                 track->mf.fifo[(track->mf.in-1) & (track->mf.flen-1)]->s.start
+                    (track->mf.out == track->mf.in ||
+                     track->mf.fifo[(track->mf.in-1) & (track->mf.flen-1)]->s.start
                      < mux->pts + mux->interleave))
             {
                 hb_bitvec_clr(mux->rdy, i);
@@ -501,7 +501,7 @@ static void muxClose( hb_work_object_t * muxer )
     // we want the muxing state to be visible while this is
     // happening.
     if( job->pass_id == HB_PASS_ENCODE ||
-        job->pass_id == HB_PASS_ENCODE_2ND )
+            job->pass_id == HB_PASS_ENCODE_2ND )
     {
         /* Update the UI */
         hb_state_t state;
@@ -519,7 +519,7 @@ static void muxClose( hb_work_object_t * muxer )
 
     // we're all done muxing -- print final stats and cleanup.
     if( job->pass_id == HB_PASS_ENCODE ||
-        job->pass_id == HB_PASS_ENCODE_2ND )
+            job->pass_id == HB_PASS_ENCODE_2ND )
     {
         hb_stat_t sb;
         uint64_t bytes_total, frames_total;
@@ -541,7 +541,7 @@ static void muxClose( hb_work_object_t * muxer )
                 {
                     /* Video */
                     hb_deep_log( 2, "mux: video bitrate error, %+"PRId64" bytes",
-                            (int64_t)(track->bytes - mux->pts * job->vbitrate * 125 / 90000) );
+                                 (int64_t)(track->bytes - mux->pts * job->vbitrate * 125 / 90000) );
                 }
                 bytes_total  += track->bytes;
                 frames_total += track->frames;
@@ -550,8 +550,8 @@ static void muxClose( hb_work_object_t * muxer )
             if( bytes_total && frames_total )
             {
                 hb_deep_log( 2, "mux: overhead, %.2f bytes per frame",
-                        (float) ( sb.st_size - bytes_total ) /
-                        frames_total );
+                             (float) ( sb.st_size - bytes_total ) /
+                             frames_total );
             }
         }
     }
@@ -610,17 +610,17 @@ static int muxInit( hb_work_object_t * muxer, hb_job_t * job )
     {
         switch( job->mux )
         {
-            case HB_MUX_AV_MP4:
-            case HB_MUX_AV_MKV:
-            case HB_MUX_AV_WEBM:
-                mux->m = hb_mux_avformat_init( job );
-                break;
-            default:
-                hb_error( "No muxer selected, exiting" );
-                free(mux);
-                *job->done_error = HB_ERROR_INIT;
-                *job->die = 1;
-                return -1;
+        case HB_MUX_AV_MP4:
+        case HB_MUX_AV_MKV:
+        case HB_MUX_AV_WEBM:
+            mux->m = hb_mux_avformat_init( job );
+            break;
+        default:
+            hb_error( "No muxer selected, exiting" );
+            free(mux);
+            *job->done_error = HB_ERROR_INIT;
+            *job->die = 1;
+            return -1;
         }
     }
 
@@ -629,7 +629,7 @@ static int muxInit( hb_work_object_t * muxer, hb_job_t * job )
     // The bit vectors must be allocated before hb_thread_init for the
     // audio and subtitle muxer jobs below.
     int bit_vec_size = 1 + hb_list_count(job->list_audio) +
-                           hb_list_count(job->list_subtitle);
+                       hb_list_count(job->list_subtitle);
     mux->rdy = hb_bitvec_new(bit_vec_size);
     mux->eof = hb_bitvec_new(bit_vec_size);
     mux->allRdy = hb_bitvec_new(bit_vec_size);

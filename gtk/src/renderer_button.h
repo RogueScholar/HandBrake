@@ -50,7 +50,7 @@ struct _CustomCellRendererButtonClass
     GtkCellRendererPixbufClass  parent_class;
 
     void (* clicked) (CustomCellRendererButton *cell_renderer_button,
-                        const gchar *path);
+                      const gchar *path);
 };
 
 GType                custom_cell_renderer_button_get_type (void);

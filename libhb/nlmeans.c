@@ -151,8 +151,8 @@ struct hb_filter_private_s
 
 static int nlmeans_init(hb_filter_object_t *filter, hb_filter_init_t *init);
 static int nlmeans_work(hb_filter_object_t *filter,
-                           hb_buffer_t **buf_in,
-                           hb_buffer_t **buf_out);
+                        hb_buffer_t **buf_in,
+                        hb_buffer_t **buf_out);
 static void nlmeans_close(hb_filter_object_t *filter);
 
 static void nlmeans_filter_thread(void *thread_args_v);
@@ -262,7 +262,7 @@ static void nlmeans_alloc(const uint8_t *src,
 }
 
 static void nlmeans_filter_mean(const uint8_t *src,
-                                      uint8_t *dst,
+                                uint8_t *dst,
                                 const int w,
                                 const int h,
                                 const int border,
@@ -294,7 +294,7 @@ static void nlmeans_filter_mean(const uint8_t *src,
 }
 
 static uint8_t nlmeans_filter_median_opt(uint8_t  *pixels,
-                                         const int size)
+        const int size)
 {
 
     // Optimized sorting networks
@@ -303,12 +303,24 @@ static uint8_t nlmeans_filter_median_opt(uint8_t  *pixels,
         /* opt_med9() via Nicolas Devillard
          * http://ndevilla.free.fr/median/median.pdf
          */
-        NLMEANS_SORT(pixels[1], pixels[2]); NLMEANS_SORT(pixels[4], pixels[5]); NLMEANS_SORT(pixels[7], pixels[8]);
-        NLMEANS_SORT(pixels[0], pixels[1]); NLMEANS_SORT(pixels[3], pixels[4]); NLMEANS_SORT(pixels[6], pixels[7]);
-        NLMEANS_SORT(pixels[1], pixels[2]); NLMEANS_SORT(pixels[4], pixels[5]); NLMEANS_SORT(pixels[7], pixels[8]);
-        NLMEANS_SORT(pixels[0], pixels[3]); NLMEANS_SORT(pixels[5], pixels[8]); NLMEANS_SORT(pixels[4], pixels[7]);
-        NLMEANS_SORT(pixels[3], pixels[6]); NLMEANS_SORT(pixels[1], pixels[4]); NLMEANS_SORT(pixels[2], pixels[5]);
-        NLMEANS_SORT(pixels[4], pixels[7]); NLMEANS_SORT(pixels[4], pixels[2]); NLMEANS_SORT(pixels[6], pixels[4]);
+        NLMEANS_SORT(pixels[1], pixels[2]);
+        NLMEANS_SORT(pixels[4], pixels[5]);
+        NLMEANS_SORT(pixels[7], pixels[8]);
+        NLMEANS_SORT(pixels[0], pixels[1]);
+        NLMEANS_SORT(pixels[3], pixels[4]);
+        NLMEANS_SORT(pixels[6], pixels[7]);
+        NLMEANS_SORT(pixels[1], pixels[2]);
+        NLMEANS_SORT(pixels[4], pixels[5]);
+        NLMEANS_SORT(pixels[7], pixels[8]);
+        NLMEANS_SORT(pixels[0], pixels[3]);
+        NLMEANS_SORT(pixels[5], pixels[8]);
+        NLMEANS_SORT(pixels[4], pixels[7]);
+        NLMEANS_SORT(pixels[3], pixels[6]);
+        NLMEANS_SORT(pixels[1], pixels[4]);
+        NLMEANS_SORT(pixels[2], pixels[5]);
+        NLMEANS_SORT(pixels[4], pixels[7]);
+        NLMEANS_SORT(pixels[4], pixels[2]);
+        NLMEANS_SORT(pixels[6], pixels[4]);
         NLMEANS_SORT(pixels[4], pixels[2]);
         return pixels[4];
     }
@@ -317,39 +329,105 @@ static uint8_t nlmeans_filter_median_opt(uint8_t  *pixels,
         /* opt_med25() via Nicolas Devillard
          * http://ndevilla.free.fr/median/median.pdf
          */
-        NLMEANS_SORT(pixels[0],  pixels[1]);  NLMEANS_SORT(pixels[3],  pixels[4]);  NLMEANS_SORT(pixels[2],  pixels[4]);
-        NLMEANS_SORT(pixels[2],  pixels[3]);  NLMEANS_SORT(pixels[6],  pixels[7]);  NLMEANS_SORT(pixels[5],  pixels[7]);
-        NLMEANS_SORT(pixels[5],  pixels[6]);  NLMEANS_SORT(pixels[9],  pixels[10]); NLMEANS_SORT(pixels[8],  pixels[10]);
-        NLMEANS_SORT(pixels[8],  pixels[9]);  NLMEANS_SORT(pixels[12], pixels[13]); NLMEANS_SORT(pixels[11], pixels[13]);
-        NLMEANS_SORT(pixels[11], pixels[12]); NLMEANS_SORT(pixels[15], pixels[16]); NLMEANS_SORT(pixels[14], pixels[16]);
-        NLMEANS_SORT(pixels[14], pixels[15]); NLMEANS_SORT(pixels[18], pixels[19]); NLMEANS_SORT(pixels[17], pixels[19]);
-        NLMEANS_SORT(pixels[17], pixels[18]); NLMEANS_SORT(pixels[21], pixels[22]); NLMEANS_SORT(pixels[20], pixels[22]);
-        NLMEANS_SORT(pixels[20], pixels[21]); NLMEANS_SORT(pixels[23], pixels[24]); NLMEANS_SORT(pixels[2],  pixels[5]);
-        NLMEANS_SORT(pixels[3],  pixels[6]);  NLMEANS_SORT(pixels[0],  pixels[6]);  NLMEANS_SORT(pixels[0],  pixels[3]);
-        NLMEANS_SORT(pixels[4],  pixels[7]);  NLMEANS_SORT(pixels[1],  pixels[7]);  NLMEANS_SORT(pixels[1],  pixels[4]);
-        NLMEANS_SORT(pixels[11], pixels[14]); NLMEANS_SORT(pixels[8],  pixels[14]); NLMEANS_SORT(pixels[8],  pixels[11]);
-        NLMEANS_SORT(pixels[12], pixels[15]); NLMEANS_SORT(pixels[9],  pixels[15]); NLMEANS_SORT(pixels[9],  pixels[12]);
-        NLMEANS_SORT(pixels[13], pixels[16]); NLMEANS_SORT(pixels[10], pixels[16]); NLMEANS_SORT(pixels[10], pixels[13]);
-        NLMEANS_SORT(pixels[20], pixels[23]); NLMEANS_SORT(pixels[17], pixels[23]); NLMEANS_SORT(pixels[17], pixels[20]);
-        NLMEANS_SORT(pixels[21], pixels[24]); NLMEANS_SORT(pixels[18], pixels[24]); NLMEANS_SORT(pixels[18], pixels[21]);
-        NLMEANS_SORT(pixels[19], pixels[22]); NLMEANS_SORT(pixels[8],  pixels[17]); NLMEANS_SORT(pixels[9],  pixels[18]);
-        NLMEANS_SORT(pixels[0],  pixels[18]); NLMEANS_SORT(pixels[0],  pixels[9]);  NLMEANS_SORT(pixels[10], pixels[19]);
-        NLMEANS_SORT(pixels[1],  pixels[19]); NLMEANS_SORT(pixels[1],  pixels[10]); NLMEANS_SORT(pixels[11], pixels[20]);
-        NLMEANS_SORT(pixels[2],  pixels[20]); NLMEANS_SORT(pixels[2],  pixels[11]); NLMEANS_SORT(pixels[12], pixels[21]);
-        NLMEANS_SORT(pixels[3],  pixels[21]); NLMEANS_SORT(pixels[3],  pixels[12]); NLMEANS_SORT(pixels[13], pixels[22]);
-        NLMEANS_SORT(pixels[4],  pixels[22]); NLMEANS_SORT(pixels[4],  pixels[13]); NLMEANS_SORT(pixels[14], pixels[23]);
-        NLMEANS_SORT(pixels[5],  pixels[23]); NLMEANS_SORT(pixels[5],  pixels[14]); NLMEANS_SORT(pixels[15], pixels[24]);
-        NLMEANS_SORT(pixels[6],  pixels[24]); NLMEANS_SORT(pixels[6],  pixels[15]); NLMEANS_SORT(pixels[7],  pixels[16]);
-        NLMEANS_SORT(pixels[7],  pixels[19]); NLMEANS_SORT(pixels[13], pixels[21]); NLMEANS_SORT(pixels[15], pixels[23]);
-        NLMEANS_SORT(pixels[7],  pixels[13]); NLMEANS_SORT(pixels[7],  pixels[15]); NLMEANS_SORT(pixels[1],  pixels[9]);
-        NLMEANS_SORT(pixels[3],  pixels[11]); NLMEANS_SORT(pixels[5],  pixels[17]); NLMEANS_SORT(pixels[11], pixels[17]);
-        NLMEANS_SORT(pixels[9],  pixels[17]); NLMEANS_SORT(pixels[4],  pixels[10]); NLMEANS_SORT(pixels[6],  pixels[12]);
-        NLMEANS_SORT(pixels[7],  pixels[14]); NLMEANS_SORT(pixels[4],  pixels[6]);  NLMEANS_SORT(pixels[4],  pixels[7]);
-        NLMEANS_SORT(pixels[12], pixels[14]); NLMEANS_SORT(pixels[10], pixels[14]); NLMEANS_SORT(pixels[6],  pixels[7]);
-        NLMEANS_SORT(pixels[10], pixels[12]); NLMEANS_SORT(pixels[6],  pixels[10]); NLMEANS_SORT(pixels[6],  pixels[17]);
-        NLMEANS_SORT(pixels[12], pixels[17]); NLMEANS_SORT(pixels[7],  pixels[17]); NLMEANS_SORT(pixels[7],  pixels[10]);
-        NLMEANS_SORT(pixels[12], pixels[18]); NLMEANS_SORT(pixels[7],  pixels[12]); NLMEANS_SORT(pixels[10], pixels[18]);
-        NLMEANS_SORT(pixels[12], pixels[20]); NLMEANS_SORT(pixels[10], pixels[20]); NLMEANS_SORT(pixels[10], pixels[12]);
+        NLMEANS_SORT(pixels[0],  pixels[1]);
+        NLMEANS_SORT(pixels[3],  pixels[4]);
+        NLMEANS_SORT(pixels[2],  pixels[4]);
+        NLMEANS_SORT(pixels[2],  pixels[3]);
+        NLMEANS_SORT(pixels[6],  pixels[7]);
+        NLMEANS_SORT(pixels[5],  pixels[7]);
+        NLMEANS_SORT(pixels[5],  pixels[6]);
+        NLMEANS_SORT(pixels[9],  pixels[10]);
+        NLMEANS_SORT(pixels[8],  pixels[10]);
+        NLMEANS_SORT(pixels[8],  pixels[9]);
+        NLMEANS_SORT(pixels[12], pixels[13]);
+        NLMEANS_SORT(pixels[11], pixels[13]);
+        NLMEANS_SORT(pixels[11], pixels[12]);
+        NLMEANS_SORT(pixels[15], pixels[16]);
+        NLMEANS_SORT(pixels[14], pixels[16]);
+        NLMEANS_SORT(pixels[14], pixels[15]);
+        NLMEANS_SORT(pixels[18], pixels[19]);
+        NLMEANS_SORT(pixels[17], pixels[19]);
+        NLMEANS_SORT(pixels[17], pixels[18]);
+        NLMEANS_SORT(pixels[21], pixels[22]);
+        NLMEANS_SORT(pixels[20], pixels[22]);
+        NLMEANS_SORT(pixels[20], pixels[21]);
+        NLMEANS_SORT(pixels[23], pixels[24]);
+        NLMEANS_SORT(pixels[2],  pixels[5]);
+        NLMEANS_SORT(pixels[3],  pixels[6]);
+        NLMEANS_SORT(pixels[0],  pixels[6]);
+        NLMEANS_SORT(pixels[0],  pixels[3]);
+        NLMEANS_SORT(pixels[4],  pixels[7]);
+        NLMEANS_SORT(pixels[1],  pixels[7]);
+        NLMEANS_SORT(pixels[1],  pixels[4]);
+        NLMEANS_SORT(pixels[11], pixels[14]);
+        NLMEANS_SORT(pixels[8],  pixels[14]);
+        NLMEANS_SORT(pixels[8],  pixels[11]);
+        NLMEANS_SORT(pixels[12], pixels[15]);
+        NLMEANS_SORT(pixels[9],  pixels[15]);
+        NLMEANS_SORT(pixels[9],  pixels[12]);
+        NLMEANS_SORT(pixels[13], pixels[16]);
+        NLMEANS_SORT(pixels[10], pixels[16]);
+        NLMEANS_SORT(pixels[10], pixels[13]);
+        NLMEANS_SORT(pixels[20], pixels[23]);
+        NLMEANS_SORT(pixels[17], pixels[23]);
+        NLMEANS_SORT(pixels[17], pixels[20]);
+        NLMEANS_SORT(pixels[21], pixels[24]);
+        NLMEANS_SORT(pixels[18], pixels[24]);
+        NLMEANS_SORT(pixels[18], pixels[21]);
+        NLMEANS_SORT(pixels[19], pixels[22]);
+        NLMEANS_SORT(pixels[8],  pixels[17]);
+        NLMEANS_SORT(pixels[9],  pixels[18]);
+        NLMEANS_SORT(pixels[0],  pixels[18]);
+        NLMEANS_SORT(pixels[0],  pixels[9]);
+        NLMEANS_SORT(pixels[10], pixels[19]);
+        NLMEANS_SORT(pixels[1],  pixels[19]);
+        NLMEANS_SORT(pixels[1],  pixels[10]);
+        NLMEANS_SORT(pixels[11], pixels[20]);
+        NLMEANS_SORT(pixels[2],  pixels[20]);
+        NLMEANS_SORT(pixels[2],  pixels[11]);
+        NLMEANS_SORT(pixels[12], pixels[21]);
+        NLMEANS_SORT(pixels[3],  pixels[21]);
+        NLMEANS_SORT(pixels[3],  pixels[12]);
+        NLMEANS_SORT(pixels[13], pixels[22]);
+        NLMEANS_SORT(pixels[4],  pixels[22]);
+        NLMEANS_SORT(pixels[4],  pixels[13]);
+        NLMEANS_SORT(pixels[14], pixels[23]);
+        NLMEANS_SORT(pixels[5],  pixels[23]);
+        NLMEANS_SORT(pixels[5],  pixels[14]);
+        NLMEANS_SORT(pixels[15], pixels[24]);
+        NLMEANS_SORT(pixels[6],  pixels[24]);
+        NLMEANS_SORT(pixels[6],  pixels[15]);
+        NLMEANS_SORT(pixels[7],  pixels[16]);
+        NLMEANS_SORT(pixels[7],  pixels[19]);
+        NLMEANS_SORT(pixels[13], pixels[21]);
+        NLMEANS_SORT(pixels[15], pixels[23]);
+        NLMEANS_SORT(pixels[7],  pixels[13]);
+        NLMEANS_SORT(pixels[7],  pixels[15]);
+        NLMEANS_SORT(pixels[1],  pixels[9]);
+        NLMEANS_SORT(pixels[3],  pixels[11]);
+        NLMEANS_SORT(pixels[5],  pixels[17]);
+        NLMEANS_SORT(pixels[11], pixels[17]);
+        NLMEANS_SORT(pixels[9],  pixels[17]);
+        NLMEANS_SORT(pixels[4],  pixels[10]);
+        NLMEANS_SORT(pixels[6],  pixels[12]);
+        NLMEANS_SORT(pixels[7],  pixels[14]);
+        NLMEANS_SORT(pixels[4],  pixels[6]);
+        NLMEANS_SORT(pixels[4],  pixels[7]);
+        NLMEANS_SORT(pixels[12], pixels[14]);
+        NLMEANS_SORT(pixels[10], pixels[14]);
+        NLMEANS_SORT(pixels[6],  pixels[7]);
+        NLMEANS_SORT(pixels[10], pixels[12]);
+        NLMEANS_SORT(pixels[6],  pixels[10]);
+        NLMEANS_SORT(pixels[6],  pixels[17]);
+        NLMEANS_SORT(pixels[12], pixels[17]);
+        NLMEANS_SORT(pixels[7],  pixels[17]);
+        NLMEANS_SORT(pixels[7],  pixels[10]);
+        NLMEANS_SORT(pixels[12], pixels[18]);
+        NLMEANS_SORT(pixels[7],  pixels[12]);
+        NLMEANS_SORT(pixels[10], pixels[18]);
+        NLMEANS_SORT(pixels[12], pixels[20]);
+        NLMEANS_SORT(pixels[10], pixels[20]);
+        NLMEANS_SORT(pixels[10], pixels[12]);
         return pixels[12];
     }
 
@@ -359,7 +437,7 @@ static uint8_t nlmeans_filter_median_opt(uint8_t  *pixels,
 }
 
 static void nlmeans_filter_median(const uint8_t *src,
-                                        uint8_t *dst,
+                                  uint8_t *dst,
                                   const int w,
                                   const int h,
                                   const int border,
@@ -391,7 +469,7 @@ static void nlmeans_filter_median(const uint8_t *src,
 }
 
 static void nlmeans_filter_csm(const uint8_t *src,
-                                     uint8_t *dst,
+                               uint8_t *dst,
                                const int w,
                                const int h,
                                const int border,
@@ -436,8 +514,8 @@ static void nlmeans_filter_csm(const uint8_t *src,
                         max = pixel;
                     }
                 }
-                end:
-                    continue;
+end:
+                continue;
             }
 
             // Final neighborhood thresholds
@@ -484,7 +562,7 @@ static void nlmeans_filter_csm(const uint8_t *src,
 }
 
 static void nlmeans_filter_edgeboost(const uint8_t *src,
-                                           uint8_t *dst,
+                                     uint8_t *dst,
                                      const int w,
                                      const int h,
                                      const int border)
@@ -495,8 +573,9 @@ static void nlmeans_filter_edgeboost(const uint8_t *src,
     // Custom kernel
     const int kernel_size = 3;
     const int kernel[3][3] = {{-31, 0, 31},
-                              {-44, 0, 44},
-                              {-31, 0, 31}};
+        {-44, 0, 44},
+        {-31, 0, 31}
+    };
     const double kernel_coef = 1.0 / 126.42;
 
     // Detect edges
@@ -597,11 +676,11 @@ static void nlmeans_prefilter(BorderedPlane *src,
     }
 
     if (filter_type & NLMEANS_PREFILTER_MODE_MEAN3X3   ||
-        filter_type & NLMEANS_PREFILTER_MODE_MEAN5X5   ||
-        filter_type & NLMEANS_PREFILTER_MODE_MEDIAN3X3 ||
-        filter_type & NLMEANS_PREFILTER_MODE_MEDIAN5X5 ||
-        filter_type & NLMEANS_PREFILTER_MODE_CSM3X3    ||
-        filter_type & NLMEANS_PREFILTER_MODE_CSM5X5)
+            filter_type & NLMEANS_PREFILTER_MODE_MEAN5X5   ||
+            filter_type & NLMEANS_PREFILTER_MODE_MEDIAN3X3 ||
+            filter_type & NLMEANS_PREFILTER_MODE_MEDIAN5X5 ||
+            filter_type & NLMEANS_PREFILTER_MODE_CSM3X3    ||
+            filter_type & NLMEANS_PREFILTER_MODE_CSM5X5)
     {
 
         // Source image
@@ -663,7 +742,7 @@ static void nlmeans_prefilter(BorderedPlane *src,
         int wet = 1;
         int dry = 0;
         if (filter_type & NLMEANS_PREFILTER_MODE_REDUCE50 &&
-            filter_type & NLMEANS_PREFILTER_MODE_REDUCE25)
+                filter_type & NLMEANS_PREFILTER_MODE_REDUCE25)
         {
             wet = 1;
             dry = 3;
@@ -708,10 +787,10 @@ static void nlmeans_prefilter(BorderedPlane *src,
 
 static void build_integral_scalar(uint32_t *integral,
                                   int       integral_stride,
-                            const uint8_t  *src,
-                            const uint8_t  *src_pre,
-                            const uint8_t  *compare,
-                            const uint8_t  *compare_pre,
+                                  const uint8_t  *src,
+                                  const uint8_t  *src_pre,
+                                  const uint8_t  *compare,
+                                  const uint8_t  *compare_pre,
                                   int       w,
                                   int       border,
                                   int       dst_w,
@@ -761,9 +840,9 @@ static void nlmeans_plane(NLMeansFunctions *functions,
                           double origin_tune,
                           int n,
                           int r,
-                    const float *exptable,
-                    const float  weight_fact_table,
-                    const int    diff_max)
+                          const float *exptable,
+                          const float  weight_fact_table,
+                          const int    diff_max)
 {
     const int n_half = (n-1) /2;
     const int r_half = (r-1) /2;
@@ -892,7 +971,7 @@ static void nlmeans_plane(NLMeansFunctions *functions,
 }
 
 static int nlmeans_init(hb_filter_object_t *filter,
-                           hb_filter_init_t *init)
+                        hb_filter_init_t *init)
 {
     filter->private_data = calloc(sizeof(struct hb_filter_private_s), 1);
     hb_filter_private_t *pv = filter->private_data;
@@ -949,35 +1028,79 @@ static int nlmeans_init(hb_filter_object_t *filter,
     // Cr not set; inherit Cb. Cb not set; inherit Y. Y not set; defaults.
     for (int c = 1; c < 3; c++)
     {
-        if (pv->strength[c]    == -1) { pv->strength[c]    = pv->strength[c-1]; }
-        if (pv->origin_tune[c] == -1) { pv->origin_tune[c] = pv->origin_tune[c-1]; }
-        if (pv->patch_size[c]  == -1) { pv->patch_size[c]  = pv->patch_size[c-1]; }
-        if (pv->range[c]       == -1) { pv->range[c]       = pv->range[c-1]; }
-        if (pv->nframes[c]     == -1) { pv->nframes[c]     = pv->nframes[c-1]; }
-        if (pv->prefilter[c]   == -1) { pv->prefilter[c]   = pv->prefilter[c-1]; }
+        if (pv->strength[c]    == -1) {
+            pv->strength[c]    = pv->strength[c-1];
+        }
+        if (pv->origin_tune[c] == -1) {
+            pv->origin_tune[c] = pv->origin_tune[c-1];
+        }
+        if (pv->patch_size[c]  == -1) {
+            pv->patch_size[c]  = pv->patch_size[c-1];
+        }
+        if (pv->range[c]       == -1) {
+            pv->range[c]       = pv->range[c-1];
+        }
+        if (pv->nframes[c]     == -1) {
+            pv->nframes[c]     = pv->nframes[c-1];
+        }
+        if (pv->prefilter[c]   == -1) {
+            pv->prefilter[c]   = pv->prefilter[c-1];
+        }
     }
 
     for (int c = 0; c < 3; c++)
     {
         // Replace unset values with defaults
-        if (pv->strength[c]    == -1) { pv->strength[c]    = c ? NLMEANS_STRENGTH_LUMA_DEFAULT    : NLMEANS_STRENGTH_CHROMA_DEFAULT; }
-        if (pv->origin_tune[c] == -1) { pv->origin_tune[c] = c ? NLMEANS_ORIGIN_TUNE_LUMA_DEFAULT : NLMEANS_ORIGIN_TUNE_CHROMA_DEFAULT; }
-        if (pv->patch_size[c]  == -1) { pv->patch_size[c]  = c ? NLMEANS_PATCH_SIZE_LUMA_DEFAULT  : NLMEANS_PATCH_SIZE_CHROMA_DEFAULT; }
-        if (pv->range[c]       == -1) { pv->range[c]       = c ? NLMEANS_RANGE_LUMA_DEFAULT       : NLMEANS_RANGE_CHROMA_DEFAULT; }
-        if (pv->nframes[c]     == -1) { pv->nframes[c]     = c ? NLMEANS_FRAMES_LUMA_DEFAULT      : NLMEANS_FRAMES_CHROMA_DEFAULT; }
-        if (pv->prefilter[c]   == -1) { pv->prefilter[c]   = c ? NLMEANS_PREFILTER_LUMA_DEFAULT   : NLMEANS_PREFILTER_CHROMA_DEFAULT; }
+        if (pv->strength[c]    == -1) {
+            pv->strength[c]    = c ? NLMEANS_STRENGTH_LUMA_DEFAULT    : NLMEANS_STRENGTH_CHROMA_DEFAULT;
+        }
+        if (pv->origin_tune[c] == -1) {
+            pv->origin_tune[c] = c ? NLMEANS_ORIGIN_TUNE_LUMA_DEFAULT : NLMEANS_ORIGIN_TUNE_CHROMA_DEFAULT;
+        }
+        if (pv->patch_size[c]  == -1) {
+            pv->patch_size[c]  = c ? NLMEANS_PATCH_SIZE_LUMA_DEFAULT  : NLMEANS_PATCH_SIZE_CHROMA_DEFAULT;
+        }
+        if (pv->range[c]       == -1) {
+            pv->range[c]       = c ? NLMEANS_RANGE_LUMA_DEFAULT       : NLMEANS_RANGE_CHROMA_DEFAULT;
+        }
+        if (pv->nframes[c]     == -1) {
+            pv->nframes[c]     = c ? NLMEANS_FRAMES_LUMA_DEFAULT      : NLMEANS_FRAMES_CHROMA_DEFAULT;
+        }
+        if (pv->prefilter[c]   == -1) {
+            pv->prefilter[c]   = c ? NLMEANS_PREFILTER_LUMA_DEFAULT   : NLMEANS_PREFILTER_CHROMA_DEFAULT;
+        }
 
         // Sanitize
-        if (pv->strength[c] < 0)        { pv->strength[c] = 0; }
-        if (pv->origin_tune[c] < 0.01)  { pv->origin_tune[c] = 0.01; } // avoid black artifacts
-        if (pv->origin_tune[c] > 1)     { pv->origin_tune[c] = 1; }
-        if (pv->patch_size[c] % 2 == 0) { pv->patch_size[c]--; }
-        if (pv->patch_size[c] < 1)      { pv->patch_size[c] = 1; }
-        if (pv->range[c] % 2 == 0)      { pv->range[c]--; }
-        if (pv->range[c] < 1)           { pv->range[c] = 1; }
-        if (pv->nframes[c] < 1)         { pv->nframes[c] = 1; }
-        if (pv->nframes[c] > NLMEANS_FRAMES_MAX) { pv->nframes[c] = NLMEANS_FRAMES_MAX; }
-        if (pv->prefilter[c] < 0)       { pv->prefilter[c] = 0; }
+        if (pv->strength[c] < 0)        {
+            pv->strength[c] = 0;
+        }
+        if (pv->origin_tune[c] < 0.01)  {
+            pv->origin_tune[c] = 0.01;    // avoid black artifacts
+        }
+        if (pv->origin_tune[c] > 1)     {
+            pv->origin_tune[c] = 1;
+        }
+        if (pv->patch_size[c] % 2 == 0) {
+            pv->patch_size[c]--;
+        }
+        if (pv->patch_size[c] < 1)      {
+            pv->patch_size[c] = 1;
+        }
+        if (pv->range[c] % 2 == 0)      {
+            pv->range[c]--;
+        }
+        if (pv->range[c] < 1)           {
+            pv->range[c] = 1;
+        }
+        if (pv->nframes[c] < 1)         {
+            pv->nframes[c] = 1;
+        }
+        if (pv->nframes[c] > NLMEANS_FRAMES_MAX) {
+            pv->nframes[c] = NLMEANS_FRAMES_MAX;
+        }
+        if (pv->prefilter[c] < 0)       {
+            pv->prefilter[c] = 0;
+        }
 
         if (pv->max_frames < pv->nframes[c]) pv->max_frames = pv->nframes[c];
 
@@ -1072,7 +1195,7 @@ static void nlmeans_close(hb_filter_object_t *filter)
         for (int f = 0; f < pv->nframes[c]; f++)
         {
             if (pv->frame[f].plane[c].mem_pre != NULL &&
-                pv->frame[f].plane[c].mem_pre != pv->frame[f].plane[c].mem)
+                    pv->frame[f].plane[c].mem_pre != pv->frame[f].plane[c].mem)
             {
                 free(pv->frame[f].plane[c].mem_pre);
                 pv->frame[f].plane[c].mem_pre = NULL;
@@ -1210,7 +1333,7 @@ static hb_buffer_t * nlmeans_filter(hb_filter_private_t *pv)
         {
             // Release last frame in buffer
             if (pv->frame[t].plane[c].mem_pre != NULL &&
-                pv->frame[t].plane[c].mem_pre != pv->frame[t].plane[c].mem)
+                    pv->frame[t].plane[c].mem_pre != pv->frame[t].plane[c].mem)
             {
                 free(pv->frame[t].plane[c].mem_pre);
                 pv->frame[t].plane[c].mem_pre = NULL;
@@ -1313,8 +1436,8 @@ static hb_buffer_t * nlmeans_filter_flush(hb_filter_private_t *pv)
 }
 
 static int nlmeans_work(hb_filter_object_t *filter,
-                           hb_buffer_t **buf_in,
-                           hb_buffer_t **buf_out )
+                        hb_buffer_t **buf_in,
+                        hb_buffer_t **buf_out )
 {
     hb_filter_private_t *pv = filter->private_data;
     hb_buffer_t *in = *buf_in;

@@ -85,7 +85,7 @@ static int mt_frame_init(hb_filter_object_t * filter,
         pv->thread_data[ii]->pv = pv;
         pv->thread_data[ii]->segment = ii;
         if (taskset_thread_spawn(&pv->taskset, ii, "mt_frame_filter",
-                             mt_frame_filter_thread, HB_NORMAL_PRIORITY) == 0)
+                                 mt_frame_filter_thread, HB_NORMAL_PRIORITY) == 0)
         {
             hb_error("MTFrame could not spawn thread");
             goto fail;
@@ -147,7 +147,7 @@ static void mt_frame_filter_thread(void *thread_args_v)
         if (pv->sub_filter->work_thread != NULL)
         {
             pv->sub_filter->work_thread(pv->sub_filter,
-                                 &pv->buf[segment], &thread_data->out, segment);
+                                        &pv->buf[segment], &thread_data->out, segment);
         }
         else
         {

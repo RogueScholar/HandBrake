@@ -115,14 +115,14 @@ static void lpcmInfo( hb_work_object_t *w, hb_buffer_t *in )
 
     switch( pv->sample_size )
     {
-        case 20:
-            chunk_size = 5;
-            samples_per_chunk = 2;
-            break;
-        case 24:
-            chunk_size = 6;
-            samples_per_chunk = 2;
-            break;
+    case 20:
+        chunk_size = 5;
+        samples_per_chunk = 2;
+        break;
+    case 24:
+        chunk_size = 6;
+        samples_per_chunk = 2;
+        break;
     }
 
     /*
@@ -148,7 +148,7 @@ static void lpcmInfo( hb_work_object_t *w, hb_buffer_t *in )
 
     pv->duration = frames * 150;
     pv->nchunks =  ( pv->duration * pv->nchannels * pv->samplerate +
-                    samples_per_chunk - 1 ) / ( 90000 * samples_per_chunk );
+                     samples_per_chunk - 1 ) / ( 90000 * samples_per_chunk );
     pv->nsamples = ( pv->duration * pv->samplerate ) / 90000;
     pv->size = pv->nchunks * chunk_size;
 
@@ -192,7 +192,7 @@ static int declpcmInit( hb_work_object_t * w, hb_job_t * job )
  * frames. Because of the arbitrary alignment, it can output zero, one or two buf's.
  */
 static int declpcmWork( hb_work_object_t * w, hb_buffer_t ** buf_in,
-                 hb_buffer_t ** buf_out )
+                        hb_buffer_t ** buf_out )
 {
     hb_work_private_t * pv = w->private_data;
     hb_buffer_t *in = *buf_in;
@@ -254,85 +254,88 @@ static hb_buffer_t *Decode( hb_work_object_t *w )
 
     switch( pv->sample_size )
     {
-        case 16: // 2 byte, big endian, signed (the right shift sign extends)
+    case 16: // 2 byte, big endian, signed (the right shift sign extends)
+    {
+        uint8_t *frm = pv->frame;
+        while ( count-- )
         {
-            uint8_t *frm = pv->frame;
-            while ( count-- )
+            int cc;
+            for( cc = 0; cc < pv->nchannels; cc++ )
             {
-                int cc;
+                // Shifts below result in sign extension which gives
+                // us proper signed values. The final division adjusts
+                // the range to [-1.0 ... 1.0]
+                *odat++ = (float)( ( (int)( frm[0] << 24 ) >> 16 ) |
+                                   frm[1] ) / 32768.0;
+                frm += 2;
+            }
+        }
+    }
+    break;
+    case 20:
+    {
+        // There will always be 2 groups of samples.  A group is
+        // a collection of samples that spans all channels.
+        // The data for the samples is split.  The first 2 msb
+        // bytes for all samples is encoded first, then the remaining
+        // lsb bits are encoded.
+        uint8_t *frm = pv->frame;
+        while ( count-- )
+        {
+            int gg, cc;
+            int shift = 4;
+            uint8_t *lsb = frm + 4 * pv->nchannels;
+            for( gg = 0; gg < 2; gg++ )
+            {
                 for( cc = 0; cc < pv->nchannels; cc++ )
                 {
                     // Shifts below result in sign extension which gives
                     // us proper signed values. The final division adjusts
                     // the range to [-1.0 ... 1.0]
-                    *odat++ = (float)( ( (int)( frm[0] << 24 ) >> 16 ) |
-                                       frm[1] ) / 32768.0;
+                    *odat = (float)( ( (int)( frm[0] << 24 ) >> 12 ) |
+                                     ( frm[1] << 4 ) |
+                                     ( ( ( lsb[0] >> shift ) & 0x0f ) ) ) /
+                            (16. * 32768.0);
+                    odat++;
+                    lsb += !shift;
+                    shift ^= 4;
                     frm += 2;
                 }
             }
-        } break;
-        case 20:
+            frm = lsb;
+        }
+    }
+    break;
+    case 24:
+    {
+        // There will always be 2 groups of samples.  A group is
+        // a collection of samples that spans all channels.
+        // The data for the samples is split.  The first 2 msb
+        // bytes for all samples is encoded first, then the remaining
+        // lsb bits are encoded.
+        uint8_t *frm = pv->frame;
+        while ( count-- )
         {
-            // There will always be 2 groups of samples.  A group is
-            // a collection of samples that spans all channels.
-            // The data for the samples is split.  The first 2 msb
-            // bytes for all samples is encoded first, then the remaining
-            // lsb bits are encoded.
-            uint8_t *frm = pv->frame;
-            while ( count-- )
+            int gg, cc;
+            uint8_t *lsb = frm + 4 * pv->nchannels;
+            for( gg = 0; gg < 2; gg++ )
             {
-                int gg, cc;
-                int shift = 4;
-                uint8_t *lsb = frm + 4 * pv->nchannels;
-                for( gg = 0; gg < 2; gg++ )
+                for( cc = 0; cc < pv->nchannels; cc++ )
                 {
-                    for( cc = 0; cc < pv->nchannels; cc++ )
-                    {
-                        // Shifts below result in sign extension which gives
-                        // us proper signed values. The final division adjusts
-                        // the range to [-1.0 ... 1.0]
-                        *odat = (float)( ( (int)( frm[0] << 24 ) >> 12 ) |
-                                         ( frm[1] << 4 ) |
-                                         ( ( ( lsb[0] >> shift ) & 0x0f ) ) ) /
-                                       (16. * 32768.0);
-                        odat++;
-                        lsb += !shift;
-                        shift ^= 4;
-                        frm += 2;
-                    }
+                    // Shifts below result in sign extension which gives
+                    // us proper signed values. The final division adjusts
+                    // the range to [-1.0 ... 1.0]
+                    *odat++ = (float)( ( (int)( frm[0] << 24 ) >> 8 ) |
+                                       ( frm[1] << 8 ) | lsb[0] ) /
+                              (256. * 32768.0);
+                    frm += 2;
+                    lsb++;
                 }
-                frm = lsb;
             }
-        } break;
-        case 24:
-        {
-            // There will always be 2 groups of samples.  A group is
-            // a collection of samples that spans all channels.
-            // The data for the samples is split.  The first 2 msb
-            // bytes for all samples is encoded first, then the remaining
-            // lsb bits are encoded.
-            uint8_t *frm = pv->frame;
-            while ( count-- )
-            {
-                int gg, cc;
-                uint8_t *lsb = frm + 4 * pv->nchannels;
-                for( gg = 0; gg < 2; gg++ )
-                {
-                    for( cc = 0; cc < pv->nchannels; cc++ )
-                    {
-                        // Shifts below result in sign extension which gives
-                        // us proper signed values. The final division adjusts
-                        // the range to [-1.0 ... 1.0]
-                        *odat++ = (float)( ( (int)( frm[0] << 24 ) >> 8 ) |
-                                           ( frm[1] << 8 ) | lsb[0] ) /
-                                  (256. * 32768.0);
-                        frm += 2;
-                        lsb++;
-                    }
-                }
-                frm = lsb;
-            }
-        } break;
+            frm = lsb;
+        }
+    }
+    break;
     }
 
     hb_audio_resample_set_channel_layout(pv->resample,

@@ -75,7 +75,7 @@ struct hb_buffer_settings_s
     int64_t       renderOffset; // DTS used by b-frame offsets in muxmp4
     int64_t       pcr;
     int           scr_sequence; // The SCR sequence that this buffer's
-                                // timestamps are referenced to
+    // timestamps are referenced to
     int           split;
     uint8_t       discontinuity;
     int           new_chap;     // Video packets: if non-zero, is the index of the chapter whose boundary was crossed
@@ -389,42 +389,42 @@ struct hb_esconfig_s
     union
     {
 
-    struct
-    {
-        uint8_t bytes[HB_CONFIG_MAX_SIZE];
-        int     length;
-    } mpeg4;
+        struct
+        {
+            uint8_t bytes[HB_CONFIG_MAX_SIZE];
+            int     length;
+        } mpeg4;
 
-	struct
-	{
-	    uint8_t  sps[HB_CONFIG_MAX_SIZE];
-	    int       sps_length;
-	    uint8_t  pps[HB_CONFIG_MAX_SIZE];
-	    int       pps_length;
-	} h264;
+        struct
+        {
+            uint8_t  sps[HB_CONFIG_MAX_SIZE];
+            int       sps_length;
+            uint8_t  pps[HB_CONFIG_MAX_SIZE];
+            int       pps_length;
+        } h264;
 
-    struct
-    {
-        uint8_t headers[HB_CONFIG_MAX_SIZE];
-        int     headers_length;
-    } h265;
+        struct
+        {
+            uint8_t headers[HB_CONFIG_MAX_SIZE];
+            int     headers_length;
+        } h265;
 
-    struct
-    {
-        uint8_t headers[3][HB_CONFIG_MAX_SIZE];
-    } theora;
+        struct
+        {
+            uint8_t headers[3][HB_CONFIG_MAX_SIZE];
+        } theora;
 
-    struct
-    {
-        uint8_t bytes[HB_CONFIG_MAX_SIZE];
-        int     length;
-    } extradata;
+        struct
+        {
+            uint8_t bytes[HB_CONFIG_MAX_SIZE];
+            int     length;
+        } extradata;
 
-    struct
-    {
-        uint8_t headers[3][HB_CONFIG_MAX_SIZE];
-        char *language;
-    } vorbis;
+        struct
+        {
+            uint8_t headers[3][HB_CONFIG_MAX_SIZE];
+            char *language;
+        } vorbis;
     };
 };
 

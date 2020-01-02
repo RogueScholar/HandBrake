@@ -85,7 +85,7 @@ static int extradataInit( hb_work_private_t * pv )
             if (!events)
             {
                 if (len >= events_len &&
-                    !strncasecmp(line, events_tag, events_len))
+                        !strncasecmp(line, events_tag, events_len))
                 {
                     events = 1;
                 }
@@ -93,7 +93,7 @@ static int extradataInit( hb_work_private_t * pv )
             else
             {
                 if (len >= format_len &&
-                    !strncasecmp(line, format_tag, format_len))
+                        !strncasecmp(line, format_tag, format_len))
                 {
                     free(line);
                     break;
@@ -214,10 +214,10 @@ static int parse_timing( char *line, int64_t *start, int64_t *stop )
     // expected ' ' after the ':' will be the character it matches on
     // when there is no layer field.
     int numPartsRead = sscanf(line, "Dialogue:%*128[^,],"
-        "%d:%d:%d.%d,"  // Start
-        "%d:%d:%d.%d,", // End
-        &start_hr, &start_min, &start_sec, &start_centi,
-          &end_hr,   &end_min,   &end_sec,   &end_centi );
+                              "%d:%d:%d.%d,"  // Start
+                              "%d:%d:%d.%d,", // End
+                              &start_hr, &start_min, &start_sec, &start_centi,
+                              &end_hr,   &end_min,   &end_sec,   &end_centi );
     if ( numPartsRead != 8 )
         return 1;
 
@@ -402,7 +402,7 @@ static hb_buffer_t * ssa_read( hb_work_private_t * pv )
 }
 
 static int decssaWork( hb_work_object_t * w, hb_buffer_t ** buf_in,
-                        hb_buffer_t ** buf_out )
+                       hb_buffer_t ** buf_out )
 {
     hb_work_private_t * pv =  w->private_data;
     hb_buffer_t       * in = *buf_in;

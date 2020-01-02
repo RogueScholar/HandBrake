@@ -116,7 +116,7 @@ int decsubWork( hb_work_object_t * w, hb_buffer_t ** buf_in,
     {
         /* We are looking for the start of a new subtitle */
         if( size_sub && size_rle && size_sub > size_rle &&
-            in->size <= size_sub )
+                in->size <= size_sub )
         {
             /* Looks all right so far */
             pv->size_sub = size_sub;
@@ -241,8 +241,10 @@ static int ParseControls( hb_work_object_t * w )
             return 1;
         }
 
-        date = ( buf[i] << 8 ) | buf[i+1]; i += 2;
-        next = ( buf[i] << 8 ) | buf[i+1]; i += 2;
+        date = ( buf[i] << 8 ) | buf[i+1];
+        i += 2;
+        next = ( buf[i] << 8 ) | buf[i+1];
+        i += 2;
 
         for( ;; )
         {
@@ -266,140 +268,142 @@ static int ParseControls( hb_work_object_t * w )
 
             switch( command )
             {
-                case 0x00: // 0x00 - FSTA_DSP - Forced Start Display, no arguments
-                    pv->pts_start    = pv->pts + date * 1024;
+            case 0x00: // 0x00 - FSTA_DSP - Forced Start Display, no arguments
+                pv->pts_start    = pv->pts + date * 1024;
+                pv->scr_sequence = pv->current_scr_sequence;
+                pv->pts_forced   = 1;
+                w->subtitle->hits++;
+                w->subtitle->forced_hits++;
+                break;
+
+            case 0x01: // 0x01 - STA_DSP - Start Display, no arguments
+                pv->pts_start    = pv->pts + date * 1024;
+                pv->scr_sequence = pv->current_scr_sequence;
+                pv->pts_forced   = 0;
+                w->subtitle->hits++;
+                break;
+
+            case 0x02: // 0x02 - STP_DSP - Stop Display, no arguments
+                if (pv->pts_stop == AV_NOPTS_VALUE)
+                {
+                    pv->pts_stop     = pv->pts + date * 1024;
                     pv->scr_sequence = pv->current_scr_sequence;
-                    pv->pts_forced   = 1;
-                    w->subtitle->hits++;
-                    w->subtitle->forced_hits++;
-                    break;
+                }
+                break;
 
-                case 0x01: // 0x01 - STA_DSP - Start Display, no arguments
-                    pv->pts_start    = pv->pts + date * 1024;
-                    pv->scr_sequence = pv->current_scr_sequence;
-                    pv->pts_forced   = 0;
-                    w->subtitle->hits++;
-                    break;
+            case 0x03: // 0x03 - SET_COLOR - Set Colour indices
+            {
+                /*
+                 * SET_COLOR - provides four indices into the CLUT
+                 * for the current PGC to associate with the four
+                 * pixel values
+                 */
+                int colors[4];
+                int j;
 
-                case 0x02: // 0x02 - STP_DSP - Stop Display, no arguments
-                    if (pv->pts_stop == AV_NOPTS_VALUE)
-                    {
-                        pv->pts_stop     = pv->pts + date * 1024;
-                        pv->scr_sequence = pv->current_scr_sequence;
-                    }
-                    break;
+                if ( i + 1 >= pv->buf->size )
+                {
+                    return 1;
+                }
 
-                case 0x03: // 0x03 - SET_COLOR - Set Colour indices
+                colors[0] = (buf[i+0]>>4)&0x0f;
+                colors[1] = (buf[i+0])&0x0f;
+                colors[2] = (buf[i+1]>>4)&0x0f;
+                colors[3] = (buf[i+1])&0x0f;
+
+                for( j = 0; j < 4; j++ )
                 {
                     /*
-                     * SET_COLOR - provides four indices into the CLUT
-                     * for the current PGC to associate with the four
-                     * pixel values
+                     * Not sure what is happening here, in theory
+                     * the palette is in YCbCr. And we want YUV.
+                     *
+                     * However it looks more like YCrCb (according
+                     * to pgcedit). And the scalers for YCrCb don't
+                     * work, but I get the right colours by doing
+                     * no conversion.
                      */
-                    int colors[4];
-                    int j;
-
-                    if ( i + 1 >= pv->buf->size )
-                    {
-                        return 1;
-                    }
-
-                    colors[0] = (buf[i+0]>>4)&0x0f;
-                    colors[1] = (buf[i+0])&0x0f;
-                    colors[2] = (buf[i+1]>>4)&0x0f;
-                    colors[3] = (buf[i+1])&0x0f;
-
-                    for( j = 0; j < 4; j++ )
-                    {
-                        /*
-                         * Not sure what is happening here, in theory
-                         * the palette is in YCbCr. And we want YUV.
-                         *
-                         * However it looks more like YCrCb (according
-                         * to pgcedit). And the scalers for YCrCb don't
-                         * work, but I get the right colours by doing
-                         * no conversion.
-                         */
-                        uint32_t color = w->subtitle->palette[colors[j]];
-                        uint8_t Cr, Cb, y;
-                        y = (color>>16) & 0xff;
-                        Cr = (color>>8) & 0xff;
-                        Cb = (color) & 0xff;
-                        pv->lum[3-j] = y;
-                        pv->chromaU[3-j] = Cb;
-                        pv->chromaV[3-j] = Cr;
-                        /* hb_log("color[%d] y = %d, u = %d, v = %d",
-                               3-j,
-                               pv->lum[3-j],
-                               pv->chromaU[3-j],
-                               pv->chromaV[3-j]);
-                        */
-                    }
-                    i += 2;
-                    break;
+                    uint32_t color = w->subtitle->palette[colors[j]];
+                    uint8_t Cr, Cb, y;
+                    y = (color>>16) & 0xff;
+                    Cr = (color>>8) & 0xff;
+                    Cb = (color) & 0xff;
+                    pv->lum[3-j] = y;
+                    pv->chromaU[3-j] = Cb;
+                    pv->chromaV[3-j] = Cr;
+                    /* hb_log("color[%d] y = %d, u = %d, v = %d",
+                           3-j,
+                           pv->lum[3-j],
+                           pv->chromaU[3-j],
+                           pv->chromaV[3-j]);
+                    */
                 }
-                case 0x04: // 0x04 - SET_CONTR - Set Contrast
+                i += 2;
+                break;
+            }
+            case 0x04: // 0x04 - SET_CONTR - Set Contrast
+            {
+                /*
+                 * SET_CONTR - directly provides the four contrast
+                 * (alpha blend) values to associate with the four
+                 * pixel values
+                 */
+                uint8_t    alpha[4];
+
+                if ( i + 1 >= pv->buf->size )
                 {
-                    /*
-                     * SET_CONTR - directly provides the four contrast
-                     * (alpha blend) values to associate with the four
-                     * pixel values
-                     */
-                    uint8_t    alpha[4];
-
-                    if ( i + 1 >= pv->buf->size )
-                    {
-                        return 1;
-                    }
-
-                    alpha[3] = ((buf[i+0] >> 4) & 0x0f) << 4;
-                    alpha[2] = ((buf[i+0]     ) & 0x0f) << 4;
-                    alpha[1] = ((buf[i+1] >> 4) & 0x0f) << 4;
-                    alpha[0] = ((buf[i+1]     ) & 0x0f) << 4;
-
-
-                    int lastAlpha = pv->alpha[3] + pv->alpha[2] + pv->alpha[1] + pv->alpha[0];
-                    int currAlpha = alpha[3] + alpha[2] + alpha[1] + alpha[0];
-
-                    // fading-in, save the highest alpha value
-                    if( currAlpha > lastAlpha )
-                    {
-                        pv->alpha[3] = alpha[3];
-                        pv->alpha[2] = alpha[2];
-                        pv->alpha[1] = alpha[1];
-                        pv->alpha[0] = alpha[0];
-                    }
-
-                    // fading-out
-                    if (currAlpha < lastAlpha && pv->pts_stop == AV_NOPTS_VALUE)
-                    {
-                        pv->pts_stop     = pv->pts + date * 1024;
-                        pv->scr_sequence = pv->current_scr_sequence;
-                    }
-
-                    i += 2;
-                    break;
+                    return 1;
                 }
-                case 0x05: // 0x05 - SET_DAREA - defines the display area
+
+                alpha[3] = ((buf[i+0] >> 4) & 0x0f) << 4;
+                alpha[2] = ((buf[i+0]     ) & 0x0f) << 4;
+                alpha[1] = ((buf[i+1] >> 4) & 0x0f) << 4;
+                alpha[0] = ((buf[i+1]     ) & 0x0f) << 4;
+
+
+                int lastAlpha = pv->alpha[3] + pv->alpha[2] + pv->alpha[1] + pv->alpha[0];
+                int currAlpha = alpha[3] + alpha[2] + alpha[1] + alpha[0];
+
+                // fading-in, save the highest alpha value
+                if( currAlpha > lastAlpha )
                 {
-                    if ( i + 4 >= pv->buf->size )
-                    {
-                        return 1;
-                    }
+                    pv->alpha[3] = alpha[3];
+                    pv->alpha[2] = alpha[2];
+                    pv->alpha[1] = alpha[1];
+                    pv->alpha[0] = alpha[0];
+                }
 
-                    pv->x     = (buf[i+0]<<4) | ((buf[i+1]>>4)&0x0f);
-                    pv->width = (((buf[i+1]&0x0f)<<8)| buf[i+2]) - pv->x + 1;
-                    pv->y     = (buf[i+3]<<4)| ((buf[i+4]>>4)&0x0f);
-                    pv->height = (((buf[i+4]&0x0f)<<8)| buf[i+5]) - pv->y + 1;
-                    i += 6;
-                    break;
-                }
-                case 0x06: // 0x06 - SET_DSPXA - defines the pixel data addresses
+                // fading-out
+                if (currAlpha < lastAlpha && pv->pts_stop == AV_NOPTS_VALUE)
                 {
-                    pv->offsets[0] = ( buf[i] << 8 ) | buf[i+1]; i += 2;
-                    pv->offsets[1] = ( buf[i] << 8 ) | buf[i+1]; i += 2;
-                    break;
+                    pv->pts_stop     = pv->pts + date * 1024;
+                    pv->scr_sequence = pv->current_scr_sequence;
                 }
+
+                i += 2;
+                break;
+            }
+            case 0x05: // 0x05 - SET_DAREA - defines the display area
+            {
+                if ( i + 4 >= pv->buf->size )
+                {
+                    return 1;
+                }
+
+                pv->x     = (buf[i+0]<<4) | ((buf[i+1]>>4)&0x0f);
+                pv->width = (((buf[i+1]&0x0f)<<8)| buf[i+2]) - pv->x + 1;
+                pv->y     = (buf[i+3]<<4)| ((buf[i+4]>>4)&0x0f);
+                pv->height = (((buf[i+4]&0x0f)<<8)| buf[i+5]) - pv->y + 1;
+                i += 6;
+                break;
+            }
+            case 0x06: // 0x06 - SET_DSPXA - defines the pixel data addresses
+            {
+                pv->offsets[0] = ( buf[i] << 8 ) | buf[i+1];
+                i += 2;
+                pv->offsets[1] = ( buf[i] << 8 ) | buf[i+1];
+                i += 2;
+                break;
+            }
             }
         }
 

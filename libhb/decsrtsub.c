@@ -221,13 +221,13 @@ read_time_from_string( const char* timeString, struct start_and_end *result )
     int scanned;
 
     scanned = sscanf(timeString, "%ld:%ld:%ld,%ld --> %ld:%ld:%ld,%ld\n",
-                    &houres1, &minutes1, &seconds1, &milliseconds1,
-                    &houres2, &minutes2, &seconds2, &milliseconds2);
+                     &houres1, &minutes1, &seconds1, &milliseconds1,
+                     &houres2, &minutes2, &seconds2, &milliseconds2);
     if (scanned != 8)
     {
         scanned = sscanf(timeString, "%ld:%ld:%ld.%ld --> %ld:%ld:%ld.%ld\n",
-                        &houres1, &minutes1, &seconds1, &milliseconds1,
-                        &houres2, &minutes2, &seconds2, &milliseconds2);
+                         &houres1, &minutes1, &seconds1, &milliseconds1,
+                         &houres2, &minutes2, &seconds2, &milliseconds2);
         if (scanned != 8)
         {
             return 0;
@@ -406,7 +406,7 @@ static hb_buffer_t *srt_read( hb_work_private_t *pv )
              */
             strtol(line_buffer, &endpoint, 10);
             if (endpoint == line_buffer ||
-                (endpoint && *endpoint != '\n' && *endpoint != '\r'))
+                    (endpoint && *endpoint != '\n' && *endpoint != '\r'))
             {
                 /*
                  * Doesn't resemble an entry number
@@ -466,7 +466,7 @@ static hb_buffer_t *srt_read( hb_work_private_t *pv )
                 continue;
             }
             if (endpoint == line_buffer ||
-                (endpoint && *endpoint != '\n' && *endpoint != '\r'))
+                    (endpoint && *endpoint != '\n' && *endpoint != '\r'))
             {
                 /*
                  * Well.. looks like we are in the wrong mode.. lets add the
@@ -496,7 +496,7 @@ static hb_buffer_t *srt_read( hb_work_private_t *pv )
                 // Drop subtitles that end before the start time
                 // or start after the stop time
                 if (stop_time  <= pv->start_time ||
-                    start_time >= pv->stop_time)
+                        start_time >= pv->stop_time)
                 {
                     hb_deep_log( 3, "Discarding SRT at time start %"PRId64", stop %"PRId64, start_time, stop_time);
                     memset( &pv->current_entry, 0, sizeof( srt_entry_t ) );
@@ -520,7 +520,7 @@ static hb_buffer_t *srt_read( hb_work_private_t *pv )
                         // sanitize newline codes to a single '\n'
                         // and delete any newline at the end of the subtitle
                         if (*(p + 1) != '\n' && *(p + 1) != '\r' &&
-                            *(p + 1) != '\0')
+                                *(p + 1) != '\0')
                         {
                             *q   = '\n';
                             q++;

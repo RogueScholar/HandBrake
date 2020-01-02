@@ -33,9 +33,9 @@ typedef struct {
 // size = 3, coef = 1.0
 static const int    kernel_lap[] =
 {
- 0, -1,  0,
--1,  5, -1,
- 0, -1,  0
+    0, -1,  0,
+    -1,  5, -1,
+    0, -1,  0
 };
 
 // Isotropic Laplacian kernel (isolap)
@@ -43,10 +43,10 @@ static const int    kernel_lap[] =
 // size = 3, coef = 1.0 / 5
 static const int    kernel_isolap[] =
 {
--1, -4, -1,
--4, 25, -4,
--1, -4, -1
-};
+    -1, -4, -1,
+        -4, 25, -4,
+        -1, -4, -1
+    };
 
 // Laplacian of Gaussian kernel (log)
 // Slight noise and grain rejection
@@ -54,11 +54,11 @@ static const int    kernel_isolap[] =
 // size = 5, coef = 1.0 / 5
 static const int    kernel_log[] =
 {
- 0,  0, -1,  0,  0,
- 0, -1, -2, -1,  0,
--1, -2, 21, -2, -1,
- 0, -1, -2, -1,  0,
- 0,  0, -1,  0,  0
+    0,  0, -1,  0,  0,
+    0, -1, -2, -1,  0,
+    -1, -2, 21, -2, -1,
+    0, -1, -2, -1,  0,
+    0,  0, -1,  0,  0
 };
 
 // Isotropic Laplacian of Gaussian kernel (isolog)
@@ -67,11 +67,11 @@ static const int    kernel_log[] =
 // size = 5, coef = 1.0 / 15
 static const int    kernel_isolog[] =
 {
- 0, -1, -1, -1,  0,
--1, -3, -4, -3, -1,
--1, -4, 55, -4, -1,
--1, -3, -4, -3, -1,
- 0, -1, -1, -1,  0
+    0, -1, -1, -1,  0,
+    -1, -3, -4, -3, -1,
+    -1, -4, 55, -4, -1,
+    -1, -3, -4, -3, -1,
+    0, -1, -1, -1,  0
 };
 
 static kernel_t kernels[] =
@@ -117,7 +117,7 @@ hb_filter_object_t hb_filter_lapsharp =
 };
 
 static void hb_lapsharp(const uint8_t *src,
-                              uint8_t *dst,
+                        uint8_t *dst,
                         const int width,
                         const int height,
                         const int stride,
@@ -135,9 +135,9 @@ static void hb_lapsharp(const uint8_t *src,
         for (int x = 0; x < width; x++)
         {
             if ((y < offset_max) ||
-                (y > height - offset_max) ||
-                (x < stride_border + offset_max) ||
-                (x > width + stride_border - offset_max))
+                    (y > height - offset_max) ||
+                    (x < stride_border + offset_max) ||
+                    (x > width + stride_border - offset_max))
             {
                 *(dst + stride*y + x) = *(src + stride*y + x);
                 continue;
@@ -241,12 +241,12 @@ static int hb_lapsharp_init(hb_filter_object_t *filter,
         if (ctx->strength == -1)
         {
             ctx->strength = c ? LAPSHARP_STRENGTH_CHROMA_DEFAULT :
-                                LAPSHARP_STRENGTH_LUMA_DEFAULT;
+                            LAPSHARP_STRENGTH_LUMA_DEFAULT;
         }
         if (ctx->kernel   == -1)
         {
             ctx->kernel   = c ? LAPSHARP_KERNEL_CHROMA_DEFAULT :
-                                LAPSHARP_KERNEL_LUMA_DEFAULT;
+                            LAPSHARP_KERNEL_LUMA_DEFAULT;
         }
 
         // Sanitize
@@ -276,8 +276,8 @@ static void hb_lapsharp_close(hb_filter_object_t * filter)
 }
 
 static int hb_lapsharp_work(hb_filter_object_t *filter,
-                           hb_buffer_t ** buf_in,
-                           hb_buffer_t ** buf_out)
+                            hb_buffer_t ** buf_in,
+                            hb_buffer_t ** buf_out)
 {
     hb_filter_private_t *pv = filter->private_data;
     hb_buffer_t *in = *buf_in, *out;

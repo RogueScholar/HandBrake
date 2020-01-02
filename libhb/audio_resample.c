@@ -12,8 +12,8 @@
 #include "handbrake/audio_resample.h"
 
 hb_audio_resample_t* hb_audio_resample_init(enum AVSampleFormat sample_fmt,
-                                            int sample_rate,
-                                            int hb_amixdown, int normalize_mix)
+        int sample_rate,
+        int hb_amixdown, int normalize_mix)
 {
     hb_audio_resample_t *resample = calloc(1, sizeof(hb_audio_resample_t));
     if (resample == NULL)
@@ -95,7 +95,7 @@ static int is_mono(uint64_t layout)
         return 0;
     }
     for (ii = 0, channel_count = 0, mask = 1;
-         ii < 64 && channel_count < 2; ii++, mask <<= 1)
+            ii < 64 && channel_count < 2; ii++, mask <<= 1)
     {
         if (layout & mask)
         {
@@ -106,7 +106,7 @@ static int is_mono(uint64_t layout)
 }
 
 void hb_audio_resample_set_channel_layout(hb_audio_resample_t *resample,
-                                          uint64_t channel_layout)
+        uint64_t channel_layout)
 {
     if (resample != NULL)
     {
@@ -118,7 +118,7 @@ void hb_audio_resample_set_channel_layout(hb_audio_resample_t *resample,
         // swresample can't remap a single-channel layout to
         // another single-channel layout
         if (resample->out.channel_layout == AV_CH_LAYOUT_MONO &&
-            is_mono(channel_layout))
+                is_mono(channel_layout))
         {
             channel_layout = AV_CH_LAYOUT_MONO;
         }
@@ -275,13 +275,13 @@ hb_buffer_t* hb_audio_resample(hb_audio_resample_t *resample,
     if (resample->resample_needed)
     {
         out_samples = nsamples  * resample->out.sample_rate /
-                                  resample->in.sample_rate + 1;
+                      resample->in.sample_rate + 1;
         out_size = av_samples_get_buffer_size(NULL, resample->out.channels,
                                               out_samples,
                                               resample->out.sample_fmt, 0);
         out = hb_buffer_init(out_size);
         out_samples = swr_convert(resample->swresample, &out->data, out_samples,
-                                                        samples,    nsamples);
+                                  samples,    nsamples);
 
         if (out_samples <= 0)
         {

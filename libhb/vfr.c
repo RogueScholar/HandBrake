@@ -124,8 +124,8 @@ static float motion_metric( unsigned * gamma_lut, hb_buffer_t * a, hb_buffer_t *
         for( x = 0; x < bw; x++ )
         {
             sum +=  sse_block16( gamma_lut, pa + y * 16 * stride + x * 16,
-                                            pb + y * 16 * stride + x * 16,
-                                            stride );
+                                 pb + y * 16 * stride + x * 16,
+                                 stride );
         }
     }
     return (float)sum / ( a->f.width * a->f.height );;
@@ -244,7 +244,7 @@ static hb_buffer_t * adjust_frame_rate( hb_filter_private_t * pv,
         ultimate    = hb_list_item(pv->frame_rate_list, count - 1);
 
         pv->frame_metric[count - 1] = motion_metric(pv->gamma_lut,
-                                                    penultimate, ultimate);
+                                      penultimate, ultimate);
 
         if (count < pv->frame_analysis_depth)
         {
@@ -507,7 +507,7 @@ static hb_filter_info_t * hb_vfr_info( hb_filter_object_t * filter )
         double peak_fps = (double)pv->vrate.num / pv->vrate.den;
         snprintf( info->human_readable_desc, 128,
                   "frame rate: %.3f fps -> peak rate limited to %.3f fps",
-                  source_fps , peak_fps );
+                  source_fps, peak_fps );
     }
     else
     {
@@ -516,7 +516,7 @@ static hb_filter_info_t * hb_vfr_info( hb_filter_object_t * filter )
         double constant_fps = (double)pv->vrate.num / pv->vrate.den;
         snprintf( info->human_readable_desc, 128,
                   "frame rate: %.3f fps -> constant %.3f fps",
-                  source_fps , constant_fps );
+                  source_fps, constant_fps );
     }
 
     return info;

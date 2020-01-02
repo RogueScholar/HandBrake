@@ -229,7 +229,7 @@ static void reset_combing_results( hb_filter_private_t * pv )
     int ii;
     for (ii = 0; ii < pv->comb_check_nthreads; ii++)
     {
-       pv->block_score[ii] = 0;
+        pv->block_score[ii] = 0;
     }
 }
 
@@ -261,7 +261,7 @@ static int check_combing_results( hb_filter_private_t * pv )
 }
 
 static void check_filtered_combing_mask( hb_filter_private_t * pv, int segment,
-                                         int start, int stop )
+        int start, int stop )
 {
     /* Go through the mask in X*Y blocks. If any of these windows
        have threshold or more combed pixels, consider the whole
@@ -419,7 +419,7 @@ static void build_gamma_lut( hb_filter_private_t * pv )
 }
 
 static void detect_gamma_combed_segment( hb_filter_private_t * pv,
-                                         int segment_start, int segment_stop )
+        int segment_start, int segment_stop )
 {
     /* A mish-mash of various comb detection tricks
        picked up from neuron2's Decomb plugin for
@@ -474,7 +474,7 @@ static void detect_gamma_combed_segment( hb_filter_private_t * pv,
                 down_diff = pv->gamma_lut[cur[0]] - pv->gamma_lut[cur[down_1]];
 
                 if (( up_diff >  athresh && down_diff >  athresh ) ||
-                    ( up_diff < -athresh && down_diff < -athresh ))
+                        ( up_diff < -athresh && down_diff < -athresh ))
                 {
                     /* The pixel above and below are different,
                        and they change in the same "direction" too.*/
@@ -483,13 +483,13 @@ static void detect_gamma_combed_segment( hb_filter_private_t * pv,
                     {
                         /* Make sure there's sufficient motion between frame t-1 to frame t+1. */
                         if (fabs(pv->gamma_lut[prev[0]]     - pv->gamma_lut[cur[0]]      ) > mthresh &&
-                            fabs(pv->gamma_lut[cur[up_1]]   - pv->gamma_lut[next[up_1]]  ) > mthresh &&
-                            fabs(pv->gamma_lut[cur[down_1]] - pv->gamma_lut[next[down_1]]) > mthresh)
-                                motion++;
+                                fabs(pv->gamma_lut[cur[up_1]]   - pv->gamma_lut[next[up_1]]  ) > mthresh &&
+                                fabs(pv->gamma_lut[cur[down_1]] - pv->gamma_lut[next[down_1]]) > mthresh)
+                            motion++;
                         if (fabs(pv->gamma_lut[next[0]]      - pv->gamma_lut[cur[0]]     ) > mthresh &&
-                            fabs(pv->gamma_lut[prev[up_1]]   - pv->gamma_lut[cur[up_1]]  ) > mthresh &&
-                            fabs(pv->gamma_lut[prev[down_1]] - pv->gamma_lut[cur[down_1]]) > mthresh)
-                                motion++;
+                                fabs(pv->gamma_lut[prev[up_1]]   - pv->gamma_lut[cur[up_1]]  ) > mthresh &&
+                                fabs(pv->gamma_lut[prev[down_1]] - pv->gamma_lut[cur[down_1]]) > mthresh)
+                            motion++;
 
                     }
                     else
@@ -585,7 +585,7 @@ static void detect_combed_segment( hb_filter_private_t * pv,
                 int down_diff = cur[0] - cur[down_1];
 
                 if (( up_diff >  athresh && down_diff >  athresh ) ||
-                    ( up_diff < -athresh && down_diff < -athresh ))
+                        ( up_diff < -athresh && down_diff < -athresh ))
                 {
                     /* The pixel above and below are different,
                        and they change in the same "direction" too.*/
@@ -594,13 +594,13 @@ static void detect_combed_segment( hb_filter_private_t * pv,
                     {
                         /* Make sure there's sufficient motion between frame t-1 to frame t+1. */
                         if (abs(prev[0]     - cur[0]      ) > mthresh &&
-                            abs(cur[up_1]   - next[up_1]  ) > mthresh &&
-                            abs(cur[down_1] - next[down_1]) > mthresh)
-                                motion++;
+                                abs(cur[up_1]   - next[up_1]  ) > mthresh &&
+                                abs(cur[down_1] - next[down_1]) > mthresh)
+                            motion++;
                         if (abs(next[0]      - cur[0]     ) > mthresh &&
-                            abs(prev[up_1]   - cur[up_1]  ) > mthresh &&
-                            abs(prev[down_1] - cur[down_1]) > mthresh)
-                                motion++;
+                                abs(prev[up_1]   - cur[up_1]  ) > mthresh &&
+                                abs(prev[down_1] - cur[down_1]) > mthresh)
+                            motion++;
                     }
                     else
                     {
@@ -612,13 +612,13 @@ static void detect_combed_segment( hb_filter_private_t * pv,
                     // If motion, or we can't measure motion yet...
                     if (motion || pv->frames == 0)
                     {
-                           /* That means it's time for the spatial check.
-                              We've got several options here.             */
+                        /* That means it's time for the spatial check.
+                           We've got several options here.             */
                         if (spatial_metric == 0)
                         {
                             /* Simple 32detect style comb detection */
                             if ((abs(cur[0] - cur[down_2]) < 10) &&
-                                (abs(cur[0] - cur[down_1]) > 15))
+                                    (abs(cur[0] - cur[down_1]) > 15))
                             {
                                 mask[0] = 1;
                             }
@@ -627,23 +627,23 @@ static void detect_combed_segment( hb_filter_private_t * pv,
                         {
                             /* This, for comparison, is what IsCombed uses.
                                It's better, but still noise sensitive.      */
-                               int combing = ( cur[up_1] - cur[0] ) *
-                                             ( cur[down_1] - cur[0] );
+                            int combing = ( cur[up_1] - cur[0] ) *
+                                          ( cur[down_1] - cur[0] );
 
-                               if (combing > athresh_squared)
-                               {
-                                   mask[0] = 1;
-                               }
+                            if (combing > athresh_squared)
+                            {
+                                mask[0] = 1;
+                            }
                         }
                         else if (spatial_metric == 2)
                         {
                             /* Tritical's noise-resistant combing scorer.
                                The check is done on a bob+blur convolution. */
                             int combing = abs( cur[up_2]
-                                             + ( 4 * cur[0] )
-                                             + cur[down_2]
-                                             - ( 3 * ( cur[up_1]
-                                                     + cur[down_1] ) ) );
+                                               + ( 4 * cur[0] )
+                                               + cur[down_2]
+                                               - ( 3 * ( cur[up_1]
+                                                         + cur[down_1] ) ) );
 
                             /* If the frame is sufficiently combed,
                                then mark it down on the mask as 1. */
@@ -934,8 +934,8 @@ static void mask_filter_thread( void *thread_args_v )
             uint8_t *cur = &pv->mask->plane[pp].data[c * stride + 1];
             uint8_t *curn = &pv->mask->plane[pp].data[n * stride + 1];
             uint8_t *dst = (pv->filter_mode == FILTER_CLASSIC ) ?
-                &pv->mask_filtered->plane[pp].data[c * stride + 1] :
-                &pv->mask_temp->plane[pp].data[c * stride + 1] ;
+                           &pv->mask_filtered->plane[pp].data[c * stride + 1] :
+                           &pv->mask_temp->plane[pp].data[c * stride + 1] ;
 
             for (yy = start; yy < stop; yy++)
             {
@@ -1149,11 +1149,11 @@ static int comb_detect_init( hb_filter_object_t * filter,
 
     /* Allocate buffers to store comb masks. */
     pv->mask = hb_frame_buffer_init(init->pix_fmt,
-                                init->geometry.width, init->geometry.height);
+                                    init->geometry.width, init->geometry.height);
     pv->mask_filtered = hb_frame_buffer_init(init->pix_fmt,
-                                init->geometry.width, init->geometry.height);
+                        init->geometry.width, init->geometry.height);
     pv->mask_temp = hb_frame_buffer_init(init->pix_fmt,
-                                init->geometry.width, init->geometry.height);
+                                         init->geometry.width, init->geometry.height);
     memset(pv->mask->data, 0, pv->mask->size);
     memset(pv->mask_filtered->data, 0, pv->mask_filtered->size);
     memset(pv->mask_temp->data, 0, pv->mask_temp->size);
@@ -1201,9 +1201,9 @@ static int comb_detect_init( hb_filter_object_t * filter,
         }
 
         if (taskset_thread_spawn( &pv->decomb_filter_taskset, ii,
-                                 "decomb_filter_segment",
-                                 decomb_filter_thread,
-                                 HB_NORMAL_PRIORITY ) == 0)
+                                  "decomb_filter_segment",
+                                  decomb_filter_thread,
+                                  HB_NORMAL_PRIORITY ) == 0)
         {
             hb_error( "decomb could not spawn thread" );
         }
@@ -1317,9 +1317,9 @@ static int comb_detect_init( hb_filter_object_t * filter,
             }
 
             if (taskset_thread_spawn( &pv->mask_filter_taskset, ii,
-                                     "mask_filter_segment",
-                                     mask_filter_thread,
-                                     HB_NORMAL_PRIORITY ) == 0)
+                                      "mask_filter_segment",
+                                      mask_filter_thread,
+                                      HB_NORMAL_PRIORITY ) == 0)
             {
                 hb_error( "mask filter could not spawn thread" );
             }
@@ -1368,9 +1368,9 @@ static int comb_detect_init( hb_filter_object_t * filter,
                 }
 
                 if (taskset_thread_spawn( &pv->mask_erode_taskset, ii,
-                                         "mask_erode_segment",
-                                         mask_erode_thread,
-                                         HB_NORMAL_PRIORITY ) == 0)
+                                          "mask_erode_segment",
+                                          mask_erode_thread,
+                                          HB_NORMAL_PRIORITY ) == 0)
                 {
                     hb_error( "mask erode could not spawn thread" );
                 }
@@ -1417,9 +1417,9 @@ static int comb_detect_init( hb_filter_object_t * filter,
                 }
 
                 if (taskset_thread_spawn( &pv->mask_dilate_taskset, ii,
-                                         "mask_dilate_segment",
-                                         mask_dilate_thread,
-                                         HB_NORMAL_PRIORITY ) == 0)
+                                          "mask_dilate_segment",
+                                          mask_dilate_thread,
+                                          HB_NORMAL_PRIORITY ) == 0)
                 {
                     hb_error( "mask dilate could not spawn thread" );
                 }
@@ -1484,18 +1484,18 @@ static void process_frame( hb_filter_private_t * pv )
     combed = comb_segmenter(pv);
     switch (combed)
     {
-        case HB_COMB_HEAVY:
-            pv->comb_heavy++;
-            break;
+    case HB_COMB_HEAVY:
+        pv->comb_heavy++;
+        break;
 
-        case HB_COMB_LIGHT:
-            pv->comb_light++;
-            break;
+    case HB_COMB_LIGHT:
+        pv->comb_light++;
+        break;
 
-        case HB_COMB_NONE:
-        default:
-            pv->comb_none++;
-            break;
+    case HB_COMB_NONE:
+    default:
+        pv->comb_none++;
+        break;
     }
     pv->frames++;
     if ((pv->mode & MODE_MASK) && combed)

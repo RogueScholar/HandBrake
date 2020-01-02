@@ -75,8 +75,8 @@ typedef struct
  * as the output characteristics (no conversion needed).
  */
 hb_audio_resample_t* hb_audio_resample_init(enum AVSampleFormat sample_fmt,
-                                            int sample_rate,
-                                            int hb_amixdown, int normalize_mix);
+        int sample_rate,
+        int hb_amixdown, int normalize_mix);
 
 /* The following functions set the audio input characteristics.
  *
@@ -85,18 +85,18 @@ hb_audio_resample_t* hb_audio_resample_init(enum AVSampleFormat sample_fmt,
  */
 
 void                 hb_audio_resample_set_channel_layout(hb_audio_resample_t *resample,
-                                                          uint64_t channel_layout);
+        uint64_t channel_layout);
 
 void                 hb_audio_resample_set_mix_levels(hb_audio_resample_t *resample,
-                                                      double surround_mix_level,
-                                                      double center_mix_level,
-                                                      double lfe_mix_level);
+        double surround_mix_level,
+        double center_mix_level,
+        double lfe_mix_level);
 
 void                 hb_audio_resample_set_sample_fmt(hb_audio_resample_t *resample,
-                                                      enum AVSampleFormat sample_fmt);
+        enum AVSampleFormat sample_fmt);
 
 void                 hb_audio_resample_set_sample_rate(hb_audio_resample_t *resample,
-                                                       int sample_rate);
+        int sample_rate);
 
 /* Update an hb_audio_resample_t.
  *

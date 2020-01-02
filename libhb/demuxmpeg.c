@@ -41,7 +41,7 @@ static inline int check_mpeg_scr( hb_psdemux_t *state, int64_t scr, int tol )
     int discontinuity = 0;
     int64_t scr_delta = scr - state->last_scr;
     if (state->last_scr == AV_NOPTS_VALUE ||
-        scr_delta > 90*tol || scr_delta < -90*10)
+            scr_delta > 90*tol || scr_delta < -90*10)
     {
         ++state->scr_changes;
         state->last_pts = AV_NOPTS_VALUE;
@@ -84,7 +84,7 @@ static void demux_dvd_ps( hb_buffer_t * buf, hb_buffer_list_t * list_es,
 #define d (buf->data)
         /* pack_header */
         if( d[pos] != 0 || d[pos+1] != 0 ||
-            d[pos+2] != 0x1 || d[pos+3] != 0xBA )
+                d[pos+2] != 0x1 || d[pos+3] != 0xBA )
         {
             hb_log( "demux_dvd_ps: not a PS packet (%02x%02x%02x%02x)",
                     d[pos], d[pos+1], d[pos+2], d[pos+3] );
@@ -114,7 +114,7 @@ static void demux_dvd_ps( hb_buffer_t * buf, hb_buffer_list_t * list_es,
 
         /* system_header */
         if( d[pos] == 0 && d[pos+1] == 0 &&
-            d[pos+2] == 0x1 && d[pos+3] == 0xBB )
+                d[pos+2] == 0x1 && d[pos+3] == 0xBB )
         {
             int header_length;
 
@@ -125,7 +125,7 @@ static void demux_dvd_ps( hb_buffer_t * buf, hb_buffer_list_t * list_es,
 
         /* pes */
         while( pos + 6 < buf->size &&
-               d[pos] == 0 && d[pos+1] == 0 && d[pos+2] == 0x1 )
+                d[pos] == 0 && d[pos+1] == 0 && d[pos+2] == 0x1 )
         {
             int      id;
             int      pes_packet_length;
@@ -161,7 +161,7 @@ static void demux_dvd_ps( hb_buffer_t * buf, hb_buffer_list_t * list_es,
             pes_packet_end     = pos + pes_packet_length;
 
             if( id != 0xE0 && id != 0xBD &&
-                ( id & 0xC0 ) != 0xC0  )
+                    ( id & 0xC0 ) != 0xC0  )
             {
                 /* Not interesting */
                 pos = pes_packet_end;
@@ -377,8 +377,8 @@ static void demux_null( hb_buffer_t * buf, hb_buffer_list_t * list_es,
             // if we don't have a time offset yet,
             // use this timestamp as the offset.
             if (state->scr_changes == 0 &&
-                (buf->s.start != AV_NOPTS_VALUE ||
-                 buf->s.renderOffset != AV_NOPTS_VALUE))
+                    (buf->s.start != AV_NOPTS_VALUE ||
+                     buf->s.renderOffset != AV_NOPTS_VALUE))
             {
                 ++state->scr_changes;
                 state->last_scr = buf->s.start >= 0 ? buf->s.start : buf->s.renderOffset;

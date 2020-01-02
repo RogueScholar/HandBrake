@@ -14,7 +14,7 @@
 
 hb_value_type_t hb_value_type(const hb_value_t *value)
 {
-   if (value == NULL)
+    if (value == NULL)
         return HB_VALUE_TYPE_NULL;
     hb_value_type_t type = json_typeof(value);
     if (type == JSON_TRUE || type == JSON_FALSE)
@@ -101,17 +101,17 @@ static hb_value_t* xform_null(hb_value_type_t type)
 {
     switch (type)
     {
-        default:
-        case HB_VALUE_TYPE_NULL:
-            return json_null();
-        case HB_VALUE_TYPE_BOOL:
-            return json_false();
-        case HB_VALUE_TYPE_INT:
-            return json_integer(0);
-        case HB_VALUE_TYPE_DOUBLE:
-            return json_real(0.0);
-        case HB_VALUE_TYPE_STRING:
-            return json_string("");
+    default:
+    case HB_VALUE_TYPE_NULL:
+        return json_null();
+    case HB_VALUE_TYPE_BOOL:
+        return json_false();
+    case HB_VALUE_TYPE_INT:
+        return json_integer(0);
+    case HB_VALUE_TYPE_DOUBLE:
+        return json_real(0.0);
+    case HB_VALUE_TYPE_STRING:
+        return json_string("");
     }
 }
 
@@ -120,22 +120,22 @@ static hb_value_t* xform_bool(const hb_value_t *value, hb_value_type_t type)
     json_int_t b = json_is_true(value);
     switch (type)
     {
-        default:
-        case HB_VALUE_TYPE_NULL:
-            return json_null();
-        case HB_VALUE_TYPE_BOOL:
-            return json_boolean(b);
-        case HB_VALUE_TYPE_INT:
-            return json_integer(b);
-        case HB_VALUE_TYPE_DOUBLE:
-            return json_real(b);
-        case HB_VALUE_TYPE_STRING:
-        {
-            char *s = hb_strdup_printf("%"JSON_INTEGER_FORMAT, b);
-            hb_value_t *v = json_string(s);
-            free(s);
-            return v;
-        }
+    default:
+    case HB_VALUE_TYPE_NULL:
+        return json_null();
+    case HB_VALUE_TYPE_BOOL:
+        return json_boolean(b);
+    case HB_VALUE_TYPE_INT:
+        return json_integer(b);
+    case HB_VALUE_TYPE_DOUBLE:
+        return json_real(b);
+    case HB_VALUE_TYPE_STRING:
+    {
+        char *s = hb_strdup_printf("%"JSON_INTEGER_FORMAT, b);
+        hb_value_t *v = json_string(s);
+        free(s);
+        return v;
+    }
     }
 }
 
@@ -144,22 +144,22 @@ static hb_value_t* xform_int(const hb_value_t *value, hb_value_type_t type)
     json_int_t i = json_integer_value(value);
     switch (type)
     {
-        default:
-        case HB_VALUE_TYPE_NULL:
-            return json_null();
-        case HB_VALUE_TYPE_BOOL:
-            return json_boolean(i);
-        case HB_VALUE_TYPE_INT:
-            return json_integer(i);
-        case HB_VALUE_TYPE_DOUBLE:
-            return json_real(i);
-        case HB_VALUE_TYPE_STRING:
-        {
-            char *s = hb_strdup_printf("%"JSON_INTEGER_FORMAT, i);
-            hb_value_t *v = json_string(s);
-            free(s);
-            return v;
-        }
+    default:
+    case HB_VALUE_TYPE_NULL:
+        return json_null();
+    case HB_VALUE_TYPE_BOOL:
+        return json_boolean(i);
+    case HB_VALUE_TYPE_INT:
+        return json_integer(i);
+    case HB_VALUE_TYPE_DOUBLE:
+        return json_real(i);
+    case HB_VALUE_TYPE_STRING:
+    {
+        char *s = hb_strdup_printf("%"JSON_INTEGER_FORMAT, i);
+        hb_value_t *v = json_string(s);
+        free(s);
+        return v;
+    }
     }
 }
 
@@ -168,22 +168,22 @@ static hb_value_t* xform_double(const hb_value_t *value, hb_value_type_t type)
     double d = json_real_value(value);
     switch (type)
     {
-        default:
-        case HB_VALUE_TYPE_NULL:
-            return json_null();
-        case HB_VALUE_TYPE_BOOL:
-            return json_boolean((int)d != 0);
-        case HB_VALUE_TYPE_INT:
-            return json_integer(d);
-        case HB_VALUE_TYPE_DOUBLE:
-            return json_real(d);
-        case HB_VALUE_TYPE_STRING:
-        {
-            char *s = hb_strdup_printf("%g", d);
-            hb_value_t *v = json_string(s);
-            free(s);
-            return v;
-        }
+    default:
+    case HB_VALUE_TYPE_NULL:
+        return json_null();
+    case HB_VALUE_TYPE_BOOL:
+        return json_boolean((int)d != 0);
+    case HB_VALUE_TYPE_INT:
+        return json_integer(d);
+    case HB_VALUE_TYPE_DOUBLE:
+        return json_real(d);
+    case HB_VALUE_TYPE_STRING:
+    {
+        char *s = hb_strdup_printf("%g", d);
+        hb_value_t *v = json_string(s);
+        free(s);
+        return v;
+    }
     }
 }
 
@@ -192,33 +192,33 @@ static hb_value_t* xform_string(const hb_value_t *value, hb_value_type_t type)
     const char *s = json_string_value(value);
     switch (type)
     {
-        default:
-        case HB_VALUE_TYPE_NULL:
-        {
-            return json_null();
-        }
-        case HB_VALUE_TYPE_BOOL:
-        {
-            if (!strcasecmp(s, "true") ||
+    default:
+    case HB_VALUE_TYPE_NULL:
+    {
+        return json_null();
+    }
+    case HB_VALUE_TYPE_BOOL:
+    {
+        if (!strcasecmp(s, "true") ||
                 !strcasecmp(s, "yes")  ||
                 !strcasecmp(s, "1"))
-            {
-                return json_true();
-            }
-            return json_false();
-        }
-        case HB_VALUE_TYPE_INT:
         {
-            return json_integer(strtoll(s, NULL, 0));
+            return json_true();
         }
-        case HB_VALUE_TYPE_DOUBLE:
-        {
-            return json_real(strtod(s, NULL));
-        }
-        case HB_VALUE_TYPE_STRING:
-        {
-            return json_string(s);
-        }
+        return json_false();
+    }
+    case HB_VALUE_TYPE_INT:
+    {
+        return json_integer(strtoll(s, NULL, 0));
+    }
+    case HB_VALUE_TYPE_DOUBLE:
+    {
+        return json_real(strtod(s, NULL));
+    }
+    case HB_VALUE_TYPE_STRING:
+    {
+        return json_string(s);
+    }
     }
 }
 
@@ -231,46 +231,46 @@ static hb_value_t* xform_array(const hb_value_t *value, hb_value_type_t type)
         first = hb_value_array_get(value, 0);
     switch (type)
     {
-        default:
-        case HB_VALUE_TYPE_NULL:
-        case HB_VALUE_TYPE_BOOL:
-        case HB_VALUE_TYPE_INT:
-        case HB_VALUE_TYPE_DOUBLE:
-            return hb_value_xform(first, type);
-        case HB_VALUE_TYPE_STRING:
+    default:
+    case HB_VALUE_TYPE_NULL:
+    case HB_VALUE_TYPE_BOOL:
+    case HB_VALUE_TYPE_INT:
+    case HB_VALUE_TYPE_DOUBLE:
+        return hb_value_xform(first, type);
+    case HB_VALUE_TYPE_STRING:
+    {
+        char *r = strdup("");
+        int ii;
+        for (ii = 0; ii < count; ii++)
         {
-            char *r = strdup("");
-            int ii;
-            for (ii = 0; ii < count; ii++)
+            hb_value_t *v = hb_value_array_get(value, ii);
+            hb_value_t *x = hb_value_xform(v, type);
+            const char *s = hb_value_get_string(x);
+            if (s != NULL)
             {
-                hb_value_t *v = hb_value_array_get(value, ii);
-                hb_value_t *x = hb_value_xform(v, type);
-                const char *s = hb_value_get_string(x);
-                if (s != NULL)
-                {
-                    char *tmp = r;
-                    r = hb_strdup_printf("%s%s,", tmp, s);
-                    free(tmp);
-                }
-                hb_value_free(&x);
+                char *tmp = r;
+                r = hb_strdup_printf("%s%s,", tmp, s);
+                free(tmp);
             }
-            int len = strlen(r);
-            hb_value_t *v;
-            if (len > 0)
-            {
-                // Removing trailing ','
-                r[len - 1] = 0;
-                v = json_string(r);
-            }
-            else
-            {
-                free(r);
-                r = NULL;
-                v = json_null();
-            }
-            free(r);
-            return v;
+            hb_value_free(&x);
         }
+        int len = strlen(r);
+        hb_value_t *v;
+        if (len > 0)
+        {
+            // Removing trailing ','
+            r[len - 1] = 0;
+            v = json_string(r);
+        }
+        else
+        {
+            free(r);
+            r = NULL;
+            v = json_null();
+        }
+        free(r);
+        return v;
+    }
     }
 }
 
@@ -284,51 +284,51 @@ static hb_value_t* xform_dict(const hb_value_t *dict, hb_value_type_t type)
 
     switch (type)
     {
-        default:
-        case HB_VALUE_TYPE_NULL:
-        case HB_VALUE_TYPE_BOOL:
-        case HB_VALUE_TYPE_INT:
-        case HB_VALUE_TYPE_DOUBLE:
-            return hb_value_xform(first, type);
-        case HB_VALUE_TYPE_STRING:
+    default:
+    case HB_VALUE_TYPE_NULL:
+    case HB_VALUE_TYPE_BOOL:
+    case HB_VALUE_TYPE_INT:
+    case HB_VALUE_TYPE_DOUBLE:
+        return hb_value_xform(first, type);
+    case HB_VALUE_TYPE_STRING:
+    {
+        char *r = strdup("");
+        hb_dict_iter_t iter;
+        for (iter  = hb_dict_iter_init(dict);
+                iter != HB_DICT_ITER_DONE;
+                iter  = hb_dict_iter_next(dict, iter))
         {
-            char *r = strdup("");
-            hb_dict_iter_t iter;
-            for (iter  = hb_dict_iter_init(dict);
-                 iter != HB_DICT_ITER_DONE;
-                 iter  = hb_dict_iter_next(dict, iter))
-            {
-                const char *k = hb_dict_iter_key(iter);
-                hb_value_t *v = hb_dict_iter_value(iter);
-                hb_value_t *x = hb_value_xform(v, type);
-                const char *s = hb_value_get_string(x);
+            const char *k = hb_dict_iter_key(iter);
+            hb_value_t *v = hb_dict_iter_value(iter);
+            hb_value_t *x = hb_value_xform(v, type);
+            const char *s = hb_value_get_string(x);
 
-                char *tmp = r;
-                r = hb_strdup_printf("%s%s%s%s:",
-                                     r,
-                                     k,
-                                     s  ? "=" : "",
-                                     s  ? s   : "");
-                free(tmp);
-                hb_value_free(&x);
-            }
-            int len = strlen(r);
-            hb_value_t *v;
-            if (len > 0)
-            {
-                // Removing trailing ':'
-                r[len - 1] = 0;
-                v = json_string(r);
-            }
-            else
-            {
-                free(r);
-                r = NULL;
-                v = json_null();
-            }
-            free(r);
-            return v;
+            char *tmp = r;
+            r = hb_strdup_printf("%s%s%s%s:",
+                                 r,
+                                 k,
+                                 s  ? "=" : "",
+                                 s  ? s   : "");
+            free(tmp);
+            hb_value_free(&x);
         }
+        int len = strlen(r);
+        hb_value_t *v;
+        if (len > 0)
+        {
+            // Removing trailing ':'
+            r[len - 1] = 0;
+            v = json_string(r);
+        }
+        else
+        {
+            free(r);
+            r = NULL;
+            v = json_null();
+        }
+        free(r);
+        return v;
+    }
     }
 }
 
@@ -342,35 +342,35 @@ hb_value_t* hb_value_xform(const hb_value_t *value, hb_value_type_t type)
     }
     switch (src_type)
     {
-        default:
-        case HB_VALUE_TYPE_NULL:
-        {
-            return xform_null(type);
-        }
-        case HB_VALUE_TYPE_BOOL:
-        {
-            return xform_bool(value, type);
-        }
-        case HB_VALUE_TYPE_INT:
-        {
-            return xform_int(value, type);
-        }
-        case HB_VALUE_TYPE_DOUBLE:
-        {
-            return xform_double(value, type);
-        }
-        case HB_VALUE_TYPE_STRING:
-        {
-            return xform_string(value, type);
-        }
-        case HB_VALUE_TYPE_ARRAY:
-        {
-            return xform_array(value, type);
-        }
-        case HB_VALUE_TYPE_DICT:
-        {
-            return xform_dict(value, type);
-        }
+    default:
+    case HB_VALUE_TYPE_NULL:
+    {
+        return xform_null(type);
+    }
+    case HB_VALUE_TYPE_BOOL:
+    {
+        return xform_bool(value, type);
+    }
+    case HB_VALUE_TYPE_INT:
+    {
+        return xform_int(value, type);
+    }
+    case HB_VALUE_TYPE_DOUBLE:
+    {
+        return xform_double(value, type);
+    }
+    case HB_VALUE_TYPE_STRING:
+    {
+        return xform_string(value, type);
+    }
+    case HB_VALUE_TYPE_ARRAY:
+    {
+        return xform_array(value, type);
+    }
+    case HB_VALUE_TYPE_DICT:
+    {
+        return xform_dict(value, type);
+    }
     }
 }
 
@@ -539,7 +539,7 @@ int hb_dict_extract_int(int *dst, const hb_dict_t * dict, const char * key)
 }
 
 int hb_dict_extract_double(double *dst, const hb_dict_t * dict,
-                                        const char * key)
+                           const char * key)
 {
     if (dict == NULL || key == NULL || dst == NULL)
     {
@@ -591,7 +591,7 @@ int hb_dict_extract_string(char **dst, const hb_dict_t * dict, const char * key)
 }
 
 int hb_dict_extract_rational(hb_rational_t *dst, const hb_dict_t * dict,
-                                                 const char * key)
+                             const char * key)
 {
     if (dict == NULL || key == NULL || dst == NULL)
     {
@@ -626,7 +626,7 @@ int hb_dict_extract_rational(hb_rational_t *dst, const hb_dict_t * dict,
         const char * str = hb_value_get_string(val);
         char ** rational = hb_str_vsplit(str, '/');
         if (rational[0] != NULL && rational[1] != NULL &&
-            isdigit(rational[0][0]) && isdigit(rational[1][0]))
+                isdigit(rational[0][0]) && isdigit(rational[1][0]))
         {
             char *num_end, *den_end;
 

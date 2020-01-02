@@ -64,8 +64,8 @@ static int textsub_post_init( hb_filter_object_t * filter, hb_job_t * job );
 static int cc608sub_post_init( hb_filter_object_t * filter, hb_job_t * job );
 
 static int textsub_work( hb_filter_object_t * filter,
-                     hb_buffer_t ** buf_in,
-                     hb_buffer_t ** buf_out );
+                         hb_buffer_t ** buf_in,
+                         hb_buffer_t ** buf_out );
 
 static void textsub_close( hb_filter_object_t * filter );
 
@@ -74,21 +74,21 @@ static void textsub_close( hb_filter_object_t * filter );
 static int pgssub_post_init( hb_filter_object_t * filter, hb_job_t * job );
 
 static int pgssub_work ( hb_filter_object_t * filter,
-                      hb_buffer_t ** buf_in,
-                      hb_buffer_t ** buf_out );
+                         hb_buffer_t ** buf_in,
+                         hb_buffer_t ** buf_out );
 
 static void pgssub_close( hb_filter_object_t * filter );
 
 
 // Entry points
 static int hb_rendersub_init( hb_filter_object_t * filter,
-                                 hb_filter_init_t * init );
+                              hb_filter_init_t * init );
 
 static int hb_rendersub_post_init( hb_filter_object_t * filter, hb_job_t *job );
 
 static int hb_rendersub_work( hb_filter_object_t * filter,
-                                 hb_buffer_t ** buf_in,
-                                 hb_buffer_t ** buf_out );
+                              hb_buffer_t ** buf_in,
+                              hb_buffer_t ** buf_out );
 
 static void hb_rendersub_close( hb_filter_object_t * filter );
 
@@ -150,7 +150,7 @@ static void blend( hb_buffer_t *dst, hb_buffer_t *src, int left, int top )
              */
             y_out[left + xx] =
                 ( (uint16_t)y_out[left + xx] * ( 255 - alpha ) +
-                     (uint16_t)y_in[xx] * alpha ) / 255;
+                  (uint16_t)y_in[xx] * alpha ) / 255;
         }
     }
 
@@ -243,15 +243,15 @@ static hb_buffer_t * ScaleSubtitle(hb_filter_private_t *pv,
         hb_picture_fill(out_data, out_stride, scaled);
 
         if (pv->sws        == NULL   ||
-            pv->sws_width  != width  ||
-            pv->sws_height != height)
+                pv->sws_width  != width  ||
+                pv->sws_height != height)
         {
             if (pv->sws!= NULL)
                 sws_freeContext(pv->sws);
             pv->sws = hb_sws_get_context(
-                                sub->f.width, sub->f.height, sub->f.fmt,
-                                scaled->f.width, scaled->f.height, sub->f.fmt,
-                                SWS_LANCZOS|SWS_ACCURATE_RND, SWS_CS_DEFAULT);
+                          sub->f.width, sub->f.height, sub->f.fmt,
+                          scaled->f.width, scaled->f.height, sub->f.fmt,
+                          SWS_LANCZOS|SWS_ACCURATE_RND, SWS_CS_DEFAULT);
             pv->sws_width   = width;
             pv->sws_height  = height;
         }
@@ -288,14 +288,14 @@ static hb_buffer_t * ScaleSubtitle(hb_filter_private_t *pv,
     }
 
     if( scaled->f.height > buf->f.height - pv->crop[0] - pv->crop[1] -
-        ( margin_top * 2 ) )
+            ( margin_top * 2 ) )
     {
         /*
          * The subtitle won't fit in the cropped zone, so center
          * it vertically so we fit in as much as we can.
          */
         top = pv->crop[0] + ( buf->f.height - pv->crop[0] -
-                                      pv->crop[1] - scaled->f.height ) / 2;
+                              pv->crop[1] - scaled->f.height ) / 2;
     }
     else if( scaled->f.y < pv->crop[0] + margin_top )
     {
@@ -324,7 +324,7 @@ static hb_buffer_t * ScaleSubtitle(hb_filter_private_t *pv,
 
     if( scaled->f.width > buf->f.width - pv->crop[2] - pv->crop[3] - 40 )
         left = pv->crop[2] + ( buf->f.width - pv->crop[2] -
-                pv->crop[3] - scaled->f.width ) / 2;
+                               pv->crop[3] - scaled->f.width ) / 2;
     else if( scaled->f.x < pv->crop[2] + 20 )
         left = pv->crop[2] + 20;
     else if( scaled->f.x > buf->f.width - pv->crop[3] - 20 - scaled->f.width )
@@ -354,7 +354,7 @@ static void ApplyVOBSubs( hb_filter_private_t * pv, hb_buffer_t * buf )
             next = NULL;
 
         if ((sub->s.stop != AV_NOPTS_VALUE && sub->s.stop <= buf->s.start) ||
-            (next != NULL && sub->s.stop == AV_NOPTS_VALUE && next->s.start <= buf->s.start))
+                (next != NULL && sub->s.stop == AV_NOPTS_VALUE && next->s.start <= buf->s.start))
         {
             // Subtitle stop is in the past, delete it
             hb_list_rem( pv->sub_list, sub );
@@ -557,7 +557,7 @@ static int ssa_post_init( hb_filter_object_t * filter, hb_job_t * job )
         hb_attachment_t * attachment = hb_list_item( list_attachment, i );
 
         if ( attachment->type == FONT_TTF_ATTACH ||
-             attachment->type == FONT_OTF_ATTACH )
+                attachment->type == FONT_OTF_ATTACH )
         {
             ass_add_font(
                 pv->ssa,
@@ -734,8 +734,8 @@ static void process_sub(hb_filter_private_t *pv, hb_buffer_t *sub)
 }
 
 static int textsub_work(hb_filter_object_t * filter,
-                    hb_buffer_t ** buf_in,
-                    hb_buffer_t ** buf_out)
+                        hb_buffer_t ** buf_in,
+                        hb_buffer_t ** buf_out)
 {
     hb_filter_private_t * pv = filter->private_data;
     hb_buffer_t * in = *buf_in;
@@ -988,78 +988,78 @@ static int hb_rendersub_post_init( hb_filter_object_t * filter, hb_job_t *job )
 
     switch( pv->type )
     {
-        case VOBSUB:
-        {
-            return vobsub_post_init( filter, job );
-        }
+    case VOBSUB:
+    {
+        return vobsub_post_init( filter, job );
+    }
 
-        case SSASUB:
-        {
-            return ssa_post_init( filter, job );
-        }
+    case SSASUB:
+    {
+        return ssa_post_init( filter, job );
+    }
 
-        case IMPORTSRT:
-        case IMPORTSSA:
-        case UTF8SUB:
-        case TX3GSUB:
-        {
-            return textsub_post_init( filter, job );
-        }
+    case IMPORTSRT:
+    case IMPORTSSA:
+    case UTF8SUB:
+    case TX3GSUB:
+    {
+        return textsub_post_init( filter, job );
+    }
 
-        case CC608SUB:
-        {
-            return cc608sub_post_init( filter, job );
-        }
+    case CC608SUB:
+    {
+        return cc608sub_post_init( filter, job );
+    }
 
-        case PGSSUB:
-        {
-            return pgssub_post_init( filter, job );
-        }
+    case PGSSUB:
+    {
+        return pgssub_post_init( filter, job );
+    }
 
-        default:
-        {
-            hb_log("rendersub: unsupported subtitle format %d", pv->type );
-            return 1;
-        }
+    default:
+    {
+        hb_log("rendersub: unsupported subtitle format %d", pv->type );
+        return 1;
+    }
     }
 }
 
 static int hb_rendersub_work( hb_filter_object_t * filter,
-                                 hb_buffer_t ** buf_in,
-                                 hb_buffer_t ** buf_out )
+                              hb_buffer_t ** buf_in,
+                              hb_buffer_t ** buf_out )
 {
     hb_filter_private_t * pv = filter->private_data;
     switch( pv->type )
     {
-        case VOBSUB:
-        {
-            return vobsub_work( filter, buf_in, buf_out );
-        }
+    case VOBSUB:
+    {
+        return vobsub_work( filter, buf_in, buf_out );
+    }
 
-        case SSASUB:
-        {
-            return ssa_work( filter, buf_in, buf_out );
-        }
+    case SSASUB:
+    {
+        return ssa_work( filter, buf_in, buf_out );
+    }
 
-        case IMPORTSRT:
-        case IMPORTSSA:
-        case CC608SUB:
-        case UTF8SUB:
-        case TX3GSUB:
-        {
-            return textsub_work( filter, buf_in, buf_out );
-        }
+    case IMPORTSRT:
+    case IMPORTSSA:
+    case CC608SUB:
+    case UTF8SUB:
+    case TX3GSUB:
+    {
+        return textsub_work( filter, buf_in, buf_out );
+    }
 
-        case PGSSUB:
-        {
-            return pgssub_work( filter, buf_in, buf_out );
-        }
+    case PGSSUB:
+    {
+        return pgssub_work( filter, buf_in, buf_out );
+    }
 
-        default:
-        {
-            hb_error("rendersub: unsupported subtitle format %d", pv->type );
-            return 1;
-        }
+    default:
+    {
+        hb_error("rendersub: unsupported subtitle format %d", pv->type );
+        return 1;
+    }
     }
 }
 
@@ -1073,34 +1073,39 @@ static void hb_rendersub_close( hb_filter_object_t * filter )
     }
     switch( pv->type )
     {
-        case VOBSUB:
-        {
-            vobsub_close( filter );
-        } break;
+    case VOBSUB:
+    {
+        vobsub_close( filter );
+    }
+    break;
 
-        case SSASUB:
-        {
-            ssa_close( filter );
-        } break;
+    case SSASUB:
+    {
+        ssa_close( filter );
+    }
+    break;
 
-        case IMPORTSRT:
-        case IMPORTSSA:
-        case CC608SUB:
-        case UTF8SUB:
-        case TX3GSUB:
-        {
-            textsub_close( filter );
-        } break;
+    case IMPORTSRT:
+    case IMPORTSSA:
+    case CC608SUB:
+    case UTF8SUB:
+    case TX3GSUB:
+    {
+        textsub_close( filter );
+    }
+    break;
 
-        case PGSSUB:
-        {
-            pgssub_close( filter );
-        } break;
+    case PGSSUB:
+    {
+        pgssub_close( filter );
+    }
+    break;
 
-        default:
-        {
-            hb_error("rendersub: unsupported subtitle format %d", pv->type );
-        } break;
+    default:
+    {
+        hb_error("rendersub: unsupported subtitle format %d", pv->type );
+    }
+    break;
     }
 }
 

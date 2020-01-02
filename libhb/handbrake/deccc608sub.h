@@ -96,7 +96,7 @@ struct s_write {
     unsigned enc_buffer_capacity;
 
     int clear_sub_needed;   // Indicates that we need to send a null
-                            // subtitle to clear the current subtitle
+    // subtitle to clear the current subtitle
 
     int rollup_cr;  // Flag indicates if CR command performed by rollup
     int direct_rollup;

@@ -61,7 +61,7 @@ hb_preset_index_t * hb_preset_index_dup(const hb_preset_index_t *path);
 
 // Append one index to another
 void                hb_preset_index_append(hb_preset_index_t *dst,
-                                           const hb_preset_index_t *src);
+        const hb_preset_index_t *src);
 
 // Load presets list from GUI presets file if it exists. This should probably
 // only be used by the CLI.
@@ -165,10 +165,10 @@ void hb_sanitize_audio_settings(const hb_title_t * title,
 //
 // I assume that the actual preset name does not include any '/'
 hb_preset_index_t * hb_preset_search_index(const char *name,
-                                           int recurse, int type);
+        int recurse, int type);
 hb_value_t        * hb_preset_search(const char *name, int recurse, int type);
 char              * hb_preset_search_json(const char *name,
-                                          int recurs, int typee);
+        int recurs, int typee);
 
 hb_value_t * hb_presets_get_folder_children(const hb_preset_index_t *path);
 hb_value_t * hb_preset_get(const hb_preset_index_t *path);

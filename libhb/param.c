@@ -64,32 +64,32 @@ static hb_filter_param_t deblock_tunes[] =
 static hb_filter_param_t hqdn3d_presets[] =
 {
     { 1, "Custom",      "custom",     NULL              },
-    { 5, "Ultralight",  "ultralight",
-      "y-spatial=1:cb-spatial=0.7:cr-spatial=0.7:"
-      "y-temporal=1:cb-temporal=2:cr-temporal=2"
-                                                        },
-    { 2, "Light",       "light",
-      "y-spatial=2:cb-spatial=1:cr-spatial=1:"
-      "y-temporal=2:cb-temporal=3:cr-temporal=3"
-                                                        },
-    { 3, "Medium",      "medium",
-      "y-spatial=3:cb-spatial=2:cr-spatial=2:"
-      "y-temporal=2:cb-temporal=3:cr-temporal=3"
-                                                        },
-    { 4, "Strong",      "strong",
-      "y-spatial=7:cb-spatial=7:cr-spatial=7:"
-      "y-temporal=5:cb-temporal=5:cr-temporal=5"
-                                                        },
+    {   5, "Ultralight",  "ultralight",
+        "y-spatial=1:cb-spatial=0.7:cr-spatial=0.7:"
+        "y-temporal=1:cb-temporal=2:cr-temporal=2"
+    },
+    {   2, "Light",       "light",
+        "y-spatial=2:cb-spatial=1:cr-spatial=1:"
+        "y-temporal=2:cb-temporal=3:cr-temporal=3"
+    },
+    {   3, "Medium",      "medium",
+        "y-spatial=3:cb-spatial=2:cr-spatial=2:"
+        "y-temporal=2:cb-temporal=3:cr-temporal=3"
+    },
+    {   4, "Strong",      "strong",
+        "y-spatial=7:cb-spatial=7:cr-spatial=7:"
+        "y-temporal=5:cb-temporal=5:cr-temporal=5"
+    },
     { 0, NULL,          NULL,         NULL              },
     // Legacy and aliases go below the NULL
-    { 2, "Weak",        "weak",
-      "y-spatial=2:cb-spatial=1:cr-spatial=1:"
-      "y-temporal=2:cb-temporal=3:cr-temporal=3"
-                                                        },
-    { 2, "Default",     "default",
-      "y-spatial=2:cb-spatial=1:cr-spatial=1:"
-      "y-temporal=2:cb-temporal=3:cr-temporal=3"
-                                                        },
+    {   2, "Weak",        "weak",
+        "y-spatial=2:cb-spatial=1:cr-spatial=1:"
+        "y-temporal=2:cb-temporal=3:cr-temporal=3"
+    },
+    {   2, "Default",     "default",
+        "y-spatial=2:cb-spatial=1:cr-spatial=1:"
+        "y-temporal=2:cb-temporal=3:cr-temporal=3"
+    },
 };
 
 static hb_filter_param_t chroma_smooth_presets[] =
@@ -164,9 +164,9 @@ static hb_filter_param_t detelecine_presets[] =
 {
     { 0, "Off",         "off",        "disable=1"       },
     { 1, "Custom",      "custom",     NULL              },
-    { 2, "Default",     "default",
-      "skip-top=4:skip-bottom=4:skip-left=1:skip-right=1:plane=0"
-                                                        },
+    {   2, "Default",     "default",
+        "skip-top=4:skip-bottom=4:skip-left=1:skip-right=1:plane=0"
+    },
     { 0, NULL,          NULL,         NULL              }
 };
 
@@ -174,18 +174,18 @@ static hb_filter_param_t comb_detect_presets[] =
 {
     { 0, "Off",             "off",        "disable=1"       },
     { 1, "Custom",          "custom",     NULL              },
-    { 2, "Default",         "default",
-      "mode=3:spatial-metric=2:motion-thresh=1:spatial-thresh=1:"
-      "filter-mode=2:block-thresh=40:block-width=16:block-height=16"
-                                                            },
-    { 3, "Less Sensitive",  "permissive",
-      "mode=3:spatial-metric=2:motion-thresh=3:spatial-thresh=3:"
-      "filter-mode=2:block-thresh=40:block-width=16:block-height=16"
-                                                            },
-    { 4, "Fast",            "fast",
-      "mode=0:spatial-metric=2:motion-thresh=2:spatial-thresh=3:"
-      "filter-mode=1:block-thresh=80:block-width=16:block-height=16"
-                                                            },
+    {   2, "Default",         "default",
+        "mode=3:spatial-metric=2:motion-thresh=1:spatial-thresh=1:"
+        "filter-mode=2:block-thresh=40:block-width=16:block-height=16"
+    },
+    {   3, "Less Sensitive",  "permissive",
+        "mode=3:spatial-metric=2:motion-thresh=3:spatial-thresh=3:"
+        "filter-mode=2:block-thresh=40:block-width=16:block-height=16"
+    },
+    {   4, "Fast",            "fast",
+        "mode=0:spatial-metric=2:motion-thresh=2:spatial-thresh=3:"
+        "filter-mode=1:block-thresh=80:block-width=16:block-height=16"
+    },
     { 0, NULL,              NULL,         NULL              }
 };
 
@@ -226,40 +226,50 @@ typedef struct
 
 static filter_param_map_t param_map[] =
 {
-    { HB_FILTER_NLMEANS,     nlmeans_presets,     nlmeans_tunes,
-      sizeof(nlmeans_presets) / sizeof(hb_filter_param_t),
-      sizeof(nlmeans_tunes)   / sizeof(hb_filter_param_t),        },
+    {   HB_FILTER_NLMEANS,     nlmeans_presets,     nlmeans_tunes,
+        sizeof(nlmeans_presets) / sizeof(hb_filter_param_t),
+        sizeof(nlmeans_tunes)   / sizeof(hb_filter_param_t),
+    },
 
-    { HB_FILTER_HQDN3D,      hqdn3d_presets,      NULL,
-      sizeof(hqdn3d_presets) / sizeof(hb_filter_param_t),      0, },
+    {   HB_FILTER_HQDN3D,      hqdn3d_presets,      NULL,
+        sizeof(hqdn3d_presets) / sizeof(hb_filter_param_t),      0,
+    },
 
-    { HB_FILTER_CHROMA_SMOOTH, chroma_smooth_presets, chroma_smooth_tunes,
-      sizeof(chroma_smooth_presets) / sizeof(hb_filter_param_t),
-      sizeof(chroma_smooth_tunes)   / sizeof(hb_filter_param_t),  },
+    {   HB_FILTER_CHROMA_SMOOTH, chroma_smooth_presets, chroma_smooth_tunes,
+        sizeof(chroma_smooth_presets) / sizeof(hb_filter_param_t),
+        sizeof(chroma_smooth_tunes)   / sizeof(hb_filter_param_t),
+    },
 
-    { HB_FILTER_UNSHARP,     unsharp_presets,     unsharp_tunes,
-      sizeof(unsharp_presets) / sizeof(hb_filter_param_t),
-      sizeof(unsharp_tunes)   / sizeof(hb_filter_param_t),        },
+    {   HB_FILTER_UNSHARP,     unsharp_presets,     unsharp_tunes,
+        sizeof(unsharp_presets) / sizeof(hb_filter_param_t),
+        sizeof(unsharp_tunes)   / sizeof(hb_filter_param_t),
+    },
 
-    { HB_FILTER_LAPSHARP,    lapsharp_presets,    lapsharp_tunes,
-      sizeof(lapsharp_presets) / sizeof(hb_filter_param_t),
-      sizeof(lapsharp_tunes)   / sizeof(hb_filter_param_t),       },
+    {   HB_FILTER_LAPSHARP,    lapsharp_presets,    lapsharp_tunes,
+        sizeof(lapsharp_presets) / sizeof(hb_filter_param_t),
+        sizeof(lapsharp_tunes)   / sizeof(hb_filter_param_t),
+    },
 
-    { HB_FILTER_DETELECINE,  detelecine_presets,  NULL,
-      sizeof(detelecine_presets) / sizeof(hb_filter_param_t),  0, },
+    {   HB_FILTER_DETELECINE,  detelecine_presets,  NULL,
+        sizeof(detelecine_presets) / sizeof(hb_filter_param_t),  0,
+    },
 
-    { HB_FILTER_COMB_DETECT, comb_detect_presets, NULL,
-      sizeof(decomb_presets) / sizeof(hb_filter_param_t),      0, },
+    {   HB_FILTER_COMB_DETECT, comb_detect_presets, NULL,
+        sizeof(decomb_presets) / sizeof(hb_filter_param_t),      0,
+    },
 
-    { HB_FILTER_DECOMB,      decomb_presets,      NULL,
-      sizeof(decomb_presets) / sizeof(hb_filter_param_t),      0, },
+    {   HB_FILTER_DECOMB,      decomb_presets,      NULL,
+        sizeof(decomb_presets) / sizeof(hb_filter_param_t),      0,
+    },
 
-    { HB_FILTER_DEINTERLACE, deinterlace_presets, NULL,
-      sizeof(deinterlace_presets) / sizeof(hb_filter_param_t), 0, },
+    {   HB_FILTER_DEINTERLACE, deinterlace_presets, NULL,
+        sizeof(deinterlace_presets) / sizeof(hb_filter_param_t), 0,
+    },
 
-    { HB_FILTER_DEBLOCK, deblock_presets, deblock_tunes,
-      sizeof(deblock_presets) / sizeof(hb_filter_param_t),
-      sizeof(deblock_tunes)   / sizeof(hb_filter_param_t),        },
+    {   HB_FILTER_DEBLOCK, deblock_presets, deblock_tunes,
+        sizeof(deblock_presets) / sizeof(hb_filter_param_t),
+        sizeof(deblock_tunes)   / sizeof(hb_filter_param_t),
+    },
 
     { HB_FILTER_INVALID,     NULL,                NULL,     0, 0, },
 };
@@ -292,8 +302,8 @@ void hb_param_configure_qsv(void)
  * sprite     - 1-/4-/8-/16-bit 2-dimensional games
  */
 static hb_dict_t * generate_nlmeans_settings(const char *preset,
-                                             const char *tune,
-                                             const char *custom)
+        const char *tune,
+        const char *custom)
 {
     hb_dict_t * settings;
 
@@ -305,9 +315,9 @@ static hb_dict_t * generate_nlmeans_settings(const char *preset,
         return hb_parse_filter_settings(custom);
     }
     if (!strcasecmp(preset, "ultralight") ||
-        !strcasecmp(preset, "light") ||
-        !strcasecmp(preset, "medium") ||
-        !strcasecmp(preset, "strong"))
+            !strcasecmp(preset, "light") ||
+            !strcasecmp(preset, "medium") ||
+            !strcasecmp(preset, "strong"))
     {
         double strength[2],
                origin_tune[2];
@@ -339,7 +349,8 @@ static hb_dict_t * generate_nlmeans_settings(const char *preset,
         }
         else if (!strcasecmp(tune, "film"))
         {
-            strength[0]    = 6; strength[1] = 8;
+            strength[0]    = 6;
+            strength[1] = 8;
             origin_tune[0] = origin_tune[1] = 0.8;
             patch_size[0]  = patch_size[1]  = 7;
             range[0]       = range[1]       = 3;
@@ -347,23 +358,30 @@ static hb_dict_t * generate_nlmeans_settings(const char *preset,
             prefilter[0]   = prefilter[1]   = 0;
             if (!strcasecmp(preset, "ultralight"))
             {
-                strength[0]    = 1.5;   strength[1]  = 2.4;
-                origin_tune[0] = 0.9; origin_tune[1] = 0.9;
+                strength[0]    = 1.5;
+                strength[1]  = 2.4;
+                origin_tune[0] = 0.9;
+                origin_tune[1] = 0.9;
             }
             else if (!strcasecmp(preset, "light"))
             {
-                strength[0]    = 3;   strength[1]    = 4;
-                origin_tune[0] = 0.9; origin_tune[1] = 0.9;
+                strength[0]    = 3;
+                strength[1]    = 4;
+                origin_tune[0] = 0.9;
+                origin_tune[1] = 0.9;
             }
             else if (!strcasecmp(preset, "strong"))
             {
-                strength[0]    = 8;   strength[1]    = 10;
-                origin_tune[0] = 0.6; origin_tune[1] = 0.6;
+                strength[0]    = 8;
+                strength[1]    = 10;
+                origin_tune[0] = 0.6;
+                origin_tune[1] = 0.6;
             }
         }
         else if (!strcasecmp(tune, "grain"))
         {
-            strength[0]    = 0; strength[1] = 6;
+            strength[0]    = 0;
+            strength[1] = 6;
             origin_tune[0] = origin_tune[1] = 0.8;
             patch_size[0]  = patch_size[1]  = 7;
             range[0]       = range[1]       = 3;
@@ -371,47 +389,66 @@ static hb_dict_t * generate_nlmeans_settings(const char *preset,
             prefilter[0]   = prefilter[1]   = 0;
             if (!strcasecmp(preset, "ultralight"))
             {
-                strength[0]    = 0;   strength[1]    = 2.4;
-                origin_tune[0] = 0.9; origin_tune[1] = 0.9;
+                strength[0]    = 0;
+                strength[1]    = 2.4;
+                origin_tune[0] = 0.9;
+                origin_tune[1] = 0.9;
             }
             else if (!strcasecmp(preset, "light"))
             {
-                strength[0]    = 0;   strength[1]    = 3.5;
-                origin_tune[0] = 0.9; origin_tune[1] = 0.9;
+                strength[0]    = 0;
+                strength[1]    = 3.5;
+                origin_tune[0] = 0.9;
+                origin_tune[1] = 0.9;
             }
             else if (!strcasecmp(preset, "strong"))
             {
-                strength[0]    = 0;   strength[1]    = 8;
-                origin_tune[0] = 0.6; origin_tune[1] = 0.6;
+                strength[0]    = 0;
+                strength[1]    = 8;
+                origin_tune[0] = 0.6;
+                origin_tune[1] = 0.6;
             }
         }
         else if (!strcasecmp(tune, "highmotion"))
         {
-            strength[0]    = 6;   strength[1]    = 6;
-            origin_tune[0] = 0.8; origin_tune[1] = 0.7;
-            patch_size[0]  = 7;   patch_size[1]  = 7;
-            range[0]       = 3;   range[1]       = 5;
-            frames[0]      = 2;   frames[1]      = 1;
-            prefilter[0]   = 0;   prefilter[1]   = 0;
+            strength[0]    = 6;
+            strength[1]    = 6;
+            origin_tune[0] = 0.8;
+            origin_tune[1] = 0.7;
+            patch_size[0]  = 7;
+            patch_size[1]  = 7;
+            range[0]       = 3;
+            range[1]       = 5;
+            frames[0]      = 2;
+            frames[1]      = 1;
+            prefilter[0]   = 0;
+            prefilter[1]   = 0;
             if (!strcasecmp(preset, "ultralight"))
             {
-                strength[0]    = 1.5;   strength[1]  = 2.4;
-                origin_tune[0] = 0.9; origin_tune[1] = 0.9;
+                strength[0]    = 1.5;
+                strength[1]  = 2.4;
+                origin_tune[0] = 0.9;
+                origin_tune[1] = 0.9;
             }
             else if (!strcasecmp(preset, "light"))
             {
-                strength[0]    = 3;   strength[1]    = 3.25;
-                origin_tune[0] = 0.9; origin_tune[1] = 0.8;
+                strength[0]    = 3;
+                strength[1]    = 3.25;
+                origin_tune[0] = 0.9;
+                origin_tune[1] = 0.8;
             }
             else if (!strcasecmp(preset, "strong"))
             {
-                strength[0]    = 8;   strength[1]    = 6.75;
-                origin_tune[0] = 0.6; origin_tune[1] = 0.5;
+                strength[0]    = 8;
+                strength[1]    = 6.75;
+                origin_tune[0] = 0.6;
+                origin_tune[1] = 0.5;
             }
         }
         else if (!strcasecmp(tune, "animation"))
         {
-            strength[0]    = 5; strength[1] = 4;
+            strength[0]    = 5;
+            strength[1] = 4;
             origin_tune[0] = origin_tune[1] = 0.15;
             patch_size[0]  = patch_size[1]  = 5;
             range[0]       = range[1]       = 7;
@@ -419,68 +456,100 @@ static hb_dict_t * generate_nlmeans_settings(const char *preset,
             prefilter[0]   = prefilter[1]   = 0;
             if (!strcasecmp(preset, "ultralight"))
             {
-                strength[0] = 2.5; strength[1] = 2;
-                frames[0]   = 2;   frames[1]   = 2;
+                strength[0] = 2.5;
+                strength[1] = 2;
+                frames[0]   = 2;
+                frames[1]   = 2;
             }
             else if (!strcasecmp(preset, "light"))
             {
-                strength[0] = 3; strength[1] = 2.25;
-                frames[0]   = 3; frames[1]   = 3;
+                strength[0] = 3;
+                strength[1] = 2.25;
+                frames[0]   = 3;
+                frames[1]   = 3;
             }
             else if (!strcasecmp(preset, "strong"))
             {
-                strength[0] = 10; strength[1] = 8;
+                strength[0] = 10;
+                strength[1] = 8;
             }
         }
         else if (!strcasecmp(tune, "tape"))
         {
-            strength[0]    = 3;   strength[1]    = 6;
-            origin_tune[0] = 0.8; origin_tune[1] = 0.8;
-            patch_size[0]  = 3;   patch_size[1]  = 5;
-            range[0]       = 5;   range[1]       = 5;
-            frames[0]      = 2;   frames[1]      = 2;
-            prefilter[0]   = 0;   prefilter[1]   = 0;
+            strength[0]    = 3;
+            strength[1]    = 6;
+            origin_tune[0] = 0.8;
+            origin_tune[1] = 0.8;
+            patch_size[0]  = 3;
+            patch_size[1]  = 5;
+            range[0]       = 5;
+            range[1]       = 5;
+            frames[0]      = 2;
+            frames[1]      = 2;
+            prefilter[0]   = 0;
+            prefilter[1]   = 0;
             if (!strcasecmp(preset, "ultralight"))
             {
-                strength[0]    = 1.5; strength[1]    = 5;
-                origin_tune[0] = 0.9; origin_tune[1] = 0.9;
-                frames[0]      = 1;   frames[1]      = 1;
+                strength[0]    = 1.5;
+                strength[1]    = 5;
+                origin_tune[0] = 0.9;
+                origin_tune[1] = 0.9;
+                frames[0]      = 1;
+                frames[1]      = 1;
             }
             else if (!strcasecmp(preset, "light"))
             {
-                strength[0]    = 2;   strength[1]    = 6;
-                origin_tune[0] = 0.9; origin_tune[1] = 0.9;
+                strength[0]    = 2;
+                strength[1]    = 6;
+                origin_tune[0] = 0.9;
+                origin_tune[1] = 0.9;
             }
             else if (!strcasecmp(preset, "strong"))
             {
-                strength[0]    = 3.5; strength[1]    = 8;
-                origin_tune[0] = 0.6; origin_tune[1] = 0.6;
-                patch_size[0]  = 5;   patch_size[1]  = 5;
+                strength[0]    = 3.5;
+                strength[1]    = 8;
+                origin_tune[0] = 0.6;
+                origin_tune[1] = 0.6;
+                patch_size[0]  = 5;
+                patch_size[1]  = 5;
             }
         }
         else if (!strcasecmp(tune, "sprite"))
         {
-            strength[0]    = 3;    strength[1]    = 4;
-            origin_tune[0] = 0.15; origin_tune[1] = 0.5;
-            patch_size[0]  = 5;    patch_size[1]  = 5;
-            range[0]       = 5;    range[1]       = 9;
-            frames[0]      = 2;    frames[1]      = 4;
-            prefilter[0]   = 0;    prefilter[1]   = 0;
+            strength[0]    = 3;
+            strength[1]    = 4;
+            origin_tune[0] = 0.15;
+            origin_tune[1] = 0.5;
+            patch_size[0]  = 5;
+            patch_size[1]  = 5;
+            range[0]       = 5;
+            range[1]       = 9;
+            frames[0]      = 2;
+            frames[1]      = 4;
+            prefilter[0]   = 0;
+            prefilter[1]   = 0;
             if (!strcasecmp(preset, "ultralight"))
             {
-                strength[0]    = 1.5; strength[1]    = 3;
-                range[0]       = 5;   range[1]       = 7;
-                frames[0]      = 1;   frames[1]      = 2;
+                strength[0]    = 1.5;
+                strength[1]    = 3;
+                range[0]       = 5;
+                range[1]       = 7;
+                frames[0]      = 1;
+                frames[1]      = 2;
             }
             else if (!strcasecmp(preset, "light"))
             {
-                strength[0]    = 2; strength[1]    = 4;
-                frames[0]      = 2; frames[1]      = 2;
+                strength[0]    = 2;
+                strength[1]    = 4;
+                frames[0]      = 2;
+                frames[1]      = 2;
             }
             else if (!strcasecmp(preset, "strong"))
             {
-                strength[0]    = 3; strength[1]    = 4;
-                range[0]       = 7; range[1]       = 11;
+                strength[0]    = 3;
+                strength[1]    = 4;
+                range[0]       = 7;
+                range[1]       = 11;
             }
         }
         else
@@ -517,8 +586,8 @@ static hb_dict_t * generate_nlmeans_settings(const char *preset,
 }
 
 static hb_dict_t * generate_chroma_smooth_settings(const char *preset,
-                                                   const char *tune,
-                                                   const char *custom)
+        const char *tune,
+        const char *custom)
 {
     hb_dict_t * settings;
 
@@ -530,22 +599,22 @@ static hb_dict_t * generate_chroma_smooth_settings(const char *preset,
         return hb_parse_filter_settings(custom);
     }
     if (!strcasecmp(preset, "ultralight") ||
-        !strcasecmp(preset, "light") ||
-        !strcasecmp(preset, "medium") ||
-        !strcasecmp(preset, "strong") ||
-        !strcasecmp(preset, "stronger") ||
-        !strcasecmp(preset, "verystrong"))
+            !strcasecmp(preset, "light") ||
+            !strcasecmp(preset, "medium") ||
+            !strcasecmp(preset, "strong") ||
+            !strcasecmp(preset, "stronger") ||
+            !strcasecmp(preset, "verystrong"))
     {
         double strength;
         int    size;
 
         // Strength
         if ((tune == NULL || !strcasecmp(tune, "none")) ||
-           (!strcasecmp(tune, "tiny"))   ||
-           (!strcasecmp(tune, "small"))  ||
-           (!strcasecmp(tune, "medium")) ||
-           (!strcasecmp(tune, "wide"))   ||
-           (!strcasecmp(tune, "verywide")))
+                (!strcasecmp(tune, "tiny"))   ||
+                (!strcasecmp(tune, "small"))  ||
+                (!strcasecmp(tune, "medium")) ||
+                (!strcasecmp(tune, "wide"))   ||
+                (!strcasecmp(tune, "verywide")))
         {
             strength = 1.2;
             if (!strcasecmp(preset, "ultralight"))
@@ -577,7 +646,7 @@ static hb_dict_t * generate_chroma_smooth_settings(const char *preset,
 
         // Size
         if (tune == NULL || tune[0] == 0 ||
-            !strcasecmp(tune, "none") || !strcasecmp(tune, "medium"))
+                !strcasecmp(tune, "none") || !strcasecmp(tune, "medium"))
         {
             size = 7;
         }
@@ -620,8 +689,8 @@ static hb_dict_t * generate_chroma_smooth_settings(const char *preset,
 }
 
 static hb_dict_t * generate_unsharp_settings(const char *preset,
-                                             const char *tune,
-                                             const char *custom)
+        const char *tune,
+        const char *custom)
 {
     hb_dict_t * settings;
 
@@ -633,11 +702,11 @@ static hb_dict_t * generate_unsharp_settings(const char *preset,
         return hb_parse_filter_settings(custom);
     }
     if (!strcasecmp(preset, "ultralight") ||
-        !strcasecmp(preset, "light") ||
-        !strcasecmp(preset, "medium") ||
-        !strcasecmp(preset, "strong") ||
-        !strcasecmp(preset, "stronger") ||
-        !strcasecmp(preset, "verystrong"))
+            !strcasecmp(preset, "light") ||
+            !strcasecmp(preset, "medium") ||
+            !strcasecmp(preset, "strong") ||
+            !strcasecmp(preset, "stronger") ||
+            !strcasecmp(preset, "verystrong"))
     {
         double strength[2];
         int    size[2];
@@ -669,127 +738,161 @@ static hb_dict_t * generate_unsharp_settings(const char *preset,
         }
         else if (!strcasecmp(tune, "ultrafine"))
         {
-            strength[0]     = 0.4; strength[1] = 0.25;
+            strength[0]     = 0.4;
+            strength[1] = 0.25;
             size[0]         =      size[1]     = 3;
             if (!strcasecmp(preset, "ultralight"))
             {
-                strength[0] = 0.15; strength[1] = 0.1;
+                strength[0] = 0.15;
+                strength[1] = 0.1;
             }
             else if (!strcasecmp(preset, "light"))
             {
-                strength[0] = 0.25; strength[1] = 0.15;
+                strength[0] = 0.25;
+                strength[1] = 0.15;
             }
             else if (!strcasecmp(preset, "strong"))
             {
-                strength[0] = 0.8;  strength[1] = 0.5;
+                strength[0] = 0.8;
+                strength[1] = 0.5;
             }
             else if (!strcasecmp(preset, "stronger"))
             {
-                strength[0] = 1.2;  strength[1] = 0.75;
+                strength[0] = 1.2;
+                strength[1] = 0.75;
             }
             else if (!strcasecmp(preset, "verystrong"))
             {
-                strength[0] = 1.5;  strength[1] = 0.9;
+                strength[0] = 1.5;
+                strength[1] = 0.9;
             }
         }
         else if (!strcasecmp(tune, "fine"))
         {
-            strength[0]     = 0.275; strength[1] = 0.165;
-            size[0]         = 7;     size[1]     = 5;
+            strength[0]     = 0.275;
+            strength[1] = 0.165;
+            size[0]         = 7;
+            size[1]     = 5;
             if (!strcasecmp(preset, "ultralight"))
             {
-                strength[0] = 0.055; strength[1] = 0.033;
+                strength[0] = 0.055;
+                strength[1] = 0.033;
             }
             else if (!strcasecmp(preset, "light"))
             {
-                strength[0] = 0.165; strength[1] = 0.1;
+                strength[0] = 0.165;
+                strength[1] = 0.1;
             }
             else if (!strcasecmp(preset, "strong"))
             {
-                strength[0] = 0.55;  strength[1] = 0.33;
+                strength[0] = 0.55;
+                strength[1] = 0.33;
             }
             else if (!strcasecmp(preset, "stronger"))
             {
-                strength[0] = 0.9;   strength[1] = 0.6;
+                strength[0] = 0.9;
+                strength[1] = 0.6;
             }
             else if (!strcasecmp(preset, "verystrong"))
             {
-                strength[0] = 1.35;   strength[1] = 0.9;
+                strength[0] = 1.35;
+                strength[1] = 0.9;
             }
         }
         else if (!strcasecmp(tune, "medium"))
         {
-            strength[0]     = 0.275; strength[1] = 0.165;
-            size[0]         = 9;     size[1]     = 7;
+            strength[0]     = 0.275;
+            strength[1] = 0.165;
+            size[0]         = 9;
+            size[1]     = 7;
             if (!strcasecmp(preset, "ultralight"))
             {
-                strength[0] = 0.055; strength[1] = 0.033;
+                strength[0] = 0.055;
+                strength[1] = 0.033;
             }
             else if (!strcasecmp(preset, "light"))
             {
-                strength[0] = 0.165; strength[1] = 0.1;
+                strength[0] = 0.165;
+                strength[1] = 0.1;
             }
             else if (!strcasecmp(preset, "strong"))
             {
-                strength[0] = 0.55;  strength[1] = 0.33;
+                strength[0] = 0.55;
+                strength[1] = 0.33;
             }
             else if (!strcasecmp(preset, "stronger"))
             {
-                strength[0] = 0.9;   strength[1] = 0.6;
+                strength[0] = 0.9;
+                strength[1] = 0.6;
             }
             else if (!strcasecmp(preset, "verystrong"))
             {
-                strength[0] = 1.35;   strength[1] = 0.9;
+                strength[0] = 1.35;
+                strength[1] = 0.9;
             }
         }
         else if (!strcasecmp(tune, "coarse"))
         {
-            strength[0]     = 0.275; strength[1] = 0.165;
-            size[0]         = 11;    size[1]     = 7;
+            strength[0]     = 0.275;
+            strength[1] = 0.165;
+            size[0]         = 11;
+            size[1]     = 7;
             if (!strcasecmp(preset, "ultralight"))
             {
-                strength[0] = 0.055; strength[1] = 0.033;
+                strength[0] = 0.055;
+                strength[1] = 0.033;
             }
             else if (!strcasecmp(preset, "light"))
             {
-                strength[0] = 0.165; strength[1] = 0.1;
+                strength[0] = 0.165;
+                strength[1] = 0.1;
             }
             else if (!strcasecmp(preset, "strong"))
             {
-                strength[0] = 0.55;  strength[1] = 0.33;
+                strength[0] = 0.55;
+                strength[1] = 0.33;
             }
             else if (!strcasecmp(preset, "stronger"))
             {
-                strength[0] = 0.9;   strength[1] = 0.6;
+                strength[0] = 0.9;
+                strength[1] = 0.6;
             }
             else if (!strcasecmp(preset, "verystrong"))
             {
-                strength[0] = 1.35;   strength[1] = 0.9;
+                strength[0] = 1.35;
+                strength[1] = 0.9;
             }
         }
         else if (!strcasecmp(tune, "verycoarse"))
         {
-            strength[0]     = 0.275; strength[1] = 0.165;
-            size[0]         = 13;    size[1]     = 9;
+            strength[0]     = 0.275;
+            strength[1] = 0.165;
+            size[0]         = 13;
+            size[1]     = 9;
             if (!strcasecmp(preset, "ultralight"))
             {
-                strength[0] = 0.055; strength[1] = 0.033;
+                strength[0] = 0.055;
+                strength[1] = 0.033;
             }
             else if (!strcasecmp(preset, "light"))
             {
-                strength[0] = 0.165; strength[1] = 0.1;
+                strength[0] = 0.165;
+                strength[1] = 0.1;
             }
             else if (!strcasecmp(preset, "strong"))
             {
-                strength[0] = 0.55;  strength[1] = 0.33;
+                strength[0] = 0.55;
+                strength[1] = 0.33;
             }
             else if (!strcasecmp(preset, "stronger"))
             {
-                strength[0] = 0.9;   strength[1] = 0.6;
+                strength[0] = 0.9;
+                strength[1] = 0.6;
             }
             else if (!strcasecmp(preset, "verystrong"))
             {
-                strength[0] = 1.35;   strength[1] = 0.9;
+                strength[0] = 1.35;
+                strength[1] = 0.9;
             }
         }
         else
@@ -818,8 +921,8 @@ static hb_dict_t * generate_unsharp_settings(const char *preset,
 }
 
 static hb_dict_t * generate_lapsharp_settings(const char *preset,
-                                              const char *tune,
-                                              const char *custom)
+        const char *tune,
+        const char *custom)
 {
     hb_dict_t * settings;
 
@@ -831,11 +934,11 @@ static hb_dict_t * generate_lapsharp_settings(const char *preset,
         return hb_parse_filter_settings(custom);
     }
     if (!strcasecmp(preset, "ultralight") ||
-        !strcasecmp(preset, "light") ||
-        !strcasecmp(preset, "medium") ||
-        !strcasecmp(preset, "strong") ||
-        !strcasecmp(preset, "stronger") ||
-        !strcasecmp(preset, "verystrong"))
+            !strcasecmp(preset, "light") ||
+            !strcasecmp(preset, "medium") ||
+            !strcasecmp(preset, "strong") ||
+            !strcasecmp(preset, "stronger") ||
+            !strcasecmp(preset, "verystrong"))
     {
         double strength[2];
         const char *kernel_string[2];
@@ -867,77 +970,95 @@ static hb_dict_t * generate_lapsharp_settings(const char *preset,
         }
         else if (!strcasecmp(tune, "film"))
         {
-            strength[0]      = 0.2;  strength[1] = 0.12;
+            strength[0]      = 0.2;
+            strength[1] = 0.12;
             kernel_string[0] = kernel_string[1]  = "isolap";
             if (!strcasecmp(preset, "ultralight"))
             {
-                strength[0]  = 0.05; strength[1] = 0.03;
+                strength[0]  = 0.05;
+                strength[1] = 0.03;
             }
             else if (!strcasecmp(preset, "light"))
             {
-                strength[0]  = 0.1;  strength[1] = 0.06;
+                strength[0]  = 0.1;
+                strength[1] = 0.06;
             }
             else if (!strcasecmp(preset, "strong"))
             {
-                strength[0]  = 0.3;  strength[1] = 0.2;
+                strength[0]  = 0.3;
+                strength[1] = 0.2;
             }
             else if (!strcasecmp(preset, "stronger"))
             {
-                strength[0]  = 0.5;  strength[1] = 0.3;
+                strength[0]  = 0.5;
+                strength[1] = 0.3;
             }
             else if (!strcasecmp(preset, "verystrong"))
             {
-                strength[0]  = 1.1;  strength[1] = 0.65;
+                strength[0]  = 1.1;
+                strength[1] = 0.65;
             }
         }
         else if (!strcasecmp(tune, "grain"))
         {
-            strength[0]      = 0.2; strength[1] = 0.1;
+            strength[0]      = 0.2;
+            strength[1] = 0.1;
             kernel_string[0] = kernel_string[1] = "isolog";
             if (!strcasecmp(preset, "ultralight"))
             {
-                strength[0] = 0.05; strength[1] = 0.025;
+                strength[0] = 0.05;
+                strength[1] = 0.025;
             }
             else if (!strcasecmp(preset, "light"))
             {
-                strength[0] = 0.1;  strength[1] = 0.05;
+                strength[0] = 0.1;
+                strength[1] = 0.05;
             }
             else if (!strcasecmp(preset, "strong"))
             {
-                strength[0] = 0.3;  strength[1] = 0.15;
+                strength[0] = 0.3;
+                strength[1] = 0.15;
             }
             else if (!strcasecmp(preset, "stronger"))
             {
-                strength[0] = 0.5;  strength[1] = 0.25;
+                strength[0] = 0.5;
+                strength[1] = 0.25;
             }
             else if (!strcasecmp(preset, "verystrong"))
             {
-                strength[0] = 1.1;  strength[1] = 0.55;
+                strength[0] = 1.1;
+                strength[1] = 0.55;
             }
         }
         else if (!strcasecmp(tune, "animation"))
         {
-            strength[0]      = 0.15; strength[1]   = 0.09;
+            strength[0]      = 0.15;
+            strength[1]   = 0.09;
             kernel_string[0] = kernel_string[1]    = "isolap";
             if (!strcasecmp(preset, "ultralight"))
             {
-                strength[0]  = 0.0375; strength[1] = 0.0225;
+                strength[0]  = 0.0375;
+                strength[1] = 0.0225;
             }
             else if (!strcasecmp(preset, "light"))
             {
-                strength[0]  = 0.075;  strength[1] = 0.05625;
+                strength[0]  = 0.075;
+                strength[1] = 0.05625;
             }
             else if (!strcasecmp(preset, "strong"))
             {
-                strength[0]  = 0.225;  strength[1] = 0.15;
+                strength[0]  = 0.225;
+                strength[1] = 0.15;
             }
             else if (!strcasecmp(preset, "stronger"))
             {
-                strength[0]  = 0.375;  strength[1] = 0.225;
+                strength[0]  = 0.375;
+                strength[1] = 0.225;
             }
             else if (!strcasecmp(preset, "verystrong"))
             {
-                strength[0]  = 0.75;  strength[1] = 0.45;
+                strength[0]  = 0.75;
+                strength[1] = 0.45;
             }
         }
         else if (!strcasecmp(tune, "sprite"))
@@ -1041,8 +1162,8 @@ int hb_validate_filter_settings(int filter_id, const hb_dict_t * settings)
     }
 
     for (iter = hb_dict_iter_init(settings);
-         iter != HB_DICT_ITER_DONE;
-         iter = hb_dict_iter_next(settings, iter))
+            iter != HB_DICT_ITER_DONE;
+            iter = hb_dict_iter_next(settings, iter))
     {
         const char * key;
         hb_value_t * val;
@@ -1055,7 +1176,7 @@ int hb_validate_filter_settings(int filter_id, const hb_dict_t * settings)
         {
             // Key is missing from template, indicate invalid settings
             hb_log("Invalid filter key (%s) for filter %s",
-                    key, filter->name);
+                   key, filter->name);
             return 1;
         }
 
@@ -1069,7 +1190,7 @@ int hb_validate_filter_settings(int filter_id, const hb_dict_t * settings)
             if (hb_validate_param_string(regex_pattern, param) != 0)
             {
                 hb_log("Invalid filter value (%s) for key %s filter %s",
-                        param, key, filter->name);
+                       param, key, filter->name);
                 free(param);
                 return 1;
             }
@@ -1146,8 +1267,8 @@ filter_param_get_entry(hb_filter_param_t *table, const char *name, int count)
     for (ii = 0; ii < count; ii++)
     {
         if ((table[ii].name != NULL && !strcasecmp(name, table[ii].name)) ||
-            (table[ii].short_name != NULL &&
-             !strcasecmp(name, table[ii].short_name)))
+                (table[ii].short_name != NULL &&
+                 !strcasecmp(name, table[ii].short_name)))
         {
             return &table[ii];
         }
@@ -1208,15 +1329,16 @@ static void check_filter_status(int filter_id, hb_value_t *settings)
     }
     switch (filter_id)
     {
-        case HB_FILTER_ROTATE:
-        {
-            int angle = hb_dict_get_int(settings, "angle");
-            int hflip = hb_dict_get_int(settings, "hflip");
-            disable = angle == 0 && hflip == 0;
-        } break;
-        default:
-        {
-        } break;
+    case HB_FILTER_ROTATE:
+    {
+        int angle = hb_dict_get_int(settings, "angle");
+        int hflip = hb_dict_get_int(settings, "hflip");
+        disable = angle == 0 && hflip == 0;
+    }
+    break;
+    default:
+    {
+    } break;
     }
     if (disable)
     {
@@ -1232,46 +1354,46 @@ hb_generate_filter_settings(int filter_id, const char *preset, const char *tune,
 
     switch (filter_id)
     {
-        case HB_FILTER_PAD:
-        case HB_FILTER_ROTATE:
-        case HB_FILTER_CROP_SCALE:
-        case HB_FILTER_VFR:
-        case HB_FILTER_RENDER_SUB:
-        case HB_FILTER_GRAYSCALE:
-        case HB_FILTER_QSV:
-            settings = hb_parse_filter_settings(custom);
-            break;
-        case HB_FILTER_NLMEANS:
-            settings = generate_nlmeans_settings(preset, tune, custom);
-            break;
-        case HB_FILTER_CHROMA_SMOOTH:
-            settings = generate_chroma_smooth_settings(preset, tune, custom);
-            break;
-        case HB_FILTER_LAPSHARP:
-            settings = generate_lapsharp_settings(preset, tune, custom);
-            break;
-        case HB_FILTER_UNSHARP:
-            settings = generate_unsharp_settings(preset, tune, custom);
-            break;
-        case HB_FILTER_DEBLOCK:
-        case HB_FILTER_COMB_DETECT:
-        case HB_FILTER_DECOMB:
-        case HB_FILTER_DETELECINE:
-        case HB_FILTER_HQDN3D:
-        case HB_FILTER_DEINTERLACE:
-            settings = generate_generic_settings(filter_id, preset,
-                                                 tune, custom);
-            break;
-        default:
-            fprintf(stderr,
-                    "hb_generate_filter_settings: Unrecognized filter (%d).\n",
-                    filter_id);
-            break;
+    case HB_FILTER_PAD:
+    case HB_FILTER_ROTATE:
+    case HB_FILTER_CROP_SCALE:
+    case HB_FILTER_VFR:
+    case HB_FILTER_RENDER_SUB:
+    case HB_FILTER_GRAYSCALE:
+    case HB_FILTER_QSV:
+        settings = hb_parse_filter_settings(custom);
+        break;
+    case HB_FILTER_NLMEANS:
+        settings = generate_nlmeans_settings(preset, tune, custom);
+        break;
+    case HB_FILTER_CHROMA_SMOOTH:
+        settings = generate_chroma_smooth_settings(preset, tune, custom);
+        break;
+    case HB_FILTER_LAPSHARP:
+        settings = generate_lapsharp_settings(preset, tune, custom);
+        break;
+    case HB_FILTER_UNSHARP:
+        settings = generate_unsharp_settings(preset, tune, custom);
+        break;
+    case HB_FILTER_DEBLOCK:
+    case HB_FILTER_COMB_DETECT:
+    case HB_FILTER_DECOMB:
+    case HB_FILTER_DETELECINE:
+    case HB_FILTER_HQDN3D:
+    case HB_FILTER_DEINTERLACE:
+        settings = generate_generic_settings(filter_id, preset,
+                                             tune, custom);
+        break;
+    default:
+        fprintf(stderr,
+                "hb_generate_filter_settings: Unrecognized filter (%d).\n",
+                filter_id);
+        break;
     }
     check_filter_status(filter_id, settings);
 
     if (settings != NULL &&
-        hb_validate_filter_settings(filter_id, settings) == 0)
+            hb_validate_filter_settings(filter_id, settings) == 0)
     {
         return settings;
     }

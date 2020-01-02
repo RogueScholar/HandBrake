@@ -154,15 +154,15 @@ int hb_dvd_region(char *device, int *region_mask)
     if ( fd < 0 )
         return -1;
     if ( fstat( fd, &st ) < 0 )
-	{
+    {
         close( fd );
         return -1;
-	}
+    }
     if ( !( S_ISBLK( st.st_mode ) || S_ISCHR( st.st_mode ) ) )
-	{
+    {
         close( fd );
         return -1;
-	}
+    }
 
     ai.type = DVD_LU_SEND_RPC_STATE;
     ret = ioctl(fd, DVD_AUTH, &ai);
@@ -192,7 +192,7 @@ uint64_t hb_get_time_us()
 
     if (frequency.QuadPart == 0)
     {
-          QueryPerformanceFrequency(&frequency);
+        QueryPerformanceFrequency(&frequency);
     }
 
     QueryPerformanceCounter(&cur_time);
@@ -261,28 +261,28 @@ const char* hb_get_cpu_platform_name()
 {
     switch (hb_cpu_info.platform)
     {
-        case HB_CPU_PLATFORM_INTEL_BNL:
-            return "Intel microarchitecture Bonnell";
-        case HB_CPU_PLATFORM_INTEL_SNB:
-            return "Intel microarchitecture Sandy Bridge";
-        case HB_CPU_PLATFORM_INTEL_IVB:
-            return "Intel microarchitecture Ivy Bridge";
-        case HB_CPU_PLATFORM_INTEL_SLM:
-            return "Intel microarchitecture Silvermont";
-        case HB_CPU_PLATFORM_INTEL_HSW:
-            return "Intel microarchitecture Haswell";
-        case HB_CPU_PLATFORM_INTEL_BDW:
-            return "Intel microarchitecture Broadwell";
-        case HB_CPU_PLATFORM_INTEL_SKL:
-            return "Intel microarchitecture Skylake";
-        case HB_CPU_PLATFORM_INTEL_CHT:
-            return "Intel microarchitecture Airmont";
-        case HB_CPU_PLATFORM_INTEL_KBL:
-            return "Intel microarchitecture Kaby Lake";
-        case HB_CPU_PLATFORM_INTEL_ICL:
-            return "Intel microarchitecture Ice Lake";
-        default:
-            return NULL;
+    case HB_CPU_PLATFORM_INTEL_BNL:
+        return "Intel microarchitecture Bonnell";
+    case HB_CPU_PLATFORM_INTEL_SNB:
+        return "Intel microarchitecture Sandy Bridge";
+    case HB_CPU_PLATFORM_INTEL_IVB:
+        return "Intel microarchitecture Ivy Bridge";
+    case HB_CPU_PLATFORM_INTEL_SLM:
+        return "Intel microarchitecture Silvermont";
+    case HB_CPU_PLATFORM_INTEL_HSW:
+        return "Intel microarchitecture Haswell";
+    case HB_CPU_PLATFORM_INTEL_BDW:
+        return "Intel microarchitecture Broadwell";
+    case HB_CPU_PLATFORM_INTEL_SKL:
+        return "Intel microarchitecture Skylake";
+    case HB_CPU_PLATFORM_INTEL_CHT:
+        return "Intel microarchitecture Airmont";
+    case HB_CPU_PLATFORM_INTEL_KBL:
+        return "Intel microarchitecture Kaby Lake";
+    case HB_CPU_PLATFORM_INTEL_ICL:
+        return "Intel microarchitecture Ice Lake";
+    default:
+        return NULL;
     }
 }
 
@@ -323,63 +323,64 @@ static void init_cpu_info()
         // Table 2-1. CPUID Signature Values of DisplayFamily_DisplayModel
         switch (family)
         {
-            case 0x06:
+        case 0x06:
+        {
+            switch (model)
             {
-                switch (model)
-                {
-                    case 0x1C:
-                    case 0x26:
-                    case 0x27:
-                    case 0x35:
-                    case 0x36:
-                        hb_cpu_info.platform = HB_CPU_PLATFORM_INTEL_BNL;
-                        break;
-                    case 0x2A:
-                    case 0x2D:
-                        hb_cpu_info.platform = HB_CPU_PLATFORM_INTEL_SNB;
-                        break;
-                    case 0x3A:
-                    case 0x3E:
-                        hb_cpu_info.platform = HB_CPU_PLATFORM_INTEL_IVB;
-                        break;
-                    case 0x37:
-                    case 0x4A:
-                    case 0x4D:
-                    case 0x5A:
-                    case 0x5D:
-                        hb_cpu_info.platform = HB_CPU_PLATFORM_INTEL_SLM;
-                        break;
-                    case 0x3C:
-                    case 0x3F:
-                    case 0x45:
-                    case 0x46:
-                        hb_cpu_info.platform = HB_CPU_PLATFORM_INTEL_HSW;
-                        break;
-                    case 0x3D:
-                    case 0x4F:
-                    case 0x56:
-                        hb_cpu_info.platform = HB_CPU_PLATFORM_INTEL_BDW;
-                        break;
-                    case 0x4C:
-                        hb_cpu_info.platform = HB_CPU_PLATFORM_INTEL_CHT;
-                        break;
-                    case 0x4E:
-                    case 0x5E:
-                        hb_cpu_info.platform = HB_CPU_PLATFORM_INTEL_SKL;
-                        break;
-                    case 0x8E:
-                    case 0x9E:
-                        hb_cpu_info.platform = HB_CPU_PLATFORM_INTEL_KBL;
-                        break;
-                    case 0x7E:
-                        hb_cpu_info.platform = HB_CPU_PLATFORM_INTEL_ICL;
-                    default:
-                        break;
-                }
-            } break;
-
+            case 0x1C:
+            case 0x26:
+            case 0x27:
+            case 0x35:
+            case 0x36:
+                hb_cpu_info.platform = HB_CPU_PLATFORM_INTEL_BNL;
+                break;
+            case 0x2A:
+            case 0x2D:
+                hb_cpu_info.platform = HB_CPU_PLATFORM_INTEL_SNB;
+                break;
+            case 0x3A:
+            case 0x3E:
+                hb_cpu_info.platform = HB_CPU_PLATFORM_INTEL_IVB;
+                break;
+            case 0x37:
+            case 0x4A:
+            case 0x4D:
+            case 0x5A:
+            case 0x5D:
+                hb_cpu_info.platform = HB_CPU_PLATFORM_INTEL_SLM;
+                break;
+            case 0x3C:
+            case 0x3F:
+            case 0x45:
+            case 0x46:
+                hb_cpu_info.platform = HB_CPU_PLATFORM_INTEL_HSW;
+                break;
+            case 0x3D:
+            case 0x4F:
+            case 0x56:
+                hb_cpu_info.platform = HB_CPU_PLATFORM_INTEL_BDW;
+                break;
+            case 0x4C:
+                hb_cpu_info.platform = HB_CPU_PLATFORM_INTEL_CHT;
+                break;
+            case 0x4E:
+            case 0x5E:
+                hb_cpu_info.platform = HB_CPU_PLATFORM_INTEL_SKL;
+                break;
+            case 0x8E:
+            case 0x9E:
+                hb_cpu_info.platform = HB_CPU_PLATFORM_INTEL_KBL;
+                break;
+            case 0x7E:
+                hb_cpu_info.platform = HB_CPU_PLATFORM_INTEL_ICL;
             default:
                 break;
+            }
+        }
+        break;
+
+        default:
+            break;
         }
 
         // Intel 64 and IA-32 Architectures Software Developer's Manual, Vol. 2A
@@ -436,7 +437,7 @@ static int init_cpu_count()
     memset( &p_aff, 0, sizeof(p_aff) );
     sched_getaffinity( 0, sizeof(p_aff), &p_aff );
     for( cpu_count = 0, bit = 0; bit < sizeof(p_aff); bit++ )
-         cpu_count += (((uint8_t *)&p_aff)[bit / 8] >> (bit % 8)) & 1;
+        cpu_count += (((uint8_t *)&p_aff)[bit / 8] >> (bit % 8)) & 1;
 
 #elif defined(SYS_BEOS)
     system_info info;
@@ -534,7 +535,7 @@ void hb_get_user_config_directory( char path[512] )
     WCHAR wide_path[MAX_PATH];
 
     if (SHGetFolderPathW(NULL, CSIDL_APPDATA, NULL, SHGFP_TYPE_CURRENT, wide_path) == S_OK &&
-        WideCharToMultiByte(CP_UTF8, 0, wide_path, -1, path, 512, NULL, NULL) != 0)
+            WideCharToMultiByte(CP_UTF8, 0, wide_path, -1, path, 512, NULL, NULL) != 0)
     {
         path[511] = 0;
         return;
@@ -543,7 +544,7 @@ void hb_get_user_config_directory( char path[512] )
     WCHAR *wide_path;
 
     if (SHGetKnownFolderPath(&FOLDERID_RoamingAppData, 0, NULL, &wide_path) == S_OK &&
-        WideCharToMultiByte(CP_UTF8, 0, wide_path, -1, path, 512, NULL, NULL) != 0)
+            WideCharToMultiByte(CP_UTF8, 0, wide_path, -1, path, 512, NULL, NULL) != 0)
     {
         CoTaskMemFree(wide_path);
         path[511] = 0;
@@ -624,7 +625,7 @@ char * hb_get_temporary_directory()
         *p = '/';
 #else
     if( (p = getenv( "TMPDIR" ) ) != NULL ||
-        (p = getenv( "TEMP" ) )   != NULL )
+            (p = getenv( "TEMP" ) )   != NULL )
         base = strdup(p);
     else
         base = strdup("/tmp");
@@ -826,19 +827,19 @@ struct hb_thread_s
 static uint64_t hb_thread_to_integer( const hb_thread_t* t )
 {
 #if defined( USE_PTHREAD )
-    #if defined( SYS_CYGWIN )
-        return (uint64_t)t->thread;
-    #elif defined( _WIN32 ) || defined( __MINGW32__ )
-    #if defined(PTW32_VERSION)
-        return (uint64_t)(ptrdiff_t)t->thread.p;
-    #else
-        return (uint64_t)t->thread;
-    #endif
-    #elif defined( SYS_DARWIN )
-        return (unsigned long)t->thread;
-    #else
-        return (uint64_t)t->thread;
-    #endif
+#if defined( SYS_CYGWIN )
+    return (uint64_t)t->thread;
+#elif defined( _WIN32 ) || defined( __MINGW32__ )
+#if defined(PTW32_VERSION)
+    return (uint64_t)(ptrdiff_t)t->thread.p;
+#else
+    return (uint64_t)t->thread;
+#endif
+#elif defined( SYS_DARWIN )
+    return (unsigned long)t->thread;
+#else
+    return (uint64_t)t->thread;
+#endif
 #else
     return 0;
 #endif
@@ -1367,12 +1368,12 @@ void hb_system_sleep_private_disable(void *opaque)
 
     // 128 chars limit for IOPMAssertionCreateWithName
     CFStringRef reasonForActivity =
-    CFSTR("HandBrake is currently scanning and/or encoding");
+        CFSTR("HandBrake is currently scanning and/or encoding");
 
     IOReturn success = IOPMAssertionCreateWithName(kIOPMAssertPreventUserIdleSystemSleep,
-                                                   kIOPMAssertionLevelOn,
-                                                   reasonForActivity,
-                                                   assertionID);
+                       kIOPMAssertionLevelOn,
+                       reasonForActivity,
+                       assertionID);
     if (success == kIOReturnSuccess)
     {
         hb_deep_log(3,
@@ -1531,7 +1532,7 @@ const char* DRI_NODE_RENDER = "renderD";
 const char* DRI_NODE_CARD = "card";
 
 static int try_adapter(const char * name, const char * dir,
-                const char * prefix, int node_start, int node_last)
+                       const char * prefix, int node_start, int node_last)
 {
     int             node;
     int             len        = strlen(name);
@@ -1552,7 +1553,7 @@ static int try_adapter(const char * name, const char * dir,
         }
 
         if (!ioctl(fd, DRM_IOCTL_VERSION, &version) &&
-            version.name_len == len && !strncmp(driverName, name, len))
+                version.name_len == len && !strncmp(driverName, name, len))
         {
             free(driverName);
             return fd;

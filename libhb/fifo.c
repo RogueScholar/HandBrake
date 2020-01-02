@@ -282,7 +282,7 @@ void hb_buffer_pool_free( void )
     {
         hb_buffer_t *b = hb_list_item(buffers.alloc_list, i);
         hb_deep_log(2, "leaked buffer %p type %d size %d alloc %d",
-               b, b->s.type, b->size, b->alloc);
+                    b, b->s.type, b->size, b->alloc);
     }
 #endif
 
@@ -305,7 +305,7 @@ void hb_buffer_pool_free( void )
         if ( count )
         {
             hb_deep_log( 2, "Freed %d buffers of size %d", count,
-                    buffers.pool[i]->buffer_size);
+                         buffers.pool[i]->buffer_size);
         }
     }
 #endif
@@ -322,7 +322,7 @@ void hb_buffer_pool_free( void )
 #endif
 
     hb_deep_log( 2, "Allocated %"PRId64" bytes of buffers on this pass and Freed %"PRId64" bytes, "
-           "%"PRId64" bytes leaked", buffers.allocated, freed, buffers.allocated - freed);
+                 "%"PRId64" bytes leaked", buffers.allocated, freed, buffers.allocated - freed);
     buffers.allocated = 0;
     hb_unlock(buffers.lock);
 }
@@ -532,7 +532,7 @@ void hb_buffer_init_planes(hb_buffer_t * b)
         b->plane[pp].data = data;
         b->plane[pp].stride        = hb_image_stride(b->f.fmt, b->f.width, pp);
         b->plane[pp].height_stride = hb_image_height_stride(b->f.fmt,
-                                                            b->f.height, pp);
+                                     b->f.height, pp);
         b->plane[pp].width         = hb_image_width(b->f.fmt, b->f.width, pp);
         b->plane[pp].height        = hb_image_height(b->f.fmt, b->f.height, pp);
         b->plane[pp].size          = b->plane[pp].stride *
@@ -835,7 +835,7 @@ hb_image_t * hb_image_init(int pix_fmt, int width, int height)
         image->plane[pp].data   = data;
         image->plane[pp].stride = hb_image_stride(pix_fmt, width, pp);
         image->plane[pp].height_stride =
-                                hb_image_height_stride(pix_fmt, height, pp);
+            hb_image_height_stride(pix_fmt, height, pp);
         image->plane[pp].width  = hb_image_width(pix_fmt, width, pp);
         image->plane[pp].height = hb_image_height(pix_fmt, height, pp);
         image->plane[pp].size   = image->plane[pp].stride *
@@ -1141,7 +1141,7 @@ void hb_fifo_push( hb_fifo_t * f, hb_buffer_t * b )
 
     hb_lock( f->lock );
     if (f->size >= f->capacity &&
-        f->cond_alert_full != NULL)
+            f->cond_alert_full != NULL)
     {
         hb_cond_broadcast( f->cond_alert_full );
     }
@@ -1181,7 +1181,7 @@ void hb_fifo_push_head( hb_fifo_t * f, hb_buffer_t * b )
 
     hb_lock( f->lock );
     if (f->size >= f->capacity &&
-        f->cond_alert_full != NULL)
+            f->cond_alert_full != NULL)
     {
         hb_cond_broadcast( f->cond_alert_full );
     }

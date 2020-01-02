@@ -162,7 +162,7 @@ static void make_empty_pgs( hb_buffer_t * buf )
 }
 
 static int decsubWork( hb_work_object_t * w, hb_buffer_t ** buf_in,
-                hb_buffer_t ** buf_out )
+                       hb_buffer_t ** buf_out )
 {
     hb_work_private_t * pv = w->private_data;
     hb_buffer_t * in = *buf_in;
@@ -178,8 +178,8 @@ static int decsubWork( hb_work_object_t * w, hb_buffer_t ** buf_in,
     }
 
     if ( !pv->job->indepth_scan &&
-         w->subtitle->config.dest == PASSTHRUSUB &&
-         hb_subtitle_can_pass( PGSSUB, pv->job->mux ) )
+            w->subtitle->config.dest == PASSTHRUSUB &&
+            hb_subtitle_can_pass( PGSSUB, pv->job->mux ) )
     {
         // Append to buffer list.  It will be sent to fifo after we determine
         // if this is a packet we need.
@@ -258,7 +258,7 @@ static int decsubWork( hb_work_object_t * w, hb_buffer_t ** buf_in,
                                 forced_sub || pv->seen_forced_sub));
                 // do we need to create an empty subtitle?
                 if (w->subtitle->config.force &&
-                    useable_sub && !forced_sub && !clear_subtitle)
+                        useable_sub && !forced_sub && !clear_subtitle)
                 {
                     // We are forced-only and need to output this subtitle, but
                     // it's neither forced nor empty.
@@ -325,7 +325,7 @@ static int decsubWork( hb_work_object_t * w, hb_buffer_t ** buf_in,
             pv->last_pts = pts;
 
             if ( w->subtitle->config.dest == PASSTHRUSUB &&
-                 hb_subtitle_can_pass( PGSSUB, pv->job->mux ) )
+                    hb_subtitle_can_pass( PGSSUB, pv->job->mux ) )
             {
                 /* PGS subtitles are spread across multiple packets,
                  * 1 per segment.

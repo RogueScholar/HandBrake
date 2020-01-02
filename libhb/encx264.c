@@ -211,7 +211,7 @@ void hb_x264_global_init(void)
     x264_apis[1].param_default_preset = hb_dlsym(h, "x264_param_default_preset");
     x264_apis[1].param_apply_profile  = hb_dlsym(h, "x264_param_apply_profile");
     x264_apis[1].param_apply_fastfirstpass =
-                                hb_dlsym(h, "x264_param_apply_fastfirstpass");
+        hb_dlsym(h, "x264_param_apply_fastfirstpass");
     x264_apis[1].param_parse          = hb_dlsym(h, "x264_param_parse");
     // x264 appends the build number to the end of x264_encoder_open
     for (ii = 140; ii < 200; ii++)
@@ -227,22 +227,22 @@ void hb_x264_global_init(void)
     x264_apis[1].encoder_headers      = hb_dlsym(h, "x264_encoder_headers");
     x264_apis[1].encoder_encode       = hb_dlsym(h, "x264_encoder_encode");
     x264_apis[1].encoder_delayed_frames =
-                                hb_dlsym(h, "x264_encoder_delayed_frames");
+        hb_dlsym(h, "x264_encoder_delayed_frames");
     x264_apis[1].encoder_close        = hb_dlsym(h, "x264_encoder_close");
     x264_apis[1].picture_init         = hb_dlsym(h, "x264_picture_init");
 
     if (dll_bitdepth > 0 && dll_bitdepth != x264_apis[0].bit_depth &&
-        x264_apis[1].param_default             != NULL &&
-        x264_apis[1].param_default_preset      != NULL &&
-        x264_apis[1].param_apply_profile       != NULL &&
-        x264_apis[1].param_apply_fastfirstpass != NULL &&
-        x264_apis[1].param_parse               != NULL &&
-        x264_apis[1].encoder_open              != NULL &&
-        x264_apis[1].encoder_headers           != NULL &&
-        x264_apis[1].encoder_encode            != NULL &&
-        x264_apis[1].encoder_delayed_frames    != NULL &&
-        x264_apis[1].encoder_close             != NULL &&
-        x264_apis[1].picture_init              != NULL)
+            x264_apis[1].param_default             != NULL &&
+            x264_apis[1].param_default_preset      != NULL &&
+            x264_apis[1].param_apply_profile       != NULL &&
+            x264_apis[1].param_apply_fastfirstpass != NULL &&
+            x264_apis[1].param_parse               != NULL &&
+            x264_apis[1].encoder_open              != NULL &&
+            x264_apis[1].encoder_headers           != NULL &&
+            x264_apis[1].encoder_encode            != NULL &&
+            x264_apis[1].encoder_delayed_frames    != NULL &&
+            x264_apis[1].encoder_close             != NULL &&
+            x264_apis[1].picture_init              != NULL)
     {
         x264_apis[1].bit_depth = dll_bitdepth;
     }
@@ -255,7 +255,7 @@ const x264_api_t * hb_x264_api_get(int bit_depth)
     for (ii = 0; ii < HB_X264_API_COUNT; ii++)
     {
         if (-1        != x264_apis[ii].bit_depth &&
-            bit_depth == x264_apis[ii].bit_depth)
+                bit_depth == x264_apis[ii].bit_depth)
         {
             return &x264_apis[ii];
         }
@@ -330,7 +330,7 @@ int encx264Init( hb_work_object_t * w, hb_job_t * job )
     pv->chapter_queue    = hb_chapter_queue_init();
 
     if (pv->api->param_default_preset(&param,
-                                  job->encoder_preset, job->encoder_tune) < 0)
+                                      job->encoder_preset, job->encoder_tune) < 0)
     {
         free( pv );
         w->private_data = NULL;
@@ -383,7 +383,7 @@ int encx264Init( hb_work_object_t * w, hb_job_t * job )
      * adjust +0.5 for when fps has remainder to bump
      * { 23.976, 29.976, 59.94 } to { 24, 30, 60 }. */
     param.i_keyint_min = (double)job->orig_vrate.num / job->orig_vrate.den +
-                                 0.5;
+                         0.5;
     param.i_keyint_max = 10 * param.i_keyint_min;
     param.i_log_level  = X264_LOG_INFO;
 
@@ -403,8 +403,8 @@ int encx264Init( hb_work_object_t * w, hb_job_t * job )
     int ret;
     hb_dict_iter_t iter;
     for (iter  = hb_dict_iter_init(x264_opts);
-         iter != HB_DICT_ITER_DONE;
-         iter  = hb_dict_iter_next(x264_opts, iter))
+            iter != HB_DICT_ITER_DONE;
+            iter  = hb_dict_iter_next(x264_opts, iter))
     {
         const char *key = hb_dict_iter_key(iter);
         hb_value_t *value = hb_dict_iter_value(iter);
@@ -442,12 +442,12 @@ int encx264Init( hb_work_object_t * w, hb_job_t * job )
 
         char min[40], max[40];
         param.i_keyint_min == X264_KEYINT_MIN_AUTO ?
-            snprintf( min, 40, "auto (%d)", min_auto ) :
-            snprintf( min, 40, "%d", param.i_keyint_min );
+        snprintf( min, 40, "auto (%d)", min_auto ) :
+        snprintf( min, 40, "%d", param.i_keyint_min );
 
         param.i_keyint_max == X264_KEYINT_MAX_INFINITE ?
-            snprintf( max, 40, "infinite" ) :
-            snprintf( max, 40, "%d", param.i_keyint_max );
+        snprintf( max, 40, "infinite" ) :
+        snprintf( max, 40, "%d", param.i_keyint_max );
 
         hb_log( "encx264: min-keyint: %s, keyint: %s", min, max );
     }
@@ -478,22 +478,22 @@ int encx264Init( hb_work_object_t * w, hb_job_t * job )
         param.rc.i_bitrate = job->vbitrate;
         hb_log( "encx264: encoding at average bitrate %d", param.rc.i_bitrate );
         if( job->pass_id == HB_PASS_ENCODE_1ST ||
-            job->pass_id == HB_PASS_ENCODE_2ND )
+                job->pass_id == HB_PASS_ENCODE_2ND )
         {
             pv->filename = hb_get_temporary_filename("x264.log");
         }
         switch( job->pass_id )
         {
-            case HB_PASS_ENCODE_1ST:
-                param.rc.b_stat_read  = 0;
-                param.rc.b_stat_write = 1;
-                param.rc.psz_stat_out = pv->filename;
-                break;
-            case HB_PASS_ENCODE_2ND:
-                param.rc.b_stat_read  = 1;
-                param.rc.b_stat_write = 0;
-                param.rc.psz_stat_in  = pv->filename;
-                break;
+        case HB_PASS_ENCODE_1ST:
+            param.rc.b_stat_read  = 0;
+            param.rc.b_stat_write = 1;
+            param.rc.psz_stat_out = pv->filename;
+            break;
+        case HB_PASS_ENCODE_2ND:
+            param.rc.b_stat_read  = 1;
+            param.rc.b_stat_write = 0;
+            param.rc.psz_stat_in  = pv->filename;
+            break;
         }
     }
 
@@ -538,13 +538,13 @@ int encx264Init( hb_work_object_t * w, hb_job_t * job )
 
     /* Log the unparsed x264 options string. */
     char *x264_opts_unparsed = hb_x264_param_unparse(pv->api->bit_depth,
-                                                     job->encoder_preset,
-                                                     job->encoder_tune,
-                                                     job->encoder_options,
-                                                     job->encoder_profile,
-                                                     job->encoder_level,
-                                                     job->width,
-                                                     job->height);
+                               job->encoder_preset,
+                               job->encoder_tune,
+                               job->encoder_options,
+                               job->encoder_profile,
+                               job->encoder_level,
+                               job->width,
+                               job->height);
     if( x264_opts_unparsed != NULL )
     {
         hb_log( "encx264: unparsed options: %s", x264_opts_unparsed );
@@ -626,26 +626,26 @@ static hb_buffer_t *nal_encode( hb_work_object_t *w, x264_picture_t *pic_out,
     /* Determine what type of frame we have. */
     switch (pic_out->i_type)
     {
-        case X264_TYPE_IDR:
-            buf->s.frametype = HB_FRAME_IDR;
-            break;
+    case X264_TYPE_IDR:
+        buf->s.frametype = HB_FRAME_IDR;
+        break;
 
-        case X264_TYPE_P:
-            buf->s.frametype = HB_FRAME_P;
-            break;
+    case X264_TYPE_P:
+        buf->s.frametype = HB_FRAME_P;
+        break;
 
-        case X264_TYPE_B:
-            buf->s.frametype = HB_FRAME_B;
-            break;
+    case X264_TYPE_B:
+        buf->s.frametype = HB_FRAME_B;
+        break;
 
-        case X264_TYPE_BREF:
-            buf->s.frametype = HB_FRAME_BREF;
-            break;
+    case X264_TYPE_BREF:
+        buf->s.frametype = HB_FRAME_BREF;
+        break;
 
-        case X264_TYPE_I:
-        default:
-            buf->s.frametype = HB_FRAME_I;
-            break;
+    case X264_TYPE_I:
+    default:
+        buf->s.frametype = HB_FRAME_I;
+        break;
     }
     buf->s.flags = 0;
 
@@ -678,22 +678,22 @@ static hb_buffer_t *nal_encode( hb_work_object_t *w, x264_picture_t *pic_out,
         /* H.264 in .mp4 or .mkv */
         switch( nal[i].i_type )
         {
-            /* Sequence Parameter Set & Program Parameter Set go in the
-             * mp4 header so skip them here
-             */
-            case NAL_SPS:
-            case NAL_PPS:
-                if (!job->inline_parameter_sets)
-                {
-                    continue;
-                }
-                break;
+        /* Sequence Parameter Set & Program Parameter Set go in the
+         * mp4 header so skip them here
+         */
+        case NAL_SPS:
+        case NAL_PPS:
+            if (!job->inline_parameter_sets)
+            {
+                continue;
+            }
+            break;
 
-            case NAL_SLICE_IDR:
-            case NAL_SLICE:
-            case NAL_SEI:
-            default:
-                break;
+        case NAL_SLICE_IDR:
+        case NAL_SLICE:
+        case NAL_SEI:
+        default:
+            break;
         }
 
         /*
@@ -798,7 +798,7 @@ static hb_buffer_t *x264_encode( hb_work_object_t *w, hb_buffer_t *in )
     if (pv->last_stop != AV_NOPTS_VALUE && pv->last_stop != in->s.start)
     {
         hb_log("encx264 input continuity err: last stop %"PRId64"  start %"PRId64,
-                pv->last_stop, in->s.start);
+               pv->last_stop, in->s.start);
     }
     pv->last_stop = in->s.stop;
 
@@ -823,7 +823,7 @@ static hb_buffer_t *x264_encode( hb_work_object_t *w, hb_buffer_t *in )
 }
 
 int encx264Work( hb_work_object_t * w, hb_buffer_t ** buf_in,
-                  hb_buffer_t ** buf_out )
+                 hb_buffer_t ** buf_out )
 {
     hb_work_private_t *pv = w->private_data;
     hb_buffer_t *in = *buf_in;
@@ -879,14 +879,14 @@ static int apply_h264_profile(const x264_api_t *api, x264_param_t *param,
         profile_names = hb_h264_profile_names_8bit;
     }
     if (h264_profile != NULL &&
-        strcasecmp(h264_profile, profile_names[0]) != 0)
+            strcasecmp(h264_profile, profile_names[0]) != 0)
     {
         /*
          * baseline profile doesn't support interlacing
          */
         if ((param->b_interlaced ||
-             param->b_fake_interlaced) &&
-            !strcasecmp(h264_profile, "baseline"))
+                param->b_fake_interlaced) &&
+                !strcasecmp(h264_profile, "baseline"))
         {
             if (verbose)
             {
@@ -899,8 +899,8 @@ static int apply_h264_profile(const x264_api_t *api, x264_param_t *param,
          */
         int qp_bd_offset = 6 * (api->bit_depth - 8);
         if (strcasecmp(h264_profile, "high444") != 0 &&
-            ((param->rc.i_rc_method == X264_RC_CQP && param->rc.i_qp_constant <= 0) ||
-             (param->rc.i_rc_method == X264_RC_CRF && (int)(param->rc.f_rf_constant + qp_bd_offset) <= 0)))
+                ((param->rc.i_rc_method == X264_RC_CQP && param->rc.i_qp_constant <= 0) ||
+                 (param->rc.i_rc_method == X264_RC_CRF && (int)(param->rc.f_rf_constant + qp_bd_offset) <= 0)))
         {
             if (verbose)
             {
@@ -959,7 +959,7 @@ int apply_h264_level(const x264_api_t *api, x264_param_t *param,
      * find the x264_level_t corresponding to the requested level
      */
     if (h264_level != NULL &&
-        strcasecmp(h264_level, hb_h264_level_names[0]) != 0)
+            strcasecmp(h264_level, hb_h264_level_names[0]) != 0)
     {
         for (i = 0; hb_h264_level_values[i]; i++)
         {
@@ -1043,7 +1043,7 @@ int apply_h264_level(const x264_api_t *api, x264_param_t *param,
     {
         // guess the H.264 profile if the user didn't request one
         if (param->rc.i_rc_method == X264_RC_CRF &&
-            param->rc.f_rf_constant < 1.0)
+                param->rc.f_rf_constant < 1.0)
         {
             hb_encx264_profile = HB_ENCX264_PROFILE_HIGH444;
         }
@@ -1302,8 +1302,8 @@ char * hb_x264_param_unparse(int bit_depth, const char *x264_preset,
      */
     hb_dict_iter_t iter;
     for (iter  = hb_dict_iter_init(x264_opts);
-         iter != HB_DICT_ITER_DONE;
-         iter  = hb_dict_iter_next(x264_opts, iter))
+            iter != HB_DICT_ITER_DONE;
+            iter  = hb_dict_iter_next(x264_opts, iter))
     {
         const char *key = hb_dict_iter_key(iter);
         hb_value_t *value = hb_dict_iter_value(iter);
@@ -1445,7 +1445,7 @@ char * hb_x264_param_unparse(int bit_depth, const char *x264_preset,
             hb_dict_remove(x264_opts, "b-adapt");
         }
         if (param.i_bframe > 1 &&
-            param.i_bframe_pyramid != defaults.i_bframe_pyramid)
+                param.i_bframe_pyramid != defaults.i_bframe_pyramid)
         {
             // can be modified by: level
             if (param.i_bframe_pyramid < X264_B_PYRAMID_NONE)
@@ -1478,7 +1478,7 @@ char * hb_x264_param_unparse(int bit_depth, const char *x264_preset,
             hb_dict_remove(x264_opts, "direct");
         }
         if (!param.analyse.b_weighted_bipred !=
-            !defaults.analyse.b_weighted_bipred)
+                !defaults.analyse.b_weighted_bipred)
         {
             // can be modified by: preset ultrafast, tune fastdecode
             hb_dict_set(x264_opts, "weightb",
@@ -1510,8 +1510,8 @@ char * hb_x264_param_unparse(int bit_depth, const char *x264_preset,
         hb_dict_remove(x264_opts, "no-deblock");
     }
     if (param.b_deblocking_filter &&
-        (param.i_deblocking_filter_alphac0 != defaults.i_deblocking_filter_alphac0 ||
-         param.i_deblocking_filter_beta    != defaults.i_deblocking_filter_beta))
+            (param.i_deblocking_filter_alphac0 != defaults.i_deblocking_filter_alphac0 ||
+             param.i_deblocking_filter_beta    != defaults.i_deblocking_filter_beta))
     {
         // can be modified by: tunes
         hb_dict_set(x264_opts, "deblock",
@@ -1558,7 +1558,7 @@ char * hb_x264_param_unparse(int bit_depth, const char *x264_preset,
         hb_dict_remove(x264_opts, "fake-interlaced");
     }
     if (param.i_cqm_preset == defaults.i_cqm_preset &&
-        param.psz_cqm_file == defaults.psz_cqm_file)
+            param.psz_cqm_file == defaults.psz_cqm_file)
     {
         // can be reset to default by: profile
         hb_dict_remove(x264_opts, "cqm");
@@ -1679,7 +1679,7 @@ char * hb_x264_param_unparse(int bit_depth, const char *x264_preset,
         hb_dict_remove(x264_opts, "mvrange");
     }
     if (param.analyse.i_subpel_refine > 9 && (param.rc.i_aq_mode == 0 ||
-                                              param.analyse.i_trellis < 2))
+            param.analyse.i_trellis < 2))
     {
         // subme 10 and higher require AQ and trellis 2
         param.analyse.i_subpel_refine = 9;
@@ -1695,7 +1695,7 @@ char * hb_x264_param_unparse(int bit_depth, const char *x264_preset,
         hb_dict_remove(x264_opts, "subme");
     }
     if (!param.analyse.b_mixed_references !=
-        !defaults.analyse.b_mixed_references)
+            !defaults.analyse.b_mixed_references)
     {
         // can be modified by: presets
         hb_dict_set(x264_opts, "mixed-refs",
@@ -1745,8 +1745,8 @@ char * hb_x264_param_unparse(int bit_depth, const char *x264_preset,
         hb_dict_remove(x264_opts, "psy");
     }
     if (param.analyse.b_psy &&
-        (param.analyse.f_psy_rd      != defaults.analyse.f_psy_rd ||
-         param.analyse.f_psy_trellis != defaults.analyse.f_psy_trellis))
+            (param.analyse.f_psy_rd      != defaults.analyse.f_psy_rd ||
+             param.analyse.f_psy_trellis != defaults.analyse.f_psy_trellis))
     {
         // can be modified by: tunes
         hb_dict_set(x264_opts, "psy-rd",
@@ -1813,7 +1813,7 @@ char * hb_x264_param_unparse(int bit_depth, const char *x264_preset,
         hb_dict_remove(x264_opts, "ipratio");
     }
     if (param.i_bframe > 0 && !param.rc.b_mb_tree &&
-        param.rc.f_pb_factor != defaults.rc.f_pb_factor)
+            param.rc.f_pb_factor != defaults.rc.f_pb_factor)
     {
         // can be modified by: tune grain
         hb_dict_set(x264_opts, "pbratio",
@@ -1843,7 +1843,7 @@ char * hb_x264_param_unparse(int bit_depth, const char *x264_preset,
         hb_dict_remove(x264_opts, "aq-mode");
     }
     if (param.rc.i_aq_mode > 0 &&
-        param.rc.f_aq_strength != defaults.rc.f_aq_strength)
+            param.rc.f_aq_strength != defaults.rc.f_aq_strength)
     {
         // can be modified by: tunes
         hb_dict_set(x264_opts, "aq-strength",

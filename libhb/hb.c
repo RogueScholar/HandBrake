@@ -84,10 +84,10 @@ int hb_avcodec_open(AVCodecContext *avctx, AVCodec *codec,
     int ret;
 
     if ((thread_count == HB_FFMPEG_THREADS_AUTO || thread_count > 0) &&
-        (codec->type == AVMEDIA_TYPE_VIDEO))
+            (codec->type == AVMEDIA_TYPE_VIDEO))
     {
         avctx->thread_count = (thread_count == HB_FFMPEG_THREADS_AUTO) ?
-                               hb_get_cpu_count() / 2 + 1 : thread_count;
+                              hb_get_cpu_count() / 2 + 1 : thread_count;
         avctx->thread_type = FF_THREAD_FRAME|FF_THREAD_SLICE;
         avctx->thread_safe_callbacks = 1;
     }
@@ -208,7 +208,7 @@ hb_handle_t * hb_init( int verbose )
     /* Initialize opaque for PowerManagement purposes */
     h->system_sleep_opaque = hb_system_sleep_opaque_init();
 
-	h->title_set.list_title = hb_list_init();
+    h->title_set.list_title = hb_list_init();
     h->jobs       = hb_list_init();
 
     h->state_lock  = hb_lock_init();
@@ -626,7 +626,7 @@ hb_image_t* hb_get_preview2(hb_handle_t * h, int title_idx, int picture,
     {
         // Deinterlace and crop
         deint_buf = hb_frame_buffer_init( AV_PIX_FMT_YUV420P,
-                              title->geometry.width, title->geometry.height );
+                                          title->geometry.width, title->geometry.height );
         hb_deinterlace(deint_buf, in_buf);
         hb_picture_crop(crop_data, crop_stride, deint_buf,
                         geo->crop[0], geo->crop[2] );
@@ -642,9 +642,9 @@ hb_image_t* hb_get_preview2(hb_handle_t * h, int title_idx, int picture,
 
     // Get scaling context
     context = hb_sws_get_context(
-                title->geometry.width  - (geo->crop[2] + geo->crop[3]),
-                title->geometry.height - (geo->crop[0] + geo->crop[1]),
-                AV_PIX_FMT_YUV420P, width, height, AV_PIX_FMT_RGB32, swsflags, colorspace);
+                  title->geometry.width  - (geo->crop[2] + geo->crop[3]),
+                  title->geometry.height - (geo->crop[0] + geo->crop[1]),
+                  AV_PIX_FMT_YUV420P, width, height, AV_PIX_FMT_RGB32, swsflags, colorspace);
 
     if (context == NULL)
     {
@@ -680,29 +680,30 @@ fail:
     return image;
 }
 
- /**
- * Analyzes a frame to detect interlacing artifacts
- * and returns true if interlacing (combing) is found.
- *
- * Code taken from Thomas Oestreich's 32detect filter
- * in the Transcode project, with minor formatting changes.
- *
- * @param buf         An hb_buffer structure holding valid frame data
- * @param width       The frame's width in pixels
- * @param height      The frame's height in pixels
- * @param color_equal Sensitivity for detecting similar colors
- * @param color_diff  Sensitivity for detecting different colors
- * @param threshold   Sensitivity for flagging planes as combed
- * @param prog_equal  Sensitivity for detecting similar colors on progressive frames
- * @param prog_diff   Sensitivity for detecting different colors on progressive frames
- * @param prog_threshold Sensitivity for flagging progressive frames as combed
- */
+/**
+* Analyzes a frame to detect interlacing artifacts
+* and returns true if interlacing (combing) is found.
+*
+* Code taken from Thomas Oestreich's 32detect filter
+* in the Transcode project, with minor formatting changes.
+*
+* @param buf         An hb_buffer structure holding valid frame data
+* @param width       The frame's width in pixels
+* @param height      The frame's height in pixels
+* @param color_equal Sensitivity for detecting similar colors
+* @param color_diff  Sensitivity for detecting different colors
+* @param threshold   Sensitivity for flagging planes as combed
+* @param prog_equal  Sensitivity for detecting similar colors on progressive frames
+* @param prog_diff   Sensitivity for detecting different colors on progressive frames
+* @param prog_threshold Sensitivity for flagging progressive frames as combed
+*/
 int hb_detect_comb( hb_buffer_t * buf, int color_equal, int color_diff, int threshold, int prog_equal, int prog_diff, int prog_threshold )
 {
     int j, k, n, off, cc_1, cc_2, cc[3];
-	// int flag[3] ; // debugging flag
+    // int flag[3] ; // debugging flag
     uint16_t s1, s2, s3, s4;
-    cc_1 = 0; cc_2 = 0;
+    cc_1 = 0;
+    cc_2 = 0;
 
     if ( buf->s.flags & 16 )
     {
@@ -735,14 +736,14 @@ int hb_detect_comb( hb_buffer_t * buf, int color_equal, int color_diff, int thre
                 /* Note if the 1st and 2nd lines are more different in
                    color than the 1st and 3rd lines are similar in color.*/
                 if ( ( abs( s1 - s3 ) < color_equal ) &&
-                     ( abs( s1 - s2 ) > color_diff ) )
-                        ++cc_1;
+                        ( abs( s1 - s2 ) > color_diff ) )
+                    ++cc_1;
 
                 /* Note if the 2nd and 3rd lines are more different in
                    color than the 2nd and 4th lines are similar in color.*/
                 if ( ( abs( s2 - s4 ) < color_equal ) &&
-                     ( abs( s2 - s3 ) > color_diff) )
-                        ++cc_2;
+                        ( abs( s2 - s3 ) > color_diff) )
+                    ++cc_2;
 
                 /* Now move down 2 horizontal lines before starting over.*/
                 off += 2 * stride;
@@ -764,7 +765,7 @@ int hb_detect_comb( hb_buffer_t * buf, int color_equal, int color_diff, int thre
     if( average_cc > threshold )
     {
 #if 0
-            hb_log("Average %i combed (Threshold %i) %i/%i/%i | PTS: %"PRId64" (%fs) %s", average_cc, threshold, cc[0], cc[1], cc[2], buf->start, (float)buf->start / 90000, (buf->flags & 16) ? "Film" : "Video" );
+        hb_log("Average %i combed (Threshold %i) %i/%i/%i | PTS: %"PRId64" (%fs) %s", average_cc, threshold, cc[0], cc[1], cc[2], buf->start, (float)buf->start / 90000, (buf->flags & 16) ? "Film" : "Video" );
 #endif
         return 1;
     }
@@ -892,226 +893,231 @@ void hb_set_anamorphic_size2(hb_geometry_t *src_geo,
 
     switch (geo->mode)
     {
-        case HB_ANAMORPHIC_NONE:
+    case HB_ANAMORPHIC_NONE:
+    {
+        /* "None" anamorphic, a.k.a. 1:1.
+         */
+        double par, cropped_sar, dar;
+        par = (double)src_geo->par.num / src_geo->par.den;
+        cropped_sar = (double)cropped_width / cropped_height;
+        dar = par * cropped_sar;
+
+        /* "None" anamorphic. a.k.a. non-anamorphic
+         *  - Uses mod-compliant dimensions, set by user
+         *  - Allows users to set the either width *or* height
+         */
+        if (keep_display_aspect)
         {
-            /* "None" anamorphic, a.k.a. 1:1.
-             */
-            double par, cropped_sar, dar;
-            par = (double)src_geo->par.num / src_geo->par.den;
-            cropped_sar = (double)cropped_width / cropped_height;
-            dar = par * cropped_sar;
-
-            /* "None" anamorphic. a.k.a. non-anamorphic
-             *  - Uses mod-compliant dimensions, set by user
-             *  - Allows users to set the either width *or* height
-             */
-            if (keep_display_aspect)
-            {
-                if (!keep_height)
-                {
-                    width = MULTIPLE_MOD_UP(geo->geometry.width, mod);
-                    height = MULTIPLE_MOD(width / dar, mod);
-                }
-                else
-                {
-                    height = MULTIPLE_MOD_UP(geo->geometry.height, mod);
-                    width = MULTIPLE_MOD(height * dar, mod);
-                }
-            }
-            else
-            {
-                width = MULTIPLE_MOD_UP(geo->geometry.width, mod);
-                height = MULTIPLE_MOD_UP(geo->geometry.height, mod);
-            }
-
-            // Limit to min/max dimensions
-            if (width < HB_MIN_WIDTH)
-            {
-                width  = HB_MIN_WIDTH;
-                if (keep_display_aspect)
-                {
-                    height = MULTIPLE_MOD(width / dar, mod);
-                }
-            }
-            if (height < HB_MIN_HEIGHT)
-            {
-                height  = HB_MIN_HEIGHT;
-                if (keep_display_aspect)
-                {
-                    width = MULTIPLE_MOD(height * dar, mod);
-                }
-            }
-            if (width > maxWidth)
-            {
-                width  = maxWidth;
-                if (keep_display_aspect)
-                {
-                    height = MULTIPLE_MOD(width / dar, mod);
-                }
-            }
-            if (height > maxHeight)
-            {
-                height  = maxHeight;
-                if (keep_display_aspect)
-                {
-                    width = MULTIPLE_MOD(height * dar, mod);
-                }
-            }
-            dst_par_num = dst_par_den = 1;
-        } break;
-
-        case HB_ANAMORPHIC_STRICT:
-        {
-            /* "Strict" anamorphic.
-             *  - Uses mod2-compliant dimensions,
-             *  - Forces title - crop dimensions
-             */
-            width  = MULTIPLE_MOD_UP(cropped_width, 2);
-            height = MULTIPLE_MOD_UP(cropped_height, 2);
-
-            /* Adjust the output PAR for new width/height
-             * Film AR is the source display width / cropped source height.
-             * Output display width is the output height * film AR.
-             * Output PAR is the output display width / output storage width.
-             *
-             * i.e.
-             * source_display_width = cropped_width * source PAR
-             * AR = source_display_width / cropped_height;
-             * output_display_width = height * AR;
-             * par = output_display_width / width;
-             *
-             * When these terms are reduced, you get the following...
-             */
-            dst_par_num = (int64_t)height * cropped_width  * src_par.num;
-            dst_par_den = (int64_t)width  * cropped_height * src_par.den;
-        } break;
-
-        case HB_ANAMORPHIC_LOOSE:
-        {
-            /* "Loose" anamorphic.
-             *  - Uses mod-compliant dimensions, set by user
-             *  - Allows users to set the either width *or* height
-             */
             if (!keep_height)
             {
                 width = MULTIPLE_MOD_UP(geo->geometry.width, mod);
-                height = MULTIPLE_MOD_UP(width / storage_aspect + 0.5, mod);
+                height = MULTIPLE_MOD(width / dar, mod);
             }
             else
             {
                 height = MULTIPLE_MOD_UP(geo->geometry.height, mod);
-                width = MULTIPLE_MOD_UP(height * storage_aspect + 0.5, mod);
+                width = MULTIPLE_MOD(height * dar, mod);
             }
-
-            // Limit to min/max dimensions
-            if (width < HB_MIN_WIDTH)
-            {
-                width  = HB_MIN_WIDTH;
-                height = MULTIPLE_MOD(width / storage_aspect + 0.5, mod);
-            }
-            if (height < HB_MIN_HEIGHT)
-            {
-                height  = HB_MIN_HEIGHT;
-                width = MULTIPLE_MOD(height * storage_aspect + 0.5, mod);
-            }
-            if (width > maxWidth)
-            {
-                width = maxWidth;
-                height = MULTIPLE_MOD(width / storage_aspect + 0.5, mod);
-            }
-            if (height > maxHeight)
-            {
-                height = maxHeight;
-                width = MULTIPLE_MOD(height * storage_aspect + 0.5, mod);
-            }
-
-            /* Adjust the output PAR for new width/height
-               See comment in HB_ANAMORPHIC_STRICT */
-            dst_par_num = (int64_t)height * cropped_width  * src_par.num;
-            dst_par_den = (int64_t)width  * cropped_height * src_par.den;
-        } break;
-
-        case HB_ANAMORPHIC_CUSTOM:
+        }
+        else
         {
-            /* "Custom" anamorphic: Power User Jamboree
-               - Set everything based on specified values */
-
-            /* Time to get picture dimensions that divide cleanly.*/
-            width  = MULTIPLE_MOD_UP(geo->geometry.width, mod);
+            width = MULTIPLE_MOD_UP(geo->geometry.width, mod);
             height = MULTIPLE_MOD_UP(geo->geometry.height, mod);
+        }
 
-            // Limit to min/max dimensions
-            if (width < HB_MIN_WIDTH)
-            {
-                width  = HB_MIN_WIDTH;
-            }
-            if (height < HB_MIN_HEIGHT)
-            {
-                height  = HB_MIN_HEIGHT;
-            }
-            if (width > maxWidth)
-            {
-                width = maxWidth;
-            }
-            if (height > maxHeight)
-            {
-                height = maxHeight;
-            }
+        // Limit to min/max dimensions
+        if (width < HB_MIN_WIDTH)
+        {
+            width  = HB_MIN_WIDTH;
             if (keep_display_aspect)
             {
-                /* We can ignore the possibility of a PAR change
-                 * Adjust the output PAR for new width/height
-                 * See comment in HB_ANAMORPHIC_STRICT
-                 */
-                dst_par_num = (int64_t)height * cropped_width  *
-                                       src_par.num;
-                dst_par_den = (int64_t)width  * cropped_height *
-                                       src_par.den;
+                height = MULTIPLE_MOD(width / dar, mod);
             }
-        } break;
-
-        default:
-        case HB_ANAMORPHIC_AUTO:
+        }
+        if (height < HB_MIN_HEIGHT)
         {
-            /* "Automatic" anamorphic.
-             *  - Uses mod-compliant dimensions, set by user
-             *  - Allows users to set the either width *or* height
-             *  - Does *not* maintain original source PAR if one
-             *    or both dimensions is limited by maxWidth/maxHeight.
-             */
-            /* Anamorphic 3: Power User Jamboree
-               - Set everything based on specified values */
+            height  = HB_MIN_HEIGHT;
+            if (keep_display_aspect)
+            {
+                width = MULTIPLE_MOD(height * dar, mod);
+            }
+        }
+        if (width > maxWidth)
+        {
+            width  = maxWidth;
+            if (keep_display_aspect)
+            {
+                height = MULTIPLE_MOD(width / dar, mod);
+            }
+        }
+        if (height > maxHeight)
+        {
+            height  = maxHeight;
+            if (keep_display_aspect)
+            {
+                width = MULTIPLE_MOD(height * dar, mod);
+            }
+        }
+        dst_par_num = dst_par_den = 1;
+    }
+    break;
 
-            /* Time to get picture dimensions that divide cleanly.*/
-            width  = MULTIPLE_MOD_UP(geo->geometry.width, mod);
+    case HB_ANAMORPHIC_STRICT:
+    {
+        /* "Strict" anamorphic.
+         *  - Uses mod2-compliant dimensions,
+         *  - Forces title - crop dimensions
+         */
+        width  = MULTIPLE_MOD_UP(cropped_width, 2);
+        height = MULTIPLE_MOD_UP(cropped_height, 2);
+
+        /* Adjust the output PAR for new width/height
+         * Film AR is the source display width / cropped source height.
+         * Output display width is the output height * film AR.
+         * Output PAR is the output display width / output storage width.
+         *
+         * i.e.
+         * source_display_width = cropped_width * source PAR
+         * AR = source_display_width / cropped_height;
+         * output_display_width = height * AR;
+         * par = output_display_width / width;
+         *
+         * When these terms are reduced, you get the following...
+         */
+        dst_par_num = (int64_t)height * cropped_width  * src_par.num;
+        dst_par_den = (int64_t)width  * cropped_height * src_par.den;
+    }
+    break;
+
+    case HB_ANAMORPHIC_LOOSE:
+    {
+        /* "Loose" anamorphic.
+         *  - Uses mod-compliant dimensions, set by user
+         *  - Allows users to set the either width *or* height
+         */
+        if (!keep_height)
+        {
+            width = MULTIPLE_MOD_UP(geo->geometry.width, mod);
+            height = MULTIPLE_MOD_UP(width / storage_aspect + 0.5, mod);
+        }
+        else
+        {
             height = MULTIPLE_MOD_UP(geo->geometry.height, mod);
+            width = MULTIPLE_MOD_UP(height * storage_aspect + 0.5, mod);
+        }
 
-            // Limit to min/max dimensions
-            if (width < HB_MIN_WIDTH)
-            {
-                width  = HB_MIN_WIDTH;
-            }
-            if (height < HB_MIN_HEIGHT)
-            {
-                height  = HB_MIN_HEIGHT;
-            }
-            if (width > maxWidth)
-            {
-                width = maxWidth;
-            }
-            if (height > maxHeight)
-            {
-                height = maxHeight;
-            }
-            /* Adjust the output PAR for new width/height
+        // Limit to min/max dimensions
+        if (width < HB_MIN_WIDTH)
+        {
+            width  = HB_MIN_WIDTH;
+            height = MULTIPLE_MOD(width / storage_aspect + 0.5, mod);
+        }
+        if (height < HB_MIN_HEIGHT)
+        {
+            height  = HB_MIN_HEIGHT;
+            width = MULTIPLE_MOD(height * storage_aspect + 0.5, mod);
+        }
+        if (width > maxWidth)
+        {
+            width = maxWidth;
+            height = MULTIPLE_MOD(width / storage_aspect + 0.5, mod);
+        }
+        if (height > maxHeight)
+        {
+            height = maxHeight;
+            width = MULTIPLE_MOD(height * storage_aspect + 0.5, mod);
+        }
+
+        /* Adjust the output PAR for new width/height
+           See comment in HB_ANAMORPHIC_STRICT */
+        dst_par_num = (int64_t)height * cropped_width  * src_par.num;
+        dst_par_den = (int64_t)width  * cropped_height * src_par.den;
+    }
+    break;
+
+    case HB_ANAMORPHIC_CUSTOM:
+    {
+        /* "Custom" anamorphic: Power User Jamboree
+           - Set everything based on specified values */
+
+        /* Time to get picture dimensions that divide cleanly.*/
+        width  = MULTIPLE_MOD_UP(geo->geometry.width, mod);
+        height = MULTIPLE_MOD_UP(geo->geometry.height, mod);
+
+        // Limit to min/max dimensions
+        if (width < HB_MIN_WIDTH)
+        {
+            width  = HB_MIN_WIDTH;
+        }
+        if (height < HB_MIN_HEIGHT)
+        {
+            height  = HB_MIN_HEIGHT;
+        }
+        if (width > maxWidth)
+        {
+            width = maxWidth;
+        }
+        if (height > maxHeight)
+        {
+            height = maxHeight;
+        }
+        if (keep_display_aspect)
+        {
+            /* We can ignore the possibility of a PAR change
+             * Adjust the output PAR for new width/height
              * See comment in HB_ANAMORPHIC_STRICT
              */
-            dst_par_num = (int64_t)height * cropped_width  * src_par.num;
-            dst_par_den = (int64_t)width  * cropped_height * src_par.den;
-        } break;
+            dst_par_num = (int64_t)height * cropped_width  *
+                          src_par.num;
+            dst_par_den = (int64_t)width  * cropped_height *
+                          src_par.den;
+        }
+    }
+    break;
+
+    default:
+    case HB_ANAMORPHIC_AUTO:
+    {
+        /* "Automatic" anamorphic.
+         *  - Uses mod-compliant dimensions, set by user
+         *  - Allows users to set the either width *or* height
+         *  - Does *not* maintain original source PAR if one
+         *    or both dimensions is limited by maxWidth/maxHeight.
+         */
+        /* Anamorphic 3: Power User Jamboree
+           - Set everything based on specified values */
+
+        /* Time to get picture dimensions that divide cleanly.*/
+        width  = MULTIPLE_MOD_UP(geo->geometry.width, mod);
+        height = MULTIPLE_MOD_UP(geo->geometry.height, mod);
+
+        // Limit to min/max dimensions
+        if (width < HB_MIN_WIDTH)
+        {
+            width  = HB_MIN_WIDTH;
+        }
+        if (height < HB_MIN_HEIGHT)
+        {
+            height  = HB_MIN_HEIGHT;
+        }
+        if (width > maxWidth)
+        {
+            width = maxWidth;
+        }
+        if (height > maxHeight)
+        {
+            height = maxHeight;
+        }
+        /* Adjust the output PAR for new width/height
+         * See comment in HB_ANAMORPHIC_STRICT
+         */
+        dst_par_num = (int64_t)height * cropped_width  * src_par.num;
+        dst_par_den = (int64_t)width  * cropped_height * src_par.den;
+    }
+    break;
     }
     if (width < HB_MIN_WIDTH || height < HB_MIN_HEIGHT ||
-        width > maxWidth     || height > maxHeight)
+            width > maxWidth     || height > maxHeight)
     {
         // Limits set above may have also attempted to keep PAR and DAR.
         // If we are still outside limits, enforce them and modify
@@ -1152,7 +1158,7 @@ void hb_set_anamorphic_size2(hb_geometry_t *src_geo,
     // I.e. don't even reduce the values.
     hb_reduce(&out_par.num, &out_par.den, dst_par_num, dst_par_den);
     if (geo->mode == HB_ANAMORPHIC_CUSTOM && !keep_display_aspect &&
-        out_par.num == in_par.num && out_par.den == in_par.den)
+            out_par.num == in_par.num && out_par.den == in_par.den)
     {
         result->par.num = geo->geometry.par.num;
         result->par.den = geo->geometry.par.den;
@@ -1363,7 +1369,7 @@ static void hb_add_internal( hb_handle_t * h, hb_job_t * job, hb_list_t *list_pa
         {
             subtitle = hb_list_item( job->title->list_subtitle, i );
             if( strcmp( subtitle->iso639_2, audio_lang ) == 0 &&
-                hb_subtitle_can_force( subtitle->source ) )
+                    hb_subtitle_can_force( subtitle->source ) )
             {
                 /* Matched subtitle language with audio language, so add this to
                  * our list to scan.
@@ -1376,7 +1382,7 @@ static void hb_add_internal( hb_handle_t * h, hb_job_t * job, hb_list_t *list_pa
         }
         int count = hb_list_count(job_copy->list_subtitle);
         if (count == 0 ||
-            (count == 1 && !job_copy->select_subtitle_config.force))
+                (count == 1 && !job_copy->select_subtitle_config.force))
         {
             hb_log("Skipping subtitle scan.  No suitable subtitle tracks.");
             hb_job_close(&job_copy);
@@ -1807,7 +1813,7 @@ static void thread_func( void * _h )
     {
         /* Check if the scan thread is done */
         if( h->scan_thread &&
-            hb_thread_has_exited( h->scan_thread ) )
+                hb_thread_has_exited( h->scan_thread ) )
         {
             hb_thread_close( &h->scan_thread );
 
@@ -1836,7 +1842,7 @@ static void thread_func( void * _h )
 
         /* Check if the work thread is done */
         if( h->work_thread &&
-            hb_thread_has_exited( h->work_thread ) )
+                hb_thread_has_exited( h->work_thread ) )
         {
             hb_thread_close( &h->work_thread );
 
@@ -1878,7 +1884,7 @@ static void redirect_thread_func(void * _data)
 {
     int pfd[2];
     if (pipe(pfd))
-       return;
+        return;
 #if defined( SYS_MINGW )
     // dup2 doesn't work on windows for some stupid reason
     stderr->_file = pfd[1];
@@ -1924,7 +1930,7 @@ void hb_set_state( hb_handle_t * h, hb_state_t * s )
     hb_lock( h->state_lock );
     memcpy( &h->state, s, sizeof( hb_state_t ) );
     if( h->state.state == HB_STATE_WORKING ||
-        h->state.state == HB_STATE_SEARCHING )
+            h->state.state == HB_STATE_SEARCHING )
     {
         // Set which job is being worked on
         if (h->current_job)
@@ -1955,6 +1961,6 @@ hb_interjob_t * hb_interjob_get( hb_handle_t * h )
     return h->interjob;
 }
 
-int is_hardware_disabled(void){
+int is_hardware_disabled(void) {
     return disable_hardware;
 }

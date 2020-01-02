@@ -120,44 +120,44 @@ char * markup_escape_text(const char *str)
         }
         switch (str[ii])
         {
-            case '<':
-                markup[jj++] = '&';
-                markup[jj++] = 'l';
-                markup[jj++] = 't';
-                markup[jj++] = ';';
-                break;
-            case '>':
-                markup[jj++] = '&';
-                markup[jj++] = 'g';
-                markup[jj++] = 't';
-                markup[jj++] = ';';
-                break;
-            case '\'':
-                markup[jj++] = '&';
-                markup[jj++] = 'a';
-                markup[jj++] = 'p';
-                markup[jj++] = 'o';
-                markup[jj++] = 's';
-                markup[jj++] = ';';
-                break;
-            case '"':
-                markup[jj++] = '&';
-                markup[jj++] = 'q';
-                markup[jj++] = 'u';
-                markup[jj++] = 'o';
-                markup[jj++] = 't';
-                markup[jj++] = ';';
-                break;
-            case '&':
-                markup[jj++] = '&';
-                markup[jj++] = 'a';
-                markup[jj++] = 'm';
-                markup[jj++] = 'p';
-                markup[jj++] = ';';
-                break;
-            default:
-                markup[jj++] = str[ii];
-                break;
+        case '<':
+            markup[jj++] = '&';
+            markup[jj++] = 'l';
+            markup[jj++] = 't';
+            markup[jj++] = ';';
+            break;
+        case '>':
+            markup[jj++] = '&';
+            markup[jj++] = 'g';
+            markup[jj++] = 't';
+            markup[jj++] = ';';
+            break;
+        case '\'':
+            markup[jj++] = '&';
+            markup[jj++] = 'a';
+            markup[jj++] = 'p';
+            markup[jj++] = 'o';
+            markup[jj++] = 's';
+            markup[jj++] = ';';
+            break;
+        case '"':
+            markup[jj++] = '&';
+            markup[jj++] = 'q';
+            markup[jj++] = 'u';
+            markup[jj++] = 'o';
+            markup[jj++] = 't';
+            markup[jj++] = ';';
+            break;
+        case '&':
+            markup[jj++] = '&';
+            markup[jj++] = 'a';
+            markup[jj++] = 'm';
+            markup[jj++] = 'p';
+            markup[jj++] = ';';
+            break;
+        default:
+            markup[jj++] = str[ii];
+            break;
         }
         markup[jj] = 0;
     }
@@ -256,49 +256,52 @@ start_element(
     hb_value_t *current = queue_peek_head(pd->stack);
     switch (id.id)
     {
-        case P_PLIST:
-        { // Ignore
-        } break;
-        case P_KEY:
-        {
-            if (pd->key) free(pd->key);
-            pd->key = NULL;
-        } break;
-        case P_DICT:
-        {
-            gval = hb_dict_init();
-            queue_push_head(pd->stack, gval);
-        } break;
-        case P_ARRAY:
-        {
-            gval = hb_value_array_init();
-            queue_push_head(pd->stack, gval);
-        } break;
-        case P_INTEGER:
-        {
-        } break;
-        case P_REAL:
-        {
-        } break;
-        case P_STRING:
-        {
-        } break;
-        case P_DATE:
-        {
-        } break;
-        case P_TRUE:
-        {
-        } break;
-        case P_FALSE:
-        {
-        } break;
-        case P_DATA:
-        {
-        } break;
+    case P_PLIST:
+    {   // Ignore
+    } break;
+    case P_KEY:
+    {
+        if (pd->key) free(pd->key);
+        pd->key = NULL;
+    }
+    break;
+    case P_DICT:
+    {
+        gval = hb_dict_init();
+        queue_push_head(pd->stack, gval);
+    }
+    break;
+    case P_ARRAY:
+    {
+        gval = hb_value_array_init();
+        queue_push_head(pd->stack, gval);
+    }
+    break;
+    case P_INTEGER:
+    {
+    } break;
+    case P_REAL:
+    {
+    } break;
+    case P_STRING:
+    {
+    } break;
+    case P_DATE:
+    {
+    } break;
+    case P_TRUE:
+    {
+    } break;
+    case P_FALSE:
+    {
+    } break;
+    case P_DATA:
+    {
+    } break;
     }
     // Add the element to the current container
     if (gval)
-    { // There's an element to add
+    {   // There's an element to add
         if (current == NULL)
         {
             pd->plist = gval;
@@ -375,49 +378,57 @@ end_element(
         value = "";
     switch (id)
     {
-        case P_PLIST:
-        { // Ignore
-        } break;
-        case P_KEY:
-        {
-            if (pd->key) free(pd->key);
-            pd->key = strdup(value);
-            return;
-        }
-        case P_DICT:
-        {
-            queue_pop_head(pd->stack);
-        } break;
-        case P_ARRAY:
-        {
-            queue_pop_head(pd->stack);
-        } break;
-        case P_INTEGER:
-        {
-            uint64_t val = strtoll(value, NULL, 0);
-            gval = hb_value_int(val);
-        } break;
-        case P_REAL:
-        {
-            double val = strtod(value, NULL);
-            gval = hb_value_double(val);
-        } break;
-        case P_STRING:
-        {
-            gval = hb_value_string(value);
-        } break;
-        case P_TRUE:
-        {
-            gval = hb_value_bool(1);
-        } break;
-        case P_FALSE:
-        {
-            gval = hb_value_bool(0);
-        } break;
-        default:
-        {
-            hb_error("Unhandled plist type %d", id);
-        } break;
+    case P_PLIST:
+    {   // Ignore
+    } break;
+    case P_KEY:
+    {
+        if (pd->key) free(pd->key);
+        pd->key = strdup(value);
+        return;
+    }
+    case P_DICT:
+    {
+        queue_pop_head(pd->stack);
+    }
+    break;
+    case P_ARRAY:
+    {
+        queue_pop_head(pd->stack);
+    }
+    break;
+    case P_INTEGER:
+    {
+        uint64_t val = strtoll(value, NULL, 0);
+        gval = hb_value_int(val);
+    }
+    break;
+    case P_REAL:
+    {
+        double val = strtod(value, NULL);
+        gval = hb_value_double(val);
+    }
+    break;
+    case P_STRING:
+    {
+        gval = hb_value_string(value);
+    }
+    break;
+    case P_TRUE:
+    {
+        gval = hb_value_bool(1);
+    }
+    break;
+    case P_FALSE:
+    {
+        gval = hb_value_bool(0);
+    }
+    break;
+    default:
+    {
+        hb_error("Unhandled plist type %d", id);
+    }
+    break;
     }
     if (gval)
     {
@@ -606,8 +617,8 @@ gval_write(FILE *file, hb_value_t *gval)
         indent++;
 
         for (iter = hb_dict_iter_init(gval);
-             iter != HB_DICT_ITER_DONE;
-             iter = hb_dict_iter_next(gval, iter))
+                iter != HB_DICT_ITER_DONE;
+                iter = hb_dict_iter_next(gval, iter))
         {
             key = hb_dict_iter_key(iter);
             val = hb_dict_iter_value(iter);

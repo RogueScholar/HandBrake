@@ -45,7 +45,7 @@ int enctheoraInit( hb_work_object_t * w, hb_job_t * job )
     pv->job = job;
 
     if( job->pass_id == HB_PASS_ENCODE_1ST ||
-        job->pass_id == HB_PASS_ENCODE_2ND )
+            job->pass_id == HB_PASS_ENCODE_2ND )
     {
         char * filename;
         filename = hb_get_temporary_filename("theroa.log");
@@ -89,7 +89,7 @@ int enctheoraInit( hb_work_object_t * w, hb_job_t * job )
     }
 
     keyframe_frequency = ((double)job->orig_vrate.num / job->orig_vrate.den +
-                                  0.5) * 10;
+                          0.5) * 10;
 
     hb_log("theora: keyint: %i", keyframe_frequency);
 
@@ -118,7 +118,7 @@ int enctheoraInit( hb_work_object_t * w, hb_job_t * job )
         hb_log("theora: Could not set soft ratecontrol");
     }
     if( job->pass_id == HB_PASS_ENCODE_1ST ||
-        job->pass_id == HB_PASS_ENCODE_2ND )
+            job->pass_id == HB_PASS_ENCODE_2ND )
     {
         arg = keyframe_frequency * 7 >> 1;
         ret = th_encode_ctl(pv->ctx, TH_ENCCTL_SET_RATE_BUFFER, &arg, sizeof(arg));
@@ -211,7 +211,7 @@ void enctheoraClose( hb_work_object_t * w )
  *
  **********************************************************************/
 int enctheoraWork( hb_work_object_t * w, hb_buffer_t ** buf_in,
-                 hb_buffer_t ** buf_out )
+                   hb_buffer_t ** buf_out )
 {
     hb_work_private_t * pv = w->private_data;
     hb_job_t * job = pv->job;
@@ -280,7 +280,7 @@ int enctheoraWork( hb_work_object_t * w, hb_buffer_t ** buf_in,
             if( size > 80 - pv->stat_fill )
                 size = 80 - pv->stat_fill;
             if( size > 0 &&
-                fread( pv->stat_buf+pv->stat_fill, 1, size, pv->file ) < size )
+                    fread( pv->stat_buf+pv->stat_fill, 1, size, pv->file ) < size )
             {
                 hb_error("Could not read frame data from two-pass data file!");
                 *job->done_error = HB_ERROR_UNKNOWN;

@@ -37,7 +37,7 @@ void     ghb_low_disk_check(signal_user_data_t *ud);
 void     ghb_queue_progress_set_visible(signal_user_data_t *ud, int index,
                                         gboolean visible);
 void     ghb_queue_progress_set_fraction(signal_user_data_t *ud, int index,
-                                         gdouble frac);
+        gdouble frac);
 void     ghb_queue_update_status(signal_user_data_t *ud, int index, int status);
 void     ghb_queue_update_status_icon(signal_user_data_t *ud, int index);
 void     ghb_queue_select_log(signal_user_data_t * ud);

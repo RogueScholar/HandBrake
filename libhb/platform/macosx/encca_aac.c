@@ -170,13 +170,13 @@ int encCoreAudioInit(hb_work_object_t *w, hb_job_t *job, enum AAC_MODE mode)
     bzero(&output, sizeof(AudioStreamBasicDescription));
     switch (mode)
     {
-        case AAC_MODE_HE:
-            output.mFormatID = kAudioFormatMPEG4AAC_HE;
-            break;
-        case AAC_MODE_LC:
-        default:
-            output.mFormatID = kAudioFormatMPEG4AAC;
-            break;
+    case AAC_MODE_HE:
+        output.mFormatID = kAudioFormatMPEG4AAC_HE;
+        break;
+    case AAC_MODE_LC:
+    default:
+        output.mFormatID = kAudioFormatMPEG4AAC;
+        break;
     }
     output.mSampleRate = (Float64)audio->config.out.samplerate;
     output.mChannelsPerFrame = pv->nchannels;
@@ -190,13 +190,13 @@ int encCoreAudioInit(hb_work_object_t *w, hb_job_t *job, enum AAC_MODE mode)
         bzero(&output, sizeof(AudioStreamBasicDescription));
         switch (mode)
         {
-            case AAC_MODE_HE:
-                output.mFormatID = kAudioFormatMPEG4AAC_HE;
-                break;
-            case AAC_MODE_LC:
-            default:
-                output.mFormatID = kAudioFormatMPEG4AAC;
-                break;
+        case AAC_MODE_HE:
+            output.mFormatID = kAudioFormatMPEG4AAC_HE;
+            break;
+        case AAC_MODE_LC:
+        default:
+            output.mFormatID = kAudioFormatMPEG4AAC;
+            break;
         }
         output.mChannelsPerFrame = pv->nchannels;
 
@@ -399,7 +399,7 @@ static OSStatus inInputDataProc(AudioConverterRef converter, UInt32 *npackets,
     }
 
     buffers->mBuffers[0].mDataByteSize = MIN(pv->ibytes,
-                                             pv->isamplesiz * *npackets);
+                                         pv->isamplesiz * *npackets);
     pv->buf = calloc(1, buffers->mBuffers[0].mDataByteSize);
     buffers->mBuffers[0].mData = pv->buf;
 
@@ -438,7 +438,7 @@ static hb_buffer_t* Encode(hb_work_object_t *w)
        without data to get out the remaining packets.
      */
     if (pv->input_done != 1 &&
-        (pv->ibytes = hb_list_bytes(pv->list)) < pv->isamples * pv->isamplesiz)
+            (pv->ibytes = hb_list_bytes(pv->list)) < pv->isamples * pv->isamplesiz)
     {
         return NULL;
     }
@@ -456,8 +456,8 @@ static hb_buffer_t* Encode(hb_work_object_t *w)
     obuflist.mBuffers[0].mData = obuf->data;
 
     OSStatus err = AudioConverterFillComplexBuffer(pv->converter,
-                                                   inInputDataProc, pv,
-                                                   &npackets, &obuflist, &odesc);
+                   inInputDataProc, pv,
+                   &npackets, &obuflist, &odesc);
 
     if (err != noErr && err != 1)
     {
