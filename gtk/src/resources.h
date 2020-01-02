@@ -27,6 +27,6 @@
 
 void ghb_resource_init(void);
 void ghb_resource_free();
-GhbValue* ghb_resource_get(const gchar *name);
+GhbValue *ghb_resource_get(const gchar *name);
 
 #endif // _RESOURCES_H_

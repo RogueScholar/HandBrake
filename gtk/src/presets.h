@@ -35,9 +35,9 @@ void ghb_pref_save(GhbValue *settings, const gchar *key);
 void ghb_pref_set(GhbValue *settings, const gchar *key);
 void ghb_prefs_store(void);
 void ghb_save_queue(GhbValue *queue);
-GhbValue* ghb_load_old_queue(int pid);
+GhbValue *ghb_load_old_queue(int pid);
 void ghb_remove_old_queue_file(int pid);
-gchar* ghb_get_user_config_dir(gchar *subdir);
+gchar *ghb_get_user_config_dir(gchar *subdir);
 void ghb_override_user_config_dir(char *dir);
 void ghb_settings_to_ui(signal_user_data_t *ud, GhbValue *dict);
 void ghb_clear_presets_selection(signal_user_data_t *ud);
@@ -48,14 +48,14 @@ void ghb_presets_list_init(signal_user_data_t *ud,
 void ghb_presets_menu_init(signal_user_data_t *ud);
 int ghb_find_pid_file();
 void ghb_write_pid_file();
-GhbValue* ghb_get_current_preset(signal_user_data_t *ud);
+GhbValue *ghb_get_current_preset(signal_user_data_t *ud);
 void ghb_preset_to_settings(GhbValue *settings, GhbValue *preset);
 void ghb_prefs_to_settings(GhbValue *settings);
-GhbValue* ghb_read_settings_file(const gchar *path);
+GhbValue *ghb_read_settings_file(const gchar *path);
 void ghb_write_settings_file(const gchar *path, GhbValue *dict);
-GhbValue* ghb_create_copy_mask(GhbValue *settings);
-GhbValue* ghb_settings_to_preset(GhbValue *settings);
-void ghb_preset_menu_button_refresh(signal_user_data_t *ud,
-                                    const char *name, int type);
+GhbValue *ghb_create_copy_mask(GhbValue *settings);
+GhbValue *ghb_settings_to_preset(GhbValue *settings);
+void ghb_preset_menu_button_refresh(signal_user_data_t *ud, const char *name,
+                                    int type);
 
 #endif // _GHB_PRESETS_H_
