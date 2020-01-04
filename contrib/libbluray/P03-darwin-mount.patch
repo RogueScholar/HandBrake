@@ -8,6 +8,6 @@ index 6d555a1..dd8e5a5 100644
      if (device_path) {
 -        char *disc_root = mount_get_mountpoint(device_path);
 +        char *disc_root = str_dup(device_path);
- 
+
          /* make sure path ends to slash */
          if (!disc_root || (disc_root[0] && disc_root[strlen(disc_root) - 1] == DIR_SEP_CHAR)) {
