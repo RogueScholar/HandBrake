@@ -10,13 +10,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol HBSecurityScope <NSObject>
 
-///  Given an instance, make the resource referenced by the instance accessible to the process.
+///  Given an instance, make the resource referenced by the instance accessible
+///  to the process.
 - (BOOL)startAccessingSecurityScopedResource;
 
-/// Revokes the access granted to the instance by a prior successful call to startAccessingSecurityScopedResource.
+/// Revokes the access granted to the instance by a prior successful call to
+/// startAccessingSecurityScopedResource.
 - (void)stopAccessingSecurityScopedResource;
 
-/// Refresh the resources (for example if the instance stores a security scoped bookmark, it will recreate the urls from the bookmark.
+/// Refresh the resources (for example if the instance stores a security scoped
+/// bookmark, it will recreate the urls from the bookmark.
 - (void)refreshSecurityScopedResources;
 
 @end
