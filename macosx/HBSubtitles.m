@@ -125,7 +125,7 @@
     for (HBSubtitlesTrack *subTrack in self.tracks)
     {
         if (subTrack != track && subTrack.isEnabled
-            && subTrack.sourceTrackIdx > FOREIGN_TRACK_INDEX && !subTrack.canPassthru)
+                && subTrack.sourceTrackIdx > FOREIGN_TRACK_INDEX && !subTrack.canPassthru)
         {
             result = NO;
         }
@@ -251,7 +251,7 @@
 - (HBSubtitlesTrack *)trackFromSourceTrackIndex:(NSInteger)index
 {
     HBSubtitlesTrack *track = [[HBSubtitlesTrack alloc] initWithTrackIdx:index container:self.container
-                                                              dataSource:self delegate:self];
+                                                        dataSource:self delegate:self];
     track.undo = self.undo;
     return track;
 }
@@ -352,23 +352,23 @@
 - (void)validateBurned:(NSUInteger)index
 {
     [self.tracks enumerateObjectsUsingBlock:^(HBSubtitlesTrack *track, NSUInteger idx, BOOL *stop)
-    {
-        if (idx != index && track.sourceTrackIdx != FOREIGN_TRACK_INDEX)
-        {
-            track.burnedIn = NO;
-        }
-    }];
+                {
+                    if (idx != index && track.sourceTrackIdx != FOREIGN_TRACK_INDEX)
+                    {
+                        track.burnedIn = NO;
+                    }
+                }];
 }
 
 - (void)validateDefault:(NSUInteger)index
 {
     [self.tracks enumerateObjectsUsingBlock:^(HBSubtitlesTrack *obj, NSUInteger idx, BOOL *stop)
-    {
-        if (idx != index && obj.sourceTrackIdx != FOREIGN_TRACK_INDEX)
-        {
-            obj.def = NO;
-        }
-    }];
+                {
+                    if (idx != index && obj.sourceTrackIdx != FOREIGN_TRACK_INDEX)
+                    {
+                        obj.def = NO;
+                    }
+                }];
 }
 
 - (void)refreshSecurityScopedResources
@@ -451,9 +451,14 @@
 {
     self = [super init];
 
-    decodeInt(_container); if (_container != HB_MUX_MP4 && _container != HB_MUX_MKV && _container != HB_MUX_WEBM) { goto fail; }
+    decodeInt(_container);
+    if (_container != HB_MUX_MP4 && _container != HB_MUX_MKV && _container != HB_MUX_WEBM) {
+        goto fail;
+    }
     decodeCollectionOfObjectsOrFail(_sourceTracks, NSArray, HBTitleSubtitlesTrack);
-    if (_sourceTracks.count < 1) { goto fail; }
+    if (_sourceTracks.count < 1) {
+        goto fail;
+    }
     decodeCollectionOfObjectsOrFail(_tracks, NSMutableArray, HBSubtitlesTrack);
 
     for (HBSubtitlesTrack *track in _tracks)

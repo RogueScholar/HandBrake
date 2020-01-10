@@ -199,7 +199,7 @@ static void *HBControllerLogLevelContext = &HBControllerLogLevelContext;
         if (!_currentDestination || [[NSFileManager defaultManager] fileExistsAtPath:_currentDestination.path isDirectory:nil] == NO)
         {
             _currentDestination = [NSURL fileURLWithPath:[NSSearchPathForDirectoriesInDomains(NSMoviesDirectory, NSUserDomainMask, YES) firstObject]
-                                             isDirectory:YES];
+                                         isDirectory:YES];
         }
 
 #ifdef __SANDBOX_ENABLED__
@@ -276,27 +276,27 @@ static void *HBControllerLogLevelContext = &HBControllerLogLevelContext;
     // Add the observers
 
     [self.core addObserver:self forKeyPath:@"state"
-                   options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionInitial
-                   context:HBControllerScanCoreContext];
+               options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionInitial
+               context:HBControllerScanCoreContext];
 
     [NSNotificationCenter.defaultCenter addObserverForName:HBQueueDidStartNotification object:_queue queue:NSOperationQueue.mainQueue usingBlock:^(NSNotification * _Nonnull note) {
-        self.bottomConstrain.animator.constant = 0;
-        self->fRipIndicator.hidden = NO;
-    }];
+                                           self.bottomConstrain.animator.constant = 0;
+                                           self->fRipIndicator.hidden = NO;
+                                       }];
 
     [NSNotificationCenter.defaultCenter addObserverForName:HBQueueDidCompleteNotification object:_queue queue:NSOperationQueue.mainQueue usingBlock:^(NSNotification * _Nonnull note) {
-        self.bottomConstrain.animator.constant = -WINDOW_HEIGHT_OFFSET;
-        self->fRipIndicator.hidden = YES;
-    }];
+                                           self.bottomConstrain.animator.constant = -WINDOW_HEIGHT_OFFSET;
+                                           self->fRipIndicator.hidden = YES;
+                                       }];
 
     [NSNotificationCenter.defaultCenter addObserverForName:HBQueueProgressNotification object:_queue queue:NSOperationQueue.mainQueue usingBlock:^(NSNotification * _Nonnull note) {
-        HBQueueItem *item = self.queue.currentItem;
-        NSString *info;
-        if (item)
+                                           HBQueueItem *item = self.queue.currentItem;
+                                           NSString *info;
+                                           if (item)
         {
             info = [NSString stringWithFormat:NSLocalizedString(@"Encoding %@\n%@", @""),
-                          self.queue.currentItem.outputFileName,
-                          note.userInfo[HBQueueProgressNotificationInfoKey]];
+                             self.queue.currentItem.outputFileName,
+                             note.userInfo[HBQueueProgressNotificationInfoKey]];
         }
         else
         {
@@ -312,21 +312,21 @@ static void *HBControllerLogLevelContext = &HBControllerLogLevelContext;
     }];
 
     [NSNotificationCenter.defaultCenter addObserverForName:HBQueueDidChangeStateNotification object:_queue queue:NSOperationQueue.mainQueue usingBlock:^(NSNotification * _Nonnull note) {
-        [self updateQueueUI];
-    }];
+                                           [self updateQueueUI];
+                                       }];
 
     [self updateQueueUI];
 
     // Presets menu
     self.presetsMenuBuilder = [[HBPresetsMenuBuilder alloc] initWithMenu:self.presetsPopup.menu
-                                                                  action:@selector(selectPresetFromMenu:)
-                                                                    size:[NSFont smallSystemFontSize]
-                                                          presetsManager:presetManager];
+                                                            action:@selector(selectPresetFromMenu:)
+                                                            size:[NSFont smallSystemFontSize]
+                                                            presetsManager:presetManager];
     [self.presetsMenuBuilder build];
 
     // Log level
     [NSUserDefaultsController.sharedUserDefaultsController addObserver:self forKeyPath:@"values.LoggingLevel"
-                                                               options:0 context:HBControllerLogLevelContext];
+                                                           options:0 context:HBControllerLogLevelContext];
 
     self.bottomConstrain.constant = -WINDOW_HEIGHT_OFFSET_INIT;
 
@@ -338,7 +338,7 @@ static void *HBControllerLogLevelContext = &HBControllerLogLevelContext;
 
 - (nullable NSArray<NSURL *> *)fileURLsFromPasteboard:(NSPasteboard *)pasteboard
 {
-    NSDictionary *options = @{NSPasteboardURLReadingFileURLsOnlyKey: @YES};
+    NSDictionary *options = @ {NSPasteboardURLReadingFileURLsOnlyKey: @YES};
     return [pasteboard readObjectsForClasses:@[[NSURL class]] options:options];
 }
 
@@ -530,7 +530,7 @@ static void *HBControllerLogLevelContext = &HBControllerLogLevelContext;
     SEL action = menuItem.action;
 
     if (action == @selector(addToQueue:) || action == @selector(addAllTitlesToQueue:) ||
-        action == @selector(addTitlesToQueue:) || action == @selector(showAddPresetPanel:))
+            action == @selector(addTitlesToQueue:) || action == @selector(showAddPresetPanel:))
     {
         return self.job && self.window.attachedSheet == nil;
     }
@@ -583,12 +583,12 @@ static void *HBControllerLogLevelContext = &HBControllerLogLevelContext;
         return [fPresetsView validateUserInterfaceItem:menuItem] && self.job != nil;
     }
     if (action == @selector(selectDefaultPreset:) ||
-        action == @selector(insertCategory:))
+            action == @selector(insertCategory:))
     {
         return self.job != nil;
     }
     if (action == @selector(deletePreset:) ||
-        action == @selector(setDefaultPreset:))
+            action == @selector(setDefaultPreset:))
     {
         return self.job != nil && self.edited == NO;//fixme
     }
@@ -668,54 +668,54 @@ static void *HBControllerLogLevelContext = &HBControllerLogLevelContext;
         NSUInteger min_title_duration_seconds = [NSUserDefaults.standardUserDefaults integerForKey:HBMinTitleScanSeconds];
 
         [self.core scanURL:mediaURL
-                titleIndex:index
-                  previews:hb_num_previews minDuration:min_title_duration_seconds keepPreviews:YES
-           progressHandler:^(HBState state, HBProgress progress, NSString *info)
-         {
-             self->fSrcDVD2Field.stringValue = info;
-             self->fScanIndicator.hidden = NO;
-             self->fScanHorizontalLine.hidden = YES;
-             self->fScanIndicator.doubleValue = progress.percent;
-         }
-         completionHandler:^(HBCoreResult result)
-         {
-             self->fScanHorizontalLine.hidden = NO;
-             self->fScanIndicator.hidden = YES;
-             self->fScanIndicator.indeterminate = NO;
-             self->fScanIndicator.doubleValue = 0.0;
+                   titleIndex:index
+                   previews:hb_num_previews minDuration:min_title_duration_seconds keepPreviews:YES
+                   progressHandler:^(HBState state, HBProgress progress, NSString *info)
+                  {
+                      self->fSrcDVD2Field.stringValue = info;
+                      self->fScanIndicator.hidden = NO;
+                      self->fScanHorizontalLine.hidden = YES;
+                      self->fScanIndicator.doubleValue = progress.percent;
+                  }
+                  completionHandler:^(HBCoreResult result)
+        {
+            self->fScanHorizontalLine.hidden = NO;
+            self->fScanIndicator.hidden = YES;
+            self->fScanIndicator.indeterminate = NO;
+            self->fScanIndicator.doubleValue = 0.0;
 
-             if (result == HBCoreResultDone)
-             {
-                 for (HBTitle *title in self.core.titles)
-                 {
-                     [self->fSrcTitlePopUp addItemWithTitle:title.description];
-                 }
-                 self.window.representedURL = mediaURL;
-                 self.window.title = mediaURL.lastPathComponent;
-             }
-             else
-             {
-                 // We display a message if a valid source was not chosen
-                 self->fSrcDVD2Field.stringValue = NSLocalizedString(@"No Valid Source Found", @"Main Window -> Info text");
-             }
+            if (result == HBCoreResultDone)
+            {
+                for (HBTitle *title in self.core.titles)
+                {
+                    [self->fSrcTitlePopUp addItemWithTitle:title.description];
+                }
+                self.window.representedURL = mediaURL;
+                self.window.title = mediaURL.lastPathComponent;
+            }
+            else
+            {
+                // We display a message if a valid source was not chosen
+                self->fSrcDVD2Field.stringValue = NSLocalizedString(@"No Valid Source Found", @"Main Window -> Info text");
+            }
 
-             // Set the last searched source directory in the prefs here
-             if ([NSWorkspace.sharedWorkspace isFilePackageAtPath:mediaURL.URLByDeletingLastPathComponent.path])
-             {
-                 [NSUserDefaults.standardUserDefaults setURL:mediaURL.URLByDeletingLastPathComponent.URLByDeletingLastPathComponent forKey:HBLastSourceDirectoryURL];
-             }
-             else
-             {
-                 [NSUserDefaults.standardUserDefaults setURL:mediaURL.URLByDeletingLastPathComponent forKey:HBLastSourceDirectoryURL];
-             }
+            // Set the last searched source directory in the prefs here
+            if ([NSWorkspace.sharedWorkspace isFilePackageAtPath:mediaURL.URLByDeletingLastPathComponent.path])
+            {
+                [NSUserDefaults.standardUserDefaults setURL:mediaURL.URLByDeletingLastPathComponent.URLByDeletingLastPathComponent forKey:HBLastSourceDirectoryURL];
+            }
+            else
+            {
+                [NSUserDefaults.standardUserDefaults setURL:mediaURL.URLByDeletingLastPathComponent forKey:HBLastSourceDirectoryURL];
+            }
 
-             completionHandler(self.core.titles);
-             [self.window.toolbar validateVisibleItems];
-             if (@available(macOS 10.12.2, *))
-             {
-                 [self _touchBar_validateUserInterfaceItems];
-             }
-         }];
+            completionHandler(self.core.titles);
+            [self.window.toolbar validateVisibleItems];
+            if (@available(macOS 10.12.2, *))
+            {
+                [self _touchBar_validateUserInterfaceItems];
+            }
+        }];
     }
     else
     {
@@ -726,13 +726,13 @@ static void *HBControllerLogLevelContext = &HBControllerLogLevelContext;
 - (void)openURL:(NSURL *)fileURL titleIndex:(NSUInteger)index
 {
     [self scanURL:fileURL titleIndex:index completionHandler:^(NSArray<HBTitle *> *titles)
-    {
-        if (titles.count)
-        {
-            [[NSDocumentController sharedDocumentController] noteNewRecentDocumentURL:fileURL];
+         {
+             if (titles.count)
+             {
+                 [[NSDocumentController sharedDocumentController] noteNewRecentDocumentURL:fileURL];
 
-            HBTitle *featuredTitle = titles.firstObject;
-            for (HBTitle *title in titles)
+                 HBTitle *featuredTitle = titles.firstObject;
+                 for (HBTitle *title in titles)
             {
                 if (title.isFeatured)
                 {
@@ -763,23 +763,23 @@ static void *HBControllerLogLevelContext = &HBControllerLogLevelContext;
     {
         [job refreshSecurityScopedResources];
         [self scanURL:job.fileURL titleIndex:job.titleIdx completionHandler:^(NSArray<HBTitle *> *titles)
-        {
-            if (titles.count)
-            {
-                // If the scan was cached, reselect
-                // the original title
-                for (HBTitle *title in titles)
-                {
-                    if (title.index == job.titleIdx)
-                    {
-                        job.title = title;
-                        break;
-                    }
-                }
+             {
+                 if (titles.count)
+                 {
+                     // If the scan was cached, reselect
+                     // the original title
+                     for (HBTitle *title in titles)
+                     {
+                         if (title.index == job.titleIdx)
+                         {
+                             job.title = title;
+                             break;
+                         }
+                     }
 
-                // Else just one title or a title specific rescan
-                // select the first title
-                if (!job.title)
+                     // Else just one title or a title specific rescan
+                     // select the first title
+                     if (!job.title)
                 {
                     job.title = titles.firstObject;
                 }
@@ -929,28 +929,28 @@ static void *HBControllerLogLevelContext = &HBControllerLogLevelContext;
     [panel setCanChooseDirectories:YES];
 
     NSURL *sourceDirectory;
-	if ([NSUserDefaults.standardUserDefaults URLForKey:HBLastSourceDirectoryURL])
-	{
-		sourceDirectory = [NSUserDefaults.standardUserDefaults URLForKey:HBLastSourceDirectoryURL];
-	}
-	else
-	{
+    if ([NSUserDefaults.standardUserDefaults URLForKey:HBLastSourceDirectoryURL])
+    {
+        sourceDirectory = [NSUserDefaults.standardUserDefaults URLForKey:HBLastSourceDirectoryURL];
+    }
+    else
+    {
         sourceDirectory = [NSURL fileURLWithPath:[NSSearchPathForDirectoriesInDomains(NSDesktopDirectory, NSUserDomainMask, YES) firstObject]
-                                                       isDirectory:YES];
-	}
+                                 isDirectory:YES];
+    }
 
     panel.directoryURL = sourceDirectory;
     panel.accessoryView = self.openTitleView;
     panel.accessoryViewDisclosed = YES;
 
     [panel beginSheetModalForWindow:self.window completionHandler: ^(NSInteger result)
-    {
-        if (result == NSModalResponseOK)
-         {
-             NSInteger titleIdx = self.scanSpecificTitle ? self.scanSpecificTitleIdx : 0;
-             [self openURL:panel.URL titleIndex:titleIdx];
-         }
-     }];
+          {
+              if (result == NSModalResponseOK)
+              {
+                  NSInteger titleIdx = self.scanSpecificTitle ? self.scanSpecificTitleIdx : 0;
+            [self openURL:panel.URL titleIndex:titleIdx];
+        }
+    }];
 }
 
 #pragma mark - GUI Controls Changed Methods
@@ -970,20 +970,20 @@ static void *HBControllerLogLevelContext = &HBControllerLogLevelContext;
     }
 
     [panel beginSheetModalForWindow:self.window completionHandler:^(NSInteger result)
-     {
-         if (result == NSModalResponseOK)
-         {
-             self.job.outputURL = panel.URL;
-             self.currentDestination = panel.URL;
+          {
+              if (result == NSModalResponseOK)
+              {
+                  self.job.outputURL = panel.URL;
+                  self.currentDestination = panel.URL;
 
-             // Save this path to the prefs so that on next browse destination window it opens there
-             [NSUserDefaults.standardUserDefaults setObject:[HBUtilities bookmarkFromURL:panel.URL]
-                                                       forKey:HBLastDestinationDirectoryBookmark];
-             [NSUserDefaults.standardUserDefaults setURL:panel.URL
-                                                  forKey:HBLastDestinationDirectoryURL];
+                  // Save this path to the prefs so that on next browse destination window it opens there
+            [NSUserDefaults.standardUserDefaults setObject:[HBUtilities bookmarkFromURL:panel.URL]
+                                                 forKey:HBLastDestinationDirectoryBookmark];
+            [NSUserDefaults.standardUserDefaults setURL:panel.URL
+                                                 forKey:HBLastDestinationDirectoryURL];
 
-         }
-     }];
+        }
+    }];
 }
 
 - (IBAction)titlePopUpChanged:(NSPopUpButton *)sender
@@ -1112,11 +1112,11 @@ static void *HBControllerLogLevelContext = &HBControllerLogLevelContext;
     if ([self.window HB_endEditing])
     {
         [self runDestinationAlerts:self.job completionHandler:^(NSModalResponse returnCode) {
-            if (returnCode == NSAlertSecondButtonReturn)
-            {
-                [self doAddToQueue];
-            }
-        }];
+                 if (returnCode == NSAlertSecondButtonReturn)
+                 {
+                     [self doAddToQueue];
+                 }
+             }];
     }
 }
 
@@ -1139,7 +1139,7 @@ static void *HBControllerLogLevelContext = &HBControllerLogLevelContext;
 {
     // Rip or Cancel ?
     if (_queue.isEncoding || _queue.canEncode)
-	{
+    {
         // Displays an alert asking user if the want to cancel encoding of current job.
         [_delegate toggleStartCancel:self];
     }
@@ -1148,11 +1148,11 @@ static void *HBControllerLogLevelContext = &HBControllerLogLevelContext;
         if ([self.window HB_endEditing])
         {
             [self runDestinationAlerts:self.job completionHandler:^(NSModalResponse returnCode) {
-                if (returnCode == NSAlertSecondButtonReturn)
-                {
-                    [self doRip];
-                }
-            }];
+                     if (returnCode == NSAlertSecondButtonReturn)
+                     {
+                         [self doRip];
+                     }
+                 }];
         }
     }
 }
@@ -1170,8 +1170,8 @@ static void *HBControllerLogLevelContext = &HBControllerLogLevelContext;
     [self.window HB_endEditing];
 
     self.titlesSelectionController = [[HBTitleSelectionController alloc] initWithTitles:self.core.titles
-                                                                             presetName:self.job.presetName
-                                                                               delegate:self];
+                                                                         presetName:self.job.presetName
+                                                                         delegate:self];
 
     [self.window beginSheet:self.titlesSelectionController.window completionHandler:nil];
 }
@@ -1247,11 +1247,11 @@ static void *HBControllerLogLevelContext = &HBControllerLogLevelContext;
         [alert setAlertStyle:NSAlertStyleCritical];
 
         [alert beginSheetModalForWindow:self.window completionHandler:^(NSModalResponse returnCode) {
-            if (returnCode == NSAlertSecondButtonReturn)
-            {
-                [self->_queue addJobs:jobs];
-            }
-        }];
+                  if (returnCode == NSAlertSecondButtonReturn)
+                  {
+                      [self->_queue addJobs:jobs];
+                  }
+              }];
     }
     else
     {
@@ -1268,7 +1268,7 @@ static void *HBControllerLogLevelContext = &HBControllerLogLevelContext;
 
 - (IBAction)showPreviewWindow:(id)sender
 {
-	[fPreviewController showWindow:sender];
+    [fPreviewController showWindow:sender];
 }
 
 - (IBAction)showTabView:(id)sender
@@ -1379,15 +1379,15 @@ static void *HBControllerLogLevelContext = &HBControllerLogLevelContext;
 
     // Show the add panel
     HBAddPresetController *addPresetController = [[HBAddPresetController alloc] initWithPreset:[self createPresetFromCurrentSettings]
-                                                                                 presetManager:presetManager
-                                                                                   customWidth:self.job.picture.width
-                                                                                  customHeight:self.job.picture.height
-                                                                               defaultToCustom:defaultToCustom];
+                                          presetManager:presetManager
+                                          customWidth:self.job.picture.width
+                                          customHeight:self.job.picture.height
+                                          defaultToCustom:defaultToCustom];
 
     [self.window beginSheet:addPresetController.window completionHandler:^(NSModalResponse returnCode) {
-        if (returnCode == NSModalResponseOK)
-        {
-            self->fPresetsView.selectedPreset = addPresetController.preset;
+                    if (returnCode == NSModalResponseOK)
+                    {
+                        self->fPresetsView.selectedPreset = addPresetController.preset;
             [self applyPreset:self->fPresetsView.selectedPreset];
             [[NSNotificationCenter defaultCenter] postNotificationName:HBPresetsChangedNotification object:nil];
         }
@@ -1398,7 +1398,7 @@ static void *HBControllerLogLevelContext = &HBControllerLogLevelContext;
 {
     HBMutablePreset *preset = [self.currentPreset mutableCopy];
 
-	// Set whether or not this is a user preset or factory 0 is factory, 1 is user
+    // Set whether or not this is a user preset or factory 0 is factory, 1 is user
     preset[@"Type"] = @1;
     preset[@"Default"] = @NO;
 
@@ -1413,11 +1413,11 @@ static void *HBControllerLogLevelContext = &HBControllerLogLevelContext;
     fPresetsView.selectedPreset = _currentPreset;
 
     __block HBRenamePresetController *renamePresetController = [[HBRenamePresetController alloc] initWithPreset:self.currentPreset
-                                                                                          presetManager:presetManager];
+                                             presetManager:presetManager];
     [self.window beginSheet:renamePresetController.window completionHandler:^(NSModalResponse returnCode) {
-        if (returnCode == NSModalResponseOK)
-        {
-            [self applyPreset:self->fPresetsView.selectedPreset];
+                    if (returnCode == NSModalResponseOK)
+                    {
+                        [self applyPreset:self->fPresetsView.selectedPreset];
             [[NSNotificationCenter defaultCenter] postNotificationName:HBPresetsChangedNotification object:nil];
         }
         renamePresetController = nil;

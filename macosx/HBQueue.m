@@ -76,11 +76,11 @@ NSString * const HBQueueItemNotificationItemKey = @"HBQueueItemNotificationItemK
 
         // Set up observers
         [self.core addObserver:self forKeyPath:@"state"
-                       options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionInitial
-                       context:HBQueueContext];
+                   options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionInitial
+                   context:HBQueueContext];
 
         [NSUserDefaultsController.sharedUserDefaultsController addObserver:self forKeyPath:@"values.LoggingLevel"
-                                                                   options:0 context:HBQueueLogLevelContext];
+                                                               options:0 context:HBQueueLogLevelContext];
     }
     return self;
 }
@@ -139,7 +139,7 @@ NSString * const HBQueueItemNotificationItemKey = @"HBQueueItemNotificationItemK
     for (HBQueueItem *item in self.items)
     {
         if ((item.state == HBQueueItemStateReady || item.state == HBQueueItemStateWorking)
-            && [item.completeOutputURL isEqualTo:url])
+                && [item.completeOutputURL isEqualTo:url])
         {
             return YES;
         }
@@ -163,7 +163,7 @@ NSString * const HBQueueItemNotificationItemKey = @"HBQueueItemNotificationItemK
         currentObjectIndex++;
     }
 
-    [NSNotificationCenter.defaultCenter postNotificationName:HBQueueDidAddItemNotification object:self userInfo:@{HBQueueItemNotificationIndexesKey: indexes}];
+    [NSNotificationCenter.defaultCenter postNotificationName:HBQueueDidAddItemNotification object:self userInfo:@ {HBQueueItemNotificationIndexesKey: indexes}];
 
     NSUndoManager *undo = self.undoManager;
     [[undo prepareWithInvocationTarget:self] removeItemsAtIndexes:indexes];
@@ -207,7 +207,7 @@ NSString * const HBQueueItemNotificationItemKey = @"HBQueueItemNotificationItemK
         [self.items removeObjectsAtIndexes:indexes];
     }
 
-    [NSNotificationCenter.defaultCenter postNotificationName:HBQueueDidRemoveItemNotification object:self userInfo:@{HBQueueItemNotificationIndexesKey: indexes}];
+    [NSNotificationCenter.defaultCenter postNotificationName:HBQueueDidRemoveItemNotification object:self userInfo:@ {HBQueueItemNotificationIndexesKey: indexes}];
 
     NSUndoManager *undo = self.undoManager;
     [[undo prepareWithInvocationTarget:self] addItems:removeItems atIndexes:indexes];
@@ -252,9 +252,10 @@ NSString * const HBQueueItemNotificationItemKey = @"HBQueueItemNotificationItemK
     }
 
     [NSNotificationCenter.defaultCenter postNotificationName:HBQueueDidMoveItemNotification
-                                                      object:self
-                                                    userInfo:@{HBQueueItemNotificationSourceIndexesKey: dest,
-                                                               HBQueueItemNotificationTargetIndexesKey: source}];
+                                        object:self
+                                        userInfo:@ {HBQueueItemNotificationSourceIndexesKey: dest,
+                                                    HBQueueItemNotificationTargetIndexesKey: source
+                                                   }];
 
     NSUndoManager *undo = self.undoManager;
     [[undo prepareWithInvocationTarget:self] moveQueueItemsAtIndexes:source toIndexes:dest];
@@ -295,9 +296,10 @@ NSString * const HBQueueItemNotificationItemKey = @"HBQueueItemNotificationItemK
     }
 
     [NSNotificationCenter.defaultCenter postNotificationName:HBQueueDidMoveItemNotification
-                                                      object:self
-                                                    userInfo:@{HBQueueItemNotificationSourceIndexesKey: newDest,
-                                                               HBQueueItemNotificationTargetIndexesKey: newSource}];
+                                        object:self
+                                        userInfo:@ {HBQueueItemNotificationSourceIndexesKey: newDest,
+                                                    HBQueueItemNotificationTargetIndexesKey: newSource
+                                                   }];
 
     NSUndoManager *undo = self.undoManager;
     [[undo prepareWithInvocationTarget:self] moveQueueItemsAtIndexes:newSource toIndexes:newDest];
@@ -325,10 +327,10 @@ NSString * const HBQueueItemNotificationItemKey = @"HBQueueItemNotificationItemK
 {
     [self.items beginTransaction];
     NSIndexSet *indexes = [self.items indexesOfObjectsUsingBlock:^BOOL(HBQueueItem *item) {
-        return (item.state == HBQueueItemStateCompleted || item.state == HBQueueItemStateCanceled);
-    }];
+                   return (item.state == HBQueueItemStateCompleted || item.state == HBQueueItemStateCanceled);
+               }];
     [self removeItemsAtIndexes:indexes];
-    [NSNotificationCenter.defaultCenter postNotificationName:HBQueueDidRemoveItemNotification object:self userInfo:@{@"indexes": indexes}];
+    [NSNotificationCenter.defaultCenter postNotificationName:HBQueueDidRemoveItemNotification object:self userInfo:@ {@"indexes": indexes}];
     [self.items commit];
 }
 
@@ -346,8 +348,8 @@ NSString * const HBQueueItemNotificationItemKey = @"HBQueueItemNotificationItemK
 {
     [self.items beginTransaction];
     NSIndexSet *indexes = [self.items indexesOfObjectsUsingBlock:^BOOL(HBQueueItem *item) {
-        return (item.state != HBQueueItemStateWorking);
-    }];
+                   return (item.state != HBQueueItemStateWorking);
+               }];
     [self removeItemsAtIndexes:indexes];
     [self.items commit];
 }
@@ -356,8 +358,8 @@ NSString * const HBQueueItemNotificationItemKey = @"HBQueueItemNotificationItemK
 {
     [self.items beginTransaction];
     NSIndexSet *indexes = [self.items indexesOfObjectsUsingBlock:^BOOL(HBQueueItem *item) {
-        return (item.state == HBQueueItemStateCompleted);
-    }];
+                   return (item.state == HBQueueItemStateCompleted);
+               }];
     [self removeItemsAtIndexes:indexes];
     [self.items commit];
 }
@@ -386,7 +388,7 @@ NSString * const HBQueueItemNotificationItemKey = @"HBQueueItemNotificationItemK
     }
 
     [self updateStats];
-    [NSNotificationCenter.defaultCenter postNotificationName:HBQueueDidChangeItemNotification object:self userInfo:@{HBQueueItemNotificationIndexesKey: indexes}];
+    [NSNotificationCenter.defaultCenter postNotificationName:HBQueueDidChangeItemNotification object:self userInfo:@ {HBQueueItemNotificationIndexesKey: indexes}];
     [self.items commit];
 }
 
@@ -394,8 +396,8 @@ NSString * const HBQueueItemNotificationItemKey = @"HBQueueItemNotificationItemK
 {
     [self.items beginTransaction];
     NSIndexSet *indexes = [self.items indexesOfObjectsUsingBlock:^BOOL(HBQueueItem *item) {
-        return (item.state != HBQueueItemStateWorking);
-    }];
+                   return (item.state != HBQueueItemStateWorking);
+               }];
     [self resetItemsAtIndexes:indexes];
     [self.items commit];
 }
@@ -404,8 +406,8 @@ NSString * const HBQueueItemNotificationItemKey = @"HBQueueItemNotificationItemK
 {
     [self.items beginTransaction];
     NSIndexSet *indexes = [self.items indexesOfObjectsUsingBlock:^BOOL(HBQueueItem *item) {
-        return (item.state == HBQueueItemStateFailed);
-    }];
+                   return (item.state == HBQueueItemStateFailed);
+               }];
     [self resetItemsAtIndexes:indexes];
     [self.items commit];
 }
@@ -432,7 +434,7 @@ NSString * const HBQueueItemNotificationItemKey = @"HBQueueItemNotificationItemK
     }
 
     [self updateStats];
-    [NSNotificationCenter.defaultCenter postNotificationName:HBQueueDidChangeItemNotification object:self userInfo:@{HBQueueItemNotificationIndexesKey: indexes}];
+    [NSNotificationCenter.defaultCenter postNotificationName:HBQueueDidChangeItemNotification object:self userInfo:@ {HBQueueItemNotificationIndexesKey: indexes}];
     [self.items commit];
 }
 
@@ -616,8 +618,9 @@ NSString * const HBQueueItemNotificationItemKey = @"HBQueueItemNotificationItemK
             self.currentItem = nextItem;
             NSIndexSet *indexes = [NSIndexSet indexSetWithIndex:[self.items indexOfObject:nextItem]];
 
-            [NSNotificationCenter.defaultCenter postNotificationName:HBQueueDidStartItemNotification object:self userInfo:@{HBQueueItemNotificationItemKey: nextItem,
-                                                                                                                            HBQueueItemNotificationIndexesKey: indexes}];
+            [NSNotificationCenter.defaultCenter postNotificationName:HBQueueDidStartItemNotification object:self userInfo:@ {HBQueueItemNotificationItemKey: nextItem,
+                                                       HBQueueItemNotificationIndexesKey: indexes
+                                                                                                                            }];
 
             // now we can go ahead and scan the new pending queue item
             [self encodeItem:nextItem];
@@ -657,40 +660,42 @@ NSString * const HBQueueItemNotificationItemKey = @"HBQueueItemNotificationItemK
 
     // Mark the encode just finished
     switch (result) {
-        case HBCoreResultDone:
-            item.state = HBQueueItemStateCompleted;
-            break;
-        case HBCoreResultCanceled:
-            item.state = HBQueueItemStateCanceled;
-            break;
-        default:
-            item.state = HBQueueItemStateFailed;
-            break;
+    case HBCoreResultDone:
+        item.state = HBQueueItemStateCompleted;
+        break;
+    case HBCoreResultCanceled:
+        item.state = HBQueueItemStateCanceled;
+        break;
+    default:
+        item.state = HBQueueItemStateFailed;
+        break;
     }
 
     // Update UI
     NSString *info = nil;
     switch (result) {
-        case HBCoreResultDone:
-            info = NSLocalizedString(@"Encode Finished.", @"Queue status");
-            break;
-        case HBCoreResultCanceled:
-            info = NSLocalizedString(@"Encode Canceled.", @"Queue status");
-            break;
-        default:
-            info = NSLocalizedString(@"Encode Failed.", @"Queue status");
-            break;
+    case HBCoreResultDone:
+        info = NSLocalizedString(@"Encode Finished.", @"Queue status");
+        break;
+    case HBCoreResultCanceled:
+        info = NSLocalizedString(@"Encode Canceled.", @"Queue status");
+        break;
+    default:
+        info = NSLocalizedString(@"Encode Failed.", @"Queue status");
+        break;
     }
 
     self.currentItem = nil;
 
-    [NSNotificationCenter.defaultCenter postNotificationName:HBQueueProgressNotification object:self userInfo:@{HBQueueProgressNotificationPercentKey: @1.0,
-                                                                                                                HBQueueProgressNotificationInfoKey: info}];
+    [NSNotificationCenter.defaultCenter postNotificationName:HBQueueProgressNotification object:self userInfo:@ {HBQueueProgressNotificationPercentKey: @1.0,
+                                               HBQueueProgressNotificationInfoKey: info
+                                                                                                                }];
 
     NSUInteger index = [self.items indexOfObject:item];
     NSIndexSet *indexes = index != NSNotFound ? [NSIndexSet indexSetWithIndex:index] : [NSIndexSet indexSet];
-    [NSNotificationCenter.defaultCenter postNotificationName:HBQueueDidCompleteItemNotification object:self userInfo:@{HBQueueItemNotificationItemKey: item,
-                                                                                                                       HBQueueItemNotificationIndexesKey: indexes}];
+    [NSNotificationCenter.defaultCenter postNotificationName:HBQueueDidCompleteItemNotification object:self userInfo:@ {HBQueueItemNotificationItemKey: item,
+                                               HBQueueItemNotificationIndexesKey: indexes
+                                                                                                                       }];
 
     [self.items commit];
 }
@@ -705,8 +710,9 @@ NSString * const HBQueueItemNotificationItemKey = @"HBQueueItemNotificationItemK
     // Progress handler
     void (^progressHandler)(HBState state, HBProgress progress, NSString *info) = ^(HBState state, HBProgress progress, NSString *info)
     {
-        [NSNotificationCenter.defaultCenter postNotificationName:HBQueueProgressNotification object:self userInfo:@{HBQueueProgressNotificationPercentKey: @0,
-                                                                                                                    HBQueueProgressNotificationInfoKey: info}];
+        [NSNotificationCenter.defaultCenter postNotificationName:HBQueueProgressNotification object:self userInfo:@ {HBQueueProgressNotificationPercentKey: @0,
+                                                   HBQueueProgressNotificationInfoKey: info
+                                                                                                                    }];
     };
 
     // Completion handler
@@ -728,12 +734,12 @@ NSString * const HBQueueItemNotificationItemKey = @"HBQueueItemNotificationItemK
     // Only scan 10 previews before an encode - additional previews are
     // only useful for autocrop and static previews, which are already taken care of at this point
     [self.core scanURL:item.fileURL
-            titleIndex:item.job.titleIdx
-              previews:10
-           minDuration:0
-          keepPreviews:NO
-       progressHandler:progressHandler
-     completionHandler:completionHandler];
+               titleIndex:item.job.titleIdx
+               previews:10
+               minDuration:0
+               keepPreviews:NO
+               progressHandler:progressHandler
+               completionHandler:completionHandler];
 }
 
 /**
@@ -753,19 +759,21 @@ NSString * const HBQueueItemNotificationItemKey = @"HBQueueItemNotificationItemK
         if (state == HBStateMuxing)
         {
             [NSNotificationCenter.defaultCenter postNotificationName:HBQueueProgressNotification
-                                                              object:self
-                                                            userInfo:@{HBQueueProgressNotificationPercentKey: @1,
-                                                                       HBQueueProgressNotificationInfoKey: info}];
+                                                object:self
+                                                userInfo:@ {HBQueueProgressNotificationPercentKey: @1,
+                                                            HBQueueProgressNotificationInfoKey: info
+                                                           }];
         }
         else
         {
             [NSNotificationCenter.defaultCenter postNotificationName:HBQueueProgressNotification
-                                                              object:self
-                                                            userInfo:@{HBQueueProgressNotificationPercentKey: @(progress.percent),
-                                                                       HBQueueProgressNotificationHoursKey: @(progress.hours),
-                                                                       HBQueueProgressNotificationMinutesKey: @(progress.minutes),
-                                                                       HBQueueProgressNotificationSecondsKey: @(progress.seconds),
-                                                                       HBQueueProgressNotificationInfoKey: info}];
+                                                object:self
+                                                userInfo:@ {HBQueueProgressNotificationPercentKey: @(progress.percent),
+                                                            HBQueueProgressNotificationHoursKey: @(progress.hours),
+                                                            HBQueueProgressNotificationMinutesKey: @(progress.minutes),
+                                                            HBQueueProgressNotificationSecondsKey: @(progress.seconds),
+                                                            HBQueueProgressNotificationInfoKey: info
+                                                           }];
         }
     };
 

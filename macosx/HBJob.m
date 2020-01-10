@@ -119,14 +119,14 @@ NSString *HBChaptersChangedNotification  = @"HBChaptersChangedNotification";
     preset[@"AlignAVStart"] = @(self.alignAVStart);
 
     [@[self.video, self.filters, self.picture, self.audio, self.subtitles] makeObjectsPerformSelector:@selector(writeToPreset:)
-                                                                                                           withObject:preset];
+                   withObject:preset];
 }
 
 - (void)setUndo:(NSUndoManager *)undo
 {
     _undo = undo;
     [@[self.video, self.range, self.filters, self.picture, self.audio, self.subtitles] makeObjectsPerformSelector:@selector(setUndo:)
-                                                                                                       withObject:_undo];
+                   withObject:_undo];
     [self.chapterTitles makeObjectsPerformSelector:@selector(setUndo:) withObject:_undo];
 }
 
@@ -174,8 +174,9 @@ NSString *HBChaptersChangedNotification  = @"HBChaptersChangedNotification";
         {
             if (outError)
             {
-                *outError = [NSError errorWithDomain:@"HBError" code:0 userInfo:@{NSLocalizedDescriptionKey: HBKitLocalizedString(@"Invalid name", @"HBJob -> invalid name error description"),
-                                                                                  NSLocalizedRecoverySuggestionErrorKey: HBKitLocalizedString(@"The file name can't contain the / character.", @"HBJob -> invalid name error recovery suggestion")}];
+                *outError = [NSError errorWithDomain:@"HBError" code:0 userInfo:@ {NSLocalizedDescriptionKey: HBKitLocalizedString(@"Invalid name", @"HBJob -> invalid name error description"),
+                                     NSLocalizedRecoverySuggestionErrorKey: HBKitLocalizedString(@"The file name can't contain the / character.", @"HBJob -> invalid name error recovery suggestion")
+                                                                                  }];
             }
             return NO;
         }
@@ -183,8 +184,9 @@ NSString *HBChaptersChangedNotification  = @"HBChaptersChangedNotification";
         {
             if (outError)
             {
-                *outError = [NSError errorWithDomain:@"HBError" code:0 userInfo:@{NSLocalizedDescriptionKey: HBKitLocalizedString(@"Invalid name", @"HBJob -> invalid name error description"),
-                                                                                  NSLocalizedRecoverySuggestionErrorKey: HBKitLocalizedString(@"The file name can't be empty.", @"HBJob -> invalid name error recovery suggestion")}];
+                *outError = [NSError errorWithDomain:@"HBError" code:0 userInfo:@ {NSLocalizedDescriptionKey: HBKitLocalizedString(@"Invalid name", @"HBJob -> invalid name error description"),
+                                     NSLocalizedRecoverySuggestionErrorKey: HBKitLocalizedString(@"The file name can't be empty.", @"HBJob -> invalid name error recovery suggestion")
+                                                                                  }];
             }
             return NO;
         }
@@ -194,8 +196,9 @@ NSString *HBChaptersChangedNotification  = @"HBChaptersChangedNotification";
     {
         if (outError)
         {
-            *outError = [NSError errorWithDomain:@"HBError" code:0 userInfo:@{NSLocalizedDescriptionKey: HBKitLocalizedString(@"Invalid name", @"HBJob -> invalid name error description"),
-                                                                              NSLocalizedRecoverySuggestionErrorKey: HBKitLocalizedString(@"The file name can't be empty.", @"HBJob -> invalid name error recovery suggestion")}];
+            *outError = [NSError errorWithDomain:@"HBError" code:0 userInfo:@ {NSLocalizedDescriptionKey: HBKitLocalizedString(@"Invalid name", @"HBJob -> invalid name error description"),
+                                 NSLocalizedRecoverySuggestionErrorKey: HBKitLocalizedString(@"The file name can't be empty.", @"HBJob -> invalid name error recovery suggestion")
+                                                                              }];
         }
         return NO;
     }
@@ -402,8 +405,8 @@ NSString *HBChaptersChangedNotification  = @"HBChaptersChangedNotification";
     if (!_fileURLBookmark)
     {
         _fileURLBookmark = [HBUtilities bookmarkFromURL:_fileURL
-                                                options:NSURLBookmarkCreationWithSecurityScope |
-                                                        NSURLBookmarkCreationSecurityScopeAllowOnlyReadAccess];
+                                        options:NSURLBookmarkCreationWithSecurityScope |
+                                        NSURLBookmarkCreationSecurityScopeAllowOnlyReadAccess];
     }
 
     encodeObject(_fileURLBookmark);
@@ -449,7 +452,10 @@ NSString *HBChaptersChangedNotification  = @"HBChaptersChangedNotification";
     {
         decodeObjectOrFail(_name, NSString);
         decodeObjectOrFail(_presetName, NSString);
-        decodeInt(_titleIdx); if (_titleIdx < 0) { goto fail; }
+        decodeInt(_titleIdx);
+        if (_titleIdx < 0) {
+            goto fail;
+        }
 
 #ifdef __SANDBOX_ENABLED__
         decodeObject(_fileURLBookmark, NSData)
@@ -482,8 +488,14 @@ NSString *HBChaptersChangedNotification  = @"HBChaptersChangedNotification";
 
         decodeObject(_outputFileName, NSString);
 
-        decodeInt(_container); if (_container != HB_MUX_MP4 && _container != HB_MUX_MKV && _container != HB_MUX_WEBM) { goto fail; }
-        decodeInt(_angle); if (_angle < 0) { goto fail; }
+        decodeInt(_container);
+        if (_container != HB_MUX_MP4 && _container != HB_MUX_MKV && _container != HB_MUX_WEBM) {
+            goto fail;
+        }
+        decodeInt(_angle);
+        if (_angle < 0) {
+            goto fail;
+        }
         decodeBool(_mp4HttpOptimize);
         decodeBool(_mp4iPodCompatible);
         decodeBool(_alignAVStart);

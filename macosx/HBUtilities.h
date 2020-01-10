@@ -14,9 +14,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface HBUtilities : NSObject
 
-/**
- *  Returns a formatted string that contains the application version.
- */
+    /**
+     *  Returns a formatted string that contains the application version.
+     */
 + (NSString *)handBrakeVersion;
 
 /**

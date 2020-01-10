@@ -77,7 +77,9 @@
     return self;
 }
 
-+ (BOOL)supportsSecureCoding { return YES; }
++ (BOOL)supportsSecureCoding {
+    return YES;
+}
 
 - (void)encodeWithCoder:(nonnull NSCoder *)coder
 {
@@ -192,7 +194,9 @@ fail:
 #endif
 }
 
-+ (BOOL)supportsSecureCoding { return YES ;}
++ (BOOL)supportsSecureCoding {
+    return YES ;
+}
 
 - (void)encodeWithCoder:(nonnull NSCoder *)coder
 {
@@ -206,7 +210,7 @@ fail:
         if (!_bookmark)
         {
             _bookmark = [HBUtilities bookmarkFromURL:_fileURL
-                                                options:NSURLBookmarkCreationWithSecurityScope | NSURLBookmarkCreationSecurityScopeAllowOnlyReadAccess];
+                                     options:NSURLBookmarkCreationWithSecurityScope | NSURLBookmarkCreationSecurityScopeAllowOnlyReadAccess];
         }
         encodeObject(_bookmark);
     }
@@ -314,17 +318,17 @@ fail:
     if (self.hb_title->type == HB_BD_TYPE)
     {
         return [NSString stringWithFormat:@"%d - %@ - %05d.MPLS",
-                 self.hb_title->index, self.timeCode, self.hb_title->playlist];
+                         self.hb_title->index, self.timeCode, self.hb_title->playlist];
     }
     else if (self.hb_title->type == HB_DVD_TYPE)
     {
         return [NSString stringWithFormat:@"%d - %@",
-                self.hb_title->index, self.timeCode];
+                         self.hb_title->index, self.timeCode];
     }
     else
     {
         return [NSString stringWithFormat:@"%d - %@ - %@",
-                self.hb_title->index, self.timeCode,  @(self.hb_title->name)];
+                         self.hb_title->index, self.timeCode,  @(self.hb_title->name)];
     }
 }
 
@@ -337,7 +341,7 @@ fail:
     if (_hb_title->geometry.par.num != 1 || _hb_title->geometry.par.den != 1)
     {
         [format appendFormat:@" (%dx%d)", _hb_title->geometry.width * _hb_title->geometry.par.num / _hb_title->geometry.par.den,
-         _hb_title->geometry.height];
+                _hb_title->geometry.height];
     }
 
     [format appendString:@", "];
@@ -401,7 +405,7 @@ fail:
 - (NSString *)timeCode
 {
     return [NSString stringWithFormat:@"%02d:%02d:%02d",
-            self.hb_title->hours, self.hb_title->minutes, self.hb_title->seconds];
+                     self.hb_title->hours, self.hb_title->minutes, self.hb_title->seconds];
 }
 
 - (int)width
@@ -508,9 +512,9 @@ fail:
                 }
 
                 [chapters addObject:[[HBChapter alloc] initWithTitle:title
-                                                               index:i + 1
-                                                           timestamp:currentTime
-                                                            duration:chapter->duration]];
+                                     index:i + 1
+                                     timestamp:currentTime
+                                     duration:chapter->duration]];
                 currentTime += chapter->duration;
             }
         }
