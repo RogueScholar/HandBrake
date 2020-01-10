@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithJob:(HBJob *)job;
 
-@property (nonatomic, readwrite, weak) HBJob *job;
+@property(nonatomic, readwrite, weak) HBJob *job;
 
 - (void)containerChanged;
 - (void)applyPreset:(HBPreset *)preset jobSettings:(NSDictionary *)settings;
@@ -37,8 +37,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithJob:(HBJob *)job;
 
-@property (nonatomic, readwrite, weak) HBJob *job;
-@property (nonatomic, readwrite) int container;
+@property(nonatomic, readwrite, weak) HBJob *job;
+@property(nonatomic, readwrite) int container;
 
 - (void)applyPreset:(HBPreset *)preset jobSettings:(NSDictionary *)settings;
 
@@ -48,8 +48,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithJob:(HBJob *)job;
 
-@property (nonatomic, readwrite, weak) HBJob *job;
-@property (nonatomic, readwrite) int container;
+@property(nonatomic, readwrite, weak) HBJob *job;
+@property(nonatomic, readwrite) int container;
 
 - (void)applyPreset:(HBPreset *)preset jobSettings:(NSDictionary *)settings;
 
@@ -68,4 +68,3 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 NS_ASSUME_NONNULL_END
-

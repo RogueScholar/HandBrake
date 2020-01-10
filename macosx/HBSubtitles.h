@@ -4,9 +4,9 @@
  Homepage: <http://handbrake.fr/>.
  It may be used under the terms of the GNU General Public License. */
 
-#import <Foundation/Foundation.h>
 #import "HBPresetCoding.h"
 #import "HBSecurityAccessToken.h"
+#import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -22,19 +22,19 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)addExternalTrackFromURL:(NSURL *)fileURL;
 
-@property (nonatomic, readonly) NSArray<HBTitleSubtitlesTrack *> *sourceTracks;
-@property (nonatomic, readonly) NSMutableArray<HBSubtitlesTrack *> *tracks;
+@property(nonatomic, readonly) NSArray<HBTitleSubtitlesTrack *> *sourceTracks;
+@property(nonatomic, readonly) NSMutableArray<HBSubtitlesTrack *> *tracks;
 
-@property (nonatomic, readwrite, strong) HBSubtitlesDefaults *defaults;
+@property(nonatomic, readwrite, strong) HBSubtitlesDefaults *defaults;
 
-@property (nonatomic, readwrite, weak, nullable) NSUndoManager *undo;
+@property(nonatomic, readwrite, weak, nullable) NSUndoManager *undo;
 
-@property (nonatomic, readonly) NSUInteger countOfTracks;
+@property(nonatomic, readonly) NSUInteger countOfTracks;
 - (HBSubtitlesTrack *)objectInTracksAtIndex:(NSUInteger)index;
-- (void)insertObject:(HBSubtitlesTrack *)audioObject inTracksAtIndex:(NSUInteger)index;
+- (void)insertObject:(HBSubtitlesTrack *)audioObject
+     inTracksAtIndex:(NSUInteger)index;
 - (void)removeObjectFromTracksAtIndex:(NSUInteger)index;
 
 @end
 
 NS_ASSUME_NONNULL_END
-
