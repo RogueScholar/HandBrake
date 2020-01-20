@@ -21,15 +21,15 @@ extern NSString *HBPresetsChangedNotification;
  */
 @interface HBPresetsManager : NSObject
 
-    /**
-     *  The root of the presets tree.
-     */
-@property (nonatomic, readonly) HBPreset *root;
+/**
+ *  The root of the presets tree.
+ */
+@property(nonatomic, readonly) HBPreset *root;
 
 /**
  *  defaultPreset and its index path in the tree
  */
-@property (nonatomic, readwrite, strong) HBPreset *defaultPreset;
+@property(nonatomic, readwrite, strong) HBPreset *defaultPreset;
 
 /**
  *  Returns a HBPresetManager with the presets loaded at the passed URL.
@@ -59,14 +59,16 @@ extern NSString *HBPresetsChangedNotification;
  */
 - (void)deletePresetAtIndexPath:(NSIndexPath *)idx;
 
-- (void)replacePresetAtIndexPath:(NSIndexPath *)idx withPreset:(HBPreset *)preset;
+- (void)replacePresetAtIndexPath:(NSIndexPath *)idx
+                      withPreset:(HBPreset *)preset;
 
 /**
  *  Returns the index path of the specified object.
  *
  *  @param preset the preset.
  *
- *  @return The index path whose corresponding value is equal to the preset. Returns nil if not found.
+ *  @return The index path whose corresponding value is equal to the preset.
+ * Returns nil if not found.
  */
 - (nullable NSIndexPath *)indexPathOfPreset:(HBPreset *)preset;
 
