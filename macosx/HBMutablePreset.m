@@ -8,7 +8,7 @@
 
 @interface HBPreset (HBMutablePreset)
 
-@property (nonatomic, strong, nullable) NSMutableDictionary *content;
+@property(nonatomic, strong, nullable) NSMutableDictionary *content;
 - (void)cleanUp;
 - (void)resetBuiltInAndDefaultState;
 
@@ -16,24 +16,20 @@
 
 @implementation HBMutablePreset
 
-- (void)setObject:(id)obj forKey:(NSString *)key
-{
-    self.content[key] = obj;
+- (void)setObject:(id)obj forKey:(NSString *)key {
+  self.content[key] = obj;
 }
 
-- (void)setObject:(id)obj forKeyedSubscript:(NSString *)key
-{
-    self.content[key] = obj;
+- (void)setObject:(id)obj forKeyedSubscript:(NSString *)key {
+  self.content[key] = obj;
 }
 
-- (void)cleanUp
-{
-    [super cleanUp];
+- (void)cleanUp {
+  [super cleanUp];
 }
 
-- (void)resetBuiltInAndDefaultState
-{
-    [super resetBuiltInAndDefaultState];
+- (void)resetBuiltInAndDefaultState {
+  [super resetBuiltInAndDefaultState];
 }
 
 @end
