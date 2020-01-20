@@ -81,7 +81,7 @@
         if ([preset isEqualTo:self.manager.defaultPreset])
         {
             NSAttributedString *newTitle = [[NSAttributedString alloc] initWithString:preset.name
-                                                                           attributes:@{NSFontAttributeName: [NSFont boldSystemFontOfSize:self.size]}];
+                                                                       attributes:@ {NSFontAttributeName: [NSFont boldSystemFontOfSize:self.size]}];
             [item setAttributedTitle:newTitle];
         }
     }

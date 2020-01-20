@@ -45,8 +45,8 @@
     self.name.stringValue = self.preset.name;
 
     [NSNotificationCenter.defaultCenter addObserver:self
-                                           selector:@selector(controlTextDidChange:)
-                                               name:NSControlTextDidChangeNotification object:nil];
+                                        selector:@selector(controlTextDidChange:)
+                                        name:NSControlTextDidChangeNotification object:nil];
 }
 
 - (void)dealloc

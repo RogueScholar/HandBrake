@@ -85,8 +85,8 @@ NSString *HBPresetsChangedNotification = @"HBPresetsChangedNotification";
     hb_presets_current_version(&major, &minor, &micro);
 
     if ([dict[@"VersionMajor"] intValue] > major ||
-        ([dict[@"VersionMajor"] intValue] == major && [dict[@"VersionMinor"] intValue] > minor) ||
-        ([dict[@"VersionMajor"] intValue] == major && [dict[@"VersionMinor"] intValue] == minor && [dict[@"VersionMicro"] intValue] > micro))
+            ([dict[@"VersionMajor"] intValue] == major && [dict[@"VersionMinor"] intValue] > minor) ||
+            ([dict[@"VersionMajor"] intValue] == major && [dict[@"VersionMinor"] intValue] == minor && [dict[@"VersionMicro"] intValue] > micro))
     {
         return YES;
     }
@@ -100,8 +100,8 @@ NSString *HBPresetsChangedNotification = @"HBPresetsChangedNotification";
     hb_presets_current_version(&major, &minor, &micro);
 
     if (major != [dict[@"VersionMajor"] intValue] ||
-        minor != [dict[@"VersionMinor"] intValue] ||
-        micro != [dict[@"VersionMicro"] intValue])
+            minor != [dict[@"VersionMinor"] intValue] ||
+            micro != [dict[@"VersionMicro"] intValue])
     {
         return YES;
     }
@@ -111,8 +111,8 @@ NSString *HBPresetsChangedNotification = @"HBPresetsChangedNotification";
 - (NSURL *)backupURLfromURL:(NSURL *)url versionMajor:(int)major minor:(int)minor micro:(int)micro
 {
     NSString *backupName = [NSString stringWithFormat:@"%@.%d.%d.%d.json",
-                            url.lastPathComponent.stringByDeletingPathExtension,
-                            major, minor, micro];
+                                     url.lastPathComponent.stringByDeletingPathExtension,
+                                     major, minor, micro];
 
     return [url.URLByDeletingLastPathComponent URLByAppendingPathComponent:backupName];
 }
@@ -147,9 +147,9 @@ typedef NS_ENUM(NSUInteger, HBPresetLoadingResult) {
                 if (backup)
                 {
                     NSURL *backupURL = [self backupURLfromURL:self.fileURL
-                                                 versionMajor:[presetsDict[@"VersionMajor"] intValue]
-                                                        minor:[presetsDict[@"VersionMinor"] intValue]
-                                                        micro:[presetsDict[@"VersionMicro"] intValue]];
+                                             versionMajor:[presetsDict[@"VersionMajor"] intValue]
+                                             minor:[presetsDict[@"VersionMinor"] intValue]
+                                             micro:[presetsDict[@"VersionMicro"] intValue]];
                     [[NSFileManager defaultManager] copyItemAtURL:url toURL:backupURL error:NULL];
                 }
 
@@ -231,12 +231,12 @@ typedef NS_ENUM(NSUInteger, HBPresetLoadingResult) {
     // add back the built in presets.
     __block BOOL leafFound = NO;
     [self.root enumerateObjectsUsingBlock:^(id obj, NSIndexPath *idx, BOOL *stop) {
-        if ([obj isLeaf])
-        {
-            leafFound = YES;
-            *stop = YES;
-        }
-    }];
+                  if ([obj isLeaf])
+                  {
+                      leafFound = YES;
+                      *stop = YES;
+                  }
+              }];
 
     if (!leafFound)
     {
@@ -262,8 +262,8 @@ typedef NS_ENUM(NSUInteger, HBPresetLoadingResult) {
 {
     // Make sure no preset has the default flag enabled.
     [preset enumerateObjectsUsingBlock:^(id obj, NSIndexPath *idx, BOOL *stop) {
-        [obj setIsDefault:NO];
-    }];
+               [obj setIsDefault:NO];
+           }];
 
     [self.root insertObject:preset inChildrenAtIndex:[self.root countOfChildren]];
 
@@ -301,13 +301,13 @@ typedef NS_ENUM(NSUInteger, HBPresetLoadingResult) {
     // Search for a possible new default preset
     // Try to use "Normal" or the first user preset.
     [self.root enumerateObjectsUsingBlock:^(id obj, NSIndexPath *idx, BOOL *stop) {
-        if ([obj isBuiltIn] && [obj isLeaf])
-        {
-            if ([[obj name] isEqualToString:@"Fast 1080p30"])
-            {
-                normalPreset = obj;
-            }
-            if (firstBuiltInPreset == nil)
+                  if ([obj isBuiltIn] && [obj isLeaf])
+                  {
+                      if ([[obj name] isEqualToString:@"Fast 1080p30"])
+                      {
+                          normalPreset = obj;
+                      }
+                      if (firstBuiltInPreset == nil)
             {
                 firstBuiltInPreset = obj;
             }

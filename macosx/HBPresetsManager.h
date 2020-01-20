@@ -21,9 +21,9 @@ extern NSString *HBPresetsChangedNotification;
  */
 @interface HBPresetsManager : NSObject
 
-/**
- *  The root of the presets tree.
- */
+    /**
+     *  The root of the presets tree.
+     */
 @property (nonatomic, readonly) HBPreset *root;
 
 /**

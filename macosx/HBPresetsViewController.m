@@ -77,7 +77,7 @@ static void *HBPresetsViewControllerContext = &HBPresetsViewControllerContext;
         _presets = presetManager;
         _selectedPresetInternal = presetManager.defaultPreset;
         _expandedNodes = [[NSArray arrayWithArray:[NSUserDefaults.standardUserDefaults
-                                                   objectForKey:@"HBPreviewViewExpandedStatus"]] mutableCopy];
+                           objectForKey:@"HBPreviewViewExpandedStatus"]] mutableCopy];
         _showHeader = YES;
     }
     return self;
@@ -93,7 +93,7 @@ static void *HBPresetsViewControllerContext = &HBPresetsViewControllerContext;
     }
 
     // drag and drop support
-	[self.outlineView registerForDraggedTypes:@[kHandBrakeInternalPBoardType, (NSString *)kUTTypeFileURL]];
+    [self.outlineView registerForDraggedTypes:@[kHandBrakeInternalPBoardType, (NSString *)kUTTypeFileURL]];
     [self.outlineView setDraggingSourceOperationMask:NSDragOperationCopy forLocal:NO];
     [self.outlineView setDraggingSourceOperationMask:NSDragOperationMove forLocal:YES];
 
@@ -170,20 +170,20 @@ static void *HBPresetsViewControllerContext = &HBPresetsViewControllerContext;
     panel.nameFieldStringValue = [self fileNameForPreset:selectedPreset];
 
     [panel beginWithCompletionHandler:^(NSInteger result)
-     {
-         if (result == NSModalResponseOK)
-         {
-             NSURL *presetExportDirectory = [panel.URL URLByDeletingLastPathComponent];
-             [NSUserDefaults.standardUserDefaults setURL:presetExportDirectory forKey:@"LastPresetExportDirectoryURL"];
+          {
+              if (result == NSModalResponseOK)
+              {
+                  NSURL *presetExportDirectory = [panel.URL URLByDeletingLastPathComponent];
+            [NSUserDefaults.standardUserDefaults setURL:presetExportDirectory forKey:@"LastPresetExportDirectoryURL"];
 
-             NSError *error = NULL;
-             BOOL success = [selectedPreset writeToURL:panel.URL atomically:YES removeRoot:NO error:&error];
-             if (success == NO)
-             {
-                 [self presentError:error];
-             }
-         }
-     }];
+            NSError *error = NULL;
+            BOOL success = [selectedPreset writeToURL:panel.URL atomically:YES removeRoot:NO error:&error];
+            if (success == NO)
+            {
+                [self presentError:error];
+            }
+        }
+    }];
 }
 
 - (void)doImportPreset:(NSArray<NSURL *> *)URLs atIndexPath:(nullable NSIndexPath *)indexPath
@@ -243,14 +243,14 @@ static void *HBPresetsViewControllerContext = &HBPresetsViewControllerContext;
     }
 
     [panel beginWithCompletionHandler:^(NSInteger result)
-     {
-         [NSUserDefaults.standardUserDefaults setURL:panel.directoryURL forKey:@"LastPresetImportDirectoryURL"];
+          {
+              [NSUserDefaults.standardUserDefaults setURL:panel.directoryURL forKey:@"LastPresetImportDirectoryURL"];
 
-         if (result == NSModalResponseOK)
-         {
-             [self doImportPreset:panel.URLs atIndexPath:nil];
-         }
-     }];
+              if (result == NSModalResponseOK)
+        {
+            [self doImportPreset:panel.URLs atIndexPath:nil];
+        }
+    }];
 }
 
 #pragma mark - UI Methods
@@ -413,7 +413,7 @@ static void *HBPresetsViewControllerContext = &HBPresetsViewControllerContext;
 }
 
 - (id<NSPasteboardWriting>)outlineView:(NSOutlineView *)outlineView
-               pasteboardWriterForItem:(id)item {
+    pasteboardWriterForItem:(id)item {
     if (@available(macOS 10.12, *))
     {
         HBFilePromiseProvider *filePromise = [[HBFilePromiseProvider alloc] initWithFileType:@"public.text" delegate:self];
@@ -438,17 +438,17 @@ static void *HBPresetsViewControllerContext = &HBPresetsViewControllerContext;
     completionHandler(error);
 }
 
- - (NSDragOperation)outlineView:(NSOutlineView *)ov
-                  validateDrop:(id <NSDraggingInfo>)info
-                  proposedItem:(id)item
-            proposedChildIndex:(NSInteger)index
+- (NSDragOperation)outlineView:(NSOutlineView *)ov
+    validateDrop:(id <NSDraggingInfo>)info
+    proposedItem:(id)item
+    proposedChildIndex:(NSInteger)index
 {
-	NSDragOperation result = NSDragOperationNone;
+    NSDragOperation result = NSDragOperationNone;
 
     if (info.draggingSource == nil)
     {
         if ([[item representedObject] isBuiltIn] ||
-            ([[item representedObject] isLeaf] && index == -1))
+                ([[item representedObject] isLeaf] && index == -1))
         {
             result = NSDragOperationNone;
         }
@@ -457,11 +457,13 @@ static void *HBPresetsViewControllerContext = &HBPresetsViewControllerContext;
             result = NSDragOperationCopy;
         }
     }
-    else if ([self.dragNodesArray allSatisfy:^BOOL(id  _Nonnull object) { return [[object representedObject] isBuiltIn] == NO; }])
+    else if ([self.dragNodesArray allSatisfy:^BOOL(id  _Nonnull object) {
+                        return [[object representedObject] isBuiltIn] == NO;
+                        }])
     {
         if ([[item representedObject] isBuiltIn] ||
-            ([[item representedObject] isLeaf] && index == -1) ||
-            [self.dragNodesArray containsObject:item])
+                ([[item representedObject] isLeaf] && index == -1) ||
+                [self.dragNodesArray containsObject:item])
         {
             // don't allow dropping on a child
             result = NSDragOperationNone;
@@ -473,19 +475,19 @@ static void *HBPresetsViewControllerContext = &HBPresetsViewControllerContext;
         }
     }
 
-	return result;
+    return result;
 }
 
 - (void)handleInternalDrops:(NSPasteboard *)pboard withIndexPath:(NSIndexPath *)indexPath
 {
-	// user is doing an intra app drag within the outline view:
-	NSArray *newNodes = self.dragNodesArray;
+    // user is doing an intra app drag within the outline view:
+    NSArray *newNodes = self.dragNodesArray;
 
-	// move the items to their new place (we do this backwards, otherwise they will end up in reverse order)
-	NSInteger idx;
-	for (idx = newNodes.count - 1; idx >= 0; idx--)
-	{
-		[self.treeController moveNode:newNodes[idx] toIndexPath:indexPath];
+    // move the items to their new place (we do this backwards, otherwise they will end up in reverse order)
+    NSInteger idx;
+    for (idx = newNodes.count - 1; idx >= 0; idx--)
+    {
+        [self.treeController moveNode:newNodes[idx] toIndexPath:indexPath];
 
         // Call manually this because the NSTreeController doesn't call
         // the KVC accessors method for the root node.
@@ -493,15 +495,15 @@ static void *HBPresetsViewControllerContext = &HBPresetsViewControllerContext;
         {
             [self.presets performSelector:@selector(nodeDidChange:) withObject:nil];
         }
-	}
+    }
 
-	// keep the moved nodes selected
-	NSMutableArray *indexPathList = [NSMutableArray array];
+    // keep the moved nodes selected
+    NSMutableArray *indexPathList = [NSMutableArray array];
     for (id node in newNodes)
     {
         [indexPathList addObject:[node indexPath]];
     }
-	[self.treeController setSelectionIndexPaths:indexPathList];
+    [self.treeController setSelectionIndexPaths:indexPathList];
 }
 
 - (void)handleExternalDrops:(NSPasteboard *)pboard withIndexPath:(NSIndexPath *)indexPath
@@ -512,45 +514,45 @@ static void *HBPresetsViewControllerContext = &HBPresetsViewControllerContext;
 
 - (BOOL)outlineView:(NSOutlineView *)ov acceptDrop:(id <NSDraggingInfo>)info item:(id)targetItem childIndex:(NSInteger)index
 {
-	BOOL result = NO;
+    BOOL result = NO;
 
     // note that "targetItem" is a NSTreeNode proxy
-	// find the index path to insert our dropped object(s)
-	NSIndexPath *indexPath;
-	if (targetItem)
-	{
-		// drop down inside the tree node: fetch the index path to insert our dropped node
+    // find the index path to insert our dropped object(s)
+    NSIndexPath *indexPath;
+    if (targetItem)
+    {
+        // drop down inside the tree node: fetch the index path to insert our dropped node
         indexPath = index == -1 ? [[targetItem indexPath] indexPathByAddingIndex:0] : [[targetItem indexPath] indexPathByAddingIndex:index];
-	}
-	else
-	{
-		// drop at the top root level
-		if (index == -1)	// drop area might be ambiguous (not at a particular location)
+    }
+    else
+    {
+        // drop at the top root level
+        if (index == -1)	// drop area might be ambiguous (not at a particular location)
         {
-			indexPath = [NSIndexPath indexPathWithIndex:self.presets.root.children.count]; // drop at the end of the top level
+            indexPath = [NSIndexPath indexPathWithIndex:self.presets.root.children.count]; // drop at the end of the top level
         }
-		else
+        else
         {
-			indexPath = [NSIndexPath indexPathWithIndex:index]; // drop at a particular place at the top level
+            indexPath = [NSIndexPath indexPathWithIndex:index]; // drop at a particular place at the top level
         }
-	}
+    }
 
     NSPasteboard *pboard = info.draggingPasteboard;
 
-	// check the dragging type
-	if ([pboard availableTypeFromArray:@[kHandBrakeInternalPBoardType]])
-	{
-		// user is doing an intra-app drag within the outline view
-		[self handleInternalDrops:pboard withIndexPath:indexPath];
-		result = YES;
-	}
+    // check the dragging type
+    if ([pboard availableTypeFromArray:@[kHandBrakeInternalPBoardType]])
+    {
+        // user is doing an intra-app drag within the outline view
+        [self handleInternalDrops:pboard withIndexPath:indexPath];
+        result = YES;
+    }
     else if ([pboard availableTypeFromArray:@[(NSString *)kUTTypeFileURL]])
     {
         [self handleExternalDrops:pboard withIndexPath:indexPath];
         result = YES;
     }
 
-	return result;
+    return result;
 }
 
 @end

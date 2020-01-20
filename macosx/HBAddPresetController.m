@@ -144,9 +144,9 @@ typedef NS_ENUM(NSUInteger, HBAddPresetControllerMode) {
     HBAddCategoryController *addCategoryController = [[HBAddCategoryController alloc] initWithPresetManager:self.manager];
 
     [self.window beginSheet:addCategoryController.window completionHandler:^(NSModalResponse returnCode) {
-        if (returnCode == NSModalResponseOK)
-        {
-            NSMenuItem *item = [self buildMenuItemWithCategory:addCategoryController.category];
+                    if (returnCode == NSModalResponseOK)
+                    {
+                        NSMenuItem *item = [self buildMenuItemWithCategory:addCategoryController.category];
             [self.categories.menu insertItem:item atIndex:2];
         }
 
@@ -180,12 +180,12 @@ typedef NS_ENUM(NSUInteger, HBAddPresetControllerMode) {
     self.defaultsController = [[HBAudioDefaultsController alloc] initWithSettings:defaults];
 
     [self.window beginSheet:self.defaultsController.window completionHandler:^(NSModalResponse returnCode) {
-        if (returnCode == NSModalResponseOK)
-        {
-            [defaults writeToPreset:self.mutablePreset];
-        }
-        self.defaultsController = nil;
-    }];
+                    if (returnCode == NSModalResponseOK)
+                    {
+                        [defaults writeToPreset:self.mutablePreset];
+                    }
+                    self.defaultsController = nil;
+                }];
 }
 
 - (IBAction)showSubtitlesSettingsSheet:(id)sender
@@ -196,12 +196,12 @@ typedef NS_ENUM(NSUInteger, HBAddPresetControllerMode) {
     self.defaultsController = [[HBSubtitlesDefaultsController alloc] initWithSettings:defaults];
 
     [self.window beginSheet:self.defaultsController.window completionHandler:^(NSModalResponse returnCode) {
-        if (returnCode == NSModalResponseOK)
-        {
-            [defaults writeToPreset:self.mutablePreset];
-        }
-        self.defaultsController = nil;
-    }];
+                    if (returnCode == NSModalResponseOK)
+                    {
+                        [defaults writeToPreset:self.mutablePreset];
+                    }
+                    self.defaultsController = nil;
+                }];
 }
 
 - (IBAction)add:(id)sender

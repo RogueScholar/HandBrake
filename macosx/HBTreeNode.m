@@ -119,13 +119,13 @@
 
     // Visit the whole tree to find the index path.
     [self enumerateObjectsUsingBlock:^(id obj2, NSIndexPath *idx, BOOL *stop)
-    {
-         if ([obj2 isEqualTo:obj])
          {
-             retValue = idx;
-             *stop = YES;
-         }
-     }];
+             if ([obj2 isEqualTo:obj])
+             {
+                 retValue = idx;
+                 *stop = YES;
+             }
+         }];
 
     return retValue;
 }
