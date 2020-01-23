@@ -5,7 +5,7 @@
 ## Authors: konablend
 ##
 ###############################################################################
-
+import argparse
 import fnmatch
 import glob
 import json
@@ -17,9 +17,8 @@ import string
 import subprocess
 import sys
 import time
-from datetime import datetime, timedelta
-
-import argparse
+from datetime import datetime
+from datetime import timedelta
 from sys import stderr
 from sys import stdout
 
