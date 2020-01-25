@@ -1,28 +1,28 @@
 // --------------------------------------------------------------------------------------------------------------------
-// <copyright file="IQueueService.cs" company="HandBrake Project (http://handbrake.fr)">
-//   This file is part of the HandBrake source code - It may be used under the terms of the GNU General Public License.
+// <copyright file="IQueueService.cs" company="HandBrake Project
+// (http://handbrake.fr)">
+//   This file is part of the HandBrake source code - It may be used under the
+//   terms of the GNU General Public License.
 // </copyright>
 // <summary>
 //   The Queue Processor
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace HandBrakeWPF.Services.Queue.Interfaces
-{
-using System;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
+namespace HandBrakeWPF.Services.Queue.Interfaces {
+  using System;
+  using System.Collections.ObjectModel;
+  using System.ComponentModel;
 
-using HandBrakeWPF.Services.Queue.Model;
+  using HandBrakeWPF.Services.Queue.Model;
 
-using IEncode = Encode.Interfaces.IEncode;
+  using IEncode = Encode.Interfaces.IEncode;
 
-/// <summary>
-/// The Queue Processor
-/// </summary>
-public interface IQueueService
-{
-    #region Events
+  /// <summary>
+  /// The Queue Processor
+  /// </summary>
+  public interface IQueueService {
+#region Events
 
     /// <summary>
     /// Fires when the Queue has started
@@ -45,57 +45,48 @@ public interface IQueueService
     /// </summary>
     event EventHandler QueuePaused;
 
-    #endregion
+#endregion
 
-    #region Properties
+#region Properties
 
     /// <summary>
     /// Gets the number of jobs in the queue
     /// </summary>
-    int Count {
-        get;
-    }
+    int Count { get; }
 
     /// <summary>
     /// Gets the number of errors detected in the queue.
     /// </summary>
-    int ErrorCount {
-        get;
-    }
+    int ErrorCount { get; }
 
     /// <summary>
     /// Gets the IEncodeService instance.
     /// </summary>
-    IEncode EncodeService {
-        get;
-    }
+    IEncode EncodeService { get; }
 
     /// <summary>
     /// Gets a value indicating whether IsProcessing.
     /// </summary>
-    bool IsProcessing {
-        get;
-    }
+    bool IsProcessing { get; }
 
     /// <summary>
     /// Gets or sets Last Processed Job.
-    /// This is set when the job is poped of the queue by GetNextJobForProcessing();
+    /// This is set when the job is poped of the queue by
+    /// GetNextJobForProcessing();
     /// </summary>
     QueueTask LastProcessedJob {
-        get;
-        set;
+      get;
+      set;
     }
 
     /// <summary>
     /// Gets The current queue.
     /// </summary>
-    ObservableCollection<QueueTask> Queue {
-        get;
-    }
+    ObservableCollection<QueueTask>Queue { get; }
 
-    #endregion
+#endregion
 
-    #region Public Methods
+#region Public Methods
 
     /// <summary>
     /// Add a job to the Queue.
@@ -118,7 +109,8 @@ public interface IQueueService
     /// Backup any changes to the queue file
     /// </summary>
     /// <param name="exportPath">
-    /// If this is not null or empty, this will be used instead of the standard backup location.
+    /// If this is not null or empty, this will be used instead of the standard
+    /// backup location.
     /// </param>
     void BackupQueue(string exportPath);
 
@@ -148,7 +140,8 @@ public interface IQueueService
     void ExportCliJson(string exportPath);
 
     /// <summary>
-    /// Checks the current queue for an existing instance of the specified destination.
+    /// Checks the current queue for an existing instance of the specified
+    /// destination.
     /// </summary>
     /// <param name="destination">
     /// The destination of the encode.
@@ -214,13 +207,14 @@ public interface IQueueService
     /// Restore a Queue from file or from the queue backup file.
     /// </summary>
     /// <param name="importPath">
-    /// The import path. String.Empty or null will result in the default file being loaded.
+    /// The import path. String.Empty or null will result in the default file
+    /// being loaded.
     /// </param>
     void RestoreQueue(string importPath);
 
     /// <summary>
-    /// Starts encoding the first job in the queue and continues encoding until all jobs
-    /// have been encoded.
+    /// Starts encoding the first job in the queue and continues encoding until
+    /// all jobs have been encoded.
     /// </summary>
     /// <param name="clearCompleted">
     /// The clear Completed.
@@ -242,6 +236,6 @@ public interface IQueueService
     /// </summary>
     void PauseEncode();
 
-    #endregion
-}
+#endregion
+  }
 }
