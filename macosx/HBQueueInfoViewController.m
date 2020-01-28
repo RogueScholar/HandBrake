@@ -46,38 +46,38 @@
     NSNotificationCenter * __weak center = NSNotificationCenter.defaultCenter;
 
     [center addObserverForName:HBQueueDidStartItemNotification
-                                              object:nil
-                                               queue:NSOperationQueue.mainQueue usingBlock:^(NSNotification * _Nonnull note)
-                           {
-                               HBQueueItem *startedItem = note.userInfo[HBQueueItemNotificationItemKey];
+            object:nil
+            queue:NSOperationQueue.mainQueue usingBlock:^(NSNotification * _Nonnull note)
+           {
+               HBQueueItem *startedItem = note.userInfo[HBQueueItemNotificationItemKey];
 
-                               if (startedItem == self.item)
-                               {
-                                   [self updateLabels];
-                                   [self updateReset];
-                               }
-                           }];
+               if (startedItem == self.item)
+        {
+            [self updateLabels];
+            [self updateReset];
+        }
+    }];
 
     [center addObserverForName:HBQueueDidCompleteItemNotification
-                        object:nil
-                         queue:NSOperationQueue.mainQueue usingBlock:^(NSNotification * _Nonnull note)
-     {
-         HBQueueItem *completedItem = note.userInfo[HBQueueItemNotificationItemKey];
+            object:nil
+            queue:NSOperationQueue.mainQueue usingBlock:^(NSNotification * _Nonnull note)
+           {
+               HBQueueItem *completedItem = note.userInfo[HBQueueItemNotificationItemKey];
 
-         if (completedItem == self.item)
-         {
-             [self updateLabels];
-             [self updateReset];
-         }
-     }];
+               if (completedItem == self.item)
+        {
+            [self updateLabels];
+            [self updateReset];
+        }
+    }];
 
     [center addObserverForName:HBQueueDidChangeItemNotification
-                        object:nil
-                         queue:NSOperationQueue.mainQueue usingBlock:^(NSNotification * _Nonnull note)
-     {
-         [self updateLabels];
-         [self updateReset];
-     }];
+            object:nil
+            queue:NSOperationQueue.mainQueue usingBlock:^(NSNotification * _Nonnull note)
+           {
+               [self updateLabels];
+        [self updateReset];
+    }];
 
 }
 
