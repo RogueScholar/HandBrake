@@ -46,35 +46,35 @@
     NSNotificationCenter * __weak center = NSNotificationCenter.defaultCenter;
 
     [center addObserverForName:HBQueueDidStartItemNotification
-                                              object:nil
-                                               queue:NSOperationQueue.mainQueue usingBlock:^(NSNotification * _Nonnull note)
-                           {
-                               HBQueueItem *startedItem = note.userInfo[HBQueueItemNotificationItemKey];
+            object:nil
+            queue:NSOperationQueue.mainQueue usingBlock:^(NSNotification * _Nonnull note)
+           {
+               HBQueueItem *startedItem = note.userInfo[HBQueueItemNotificationItemKey];
 
-                               if (startedItem == self.item)
-                               {
-                                   [self updateUI];
-                               }
-                           }];
+               if (startedItem == self.item)
+        {
+            [self updateUI];
+        }
+    }];
 
     [center addObserverForName:HBQueueDidCompleteItemNotification
-                        object:nil
-                         queue:NSOperationQueue.mainQueue usingBlock:^(NSNotification * _Nonnull note)
-     {
-         HBQueueItem *completedItem = note.userInfo[HBQueueItemNotificationItemKey];
+            object:nil
+            queue:NSOperationQueue.mainQueue usingBlock:^(NSNotification * _Nonnull note)
+           {
+               HBQueueItem *completedItem = note.userInfo[HBQueueItemNotificationItemKey];
 
-         if (completedItem == self.item)
-         {
-             [self updateUI];
-         }
-     }];
+               if (completedItem == self.item)
+        {
+            [self updateUI];
+        }
+    }];
 
     [center addObserverForName:HBQueueDidChangeItemNotification
-                        object:nil
-                         queue:NSOperationQueue.mainQueue usingBlock:^(NSNotification * _Nonnull note)
-     {
-         [self updateUI];
-     }];
+            object:nil
+            queue:NSOperationQueue.mainQueue usingBlock:^(NSNotification * _Nonnull note)
+           {
+               [self updateUI];
+           }];
 
 }
 
@@ -82,7 +82,7 @@
 {
     [self updateLabels];
     [self updateReset];
-    dispatch_async(dispatch_get_main_queue(), ^{
+    dispatch_async(dispatch_get_main_queue(), ^ {
         [self updateDivider];
     });
 }
@@ -103,7 +103,7 @@
         self.statisticsLabel.attributedStringValue = self.item.attributedStatistics;
         self.summaryLabel.attributedStringValue = self.item.attributedDescription;
 
-        dispatch_async(dispatch_get_main_queue(), ^{
+        dispatch_async(dispatch_get_main_queue(), ^ {
             [self.scrollView flashScrollers];
         });
     }
