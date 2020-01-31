@@ -1,17 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
-  <!-- 
-    Microsoft ResX Schema 
-    
+  <!--
+    Microsoft ResX Schema
+
     Version 2.0
-    
-    The primary goals of this format is to allow a simple XML format 
-    that is mostly human readable. The generation and parsing of the 
-    various data types are done through the TypeConverter classes 
+
+    The primary goals of this format is to allow a simple XML format
+    that is mostly human readable. The generation and parsing of the
+    various data types are done through the TypeConverter classes
     associated with the data types.
-    
+
     Example:
-    
+
     ... ado.net/XML headers & schema ...
     <resheader name="resmimetype">text/microsoft-resx</resheader>
     <resheader name="version">2.0</resheader>
@@ -26,36 +26,36 @@
         <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
         <comment>This is a comment</comment>
     </data>
-                
-    There are any number of "resheader" rows that contain simple 
+
+    There are any number of "resheader" rows that contain simple
     name/value pairs.
-    
-    Each data row contains a name, and value. The row also contains a 
-    type or mimetype. Type corresponds to a .NET class that support 
-    text/value conversion through the TypeConverter architecture. 
-    Classes that don't support this are serialized and stored with the 
+
+    Each data row contains a name, and value. The row also contains a
+    type or mimetype. Type corresponds to a .NET class that support
+    text/value conversion through the TypeConverter architecture.
+    Classes that don't support this are serialized and stored with the
     mimetype set.
-    
-    The mimetype is used for serialized objects, and tells the 
-    ResXResourceReader how to depersist the object. This is currently not 
+
+    The mimetype is used for serialized objects, and tells the
+    ResXResourceReader how to depersist the object. This is currently not
     extensible. For a given mimetype the value must be set accordingly:
-    
-    Note - application/x-microsoft.net.object.binary.base64 is the format 
-    that the ResXResourceWriter will generate, however the reader can 
+
+    Note - application/x-microsoft.net.object.binary.base64 is the format
+    that the ResXResourceWriter will generate, however the reader can
     read any of the formats listed below.
-    
+
     mimetype: application/x-microsoft.net.object.binary.base64
-    value   : The object must be serialized with 
+    value   : The object must be serialized with
             : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
             : and then encoded with base64 encoding.
-    
+
     mimetype: application/x-microsoft.net.object.soap.base64
-    value   : The object must be serialized with 
+    value   : The object must be serialized with
             : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
             : and then encoded with base64 encoding.
 
     mimetype: application/x-microsoft.net.object.bytearray.base64
-    value   : The object must be serialized into a byte array 
+    value   : The object must be serialized into a byte array
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
@@ -138,9 +138,9 @@ Bei x264 und x265 ist die Skala logarithmisch und kleinere Werte bedeuten eine h
 Daher führen kleine Erhöhungen der Werte zu einer stark zunehmende Erhöhung der Dateigröße.</value>
   </data>
   <data name="AddPreset_PictureSizeMode" xml:space="preserve">
-    <value>Mit dieser Voreinstellung kann optional eine Bildeinstellung gespeichert werden. Es gibt 3 Modi: 
+    <value>Mit dieser Voreinstellung kann optional eine Bildeinstellung gespeichert werden. Es gibt 3 Modi:
 
-Keine: Die Bildeinstellungen werden nicht in der Voreinstellung gespeichert. Beim Laden einer Quelle bleiben sie innerhalb der Grenzen der Quellauflösung. Dies betrifft auch Anamorph, Modulus, Beschneidung usw. 
+Keine: Die Bildeinstellungen werden nicht in der Voreinstellung gespeichert. Beim Laden einer Quelle bleiben sie innerhalb der Grenzen der Quellauflösung. Dies betrifft auch Anamorph, Modulus, Beschneidung usw.
 
 Eigene: Es kann optional eine maximale Breite und Höhe eingestellt werden. Dabei ist eine Kodierung kleiner oder gleich diesen Werten. „Das Seitenverhältnis beibehalten“ wird automatisch angewendet.
 
@@ -151,13 +151,13 @@ Quellenmaximum: Kodiert nach Möglichkeit immer mit der Quellauflösung.</value>
 den Bedingungen der GNU General Public License, wie sie von
 der Free Software Foundation veröffentlicht wurde, weitergeben
 und/oder verändert werden; entweder Version 2 der Lizenz oder
-(nach eigener Wahl) jede spätere Version. 
+(nach eigener Wahl) jede spätere Version.�
 
 Dieses Programm wird in der Hoffnung verteilt, dass es nützlich
 sein wird, aber OHNE JEGLICHE GEWÄHRLEISTUNG; auch ohne
 die stillschweigende Gewährleistung der MARKTREIFE oder
 Tauglichkeit für einen bestimmten Zweck. Weitere Informationen
-finden Sie in der GNU General Public License. 
+finden Sie in der GNU General Public License.�
 
 Sie sollten eine Kopie der GNU General Public License
 zusammen mit diesem Programm erhalten haben; wenn
@@ -336,7 +336,7 @@ Trotzdem fortfahren?</value>
   <data name="Options_AdditionalFormatOptions" xml:space="preserve">
     <value>Das Format der Ausgabedatei. Zusätzlich zu allen unterstützten Dateisystemzeichen können die folgenden Platzhalter verwendet werden, die ersetzt werden, wenn der Titel geändert oder eine Quelle überprüft wird.
 
-Live-Update-Optionen: {source} {title} {chapters}  
+Live-Update-Optionen: {source} {title} {chapters}
 Nicht-Live-Optionen: {date} {time} {creation-date} {creation-time} {quality} {bitrate} (Diese ändern sich nur, wenn eine neue Quelle überprüft wird, der Titel oder die Kapitel geändert werden).</value>
   </data>
   <data name="Options_DefaultPathAdditionalParams" xml:space="preserve">
@@ -363,7 +363,7 @@ Voreinstellungen aus älteren Versionen müssen mit einer aktuellen Version neu 
   </data>
   <data name="Subtitles_BurnInBehaviourModes" xml:space="preserve">
     <value>Keine – Es werden nur Spuren eingebrannt, bei denen der Container das Format nicht unterstützt.
-Fremdsprachenspur – Die Fremdsprachenspur wird eingebrannt, falls vorhanden. 
+Fremdsprachenspur – Die Fremdsprachenspur wird eingebrannt, falls vorhanden.
 Erste Spur – Die erste Spur wird eingebrannt.
 Fremdsprachenton bevorzugt, sonst Erste – Wenn die Fremdsprachenspur existiert, wird sie eingebrannt, sonst wird die erste Spur ausgewählt.</value>
   </data>
@@ -381,11 +381,11 @@ Beim Fortfahren gehen nicht-eingebrannte Untertitel verloren.</value>
     <value>Keine gültige Quelle oder Titel gefunden</value>
   </data>
   <data name="Main_ScanNoTitlesFoundMessage" xml:space="preserve">
-    <value>HandBrake kann die ausgewählte Quelle nicht kodieren, da es keine gültige Quelle mit zu kodierenden Titeln gefunden hat. 
-Dies kann auf einen der folgenden Gründe zurückzuführen sein: 
-– Die Dauer jedes Titels liegt unterhalb des Schwellenwertes „Minimale Titeldauer“ in „Einstellungen &gt; Erweitert“. 
+    <value>HandBrake kann die ausgewählte Quelle nicht kodieren, da es keine gültige Quelle mit zu kodierenden Titeln gefunden hat.
+Dies kann auf einen der folgenden Gründe zurückzuführen sein:
+– Die Dauer jedes Titels liegt unterhalb des Schwellenwertes „Minimale Titeldauer“ in „Einstellungen &gt; Erweitert“.
 – Die Quelldatei ist keine gültige Videodatei oder befindet sich in einem Format, das HandBrake nicht unterstützt.
-– Die Quelle kann kopiergeschützt sein oder DRM enthalten. Bitte beachten Sie, dass HandBrake das Entfernen von Kopierschutzmaßnahmen nicht unterstützt. 
+– Die Quelle kann kopiergeschützt sein oder DRM enthalten. Bitte beachten Sie, dass HandBrake das Entfernen von Kopierschutzmaßnahmen nicht unterstützt.
 
 Das Aktivitätsprotokoll kann weitere Informationen enthalten.</value>
   </data>
@@ -1906,7 +1906,7 @@ verbleibende Zeit: {5:hh\:mm\:ss}, vergangen: {6:hh\:mm\:ss} {7}</value>
     <value>HandBrakes Engine konnte nicht initialisiert werden. Dies wird oft durch veraltete GPU-Treiber verursacht.\n Bitte die GPU-Treiber für alle Onboard- und diskreten Grafikkarten aktualisieren, die dieses System besitzt.</value>
   </data>
   <data name="OptionsView_FormatOptions" xml:space="preserve">
-    <value>Echtzeit-Update Optionen: {source} {title} {chapters} 
+    <value>Echtzeit-Update Optionen: {source} {title} {chapters}
 Nicht-Echtzeit Optionen: {date} {time} {creation-date} {creation-time} {quality} {bitrate} (Diese werden nur geändert, wenn eine neue Quelle gescannt, Titel oder Kapitel geändert werden)</value>
   </data>
   <data name="OptionsView_PathOptions" xml:space="preserve">
@@ -1970,7 +1970,7 @@ Nicht-Echtzeit Optionen: {date} {time} {creation-date} {creation-time} {quality}
     <value>Wiederherstellung der Warteschlange möglich</value>
   </data>
   <data name="PresetService_ImportingBuiltInWarning" xml:space="preserve">
-    <value>Ihre Voreinstellungsdatei beinhaltete installierte Voreinstellungen. Die Importfunktion unterstützt einen Import dieser nicht. Bitte „Einstellungsmenü -&gt; Installierte Voreinstellungen zurücksetzen“ verwenden, um den Standard wieder herzustellen. 
+    <value>Ihre Voreinstellungsdatei beinhaltete installierte Voreinstellungen. Die Importfunktion unterstützt einen Import dieser nicht. Bitte „Einstellungsmenü -&gt; Installierte Voreinstellungen zurücksetzen“ verwenden, um den Standard wieder herzustellen.
 
 Falls unterstützt, wird jede benutzerdefinierte Voreinstellung übernommen. </value>
   </data>

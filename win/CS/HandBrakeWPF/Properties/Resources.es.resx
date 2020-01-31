@@ -1,17 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
-  <!-- 
-    Microsoft ResX Schema 
-    
+  <!--
+    Microsoft ResX Schema
+
     Version 2.0
-    
-    The primary goals of this format is to allow a simple XML format 
-    that is mostly human readable. The generation and parsing of the 
-    various data types are done through the TypeConverter classes 
+
+    The primary goals of this format is to allow a simple XML format
+    that is mostly human readable. The generation and parsing of the
+    various data types are done through the TypeConverter classes
     associated with the data types.
-    
+
     Example:
-    
+
     ... ado.net/XML headers & schema ...
     <resheader name="resmimetype">text/microsoft-resx</resheader>
     <resheader name="version">2.0</resheader>
@@ -26,36 +26,36 @@
         <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
         <comment>This is a comment</comment>
     </data>
-                
-    There are any number of "resheader" rows that contain simple 
+
+    There are any number of "resheader" rows that contain simple
     name/value pairs.
-    
-    Each data row contains a name, and value. The row also contains a 
-    type or mimetype. Type corresponds to a .NET class that support 
-    text/value conversion through the TypeConverter architecture. 
-    Classes that don't support this are serialized and stored with the 
+
+    Each data row contains a name, and value. The row also contains a
+    type or mimetype. Type corresponds to a .NET class that support
+    text/value conversion through the TypeConverter architecture.
+    Classes that don't support this are serialized and stored with the
     mimetype set.
-    
-    The mimetype is used for serialized objects, and tells the 
-    ResXResourceReader how to depersist the object. This is currently not 
+
+    The mimetype is used for serialized objects, and tells the
+    ResXResourceReader how to depersist the object. This is currently not
     extensible. For a given mimetype the value must be set accordingly:
-    
-    Note - application/x-microsoft.net.object.binary.base64 is the format 
-    that the ResXResourceWriter will generate, however the reader can 
+
+    Note - application/x-microsoft.net.object.binary.base64 is the format
+    that the ResXResourceWriter will generate, however the reader can
     read any of the formats listed below.
-    
+
     mimetype: application/x-microsoft.net.object.binary.base64
-    value   : The object must be serialized with 
+    value   : The object must be serialized with
             : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
             : and then encoded with base64 encoding.
-    
+
     mimetype: application/x-microsoft.net.object.soap.base64
-    value   : The object must be serialized with 
+    value   : The object must be serialized with
             : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
             : and then encoded with base64 encoding.
 
     mimetype: application/x-microsoft.net.object.bytearray.base64
-    value   : The object must be serialized into a byte array 
+    value   : The object must be serialized into a byte array
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Video_EncoderExtraArgs" xml:space="preserve">
-    <value>Lista completa de parámetros del codificador: 
+    <value>Lista completa de parámetros del codificador:
 {0} </value>
   </data>
   <data name="Video_x264FastDecode" xml:space="preserve">
@@ -243,8 +243,8 @@ Barra de herramientas &gt; Opciones</value>
     <value>El ajuste ha sido actualizado con su configuración actual.</value>
   </data>
   <data name="Main_PresetUpdateNotification" xml:space="preserve">
-    <value>HandBrake ha determinado que sus ajustes preestablecidos están desactualizados... Estos ajustes preestablecidos ahora se actualizarán. 
- Los ajustes preestablecidos personalizados no se han actualizado, por lo que es posible que tenga que volver a crearlos eliminándolos y reagregándolos. 
+    <value>HandBrake ha determinado que sus ajustes preestablecidos están desactualizados... Estos ajustes preestablecidos ahora se actualizarán.
+ Los ajustes preestablecidos personalizados no se han actualizado, por lo que es posible que tenga que volver a crearlos eliminándolos y reagregándolos.
  Se realizó una copia de seguridad del archivo user_presets.xml anterior.</value>
   </data>
   <data name="Main_QueueFinished" xml:space="preserve">
@@ -272,7 +272,7 @@ Barra de herramientas &gt; Opciones</value>
     <value>Primero debe escanear una fuente y configurar su trabajo antes de codificar. Pulse el botón 'Fuente' en la barra de herramientas para continuar</value>
   </data>
   <data name="Main_SelectPreset" xml:space="preserve">
-    <value>Por favor asegurese de haber seleccionado uno de sus propios ajustes. 
+    <value>Por favor asegurese de haber seleccionado uno de sus propios ajustes.
 No puede exportar los ajustes integrados</value>
   </data>
   <data name="Main_SelectPresetForUpdate" xml:space="preserve">
@@ -331,8 +331,8 @@ Puede no ser posible el importar todos los valores de este ajuste.
   </data>
   <data name="Options_AdditionalFormatOptions" xml:space="preserve">
     <value>El formato del archivo de salida.  Además de cualquier carácter de sistema de archivos compatible, puede utilizar los siguientes marcadores de posición que se reemplazarán al cambiar el título o escanear un origen.
-    
-     Opciones de actualización en vivo: {source} {title} {chapters} 
+
+     Opciones de actualización en vivo: {source} {title} {chapters}
 	 Opciones no en vivo:  {date} {time} {creation-date} {creation-time} {quality} {bitrate} ( Estos solo cambiaran si escanea una nueva fuente, cambia el título o los capítulos) </value>
   </data>
   <data name="Options_DefaultPathAdditionalParams" xml:space="preserve">
@@ -351,35 +351,35 @@ Puede no ser posible el importar todos los valores de este ajuste.
     <value>No se puede importar el preajuste seleccionado.</value>
   </data>
   <data name="Main_PresetImportFailedSolution" xml:space="preserve">
-    <value>El preajuste puede estar dañado o desde una versión anterior de HandBrake que no es compatible.  
+    <value>El preajuste puede estar dañado o desde una versión anterior de HandBrake que no es compatible.
     Los preajustes de versiones anteriores deben volver a crearse en la versión actual.</value>
   </data>
   <data name="Video_EncoderExtraArgsTooltip" xml:space="preserve">
     <value>Argumentos avanzados adicionales que se pueden pasar al codificador de vídeo. </value>
   </data>
   <data name="Subtitles_BurnInBehaviourModes" xml:space="preserve">
-    <value>Ninguno: solo se grabarán las pistas en las que el contenedor no admite el formato. 
+    <value>Ninguno: solo se grabarán las pistas en las que el contenedor no admite el formato.
  Pista de audio externo: la pista de audio externo se grabará si está disponible.
- Primera pista - Se grabara la primera pista. 
+ Primera pista - Se grabara la primera pista.
  Audio externo preferido, sino Primero - Si la pista de audio externo existe, se grabará, de lo contrario se elegirá la primera pista. </value>
   </data>
   <data name="Subtitles_WebmSubtitleIncompatibilityHeader" xml:space="preserve">
     <value>Compatibilidad de subtítulos WebM </value>
   </data>
   <data name="Subtitles_WebmSubtitleIncompatibilityError" xml:space="preserve">
-    <value>WebM en HandBrake solo admite subtítulos grabados. 
+    <value>WebM en HandBrake solo admite subtítulos grabados.
 
- Debe cambiar las selecciones de subtítulos. 
- 
+ Debe cambiar las selecciones de subtítulos.
+
  Si continúas, tus subtítulos no grabados se perderán.</value>
   </data>
   <data name="Main_ScanNoTitlesFound" xml:space="preserve">
     <value>No se han encontrado fuentes o títulos validos.</value>
   </data>
   <data name="Main_ScanNoTitlesFoundMessage" xml:space="preserve">
-    <value>HandBrake no podrá codificar la fuente seleccionada, ya que no encontró una fuente válida con títulos para codificar. 
+    <value>HandBrake no podrá codificar la fuente seleccionada, ya que no encontró una fuente válida con títulos para codificar.
 Esto podría deberse a una de las siguientes razones:
-- La duración de cada título de origen está por debajo de la opción de umbral "Duración mínima del título" en 'Preferencias &gt; Avanzadas'. 
+- La duración de cada título de origen está por debajo de la opción de umbral "Duración mínima del título" en 'Preferencias &gt; Avanzadas'.
 - El archivo de origen no es un archivo de vídeo válido o está en un formato que HandBrake no admite.
 - El origen puede estar protegido contra copias o incluir DRM. Tenga en cuenta que HandBrake no admite la eliminación de protecciones de copia.
 
@@ -543,7 +543,7 @@ Puede encontrar más información en el registro de actividad.</value>
     <value>Primero debe escanear un origen y configurar su codificación antes de crear una vista previa.</value>
   </data>
   <data name="StaticPreviewViewModel_UnableToFindVLC" xml:space="preserve">
-    <value>No se puede detectar el reproductor VLC. 
+    <value>No se puede detectar el reproductor VLC.
  Asegúrese de que VLC está instalado y el directorio especificado en las opciones de HandBrake es correcto. (Véase: "Menú Herramientas &gt; Preferencias &gt; General")</value>
   </data>
   <data name="StaticPreviewViewModel_UnableToPlayFile" xml:space="preserve">
@@ -571,7 +571,7 @@ Puede encontrar más información en el registro de actividad.</value>
     <value>No se pueden cargar ajustes preestablecidos.</value>
   </data>
   <data name="PresetService_UnableToLoadPresets" xml:space="preserve">
-    <value>HandBrake  no pudo cargar el archivo de ajustes preestablecidos. Puede ser debido a una versión antigua no compatible de HandBrake o que el archivo este corrupto. 
+    <value>HandBrake  no pudo cargar el archivo de ajustes preestablecidos. Puede ser debido a una versión antigua no compatible de HandBrake o que el archivo este corrupto.
 
  Su antiguo archivo de ajustes preestablecidos fue archivado en:</value>
   </data>
@@ -606,13 +606,13 @@ Puede encontrar más información en el registro de actividad.</value>
     <value>Información de capítulo no válida para el medio de origen</value>
   </data>
   <data name="ChaptersViewModel_ValidateImportedChapters_ChapterCountMismatch" xml:space="preserve">
-    <value>El número de capítulos en el medio de origen 
+    <value>El número de capítulos en el medio de origen
     y el número de capítulos en el archivo de entrada no coincide ({0} vs {1}).
 
  Aún desea importar los nombres de capítulo?</value>
   </data>
   <data name="ChaptersViewModel_ValidateImportedChapters_ChapterCountMismatchMsg" xml:space="preserve">
-    <value>El número de capítulos en el medio de origen 
+    <value>El número de capítulos en el medio de origen
     y el número de capítulos en el archivo de entrada no coincide ({0} vs {1}).
 
  Aún desea importar los nombres de capítulo?</value>
@@ -623,7 +623,7 @@ Puede encontrar más información en el registro de actividad.</value>
   <data name="ChaptersViewModel_ValidateImportedChapters_ChapterDurationMismatchMsg" xml:space="preserve">
     <value> La duración obtenida de los capítulos del medio fuente y la duración de los capítulos en el archivo de entrada difiere mucho.
 
-Es muy probable que este archivo de capítulo se haya producido a partir de un medio de origen diferente. 
+Es muy probable que este archivo de capítulo se haya producido a partir de un medio de origen diferente.
 
 Está seguro de que desea importar los nombres de capítulo?</value>
   </data>
@@ -634,7 +634,7 @@ Está seguro de que desea importar los nombres de capítulo?</value>
     <value>Se ha producido un error al intentar detener el análisis. Reinicie HandBrake.</value>
   </data>
   <data name="Presets_PresetForceReset" xml:space="preserve">
-    <value>HandBrake no puede actualizar el archivo de ajustes preestablecidos a un nuevo formato de versión.  
+    <value>HandBrake no puede actualizar el archivo de ajustes preestablecidos a un nuevo formato de versión.
 El archivo predefinido se archivará y se creará uno nuevo. Tendrá que volver a crear sus propios ajustes preestablecidos. </value>
   </data>
   <data name="SettingService_SaveErrorReset" xml:space="preserve">
@@ -662,7 +662,7 @@ El archivo predefinido se archivará y se creará uno nuevo. Tendrá que volver 
     <value>Crear Directorio?</value>
   </data>
   <data name="DirectoryUtils_CreateFolderMsg" xml:space="preserve">
-    <value> La carpeta en la que está intentando escribir no existe. ¿Desea que HandBrake cree la siguiente carpeta? 
+    <value> La carpeta en la que está intentando escribir no existe. ¿Desea que HandBrake cree la siguiente carpeta?
 {0}</value>
   </data>
   <data name="MainViewModel_UnableToLaunchDestDir" xml:space="preserve">
@@ -1858,7 +1858,7 @@ Tiempo restante: {5},  Transcurrido: {6:d\:hh\:mm\:ss}</value>
     <value>Mostrar 'Agregar selección a la cola' en la barra de herramientas</value>
   </data>
   <data name="OptionsView_HardwareDetectFailed" xml:space="preserve">
-    <value>La compatibilidad con la codificación de hardware está deshabilitada actualmente. Asegúrese de que está ejecutando controladores actualizados para todos los adaptadores de gráficos de este sistema. 
+    <value>La compatibilidad con la codificación de hardware está deshabilitada actualmente. Asegúrese de que está ejecutando controladores actualizados para todos los adaptadores de gráficos de este sistema.
 
 Esto no afectará a ninguno de los codificadores de software.</value>
   </data>
@@ -1898,11 +1898,11 @@ Tiempo Restante: {5},  Transcurrido: {6:d\:hh\:mm\:ss} {7}</value>
     <value>Modo portátil: No se puede leer portable.ini. Puede haber un error en este archivo. Vuelva a intentar usar portable.ini.template como guía.</value>
   </data>
   <data name="Startup_InitFailed" xml:space="preserve">
-    <value>El motor de HandBrake falló al inicializarse. Esto a menudo se debe a controladores de GPU obsoletos. 
+    <value>El motor de HandBrake falló al inicializarse. Esto a menudo se debe a controladores de GPU obsoletos.
 Actualice los controladores de GPU para cualquier gráfico integrado y discreto que tenga su sistema. </value>
   </data>
   <data name="OptionsView_FormatOptions" xml:space="preserve">
-    <value>Opciones de actualización en vivo: {source} {title} {chapters} 
+    <value>Opciones de actualización en vivo: {source} {title} {chapters}
 Opciones no en vivo: {date} {time} {creation-date} {creation-time} {quality} {bitrate} (Estos solo cambian si escanea una nueva fuente, cambia el título o los capítulos)</value>
   </data>
   <data name="OptionsView_PathOptions" xml:space="preserve">
@@ -1957,7 +1957,7 @@ Opciones no en vivo: {date} {time} {creation-date} {creation-time} {quality} {bi
     <value>La elección del codificador estará disponible en la pestaña "Vídeo".</value>
   </data>
   <data name="Queue_RecoverQueueQuestionPlural" xml:space="preserve">
-    <value> HandBrake ha detectado varios archivos de cola inacabados. Estos serán de varias instancias de HandBrake en ejecución. 
+    <value> HandBrake ha detectado varios archivos de cola inacabados. Estos serán de varias instancias de HandBrake en ejecución.
 ¿Le gustaría recuperar todos los trabajos pendientes?</value>
   </data>
   <data name="Queue_RecoverQueueQuestionSingular" xml:space="preserve">
@@ -1968,7 +1968,7 @@ Opciones no en vivo: {date} {time} {creation-date} {creation-time} {quality} {bi
   </data>
   <data name="PresetService_ImportingBuiltInWarning" xml:space="preserve">
     <value>El archivo de ajustes preestablecidos contenía ajustes preestablecidos integrados. La función de importación no admite la importación de estos.
-Utilice 'Menú de ajustes preestablecidos -&gt; Restablecer ajustes preestablecidos incorporados' para restaurar los ajustes preestablecidos estándar. 
+Utilice 'Menú de ajustes preestablecidos -&gt; Restablecer ajustes preestablecidos incorporados' para restaurar los ajustes preestablecidos estándar.
 
 Cuando se admita, se habrán importado los ajustes preestablecidos de usuario.</value>
   </data>
