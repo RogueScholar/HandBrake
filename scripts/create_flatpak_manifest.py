@@ -1,16 +1,16 @@
 #!/usr/bin/env python
-
-import types
-import os
-import sys
-import json
 import getopt
+import json
+import os
 import posixpath
+import sys
+import types
 from collections import OrderedDict
+
 try:
     from urlparse import urlsplit
     from urllib import unquote
-except ImportError: # Python 3
+except ImportError:  # Python 3
     from urllib.parse import urlsplit, unquote
 
 
@@ -18,62 +18,67 @@ def url2filename(url):
     path = urlsplit(url).path
     return posixpath.basename(unquote(path))
 
+
 def islocal(url):
     result = urlsplit(url)
     return result.scheme == "" and result.netloc == ""
+
 
 class SourceType:
     contrib = 1
     archive = 2
 
+
 class SourceEntry:
     def __init__(self, url, entry_type, sha256=None):
-        self.url        = url
+        self.url = url
         self.entry_type = entry_type
-        self.sha256     = sha256
+        self.sha256 = sha256
+
 
 class FlatpakPluginManifest:
     def __init__(self, runtime, template=None):
         if template != None:
-            with open(template, 'r') as fp:
+            with open(template, "r") as fp:
                 self.manifest = json.load(fp, object_pairs_hook=OrderedDict)
 
         else:
-            self.manifest    = OrderedDict()
+            self.manifest = OrderedDict()
 
         if runtime != None:
             self.manifest["runtime-version"] = runtime
 
+
 class FlatpakManifest:
     def __init__(self, source_list, runtime, qsv, template=None):
         if template != None:
-            with open(template, 'r') as fp:
+            with open(template, "r") as fp:
                 self.manifest = json.load(fp, object_pairs_hook=OrderedDict)
 
             self.finish_args = self.manifest["finish-args"]
-            self.modules     = self.manifest["modules"]
-            self.hbmodule    = self.modules[len(self.modules) - 1]
-            self.hbconfig    = self.hbmodule["config-opts"]
-            self.sources     = [None]
+            self.modules = self.manifest["modules"]
+            self.hbmodule = self.modules[len(self.modules) - 1]
+            self.hbconfig = self.hbmodule["config-opts"]
+            self.sources = [None]
 
-            self.hbmodule["sources"]     = self.sources
+            self.hbmodule["sources"] = self.sources
         else:
-            self.manifest    = OrderedDict()
-            self.modules     = []
-            self.hbmodule    = OrderedDict()
-            self.sources     = [None]
+            self.manifest = OrderedDict()
+            self.modules = []
+            self.hbmodule = OrderedDict()
+            self.sources = [None]
 
             self.manifest["finish-args"] = self.finish_args
-            self.manifest["modules"]     = self.modules
-            self.modules[0]              = self.hbmodule
-            self.hbmodule["sources"]     = self.sources
-            self.hbconfig                = [None]
+            self.manifest["modules"] = self.modules
+            self.modules[0] = self.hbmodule
+            self.hbmodule["sources"] = self.sources
+            self.hbconfig = [None]
 
         if runtime != None:
             self.manifest["runtime-version"] = runtime
 
         if qsv:
-            self.hbconfig.append("--enable-qsv");
+            self.hbconfig.append("--enable-qsv")
 
         handbrake_found = False
         for key, value in source_list.items():
@@ -104,7 +109,9 @@ class FlatpakManifest:
 
 
 def usage():
-    print("create_flatpak_manifest [-a <archive>] [-c <contrib>] [-s <sha265>] [-t <template>] [-r <sdk-runtime-version] [-h] [<dst>]")
+    print(
+        "create_flatpak_manifest [-a <archive>] [-c <contrib>] [-s <sha265>] [-t <template>] [-r <sdk-runtime-version] [-h] [<dst>]"
+    )
     print("     -a --archive    - Main archive (a.k.a. HB sources)")
     print("     -c --contrib    - Contrib download URL (can be repeated)")
     print("     -s --sha256     - sha256 of previous file on command line")
@@ -114,11 +121,23 @@ def usage():
     print("     -p --plugin     - Manifest if for a HandBrake flatpak plugin")
     print("     -h --help       - Show this message")
 
+
 if __name__ == "__main__":
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "a:c:s:t:r:qph",
-            ["archive=", "contrib=", "sha265=",
-             "template=", "runtime=", "qsv", "plugin", "help"])
+        opts, args = getopt.getopt(
+            sys.argv[1:],
+            "a:c:s:t:r:qph",
+            [
+                "archive=",
+                "contrib=",
+                "sha265=",
+                "template=",
+                "runtime=",
+                "qsv",
+                "plugin",
+                "help",
+            ],
+        )
     except getopt.GetoptError:
         print("Error: Invalid option")
         usage()
@@ -157,9 +176,9 @@ if __name__ == "__main__":
         elif opt in ("-r", "--runtime"):
             runtime = arg
         elif opt in ("-q", "--qsv"):
-            qsv = 1;
+            qsv = 1
         elif opt in ("-p", "--plugin"):
-            plugin = 1;
+            plugin = 1
 
     if len(args) > 0:
         dst = args[0]
@@ -172,8 +191,7 @@ if __name__ == "__main__":
         manifest = FlatpakManifest(source_list, runtime, qsv, template)
 
     if dst != None:
-        with open(dst, 'w') as fp:
+        with open(dst, "w") as fp:
             json.dump(manifest.manifest, fp, ensure_ascii=False, indent=4)
     else:
         print(json.dumps(manifest.manifest, ensure_ascii=False, indent=4))
-
