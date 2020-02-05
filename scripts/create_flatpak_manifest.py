@@ -1,11 +1,10 @@
 #!/usr/bin/env python
-
-import types
-import os
-import sys
-import json
 import getopt
+import json
+import os
 import posixpath
+import sys
+import types
 from collections import OrderedDict
 
 try:
