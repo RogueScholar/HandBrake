@@ -7,6 +7,7 @@ import json
 import getopt
 import posixpath
 from collections import OrderedDict
+
 try:
     from urlparse import urlsplit
     from urllib import unquote
@@ -39,7 +40,7 @@ class SourceEntry:
 class FlatpakPluginManifest:
     def __init__(self, runtime, template=None):
         if template != None:
-            with open(template, 'r') as fp:
+            with open(template, "r") as fp:
                 self.manifest = json.load(fp, object_pairs_hook=OrderedDict)
 
         else:
@@ -52,7 +53,7 @@ class FlatpakPluginManifest:
 class FlatpakManifest:
     def __init__(self, source_list, runtime, qsv, template=None):
         if template != None:
-            with open(template, 'r') as fp:
+            with open(template, "r") as fp:
                 self.manifest = json.load(fp, object_pairs_hook=OrderedDict)
 
             self.finish_args = self.manifest["finish-args"]
@@ -110,7 +111,8 @@ class FlatpakManifest:
 
 def usage():
     print(
-        "create_flatpak_manifest [-a <archive>] [-c <contrib>] [-s <sha265>] [-t <template>] [-r <sdk-runtime-version] [-h] [<dst>]")
+        "create_flatpak_manifest [-a <archive>] [-c <contrib>] [-s <sha265>] [-t <template>] [-r <sdk-runtime-version] [-h] [<dst>]"
+    )
     print("     -a --archive    - Main archive (a.k.a. HB sources)")
     print("     -c --contrib    - Contrib download URL (can be repeated)")
     print("     -s --sha256     - sha256 of previous file on command line")
@@ -123,9 +125,20 @@ def usage():
 
 if __name__ == "__main__":
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "a:c:s:t:r:qph",
-                                   ["archive=", "contrib=", "sha265=",
-                                    "template=", "runtime=", "qsv", "plugin", "help"])
+        opts, args = getopt.getopt(
+            sys.argv[1:],
+            "a:c:s:t:r:qph",
+            [
+                "archive=",
+                "contrib=",
+                "sha265=",
+                "template=",
+                "runtime=",
+                "qsv",
+                "plugin",
+                "help",
+            ],
+        )
     except getopt.GetoptError:
         print("Error: Invalid option")
         usage()
@@ -179,7 +192,7 @@ if __name__ == "__main__":
         manifest = FlatpakManifest(source_list, runtime, qsv, template)
 
     if dst != None:
-        with open(dst, 'w') as fp:
+        with open(dst, "w") as fp:
             json.dump(manifest.manifest, fp, ensure_ascii=False, indent=4)
     else:
         print(json.dumps(manifest.manifest, ensure_ascii=False, indent=4))
