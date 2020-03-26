@@ -12,7 +12,7 @@ endif
 $(eval $(call import.MODULE.defs,FFMPEG,ffmpeg,$(__deps__)))
 $(eval $(call import.CONTRIB.defs,FFMPEG))
 
-FFMPEG.FETCH.url    = https://download.handbrake.fr/handbrake/contrib/ffmpeg-4.2.2.tar.bz2
+FFMPEG.FETCH.url    = https://github.com/HandBrake/HandBrake-contribs/releases/download/contribs/ffmpeg-4.2.2.tar.bz2
 FFMPEG.FETCH.url   += https://ffmpeg.org/releases/ffmpeg-4.2.2.tar.bz2
 FFMPEG.FETCH.sha256 = b620d187c26f76ca19e74210a0336c3b8380b97730df5cdf45f3e69e89000e5c
 
@@ -130,7 +130,7 @@ ifeq (1,$(FEATURE.qsv))
 endif
 
 ifeq (1,$(FEATURE.vce))
-  FFMPEG.CONFIGURE.extra += --enable-amf --enable-encoder=h264_amf --enable-encoder=hevc_amf 
+  FFMPEG.CONFIGURE.extra += --enable-amf --enable-encoder=h264_amf --enable-encoder=hevc_amf
 endif
 
 ifeq (1,$(FEATURE.nvenc))

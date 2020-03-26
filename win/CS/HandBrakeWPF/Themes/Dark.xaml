@@ -3,8 +3,8 @@
 
     <!--
         #252525 - Dark
-        #363636 - Mid 
-    
+        #363636 - Mid
+
         #414141 - Light
         #606060 - Ultralight
     -->
@@ -104,6 +104,7 @@
         <ResourceDictionary Source="Controls/ContextMenuDark.xaml" />
         <ResourceDictionary Source="Controls/ToolbarDark.xaml" />
         <ResourceDictionary Source="Controls/GroupBoxDark.xaml" />
+        <ResourceDictionary Source="Controls/TreeviewDark.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
 </ResourceDictionary>
