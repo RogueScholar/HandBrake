@@ -1,26 +1,26 @@
 // --------------------------------------------------------------------------------------------------------------------
-// <copyright file="IMainViewModel.cs" company="HandBrake Project (http://handbrake.fr)">
-//   This file is part of the HandBrake source code - It may be used under the terms of the GNU General Public License.
+// <copyright file="IMainViewModel.cs" company="HandBrake Project
+// (http://handbrake.fr)">
+//   This file is part of the HandBrake source code - It may be used under the
+//   terms of the GNU General Public License.
 // </copyright>
 // <summary>
 //   The Main Window View Model
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace HandBrakeWPF.ViewModels.Interfaces
-{
-using System.Windows;
+namespace HandBrakeWPF.ViewModels.Interfaces {
+  using System.Windows;
 
-using HandBrakeWPF.Model;
-using HandBrakeWPF.Services.Queue.Model;
+  using HandBrakeWPF.Model;
+  using HandBrakeWPF.Services.Queue.Model;
 
-using EncodeTask = HandBrakeWPF.Services.Encode.Model.EncodeTask;
+  using EncodeTask = HandBrakeWPF.Services.Encode.Model.EncodeTask;
 
-/// <summary>
-/// The Main Window View Model
-/// </summary>
-public interface IMainViewModel
-{
+  /// <summary>
+  /// The Main Window View Model
+  /// </summary>
+  public interface IMainViewModel {
     /// <summary>
     /// The preset select.
     /// </summary>
@@ -127,5 +127,5 @@ public interface IMainViewModel
     /// Browse for and set a destination file.
     /// </summary>
     void BrowseDestination();
-}
+  }
 }
