@@ -9,11 +9,11 @@
 
 namespace HandBrakeWPF.Converters.Main
 {
-    using System.Windows.Data;
+using System.Windows.Data;
 
-    using HandBrakeWPF.Services.Encode.Model.Models;
+using HandBrakeWPF.Services.Encode.Model.Models;
 
-    public class PointToPointConverter : ResourceConverterBase<PointToPointMode>, IValueConverter
-    {
-    }
+public class PointToPointConverter : ResourceConverterBase<PointToPointMode>, IValueConverter
+{
+}
 }

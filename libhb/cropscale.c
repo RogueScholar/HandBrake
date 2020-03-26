@@ -91,27 +91,27 @@ static int crop_scale_init(hb_filter_object_t * filter, hb_filter_init_t * init)
     hb_dict_set_string(avsettings, "flags", "lanczos+accurate_rnd");
     switch (init->color_matrix)
     {
-        case HB_COLR_MAT_BT709:
-            matrix = "bt709";
-            break;
-        case HB_COLR_MAT_FCC:
-            matrix = "fcc";
-            break;
-        case HB_COLR_MAT_SMPTE240M:
-            matrix = "smpte240m";
-            break;
-        case HB_COLR_MAT_BT470BG:
-        case HB_COLR_MAT_SMPTE170M:
-            matrix = "smpte170m";
-            break;
-        case HB_COLR_MAT_BT2020_NCL:
-        case HB_COLR_MAT_BT2020_CL:
-            matrix = "bt2020";
-            break;
-        default:
-        case HB_COLR_MAT_UNDEF:
-            matrix = NULL;
-            break;
+    case HB_COLR_MAT_BT709:
+        matrix = "bt709";
+        break;
+    case HB_COLR_MAT_FCC:
+        matrix = "fcc";
+        break;
+    case HB_COLR_MAT_SMPTE240M:
+        matrix = "smpte240m";
+        break;
+    case HB_COLR_MAT_BT470BG:
+    case HB_COLR_MAT_SMPTE170M:
+        matrix = "smpte170m";
+        break;
+    case HB_COLR_MAT_BT2020_NCL:
+    case HB_COLR_MAT_BT2020_CL:
+        matrix = "bt2020";
+        break;
+    default:
+    case HB_COLR_MAT_UNDEF:
+        matrix = NULL;
+        break;
 
     }
     if (matrix != NULL)
@@ -177,10 +177,10 @@ static hb_filter_info_t * crop_scale_info( hb_filter_object_t * filter )
     int cropped_height = pv->input.geometry.height - (top + bottom);
 
     info->human_readable_desc = hb_strdup_printf(
-        "source: %d * %d, crop (%d/%d/%d/%d): %d * %d, scale: %d * %d",
-        pv->input.geometry.width, pv->input.geometry.height,
-        top, bottom, left, right,
-        cropped_width, cropped_height, width, height);
+                                    "source: %d * %d, crop (%d/%d/%d/%d): %d * %d, scale: %d * %d",
+                                    pv->input.geometry.width, pv->input.geometry.height,
+                                    top, bottom, left, right,
+                                    cropped_width, cropped_height, width, height);
 
     return info;
 }

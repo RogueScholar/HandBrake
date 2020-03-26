@@ -35,9 +35,9 @@
 }
 
 - (instancetype)initWithTrackIdx:(NSUInteger)index
-                       container:(int)container
-                      dataSource:(id<HBAudioTrackDataSource>)dataSource
-                        delegate:(id<HBAudioTrackDelegate>)delegate
+    container:(int)container
+    dataSource:(id<HBAudioTrackDataSource>)dataSource
+    delegate:(id<HBAudioTrackDelegate>)delegate
 {
     self = [super init];
     if (self)
@@ -222,8 +222,8 @@
 - (void)setTitle:(NSString *)title
 {
     if ([title isEqualToString:@"Mono"] ||
-        [title isEqualToString:@"Stereo"] ||
-        [title isEqualToString:@"Surround"])
+            [title isEqualToString:@"Stereo"] ||
+            [title isEqualToString:@"Surround"])
     {
         title = nil;
     }
@@ -323,11 +323,11 @@
     int inputCodec = sourceTrack.codec;
 
     for (const hb_encoder_t *audio_encoder = hb_audio_encoder_get_next(NULL);
-         audio_encoder != NULL;
-         audio_encoder  = hb_audio_encoder_get_next(audio_encoder))
+            audio_encoder != NULL;
+            audio_encoder  = hb_audio_encoder_get_next(audio_encoder))
     {
         if (audio_encoder->muxers & self.container &&
-            audio_encoder->codec != HB_ACODEC_AUTO_PASS)
+                audio_encoder->codec != HB_ACODEC_AUTO_PASS)
         {
             if (audio_encoder->codec & HB_ACODEC_PASS_FLAG)
             {
@@ -354,8 +354,8 @@
     uint64_t channelLayout = sourceTrack.channelLayout;
 
     for (const hb_mixdown_t *mixdown = hb_mixdown_get_next(NULL);
-         mixdown != NULL;
-         mixdown  = hb_mixdown_get_next(mixdown))
+            mixdown != NULL;
+            mixdown  = hb_mixdown_get_next(mixdown))
     {
         if (hb_mixdown_is_supported(mixdown->amixdown, self.encoder, channelLayout))
         {
@@ -371,8 +371,8 @@
     [sampleRates addObject:@"Auto"];
 
     for (const hb_rate_t *audio_samplerate = hb_audio_samplerate_get_next(NULL);
-         audio_samplerate != NULL;
-         audio_samplerate  = hb_audio_samplerate_get_next(audio_samplerate))
+            audio_samplerate != NULL;
+            audio_samplerate  = hb_audio_samplerate_get_next(audio_samplerate))
     {
         int rate = audio_samplerate->rate;
         if (rate == hb_audio_samplerate_find_closest(rate, self.encoder))
@@ -392,8 +392,8 @@
 
     NSMutableArray<NSString *> *bitRates = [[NSMutableArray alloc] init];
     for (const hb_rate_t *audio_bitrate = hb_audio_bitrate_get_next(NULL);
-         audio_bitrate != NULL;
-         audio_bitrate  = hb_audio_bitrate_get_next(audio_bitrate))
+            audio_bitrate != NULL;
+            audio_bitrate  = hb_audio_bitrate_get_next(audio_bitrate))
     {
         if (audio_bitrate->rate >= minBitRate && audio_bitrate->rate <= maxBitRate)
         {
@@ -480,8 +480,8 @@
     NSSet *retval = nil;
 
     if ([key isEqualToString:@"bitrateEnabled"] ||
-        [key isEqualToString:@"passThruDisabled"] ||
-        [key isEqualToString:@"mixdownEnabled"])
+            [key isEqualToString:@"passThruDisabled"] ||
+            [key isEqualToString:@"mixdownEnabled"])
     {
         retval = [NSSet setWithObjects:@"encoder", nil];
     }
@@ -572,13 +572,31 @@
 {
     self = [super init];
 
-    decodeInteger(_sourceTrackIdx); if (_sourceTrackIdx < 0) { goto fail; }
-    decodeInt(_container); if (_container != HB_MUX_MP4 && _container != HB_MUX_MKV && _container != HB_MUX_WEBM) { goto fail; }
+    decodeInteger(_sourceTrackIdx);
+    if (_sourceTrackIdx < 0) {
+        goto fail;
+    }
+    decodeInt(_container);
+    if (_container != HB_MUX_MP4 && _container != HB_MUX_MKV && _container != HB_MUX_WEBM) {
+        goto fail;
+    }
 
-    decodeInt(_encoder); if (_encoder < 0) { goto fail; }
-    decodeInt(_mixdown); if (_mixdown < 0) { goto fail; }
-    decodeInt(_sampleRate); if (_sampleRate < 0) { goto fail; }
-    decodeInt(_bitRate); if (_bitRate < -1) { goto fail; }
+    decodeInt(_encoder);
+    if (_encoder < 0) {
+        goto fail;
+    }
+    decodeInt(_mixdown);
+    if (_mixdown < 0) {
+        goto fail;
+    }
+    decodeInt(_sampleRate);
+    if (_sampleRate < 0) {
+        goto fail;
+    }
+    decodeInt(_bitRate);
+    if (_bitRate < -1) {
+        goto fail;
+    }
 
     decodeDouble(_gain);
     decodeDouble(_drc);

@@ -153,7 +153,7 @@ ghb_can_suspend_gpm()
 
     g_debug("ghb_can_suspend_gpm()");
     proxy = ghb_get_session_dbus_proxy(GPM_DBUS_PM_SERVICE,
-                            GPM_DBUS_PM_PATH, GPM_DBUS_PM_INTERFACE);
+                                       GPM_DBUS_PM_PATH, GPM_DBUS_PM_INTERFACE);
     if (proxy == NULL)
         return FALSE;
 
@@ -192,7 +192,7 @@ ghb_suspend_gpm()
 
     g_debug("ghb_suspend_gpm()");
     proxy = ghb_get_session_dbus_proxy(GPM_DBUS_PM_SERVICE,
-                            GPM_DBUS_PM_PATH, GPM_DBUS_PM_INTERFACE);
+                                       GPM_DBUS_PM_PATH, GPM_DBUS_PM_INTERFACE);
     if (proxy == NULL)
         return;
 
@@ -228,7 +228,7 @@ ghb_can_shutdown_gpm()
 
     g_debug("ghb_can_shutdown_gpm()");
     proxy = ghb_get_session_dbus_proxy(GPM_DBUS_PM_SERVICE,
-                            GPM_DBUS_PM_PATH, GPM_DBUS_PM_INTERFACE);
+                                       GPM_DBUS_PM_PATH, GPM_DBUS_PM_INTERFACE);
     if (proxy == NULL)
         return FALSE;
 
@@ -267,7 +267,7 @@ ghb_shutdown_gpm()
 
     g_debug("ghb_shutdown_gpm()");
     proxy = ghb_get_session_dbus_proxy(GPM_DBUS_PM_SERVICE,
-                            GPM_DBUS_PM_PATH, GPM_DBUS_PM_INTERFACE);
+                                       GPM_DBUS_PM_PATH, GPM_DBUS_PM_INTERFACE);
     if (proxy == NULL)
         return;
 
@@ -304,7 +304,7 @@ ghb_inhibit_gpm()
 
     g_debug("ghb_inhibit_gpm()");
     proxy = ghb_get_session_dbus_proxy(GPM_DBUS_PM_SERVICE,
-                            GPM_DBUS_INHIBIT_PATH, GPM_DBUS_INHIBIT_INTERFACE);
+                                       GPM_DBUS_INHIBIT_PATH, GPM_DBUS_INHIBIT_INTERFACE);
     if (proxy == NULL)
         return 0;
 
@@ -340,7 +340,7 @@ ghb_uninhibit_gpm(guint cookie)
     g_debug("ghb_uninhibit_gpm() cookie %u", cookie);
 
     proxy = ghb_get_session_dbus_proxy(GPM_DBUS_PM_SERVICE,
-                            GPM_DBUS_INHIBIT_PATH, GPM_DBUS_INHIBIT_INTERFACE);
+                                       GPM_DBUS_INHIBIT_PATH, GPM_DBUS_INHIBIT_INTERFACE);
     if (proxy == NULL)
         return;
 
@@ -380,7 +380,7 @@ ghb_can_shutdown_gsm()
     GVariant *res;
 
     proxy = ghb_get_session_dbus_proxy(GPM_DBUS_SM_SERVICE,
-                            GPM_DBUS_SM_PATH, GPM_DBUS_SM_INTERFACE);
+                                       GPM_DBUS_SM_PATH, GPM_DBUS_SM_INTERFACE);
     if (proxy == NULL)
         return FALSE;
 
@@ -416,7 +416,7 @@ ghb_shutdown_gsm()
 
     g_debug("ghb_shutdown_gpm()");
     proxy = ghb_get_session_dbus_proxy(GPM_DBUS_SM_SERVICE,
-                            GPM_DBUS_SM_PATH, GPM_DBUS_SM_INTERFACE);
+                                       GPM_DBUS_SM_PATH, GPM_DBUS_SM_INTERFACE);
     if (proxy == NULL)
         return;
 
@@ -454,7 +454,7 @@ ghb_inhibit_gsm(signal_user_data_t *ud)
 
     g_debug("ghb_inhibit_gsm()");
     proxy = ghb_get_session_dbus_proxy(GPM_DBUS_SM_SERVICE,
-                            GPM_DBUS_SM_PATH, GPM_DBUS_SM_INTERFACE);
+                                       GPM_DBUS_SM_PATH, GPM_DBUS_SM_INTERFACE);
     if (proxy == NULL)
         return -1;
 
@@ -492,7 +492,7 @@ ghb_uninhibit_gsm(guint cookie)
     g_debug("ghb_uninhibit_gsm() cookie %u", cookie);
 
     proxy = ghb_get_session_dbus_proxy(GPM_DBUS_SM_SERVICE,
-                            GPM_DBUS_SM_PATH, GPM_DBUS_SM_INTERFACE);
+                                       GPM_DBUS_SM_PATH, GPM_DBUS_SM_INTERFACE);
     if (proxy == NULL)
         return;
 
@@ -534,7 +534,7 @@ ghb_inhibit_suspend(signal_user_data_t *ud)
     }
 #if GTK_CHECK_VERSION(3, 4, 0)
     suspend_cookie = gtk_application_inhibit(ud->app, NULL,
-                            GTK_APPLICATION_INHIBIT_SUSPEND, "Encoding");
+                     GTK_APPLICATION_INHIBIT_SUSPEND, "Encoding");
     if (suspend_cookie != 0)
     {
         suspend_inhibited = GHB_SUSPEND_INHIBITED_GTK;
@@ -562,20 +562,20 @@ ghb_uninhibit_suspend(signal_user_data_t *ud)
     switch (suspend_inhibited)
     {
 #if GTK_CHECK_VERSION(3, 4, 0)
-        case GHB_SUSPEND_INHIBITED_GTK:
-            gtk_application_uninhibit(ud->app, suspend_cookie);
-            break;
+    case GHB_SUSPEND_INHIBITED_GTK:
+        gtk_application_uninhibit(ud->app, suspend_cookie);
+        break;
 #else
-        case GHB_SUSPEND_INHIBITED_GPM:
-            ghb_uninhibit_gpm(suspend_cookie);
-            break;
+    case GHB_SUSPEND_INHIBITED_GPM:
+        ghb_uninhibit_gpm(suspend_cookie);
+        break;
 
-        case GHB_SUSPEND_INHIBITED_GSM:
-            ghb_uninhibit_gsm(suspend_cookie);
-            break;
+    case GHB_SUSPEND_INHIBITED_GSM:
+        ghb_uninhibit_gsm(suspend_cookie);
+        break;
 #endif
-        default:
-            break;
+    default:
+        break;
     }
     suspend_inhibited = GHB_SUSPEND_UNINHIBITED;
 }
@@ -841,21 +841,23 @@ camel_convert(gchar *str)
         if (*str == '_') *str = ' ';
         switch (state)
         {
-            case CAMEL_OTHER:
-            {
-                if (*str >= 'A' && *str <= 'Z')
-                    state = CAMEL_FIRST_UPPER;
-                else
-                    state = CAMEL_OTHER;
+        case CAMEL_OTHER:
+        {
+            if (*str >= 'A' && *str <= 'Z')
+                state = CAMEL_FIRST_UPPER;
+            else
+                state = CAMEL_OTHER;
 
-            } break;
-            case CAMEL_FIRST_UPPER:
-            {
-                if (*str >= 'A' && *str <= 'Z')
-                    *str = *str - 'A' + 'a';
-                else
-                    state = CAMEL_OTHER;
-            } break;
+        }
+        break;
+        case CAMEL_FIRST_UPPER:
+        {
+            if (*str >= 'A' && *str <= 'Z')
+                *str = *str - 'A' + 'a';
+            else
+                state = CAMEL_OTHER;
+        }
+        break;
         }
         str++;
     }
@@ -961,16 +963,16 @@ ghb_volname_cache_init(void)
     volname_mutex = g_mutex_new();
 #endif
     volname_hash = g_hash_table_new_full(g_str_hash, g_str_equal,
-                                        free_volname_key, free_volname_value);
+                                         free_volname_key, free_volname_value);
 }
 
 static void
 free_drive(gpointer drive)
 {
 #if defined(_WIN32)
-        g_free(drive);
+    g_free(drive);
 #else
-        g_object_unref(drive);
+    g_object_unref(drive);
 #endif
 }
 
@@ -1035,7 +1037,7 @@ get_extension(signal_user_data_t *ud, GhbValue *settings)
     mux = ghb_lookup_container_by_name(mux_id);
 
     if ((mux->format & HB_MUX_MASK_MP4) &&
-        ghb_dict_get_bool(ud->prefs, "UseM4v"))
+            ghb_dict_get_bool(ud->prefs, "UseM4v"))
     {
         return "m4v";
     }
@@ -1094,7 +1096,7 @@ get_creation_date(const char *pattern, const char *metaValue, const char *file)
     else
     {
         struct stat stbuf;
-        if (g_stat(file, &stbuf) == 0){
+        if (g_stat(file, &stbuf) == 0) {
             struct tm *tm;
             tm = localtime(&(stbuf.st_mtime));
             strftime(date, 11, pattern, tm);
@@ -1145,7 +1147,7 @@ set_destination_settings(signal_user_data_t *ud, GhbValue *settings)
         g_free(filename);
     }
     ghb_dict_set(settings, "dest_dir", ghb_value_dup(
-                 ghb_dict_get_value(ud->prefs, "destination_dir")));
+                     ghb_dict_get_value(ud->prefs, "destination_dir")));
     if (ghb_dict_get_bool(ud->prefs, "auto_name"))
     {
         GString *str = g_string_new("");
@@ -1155,8 +1157,8 @@ set_destination_settings(signal_user_data_t *ud, GhbValue *settings)
         // {source-path} is only allowed as the first element of the
         // template since the path must come first in the filename
         if (p != NULL &&
-            (!strncasecmp(p, "{source-path}", strlen("{source-path}")) ||
-             !strncasecmp(p, "{source_path}", strlen("{source_path}"))))
+                (!strncasecmp(p, "{source-path}", strlen("{source-path}")) ||
+                 !strncasecmp(p, "{source_path}", strlen("{source_path}"))))
         {
             const gchar * source;
 
@@ -1166,8 +1168,8 @@ set_destination_settings(signal_user_data_t *ud, GhbValue *settings)
                 char * dirname = g_path_get_dirname(source);
                 // if dirname is a directory and it is writable...
                 if (dirname != NULL &&
-                    g_file_test(dirname, G_FILE_TEST_IS_DIR) &&
-                    access(dirname, W_OK) == 0)
+                        g_file_test(dirname, G_FILE_TEST_IS_DIR) &&
+                        access(dirname, W_OK) == 0)
                 {
                     ghb_dict_set_string(settings, "dest_dir", dirname);
                 }
@@ -1296,7 +1298,7 @@ set_destination(signal_user_data_t *ud)
 {
     set_destination_settings(ud, ud->settings);
     ghb_ui_update(ud, "dest_file",
-        ghb_dict_get_value(ud->settings, "dest_file"));
+                  ghb_dict_get_value(ud->settings, "dest_file"));
 }
 
 G_MODULE_EXPORT void
@@ -1372,7 +1374,7 @@ source_dialog_extra_widgets(
     g_debug("source_dialog_extra_widgets ()");
     combo = GTK_COMBO_BOX_TEXT(GHB_WIDGET(ud->builder, "source_device"));
     gtk_list_store_clear(GTK_LIST_STORE(
-                gtk_combo_box_get_model(GTK_COMBO_BOX(combo))));
+                             gtk_combo_box_get_model(GTK_COMBO_BOX(combo))));
 
     link = drives = dvd_device_list();
     gtk_combo_box_text_append_text (combo, _("Not Selected"));
@@ -1480,7 +1482,7 @@ void ghb_show_container_options(signal_user_data_t *ud)
     gtk_widget_set_visible(w1, (mux->format & HB_MUX_MASK_MP4));
     gtk_widget_set_visible(w2, (mux->format & HB_MUX_MASK_MP4));
     gtk_widget_set_visible(w3, (mux->format & HB_MUX_MASK_MP4) &&
-                               (enc == HB_VCODEC_X264_8BIT));
+                           (enc == HB_VCODEC_X264_8BIT));
 }
 
 static void
@@ -1752,7 +1754,7 @@ start_scan(
     widget = GHB_WIDGET(ud->builder, "source_title_open");
     gtk_widget_set_sensitive(widget, FALSE);
     ghb_backend_scan(path, title_id, preview_count,
-            90000L * ghb_dict_get_int(ud->prefs, "MinTitleDuration"));
+                     90000L * ghb_dict_get_int(ud->prefs, "MinTitleDuration"));
 }
 
 gboolean
@@ -1784,7 +1786,7 @@ ghb_do_scan(
 
     g_debug("ghb_do_scan()");
     if (!force && last_scan_file != NULL &&
-        strcmp(last_scan_file, filename) == 0)
+            strcmp(last_scan_file, filename) == 0)
     {
         if (ghb_queue_edit_settings != NULL)
         {
@@ -2029,7 +2031,7 @@ update_default_destination(signal_user_data_t *ud)
     dest_dir = ghb_dict_get_string(ud->settings, "dest_dir");
     def_dest = ghb_dict_get_string(ud->prefs, "destination_dir");
     if (dest_dir != NULL && def_dest != NULL && dest_dir[0] != 0 &&
-        strcmp(dest_dir, def_dest) != 0)
+            strcmp(dest_dir, def_dest) != 0)
     {
         ghb_dict_set_string(ud->prefs, "destination_dir", dest_dir);
         ghb_pref_save(ud->prefs, "destination_dir");
@@ -2087,11 +2089,11 @@ destination_action_cb(GSimpleAction *action, GVariant *param,
     hb_window = GTK_WINDOW(GHB_WIDGET(ud->builder, "hb_window"));
     destname = ghb_dict_get_string(ud->settings, "destination");
     dialog = gtk_file_chooser_dialog_new("Choose Destination",
-                      hb_window,
-                      GTK_FILE_CHOOSER_ACTION_SAVE,
-                      GHB_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-                      GHB_STOCK_SAVE, GTK_RESPONSE_ACCEPT,
-                      NULL);
+                                         hb_window,
+                                         GTK_FILE_CHOOSER_ACTION_SAVE,
+                                         GHB_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+                                         GHB_STOCK_SAVE, GTK_RESPONSE_ACCEPT,
+                                         NULL);
     gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(dialog), destname);
     basename = g_path_get_basename(destname);
     gtk_file_chooser_set_current_name(GTK_FILE_CHOOSER(dialog), basename);
@@ -2141,7 +2143,7 @@ window_delete_event_cb(
     if (state & (GHB_STATE_WORKING|GHB_STATE_SEARCHING))
     {
         if (ghb_cancel_encode2(ud,
-            _("Closing HandBrake will terminate encoding.\n")))
+                               _("Closing HandBrake will terminate encoding.\n")))
         {
             ghb_hb_cleanup(FALSE);
             prune_logs(ud);
@@ -2267,17 +2269,17 @@ ghb_update_title_info(signal_user_data_t *ud)
               geo->height * geo->par.den);
     aspect = get_aspect_string(aspect_n, aspect_d);
     rate   = g_strdup_printf("%.6g", (gdouble)title->vrate.num /
-                                              title->vrate.den);
+                             title->vrate.den);
     audio_count = hb_list_count(title->list_audio);
     subtitle_count = hb_list_count(title->list_subtitle);
 
     text = g_strdup_printf(
-        ", %dx%d (%dx%d), %s, %s FPS, %d Audio Track%s, %d Subtitle Track%s",
-        geo->width, geo->height,
-        geo->width * geo->par.num / geo->par.den, geo->height,
-        aspect, rate,
-        audio_count, audio_count == 1 ? "" : "s",
-        subtitle_count, subtitle_count == 1 ? "" : "s");
+               ", %dx%d (%dx%d), %s, %s FPS, %d Audio Track%s, %d Subtitle Track%s",
+               geo->width, geo->height,
+               geo->width * geo->par.num / geo->par.den, geo->height,
+               aspect, rate,
+               audio_count, audio_count == 1 ? "" : "s",
+               subtitle_count, subtitle_count == 1 ? "" : "s");
 
     widget = GHB_WIDGET(ud->builder, "source_info_label");
     gtk_label_set_text(GTK_LABEL(widget), text);
@@ -2609,12 +2611,12 @@ ghb_update_summary_info(signal_user_data_t *ud)
 
     display_width = (double)width * par_width / par_height;
     display_aspect = ghb_get_display_aspect_string(display_width,
-                                                   display_height);
+                     display_height);
 
     display_width  = ghb_dict_get_int(ud->settings, "PictureDisplayWidth");
     text = g_strdup_printf("%dx%d storage, %dx%d display\n"
                            "%d:%d Pixel Aspect Ratio\n"
-                            "%s Display Aspect Ratio",
+                           "%s Display Aspect Ratio",
                            width, height, (int)display_width, display_height,
                            par_width, par_height, display_aspect);
     widget = GHB_WIDGET(ud->builder, "dimensions_summary");
@@ -2669,7 +2671,7 @@ ghb_set_title_settings(signal_user_data_t *ud, GhbValue *settings)
         crop[2] = ghb_dict_get_int(settings, "PictureLeftCrop");
         crop[3] = ghb_dict_get_int(settings, "PictureRightCrop");
         ghb_dict_set_int(settings, "scale_width",
-                 title->geometry.width - crop[2] - crop[3]);
+                         title->geometry.width - crop[2] - crop[3]);
 
         // If anamorphic or keep_aspect, the height will
         // be automatically calculated
@@ -2678,12 +2680,12 @@ ghb_set_title_settings(signal_user_data_t *ud, GhbValue *settings)
         keep_aspect = ghb_dict_get_bool(settings, "PictureKeepRatio");
         pic_par = ghb_settings_combo_int(settings, "PicturePAR");
         if (!keep_aspect ||
-            pic_par == HB_ANAMORPHIC_NONE ||
-            pic_par == HB_ANAMORPHIC_AUTO ||
-            pic_par == HB_ANAMORPHIC_CUSTOM)
+                pic_par == HB_ANAMORPHIC_NONE ||
+                pic_par == HB_ANAMORPHIC_AUTO ||
+                pic_par == HB_ANAMORPHIC_CUSTOM)
         {
             ghb_dict_set_int(settings, "scale_height",
-                title->geometry.height - crop[0] - crop[1]);
+                             title->geometry.height - crop[0] - crop[1]);
         }
 
         ghb_set_scale_settings(settings, GHB_PIC_KEEP_PAR|GHB_PIC_USE_MAX);
@@ -2696,37 +2698,37 @@ ghb_set_title_settings(signal_user_data_t *ud, GhbValue *settings)
             if (title->metadata->name)
             {
                 ghb_dict_set_string(settings, "MetaName",
-                    title->metadata->name);
+                                    title->metadata->name);
                 update_meta(settings, "Name", title->metadata->name);
             }
             ghb_dict_set_string(settings, "MetaArtist",
-                    title->metadata->artist);
+                                title->metadata->artist);
             update_meta(settings, "Artist", title->metadata->artist);
             ghb_dict_set_string(settings, "MetaReleaseDate",
-                    title->metadata->release_date);
+                                title->metadata->release_date);
             update_meta(settings, "ReleaseDate", title->metadata->release_date);
             ghb_dict_set_string(settings, "MetaComment",
-                    title->metadata->comment);
+                                title->metadata->comment);
             update_meta(settings, "Comment", title->metadata->comment);
             if (!title->metadata->name && title->metadata->album)
             {
                 ghb_dict_set_string(settings, "MetaName",
-                    title->metadata->album);
+                                    title->metadata->album);
                 update_meta(settings, "Name", title->metadata->album);
             }
             ghb_dict_set_string(settings, "MetaAlbumArtist",
-                    title->metadata->album_artist);
+                                title->metadata->album_artist);
             update_meta(settings, "AlbumArtist", title->metadata->album_artist);
             ghb_dict_set_string(settings, "MetaGenre",
-                    title->metadata->genre);
+                                title->metadata->genre);
             update_meta(settings, "Genre", title->metadata->genre);
             ghb_dict_set_string(settings, "MetaDescription",
-                    title->metadata->description);
+                                title->metadata->description);
             update_meta(settings, "Description", title->metadata->description);
             ghb_dict_set_string(settings, "MetaLongDescription",
-                    title->metadata->long_description);
+                                title->metadata->long_description);
             update_meta(settings, "LongDescription",
-                title->metadata->long_description);
+                        title->metadata->long_description);
         }
         ghb_sanitize_audio_track_settings(settings);
     }
@@ -3120,7 +3122,7 @@ vquality_type_changed_cb(GtkWidget *widget, signal_user_data_t *ud)
     ghb_clear_presets_selection(ud);
     ghb_live_reset(ud);
     if (check_name_template(ud, "{quality}") ||
-        check_name_template(ud, "{bitrate}"))
+            check_name_template(ud, "{bitrate}"))
         set_destination(ud);
 }
 
@@ -3520,7 +3522,7 @@ quit_cb(countdown_t *cd)
         return FALSE;
     }
     str = g_strdup_printf(_("%s\n\n%s in %d seconds ..."),
-                            cd->msg, cd->action, cd->timeout);
+                          cd->msg, cd->action, cd->timeout);
     gtk_message_dialog_set_markup(cd->dlg, str);
     g_free(str);
     return TRUE;
@@ -3542,7 +3544,7 @@ shutdown_cb(countdown_t *cd)
         return FALSE;
     }
     str = g_strdup_printf(_("%s\n\n%s in %d seconds ..."),
-                            cd->msg, cd->action, cd->timeout);
+                          cd->msg, cd->action, cd->timeout);
     gtk_message_dialog_set_markup(cd->dlg, str);
     g_free(str);
     return TRUE;
@@ -3561,7 +3563,7 @@ suspend_cb(countdown_t *cd)
         return FALSE;
     }
     str = g_strdup_printf(_("%s\n\n%s in %d seconds ..."),
-                            cd->msg, cd->action, cd->timeout);
+                          cd->msg, cd->action, cd->timeout);
     gtk_message_dialog_set_markup(cd->dlg, str);
     g_free(str);
     return TRUE;
@@ -3591,12 +3593,12 @@ ghb_countdown_dialog(
     // Toss up a warning dialog
     hb_window = GTK_WINDOW(GHB_WIDGET(ud->builder, "hb_window"));
     dialog = gtk_message_dialog_new(hb_window, GTK_DIALOG_MODAL,
-                            type, GTK_BUTTONS_NONE,
-                            _("%s\n\n%s in %d seconds ..."),
-                            message, action, timeout);
+                                    type, GTK_BUTTONS_NONE,
+                                    _("%s\n\n%s in %d seconds ..."),
+                                    message, action, timeout);
     gtk_dialog_add_buttons( GTK_DIALOG(dialog),
-                           cancel, GTK_RESPONSE_CANCEL,
-                           NULL);
+                            cancel, GTK_RESPONSE_CANCEL,
+                            NULL);
 
     cd.dlg = GTK_MESSAGE_DIALOG(dialog);
     timeout_id = g_timeout_add(1000, action_func, &cd);
@@ -3622,11 +3624,11 @@ ghb_message_dialog(GtkWindow *parent, GtkMessageType type, const gchar *message,
 
     // Toss up a warning dialog
     dialog = gtk_message_dialog_new(parent, GTK_DIALOG_MODAL,
-                            type, GTK_BUTTONS_NONE,
-                            "%s", message);
+                                    type, GTK_BUTTONS_NONE,
+                                    "%s", message);
     gtk_dialog_add_buttons( GTK_DIALOG(dialog),
-                           no, GTK_RESPONSE_NO,
-                           yes, GTK_RESPONSE_YES, NULL);
+                            no, GTK_RESPONSE_NO,
+                            yes, GTK_RESPONSE_YES, NULL);
     response = gtk_dialog_run(GTK_DIALOG(dialog));
     gtk_widget_destroy (dialog);
     if (response == GTK_RESPONSE_NO)
@@ -3643,10 +3645,10 @@ ghb_error_dialog(GtkWindow *parent, GtkMessageType type, const gchar *message, c
 
     // Toss up a warning dialog
     dialog = gtk_message_dialog_new(parent, GTK_DIALOG_MODAL,
-                            type, GTK_BUTTONS_NONE,
-                            "%s", message);
+                                    type, GTK_BUTTONS_NONE,
+                                    "%s", message);
     gtk_dialog_add_buttons( GTK_DIALOG(dialog),
-                           cancel, GTK_RESPONSE_CANCEL, NULL);
+                            cancel, GTK_RESPONSE_CANCEL, NULL);
     gtk_dialog_run(GTK_DIALOG(dialog));
     gtk_widget_destroy (dialog);
 }
@@ -3662,34 +3664,34 @@ ghb_cancel_encode(signal_user_data_t *ud, const gchar *extra_msg)
     // Toss up a warning dialog
     hb_window = GTK_WINDOW(GHB_WIDGET(ud->builder, "hb_window"));
     dialog = gtk_message_dialog_new(hb_window, GTK_DIALOG_MODAL,
-                GTK_MESSAGE_WARNING, GTK_BUTTONS_NONE,
-                _("%sYour movie will be lost if you don't continue encoding."),
-                extra_msg);
+                                    GTK_MESSAGE_WARNING, GTK_BUTTONS_NONE,
+                                    _("%sYour movie will be lost if you don't continue encoding."),
+                                    extra_msg);
     gtk_dialog_add_buttons( GTK_DIALOG(dialog),
-                           _("Cancel Current and Stop"), 1,
-                           _("Cancel Current, Start Next"), 2,
-                           _("Finish Current, then Stop"), 3,
-                           _("Continue Encoding"), 4,
-                           NULL);
+                            _("Cancel Current and Stop"), 1,
+                            _("Cancel Current, Start Next"), 2,
+                            _("Finish Current, then Stop"), 3,
+                            _("Continue Encoding"), 4,
+                            NULL);
     response = gtk_dialog_run(GTK_DIALOG(dialog));
     gtk_widget_destroy (dialog);
     switch ((int)response)
     {
-        case 1:
-            ghb_stop_queue();
-            ud->cancel_encode = GHB_CANCEL_ALL;
-            break;
-        case 2:
-            ghb_stop_queue();
-            ud->cancel_encode = GHB_CANCEL_CURRENT;
-            break;
-        case 3:
-            ud->cancel_encode = GHB_CANCEL_FINISH;
-            break;
-        case 4:
-        default:
-            ud->cancel_encode = GHB_CANCEL_NONE;
-            break;
+    case 1:
+        ghb_stop_queue();
+        ud->cancel_encode = GHB_CANCEL_ALL;
+        break;
+    case 2:
+        ghb_stop_queue();
+        ud->cancel_encode = GHB_CANCEL_CURRENT;
+        break;
+    case 3:
+        ud->cancel_encode = GHB_CANCEL_FINISH;
+        break;
+    case 4:
+    default:
+        ud->cancel_encode = GHB_CANCEL_NONE;
+        break;
     }
 }
 
@@ -3704,24 +3706,24 @@ ghb_cancel_encode2(signal_user_data_t *ud, const gchar *extra_msg)
     // Toss up a warning dialog
     hb_window = GTK_WINDOW(GHB_WIDGET(ud->builder, "hb_window"));
     dialog = gtk_message_dialog_new(hb_window, GTK_DIALOG_MODAL,
-                GTK_MESSAGE_WARNING, GTK_BUTTONS_NONE,
-                _("%sYour movie will be lost if you don't continue encoding."),
-                extra_msg);
+                                    GTK_MESSAGE_WARNING, GTK_BUTTONS_NONE,
+                                    _("%sYour movie will be lost if you don't continue encoding."),
+                                    extra_msg);
     gtk_dialog_add_buttons( GTK_DIALOG(dialog),
-                           _("Cancel Current and Stop"), 1,
-                           _("Continue Encoding"), 4,
-                           NULL);
+                            _("Cancel Current and Stop"), 1,
+                            _("Continue Encoding"), 4,
+                            NULL);
     response = gtk_dialog_run(GTK_DIALOG(dialog));
     gtk_widget_destroy (dialog);
     switch ((int)response)
     {
-        case 1:
-            ghb_stop_queue();
-            ud->cancel_encode = GHB_CANCEL_ALL;
-            return TRUE;
-        case 4:
-        default:
-            break;
+    case 1:
+        ghb_stop_queue();
+        ud->cancel_encode = GHB_CANCEL_ALL;
+        return TRUE;
+    case 4:
+    default:
+        break;
     }
     return FALSE;
 }
@@ -3758,10 +3760,10 @@ start_new_log(signal_user_data_t *ud, GhbValue *uiDict)
         *pos = 0;
     }
     log_path = g_strdup_printf("%s/%s %d-%02d-%02d %02d-%02d-%02d.log",
-        dest_dir,
-        basename,
-        now->tm_year + 1900, now->tm_mon + 1, now->tm_mday,
-        now->tm_hour, now->tm_min, now->tm_sec);
+                               dest_dir,
+                               basename,
+                               now->tm_year + 1900, now->tm_mon + 1, now->tm_mday,
+                               now->tm_hour, now->tm_min, now->tm_sec);
     g_free(basename);
     g_free(dest_dir);
     if (ud->job_activity_log)
@@ -3772,9 +3774,9 @@ start_new_log(signal_user_data_t *ud, GhbValue *uiDict)
         gchar *ver_str;
 
         ver_str = g_strdup_printf("Handbrake Version: %s (%d)\n",
-                                    hb_get_version(NULL), hb_get_build(NULL));
+                                  hb_get_version(NULL), hb_get_build(NULL));
         g_io_channel_write_chars (ud->job_activity_log, ver_str,
-                                    -1, NULL, NULL);
+                                  -1, NULL, NULL);
         g_free(ver_str);
         ghb_dict_set_string(uiDict, "ActivityFilename", log_path);
     }
@@ -3959,12 +3961,12 @@ working_status_string(signal_user_data_t *ud, ghb_instance_status_t *status)
         if (status->pass_id == HB_PASS_SUBTITLE)
         {
             task_str = g_strdup_printf(_("pass %d (subtitle scan) of %d, "),
-                status->pass, status->pass_count);
+                                       status->pass, status->pass_count);
         }
         else
         {
             task_str = g_strdup_printf(_("pass %d of %d, "),
-                status->pass, status->pass_count);
+                                       status->pass, status->pass_count);
         }
     }
     else
@@ -3976,29 +3978,29 @@ working_status_string(signal_user_data_t *ud, ghb_instance_status_t *status)
         if (status->rate_cur > 0.0)
         {
             status_str= g_strdup_printf(
-                _("Encoding: %s%s%.2f %%"
-                " (%.2f fps, avg %.2f fps, ETA %02dh%02dm%02ds)"),
-                job_str, task_str,
-                100.0 * status->progress,
-                status->rate_cur, status->rate_avg, status->hours,
-                status->minutes, status->seconds );
+                            _("Encoding: %s%s%.2f %%"
+                              " (%.2f fps, avg %.2f fps, ETA %02dh%02dm%02ds)"),
+                            job_str, task_str,
+                            100.0 * status->progress,
+                            status->rate_cur, status->rate_avg, status->hours,
+                            status->minutes, status->seconds );
         }
         else
         {
             status_str= g_strdup_printf(
-                _("Encoding: %s%s%.2f %%"
-                " (ETA %02dh%02dm%02ds)"),
-                job_str, task_str,
-                100.0 * status->progress,
-                status->hours, status->minutes, status->seconds );
+                            _("Encoding: %s%s%.2f %%"
+                              " (ETA %02dh%02dm%02ds)"),
+                            job_str, task_str,
+                            100.0 * status->progress,
+                            status->hours, status->minutes, status->seconds );
         }
     }
     else
     {
         status_str= g_strdup_printf(
-            _("Encoding: %s%s%.2f %%"),
-            job_str, task_str,
-            100.0 * status->progress );
+                        _("Encoding: %s%s%.2f %%"),
+                        job_str, task_str,
+                        100.0 * status->progress );
     }
     g_free(task_str);
     g_free(job_str);
@@ -4026,18 +4028,18 @@ searching_status_string(signal_user_data_t *ud, ghb_instance_status_t *status)
     if(status->seconds > -1)
     {
         status_str= g_strdup_printf(
-            _("Encoding: %s%s%.2f %%"
-            " (ETA %02dh%02dm%02ds)"),
-            job_str, task_str,
-            100.0 * status->progress,
-            status->hours, status->minutes, status->seconds );
+                        _("Encoding: %s%s%.2f %%"
+                          " (ETA %02dh%02dm%02ds)"),
+                        job_str, task_str,
+                        100.0 * status->progress,
+                        status->hours, status->minutes, status->seconds );
     }
     else
     {
         status_str= g_strdup_printf(
-            _("Encoding: %s%s%.2f %%"),
-            job_str, task_str,
-            100.0 * status->progress );
+                        _("Encoding: %s%s%.2f %%"),
+                        job_str, task_str,
+                        100.0 * status->progress );
     }
     g_free(task_str);
     g_free(job_str);
@@ -4061,7 +4063,7 @@ ghb_backend_events(signal_user_data_t *ud)
     ghb_track_status();
     ghb_get_status(&status);
     if (prev_scan_state != status.scan.state ||
-        prev_queue_state != status.queue.state)
+            prev_queue_state != status.queue.state)
     {
         ghb_queue_buttons_grey(ud);
         prev_scan_state = status.scan.state;
@@ -4070,7 +4072,7 @@ ghb_backend_events(signal_user_data_t *ud)
     progress = GTK_PROGRESS_BAR(GHB_WIDGET (ud->builder, "progressbar"));
     work_status = GTK_LABEL(GHB_WIDGET (ud->builder, "work_status"));
     if (status.scan.state == GHB_STATE_IDLE &&
-        status.queue.state == GHB_STATE_IDLE)
+            status.queue.state == GHB_STATE_IDLE)
     {
         static gboolean prev_dvdnav;
         gboolean dvdnav = ghb_dict_get_bool(ud->prefs, "use_dvdnav");
@@ -4098,12 +4100,12 @@ ghb_backend_events(signal_user_data_t *ud)
         {
             if (status.scan.preview_cur == 0)
                 status_str = g_strdup_printf(_("Scanning title %d of %d..."),
-                              status.scan.title_cur, status.scan.title_count );
+                                             status.scan.title_cur, status.scan.title_count );
             else
                 status_str = g_strdup_printf(
-                    _("Scanning title %d of %d preview %d..."),
-                    status.scan.title_cur, status.scan.title_count,
-                    status.scan.preview_cur);
+                                 _("Scanning title %d of %d preview %d..."),
+                                 status.scan.title_cur, status.scan.title_count,
+                                 status.scan.preview_cur);
 
         }
         gtk_label_set_text(label, status_str);
@@ -4151,7 +4153,7 @@ ghb_backend_events(signal_user_data_t *ud)
         {
             // Switch to the correct title in the list
             ghb_ui_update(ud, "title",
-                ghb_dict_get_value(ghb_queue_edit_settings, "title"));
+                          ghb_dict_get_value(ghb_queue_edit_settings, "title"));
 
             // The above should cause the current title index to update
             title_id = ghb_dict_get_int(ud->settings, "title");
@@ -4169,7 +4171,7 @@ ghb_backend_events(signal_user_data_t *ud)
         index = ghb_find_queue_job(ud->queue, status.queue.unique_id,
                                    &queueDict);
         if ((status.queue.state & GHB_STATE_WORKING) &&
-            (event_sequence % 50 == 0)) // check every 10 seconds
+                (event_sequence % 50 == 0)) // check every 10 seconds
         {
             ghb_low_disk_check(ud);
         }
@@ -4220,18 +4222,18 @@ ghb_backend_events(signal_user_data_t *ud)
 
         switch (status.queue.error)
         {
-            case GHB_ERROR_NONE:
-                gtk_label_set_text(work_status, _("Encode Done!"));
-                qstatus = GHB_QUEUE_DONE;
-                break;
-            case GHB_ERROR_CANCELED:
-                gtk_label_set_text(work_status, _("Encode Canceled."));
-                qstatus = GHB_QUEUE_CANCELED;
-                break;
-            case GHB_ERROR_FAIL:
-            default:
-                gtk_label_set_text(work_status, _("Encode Failed."));
-                qstatus = GHB_QUEUE_FAIL;
+        case GHB_ERROR_NONE:
+            gtk_label_set_text(work_status, _("Encode Done!"));
+            qstatus = GHB_QUEUE_DONE;
+            break;
+        case GHB_ERROR_CANCELED:
+            gtk_label_set_text(work_status, _("Encode Canceled."));
+            qstatus = GHB_QUEUE_CANCELED;
+            break;
+        case GHB_ERROR_FAIL:
+        default:
+            gtk_label_set_text(work_status, _("Encode Failed."));
+            qstatus = GHB_QUEUE_FAIL;
         }
         if (queueDict != NULL)
         {
@@ -4252,12 +4254,12 @@ ghb_backend_events(signal_user_data_t *ud)
             g_io_channel_unref(ud->job_activity_log);
         ud->job_activity_log = NULL;
         if (ghb_dict_get_bool(ud->prefs, "RemoveFinishedJobs") &&
-            status.queue.error == GHB_ERROR_NONE)
+                status.queue.error == GHB_ERROR_NONE)
         {
             ghb_queue_remove_row(ud, index);
         }
         if (ud->cancel_encode != GHB_CANCEL_ALL &&
-            ud->cancel_encode != GHB_CANCEL_FINISH)
+                ud->cancel_encode != GHB_CANCEL_FINISH)
         {
             ghb_start_next_job(ud);
         }
@@ -4279,7 +4281,7 @@ ghb_backend_events(signal_user_data_t *ud)
     {
         GtkProgressBar *live_progress;
         live_progress = GTK_PROGRESS_BAR(
-            GHB_WIDGET(ud->builder, "live_encode_progress"));
+                            GHB_WIDGET(ud->builder, "live_encode_progress"));
         status_str = working_status_string(ud, &status.live);
         gtk_progress_bar_set_text (live_progress, status_str);
         gtk_progress_bar_set_fraction (live_progress, status.live.progress);
@@ -4289,14 +4291,16 @@ ghb_backend_events(signal_user_data_t *ud)
     {
         switch( status.live.error )
         {
-            case GHB_ERROR_NONE:
-            {
-                ghb_live_encode_done(ud, TRUE);
-            } break;
-            default:
-            {
-                ghb_live_encode_done(ud, FALSE);
-            } break;
+        case GHB_ERROR_NONE:
+        {
+            ghb_live_encode_done(ud, TRUE);
+        }
+        break;
+        default:
+        {
+            ghb_live_encode_done(ud, FALSE);
+        }
+        break;
         }
         ghb_clear_live_state(GHB_STATE_WORKDONE);
     }
@@ -4339,7 +4343,7 @@ ghb_timer_cb(gpointer data)
             if (last + duration < tt)
             {
                 ghb_dict_set_int(ud->prefs,
-                                        "last_update_check", tt);
+                                 "last_update_check", tt);
                 ghb_pref_save(ud->prefs, "last_update_check");
                 GHB_THREAD_NEW("Update Check", (GThreadFunc)ghb_check_update, ud);
             }
@@ -4397,20 +4401,20 @@ ghb_log_cb(GIOChannel *source, GIOCondition cond, gpointer data)
             if (ud->activity_log != NULL)
             {
                 g_io_channel_write_chars (ud->activity_log, utf8_text,
-                                        length, &outlength, NULL);
+                                          length, &outlength, NULL);
 #if defined(_WIN32)
                 g_io_channel_write_chars (ud->activity_log, "\n",
-                                        one, &one, NULL);
+                                          one, &one, NULL);
 #endif
                 g_io_channel_flush(ud->activity_log, NULL);
             }
             if (ud->job_activity_log)
             {
                 g_io_channel_write_chars (ud->job_activity_log, utf8_text,
-                                        length, &outlength, NULL);
+                                          length, &outlength, NULL);
 #if defined(_WIN32)
                 g_io_channel_write_chars (ud->activity_log, "\n",
-                                        one, &outlength, NULL);
+                                          one, &outlength, NULL);
 #endif
                 g_io_channel_flush(ud->job_activity_log, NULL);
             }
@@ -4484,7 +4488,7 @@ ghb_log(gchar *log, ...)
     _now = time(NULL);
     now = localtime( &_now );
     snprintf(fmt, 362, "[%02d:%02d:%02d] gtkgui: %s\n",
-            now->tm_hour, now->tm_min, now->tm_sec, log);
+             now->tm_hour, now->tm_min, now->tm_sec, log);
     va_start(args, log);
     vfprintf(stderr, fmt, args);
     va_end(args);
@@ -4503,29 +4507,29 @@ ghb_browse_uri(signal_user_data_t *ud, const gchar *uri)
     result = gtk_show_uri_on_window(parent, uri, GDK_CURRENT_TIME, NULL);
     if (result) return;
     char *argv[] =
-        {"xdg-open",NULL,NULL,NULL};
+    {"xdg-open",NULL,NULL,NULL};
     argv[1] = (gchar*)uri;
     result = g_spawn_async(NULL, argv, NULL, G_SPAWN_SEARCH_PATH, NULL,
-                NULL, NULL, NULL);
+                           NULL, NULL, NULL);
     if (result) return;
 
     argv[0] = "gnome-open";
     result = g_spawn_async(NULL, argv, NULL, G_SPAWN_SEARCH_PATH, NULL,
-                NULL, NULL, NULL);
+                           NULL, NULL, NULL);
     if (result) return;
 
     argv[0] = "kfmclient";
     argv[1] = "exec";
     argv[2] = (gchar*)uri;
     result = g_spawn_async(NULL, argv, NULL, G_SPAWN_SEARCH_PATH, NULL,
-                NULL, NULL, NULL);
+                           NULL, NULL, NULL);
     if (result) return;
 
     argv[0] = "firefox";
     argv[1] = (gchar*)uri;
     argv[2] = NULL;
     result = g_spawn_async(NULL, argv, NULL, G_SPAWN_SEARCH_PATH, NULL,
-                NULL, NULL, NULL);
+                           NULL, NULL, NULL);
 #endif
 }
 
@@ -4539,9 +4543,9 @@ about_action_cb(GSimpleAction *action, GVariant *param, signal_user_data_t *ud)
     gtk_about_dialog_set_version(GTK_ABOUT_DIALOG(widget), ver);
     g_free(ver);
     gtk_about_dialog_set_website(GTK_ABOUT_DIALOG(widget),
-                                HB_PROJECT_URL_WEBSITE);
+                                 HB_PROJECT_URL_WEBSITE);
     gtk_about_dialog_set_website_label(GTK_ABOUT_DIALOG(widget),
-                                        HB_PROJECT_URL_WEBSITE);
+                                       HB_PROJECT_URL_WEBSITE);
     gtk_widget_show (widget);
 }
 
@@ -4713,13 +4717,13 @@ activity_font_changed_cb(GtkWidget *widget, signal_user_data_t *ud)
 #if GTK_CHECK_VERSION(3, 90, 0)
     GdkDisplay *dd = gtk_widget_get_display(win);
     gtk_style_context_add_provider_for_display(dd,
-                                GTK_STYLE_PROVIDER(provider),
-                                GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+            GTK_STYLE_PROVIDER(provider),
+            GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 #else
     GdkScreen *ss = gtk_window_get_screen(GTK_WINDOW(win));
     gtk_style_context_add_provider_for_screen(ss,
-                                GTK_STYLE_PROVIDER(provider),
-                                GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+            GTK_STYLE_PROVIDER(provider),
+            GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 #endif
     g_object_unref(provider);
     g_free(css);
@@ -4883,7 +4887,7 @@ ghb_file_menu_add_dvd(signal_user_data_t *ud)
 
             // Connect signal to action (menu item)
             g_signal_connect(widget, "activate",
-                (GCallback)dvd_source_activate_cb, ud);
+                             (GCallback)dvd_source_activate_cb, ud);
             g_free(name);
             g_free(drive);
             free_drive(link->data);
@@ -4920,7 +4924,7 @@ dvd_device_list()
             if (dtype == DRIVE_CDROM)
             {
                 dvd_devices = g_list_append(dvd_devices,
-                        (gpointer)g_strdup(drive));
+                                            (gpointer)g_strdup(drive));
             }
         }
         drives >>= 1;
@@ -5019,10 +5023,10 @@ handle_media_change(const gchar *device, gboolean insert, signal_user_data_t *ud
         if (ins_count == 2)
         {
             GHB_THREAD_NEW("Cache Volume Names",
-                    (GThreadFunc)ghb_cache_volnames, ud);
+                           (GThreadFunc)ghb_cache_volnames, ud);
             if (ghb_dict_get_bool(ud->prefs, "AutoScan") &&
-                ud->current_dvd_device != NULL &&
-                strcmp(device, ud->current_dvd_device) == 0)
+                    ud->current_dvd_device != NULL &&
+                    strcmp(device, ud->current_dvd_device) == 0)
             {
                 show_scan_progress(ud);
                 gint preview_count;
@@ -5039,9 +5043,9 @@ handle_media_change(const gchar *device, gboolean insert, signal_user_data_t *ud
         if (rem_count == 2)
         {
             GHB_THREAD_NEW("Cache Volume Names",
-                    (GThreadFunc)ghb_cache_volnames, ud);
+                           (GThreadFunc)ghb_cache_volnames, ud);
             if (ud->current_dvd_device != NULL &&
-                strcmp(device, ud->current_dvd_device) == 0)
+                    strcmp(device, ud->current_dvd_device) == 0)
             {
                 ghb_hb_cleanup(TRUE);
                 prune_logs(ud);
@@ -5074,34 +5078,37 @@ wm_drive_changed(MSG *msg, signal_user_data_t *ud)
     g_strlcpy(drive, "A:" G_DIR_SEPARATOR_S, 4);
     switch (msg->wParam)
     {
-        case DBT_DEVICEARRIVAL:
+    case DBT_DEVICEARRIVAL:
+    {
+        if (bch->dbch_devicetype == DBT_DEVTYP_VOLUME)
         {
-            if (bch->dbch_devicetype == DBT_DEVTYP_VOLUME)
+            PDEV_BROADCAST_VOLUME bcv = (PDEV_BROADCAST_VOLUME)bch;
+
+            if (bcv->dbcv_flags & DBTF_MEDIA)
             {
-                PDEV_BROADCAST_VOLUME bcv = (PDEV_BROADCAST_VOLUME)bch;
-
-                if (bcv->dbcv_flags & DBTF_MEDIA)
-                {
-                    drive[0] = FindDriveFromMask(bcv->dbcv_unitmask);
-                    handle_media_change(drive, TRUE, ud);
-                }
+                drive[0] = FindDriveFromMask(bcv->dbcv_unitmask);
+                handle_media_change(drive, TRUE, ud);
             }
-        } break;
+        }
+    }
+    break;
 
-        case DBT_DEVICEREMOVECOMPLETE:
+    case DBT_DEVICEREMOVECOMPLETE:
+    {
+        if (bch->dbch_devicetype == DBT_DEVTYP_VOLUME)
         {
-            if (bch->dbch_devicetype == DBT_DEVTYP_VOLUME)
-            {
-                PDEV_BROADCAST_VOLUME bcv = (PDEV_BROADCAST_VOLUME)bch;
+            PDEV_BROADCAST_VOLUME bcv = (PDEV_BROADCAST_VOLUME)bch;
 
-                if (bcv->dbcv_flags & DBTF_MEDIA)
-                {
-                    drive[0] = FindDriveFromMask(bcv->dbcv_unitmask);
-                    handle_media_change(drive, FALSE, ud);
-                }
+            if (bcv->dbcv_flags & DBTF_MEDIA)
+            {
+                drive[0] = FindDriveFromMask(bcv->dbcv_unitmask);
+                handle_media_change(drive, FALSE, ud);
             }
-        } break;
-        default: ;
+        }
+    }
+    break;
+    default:
+        ;
     }
 }
 
@@ -5119,8 +5126,8 @@ drive_changed_cb(GVolumeMonitor *gvm, GDrive *gd, signal_user_data_t *ud)
     state = ghb_get_scan_state();
     device = g_drive_get_identifier(gd, G_VOLUME_IDENTIFIER_KIND_UNIX_DEVICE);
     if (ud->current_dvd_device == NULL ||
-        strcmp(device, ud->current_dvd_device) != 0 ||
-        state != GHB_STATE_IDLE )
+            strcmp(device, ud->current_dvd_device) != 0 ||
+            state != GHB_STATE_IDLE )
     {
         return;
     }
@@ -5202,23 +5209,25 @@ easter_egg_cb(
         bc.count++;
         switch (bc.count)
         {
-            case 1:
-            {
-                g_timeout_add(500, (GSourceFunc)easter_egg_timeout_cb, &bc);
-            } break;
+        case 1:
+        {
+            g_timeout_add(500, (GSourceFunc)easter_egg_timeout_cb, &bc);
+        }
+        break;
 
-            case 3:
-            {
-                // Its a tripple left mouse button click
-                GtkWidget *widget;
-                widget = GHB_WIDGET(ud->builder, "allow_tweaks");
-                gtk_widget_show(widget);
-                widget = GHB_WIDGET(ud->builder, "hbfd_feature");
-                gtk_widget_show(widget);
-            } break;
+        case 3:
+        {
+            // Its a tripple left mouse button click
+            GtkWidget *widget;
+            widget = GHB_WIDGET(ud->builder, "allow_tweaks");
+            gtk_widget_show(widget);
+            widget = GHB_WIDGET(ud->builder, "hbfd_feature");
+            gtk_widget_show(widget);
+        }
+        break;
 
-            default:
-                break;
+        default:
+            break;
         }
     }
     return FALSE;
@@ -5249,7 +5258,7 @@ process_appcast(signal_user_data_t *ud)
     gint    response, ibuild = 0, skip;
 
     if (ud->appcast == NULL || ud->appcast_len < 15 ||
-        strncmp(&(ud->appcast[9]), "200 OK", 6))
+            strncmp(&(ud->appcast[9]), "200 OK", 6))
     {
         goto done;
     }
@@ -5258,12 +5267,12 @@ process_appcast(signal_user_data_t *ud)
         ibuild = g_strtod(build, NULL);
     skip = ghb_dict_get_int(ud->prefs, "update_skip_version");
     if (description == NULL || build == NULL || version == NULL
-        || ibuild <= hb_get_build(NULL) || skip == ibuild)
+            || ibuild <= hb_get_build(NULL) || skip == ibuild)
     {
         goto done;
     }
     msg = g_strdup_printf(_("HandBrake %s/%s is now available (you have %s/%d)."),
-            version, build, hb_get_version(NULL), hb_get_build(NULL));
+                          version, build, hb_get_version(NULL), hb_get_build(NULL));
     label = GHB_WIDGET(ud->builder, "update_message");
     gtk_label_set_text(GTK_LABEL(label), msg);
 
@@ -5325,7 +5334,7 @@ ghb_net_recv_cb(GIOChannel *ioc, GIOCondition cond, gpointer data)
 
     status = g_io_channel_read_chars (ioc, buf, 2048, &len, &gerror);
     if ((status == G_IO_STATUS_NORMAL || status == G_IO_STATUS_EOF) &&
-        len > 0)
+            len > 0)
     {
         gint new_len = ud->appcast_len + len;
         ud->appcast = g_realloc(ud->appcast, new_len + 1);
@@ -5445,7 +5454,7 @@ ghb_notify_done(signal_user_data_t *ud)
 
     notification = g_notification_new(_("Encode Complete"));
     g_notification_set_body(notification,
-        _("Put down that cocktail, Your HandBrake queue is done!"));
+                            _("Put down that cocktail, Your HandBrake queue is done!"));
     icon = g_themed_icon_new("fr.handbrake.ghb");
     g_notification_set_icon(notification, icon);
 
@@ -5458,9 +5467,9 @@ ghb_notify_done(signal_user_data_t *ud)
         if (ghb_can_shutdown_gsm())
         {
             ghb_countdown_dialog(GTK_MESSAGE_WARNING,
-                _("Your encode is complete."),
-                _("Shutting down the computer"),
-                _("Cancel"), (GSourceFunc)shutdown_cb, ud, 60);
+                                 _("Your encode is complete."),
+                                 _("Shutting down the computer"),
+                                 _("Cancel"), (GSourceFunc)shutdown_cb, ud, 60);
         }
     }
     if (ghb_settings_combo_int(ud->prefs, "WhenComplete") == 2)
@@ -5468,17 +5477,17 @@ ghb_notify_done(signal_user_data_t *ud)
         if (ghb_can_suspend_gpm())
         {
             ghb_countdown_dialog(GTK_MESSAGE_WARNING,
-                _("Your encode is complete."),
-                _("Putting computer to sleep"),
-                _("Cancel"), (GSourceFunc)suspend_cb, ud, 60);
+                                 _("Your encode is complete."),
+                                 _("Putting computer to sleep"),
+                                 _("Cancel"), (GSourceFunc)suspend_cb, ud, 60);
         }
     }
     if (ghb_settings_combo_int(ud->prefs, "WhenComplete") == 4)
     {
         ghb_countdown_dialog(GTK_MESSAGE_WARNING,
-                            _("Your encode is complete."),
-                            _("Quitting Handbrake"),
-                            _("Cancel"), (GSourceFunc)quit_cb, ud, 60);
+                             _("Your encode is complete."),
+                             _("Quitting Handbrake"),
+                             _("Cancel"), (GSourceFunc)quit_cb, ud, 60);
     }
 }
 
@@ -5590,7 +5599,7 @@ combo_search_key_press_cb(
     GtkComboBox  * combo;
 
     combo = GTK_COMBO_BOX(gtk_event_controller_get_widget(
-                            GTK_EVENT_CONTROLLER(keycon)));
+                              GTK_EVENT_CONTROLLER(keycon)));
     lang_combo_search(combo, keyval, ud);
     return FALSE;
 }

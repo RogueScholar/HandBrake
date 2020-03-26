@@ -187,14 +187,14 @@
     else if (self.bitRate == -1) // switching from passthru
     {
         self.bitRate = hb_audio_bitrate_get_default(self.selectedEncoder,
-                                                    self.sampleRate ? self.sampleRate : DEFAULT_SAMPLERATE,
-                                                    self.mixdown);
+                       self.sampleRate ? self.sampleRate : DEFAULT_SAMPLERATE,
+                       self.mixdown);
     }
     else
     {
         self.bitRate = hb_audio_bitrate_get_best(self.selectedEncoder, self.bitRate,
-                                                 self.sampleRate ? self.sampleRate : DEFAULT_SAMPLERATE,
-                                                 self.mixdown);
+                       self.sampleRate ? self.sampleRate : DEFAULT_SAMPLERATE,
+                       self.mixdown);
     }
 }
 
@@ -285,8 +285,8 @@
 {
     NSMutableArray<NSString *> *encoders = [[NSMutableArray alloc] init];
     for (const hb_encoder_t *audio_encoder = hb_audio_encoder_get_next(NULL);
-         audio_encoder != NULL;
-         audio_encoder  = hb_audio_encoder_get_next(audio_encoder))
+            audio_encoder != NULL;
+            audio_encoder  = hb_audio_encoder_get_next(audio_encoder))
     {
         if (audio_encoder->codec != HB_ACODEC_NONE)
         {
@@ -300,8 +300,8 @@
 {
     NSMutableArray<NSString *> *mixdowns = [[NSMutableArray alloc] init];
     for (const hb_mixdown_t *mixdown = hb_mixdown_get_next(NULL);
-         mixdown != NULL;
-         mixdown  = hb_mixdown_get_next(mixdown))
+            mixdown != NULL;
+            mixdown  = hb_mixdown_get_next(mixdown))
     {
         if (hb_mixdown_has_codec_support(mixdown->amixdown, self.selectedEncoder))
         {
@@ -317,8 +317,8 @@
     [sampleRates addObject:@"Auto"];
 
     for (const hb_rate_t *audio_samplerate = hb_audio_samplerate_get_next(NULL);
-         audio_samplerate != NULL;
-         audio_samplerate  = hb_audio_samplerate_get_next(audio_samplerate))
+            audio_samplerate != NULL;
+            audio_samplerate  = hb_audio_samplerate_get_next(audio_samplerate))
     {
         int rate = audio_samplerate->rate;
         if (rate == hb_audio_samplerate_find_closest(rate, self.selectedEncoder))
@@ -338,8 +338,8 @@
 
     NSMutableArray<NSString *> *bitRates = [[NSMutableArray alloc] init];
     for (const hb_rate_t *audio_bitrate = hb_audio_bitrate_get_next(NULL);
-         audio_bitrate != NULL;
-         audio_bitrate  = hb_audio_bitrate_get_next(audio_bitrate))
+            audio_bitrate != NULL;
+            audio_bitrate  = hb_audio_bitrate_get_next(audio_bitrate))
     {
         if (audio_bitrate->rate >= minBitRate && audio_bitrate->rate <= maxBitRate)
         {
@@ -356,8 +356,8 @@
     // Tell KVO to reload the *enabled keyPaths
     // after a change to encoder.
     if ([key isEqualToString:@"bitrateEnabled"] ||
-        [key isEqualToString:@"passThruDisabled"] ||
-        [key isEqualToString:@"mixdownEnabled"])
+            [key isEqualToString:@"passThruDisabled"] ||
+            [key isEqualToString:@"mixdownEnabled"])
     {
         retval = [NSSet setWithObjects:@"selectedEncoder", @"encoder", @"fallbackEncoder", @"mixdown", @"sampleRate", nil];
     }
@@ -440,16 +440,34 @@
 {
     self = [super init];
 
-    decodeInt(_encoder); if (_encoder < 0) { goto fail; }
-    decodeInt(_fallbackEncoder); if (_fallbackEncoder < 0) { goto fail; }
-    decodeInt(_mixdown); if (_mixdown < 0) { goto fail; }
-    decodeInt(_sampleRate); if (_sampleRate < 0) { goto fail; }
-    decodeInt(_bitRate); if (_bitRate < -1) { goto fail; }
+    decodeInt(_encoder);
+    if (_encoder < 0) {
+        goto fail;
+    }
+    decodeInt(_fallbackEncoder);
+    if (_fallbackEncoder < 0) {
+        goto fail;
+    }
+    decodeInt(_mixdown);
+    if (_mixdown < 0) {
+        goto fail;
+    }
+    decodeInt(_sampleRate);
+    if (_sampleRate < 0) {
+        goto fail;
+    }
+    decodeInt(_bitRate);
+    if (_bitRate < -1) {
+        goto fail;
+    }
 
     decodeDouble(_gain);
     decodeDouble(_drc);
 
-    decodeInt(_container); if (_container != HB_MUX_MP4 && _container != HB_MUX_MKV && _container != HB_MUX_WEBM) { goto fail; }
+    decodeInt(_container);
+    if (_container != HB_MUX_MP4 && _container != HB_MUX_MKV && _container != HB_MUX_WEBM) {
+        goto fail;
+    }
 
     [self validateFallbackEncoder];
 
