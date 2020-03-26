@@ -12,4 +12,3 @@ XZ.CONFIGURE.extra = \
     --disable-lzmainfo \
     --disable-scripts \
     --disable-doc
-

@@ -20,7 +20,7 @@ index f5ca18aa64..75d9b5669b 100644
 +        return 0;
      }
  }
- 
+
 diff --git a/libavcodec/qsv.c b/libavcodec/qsv.c
 index 986d4f6022..2f01976be7 100644
 --- a/libavcodec/qsv.c
@@ -28,7 +28,7 @@ index 986d4f6022..2f01976be7 100644
 @@ -36,6 +36,8 @@
  #include "avcodec.h"
  #include "qsv_internal.h"
- 
+
 +#define MFX_IMPL_VIA_MASK(impl) (0x0f00 & (impl))
 +
  #if QSV_VERSION_ATLEAST(1, 12)
@@ -37,7 +37,7 @@ index 986d4f6022..2f01976be7 100644
 @@ -207,7 +209,7 @@ int ff_qsv_print_warning(void *log_ctx, mfxStatus err,
      return ret;
  }
- 
+
 -static enum AVPixelFormat qsv_map_fourcc(uint32_t fourcc)
 +enum AVPixelFormat ff_qsv_map_fourcc(uint32_t fourcc)
  {
@@ -46,7 +46,7 @@ index 986d4f6022..2f01976be7 100644
 @@ -245,6 +247,24 @@ int ff_qsv_find_surface_idx(QSVFramesContext *ctx, QSVFrame *frame)
      return AVERROR_BUG;
  }
- 
+
 +enum AVFieldOrder ff_qsv_map_picstruct(int mfx_pic_struct)
 +{
 +    enum AVFieldOrder field = AV_FIELD_UNKNOWN;
@@ -81,7 +81,7 @@ index 986d4f6022..2f01976be7 100644
 +#endif
 +    mfxVersion        ver = { { QSV_VERSION_MINOR, QSV_VERSION_MAJOR } };
 +    mfxInitParam init_par = { MFX_IMPL_AUTO_ANY };
- 
+
      const char *desc;
      int ret;
 @@ -406,6 +431,7 @@ static AVBufferRef *qsv_create_mids(AVBufferRef *hw_frames_ref)
@@ -91,10 +91,10 @@ index 986d4f6022..2f01976be7 100644
 +        mid->texture       = frames_hwctx->texture;
          mid->hw_frames_ref = hw_frames_ref1;
      }
- 
+
 @@ -500,7 +526,7 @@ static mfxStatus qsv_frame_alloc(mfxHDL pthis, mfxFrameAllocRequest *req,
          frames_hwctx = frames_ctx->hwctx;
- 
+
          frames_ctx->format            = AV_PIX_FMT_QSV;
 -        frames_ctx->sw_format         = qsv_map_fourcc(i->FourCC);
 +        frames_ctx->sw_format         = ff_qsv_map_fourcc(i->FourCC);
@@ -115,26 +115,26 @@ index 986d4f6022..2f01976be7 100644
 +    }
      return MFX_ERR_NONE;
  }
- 
+
 @@ -630,12 +662,12 @@ int ff_qsv_init_session_device(AVCodecContext *avctx, mfxSession *psession,
      AVHWDeviceContext    *device_ctx = (AVHWDeviceContext*)device_ref->data;
      AVQSVDeviceContext *device_hwctx = device_ctx->hwctx;
      mfxSession        parent_session = device_hwctx->session;
 +    mfxHDL                    handle = NULL;
 +    mfxHandleType        handle_type = MFX_IMPL_AUTO;
- 
+
      mfxSession    session;
      mfxVersion    ver;
      mfxIMPL       impl;
 -    mfxHDL        handle = NULL;
 -    mfxHandleType handle_type;
      mfxStatus err;
- 
+
      int i, ret;
 @@ -647,11 +679,26 @@ int ff_qsv_init_session_device(AVCodecContext *avctx, mfxSession *psession,
          return ff_qsv_print_error(avctx, err,
                                    "Error querying the session attributes");
- 
+
 +    if (MFX_IMPL_VIA_D3D11 == MFX_IMPL_VIA_MASK(impl))
 +    {
 +        handle_type = MFX_HANDLE_D3D11_DEVICE;
@@ -171,27 +171,27 @@ index b63a7d6a31..fe2cda4b22 100644
      AVFrame *hw_frame;
      mfxFrameSurface1 surf;
 +    /**
-+     * ID3D11Texture2D texture in which the frame is located for D3D11VA device. 
++     * ID3D11Texture2D texture in which the frame is located for D3D11VA device.
 +     * Null in case of DXVA2 device.
 +     */
 +    void *texture;
  } QSVMid;
- 
+
  typedef struct QSVFrame {
 @@ -92,9 +97,13 @@ int ff_qsv_codec_id_to_mfx(enum AVCodecID codec_id);
  int ff_qsv_profile_to_mfx(enum AVCodecID codec_id, int profile);
  int ff_qsv_level_to_mfx(enum AVCodecID codec_id, int level);
- 
+
 +enum AVPixelFormat ff_qsv_map_fourcc(uint32_t fourcc);
 +
  int ff_qsv_map_pixfmt(enum AVPixelFormat format, uint32_t *fourcc);
  enum AVPictureType ff_qsv_map_pictype(int mfx_pic_type);
- 
+
 +enum AVFieldOrder ff_qsv_map_picstruct(int mfx_pic_struct);
 +
  int ff_qsv_init_internal_session(AVCodecContext *avctx, mfxSession *session,
                                   const char *load_plugins);
- 
+
 diff --git a/libavcodec/qsvdec.c b/libavcodec/qsvdec.c
 index 46aa2d6814..7e48c833ab 100644
 --- a/libavcodec/qsvdec.c
@@ -199,7 +199,7 @@ index 46aa2d6814..7e48c833ab 100644
 @@ -147,19 +147,21 @@ static int check_dec_param(AVCodecContext *avctx, QSVContext *q, mfxVideoParam *
      return 1;
  }
- 
+
 -static int qsv_decode_init(AVCodecContext *avctx, QSVContext *q)
 +static int qsv_decode_preinit(AVCodecContext *avctx, QSVContext *q, enum AVPixelFormat pix_fmt, mfxVideoParam *param)
  {
@@ -214,7 +214,7 @@ index 46aa2d6814..7e48c833ab 100644
 +        AV_PIX_FMT_QSV, /* opaque format in case of video memory output */
 +        pix_fmt,        /* system memory format obtained from bitstream parser */
 +        AV_PIX_FMT_NONE };
- 
+
 -    desc = av_pix_fmt_desc_get(avctx->sw_pix_fmt);
 -    if (!desc)
 -        return AVERROR_BUG;
@@ -223,13 +223,13 @@ index 46aa2d6814..7e48c833ab 100644
 +        q->orig_pix_fmt = avctx->pix_fmt = AV_PIX_FMT_NONE;
 +        return ret;
 +    }
- 
+
      if (!q->async_fifo) {
          q->async_fifo = av_fifo_alloc(q->async_depth * qsv_fifo_item_size());
 @@ -197,54 +199,72 @@ static int qsv_decode_init(AVCodecContext *avctx, QSVContext *q)
          return ret;
      }
- 
+
 -    ret = ff_qsv_codec_id_to_mfx(avctx->codec_id);
 -    if (ret < 0)
 -        return ret;
@@ -237,7 +237,7 @@ index 46aa2d6814..7e48c833ab 100644
 +    param->AsyncDepth  = q->async_depth;
 +    param->ExtParam    = q->ext_buffers;
 +    param->NumExtParam = q->nb_ext_buffers;
- 
+
 -    param.mfx.CodecId      = ret;
 -    param.mfx.CodecProfile = ff_qsv_profile_to_mfx(avctx->codec_id, avctx->profile);
 -    param.mfx.CodecLevel   = ff_qsv_level_to_mfx(avctx->codec_id, avctx->level);
@@ -266,7 +266,7 @@ index 46aa2d6814..7e48c833ab 100644
 -    }
 +    return 0;
 + }
- 
+
 -    param.IOPattern   = q->iopattern;
 -    param.AsyncDepth  = q->async_depth;
 -    param.ExtParam    = q->ext_buffers;
@@ -274,7 +274,7 @@ index 46aa2d6814..7e48c833ab 100644
 +static int qsv_decode_init(AVCodecContext *avctx, QSVContext *q, mfxVideoParam *param)
 +{
 +    int ret;
- 
+
 -    if (!check_dec_param(avctx, q, &param)) {
 -        //Just give a warning instead of an error since it is still decodable possibly.
 -        av_log(avctx, AV_LOG_WARNING,
@@ -288,13 +288,13 @@ index 46aa2d6814..7e48c833ab 100644
 +    avctx->profile      = param->mfx.CodecProfile;
 +    avctx->field_order  = ff_qsv_map_picstruct(param->mfx.FrameInfo.PicStruct);
 +    avctx->pix_fmt      = ff_qsv_map_fourcc(param->mfx.FrameInfo.FourCC);
- 
+
 -    ret = MFXVideoDECODE_Init(q->session, &param);
 +    ret = MFXVideoDECODE_Init(q->session, param);
      if (ret < 0)
          return ff_qsv_print_error(avctx, ret,
                                    "Error initializing the MFX video decoder");
- 
+
 -    q->frame_info = param.mfx.FrameInfo;
 +    q->frame_info = param->mfx.FrameInfo;
 +
@@ -336,7 +336,7 @@ index 46aa2d6814..7e48c833ab 100644
 +    if (ret < 0)
 +        return ff_qsv_print_error(avctx, ret,
 +                "Error decoding stream header");
- 
+
      return 0;
  }
 @@ -527,7 +547,8 @@ int ff_qsv_process_data(AVCodecContext *avctx, QSVContext *q,
@@ -346,21 +346,21 @@ index 46aa2d6814..7e48c833ab 100644
 -    const AVPixFmtDescriptor *desc;
 +    mfxVideoParam param = { 0 };
 +    enum AVPixelFormat pix_fmt = AV_PIX_FMT_NV12;
- 
+
      if (!q->avctx_internal) {
          q->avctx_internal = avcodec_alloc_context3(NULL);
 @@ -541,7 +562,6 @@ int ff_qsv_process_data(AVCodecContext *avctx, QSVContext *q,
              return AVERROR(ENOMEM);
- 
+
          q->parser->flags |= PARSER_FLAG_COMPLETE_FRAMES;
 -        q->orig_pix_fmt   = AV_PIX_FMT_NONE;
      }
- 
+
      if (!pkt->size)
 @@ -554,15 +574,23 @@ int ff_qsv_process_data(AVCodecContext *avctx, QSVContext *q,
                       pkt->data, pkt->size, pkt->pts, pkt->dts,
                       pkt->pos);
- 
+
 -    avctx->field_order  = q->parser->field_order;
      /* TODO: flush delayed frames on reinit */
 -    if (q->parser->format       != q->orig_pix_fmt    ||
@@ -387,7 +387,7 @@ index 46aa2d6814..7e48c833ab 100644
 +        avctx->coded_width  != param.mfx.FrameInfo.Width ||
 +        avctx->coded_height != param.mfx.FrameInfo.Height)) {
          AVPacket zero_pkt = {0};
- 
+
          if (q->buffered_count) {
 @@ -571,45 +599,24 @@ int ff_qsv_process_data(AVCodecContext *avctx, QSVContext *q,
              q->buffered_count--;
@@ -395,7 +395,7 @@ index 46aa2d6814..7e48c833ab 100644
          }
 -
          q->reinit_flag = 0;
- 
+
 -        qsv_format = ff_qsv_map_pixfmt(q->parser->format, &q->fourcc);
 -        if (qsv_format < 0) {
 -            av_log(avctx, AV_LOG_ERROR,
@@ -405,7 +405,7 @@ index 46aa2d6814..7e48c833ab 100644
 -            goto reinit_fail;
 -        }
 +        q->orig_pix_fmt = avctx->pix_fmt = pix_fmt = ff_qsv_map_fourcc(param.mfx.FrameInfo.FourCC);
- 
+
 -        q->orig_pix_fmt     = q->parser->format;
 -        avctx->pix_fmt      = pix_fmts[1] = qsv_format;
 -        avctx->width        = q->parser->width;
@@ -416,14 +416,14 @@ index 46aa2d6814..7e48c833ab 100644
 -        avctx->profile      = q->avctx_internal->profile;
 +        avctx->coded_width  = param.mfx.FrameInfo.Width;
 +        avctx->coded_height = param.mfx.FrameInfo.Height;
- 
+
 -        ret = ff_get_format(avctx, pix_fmts);
 +        ret = qsv_decode_preinit(avctx, q, pix_fmt, &param);
          if (ret < 0)
              goto reinit_fail;
 +        q->initialized = 0;
 +    }
- 
+
 -        avctx->pix_fmt = ret;
 -
 -        desc = av_pix_fmt_desc_get(avctx->pix_fmt);
@@ -442,7 +442,7 @@ index 46aa2d6814..7e48c833ab 100644
              goto reinit_fail;
 +        q->initialized = 1;
      }
- 
+
      return qsv_decode(avctx, q, frame, got_frame, pkt);
 @@ -622,4 +629,5 @@ reinit_fail:
  void ff_qsv_decode_flush(AVCodecContext *avctx, QSVContext *q)
@@ -457,7 +457,7 @@ index 111536caba..4812fb2a6b 100644
 @@ -63,6 +63,8 @@ typedef struct QSVContext {
      uint32_t fourcc;
      mfxFrameInfo frame_info;
- 
+
 +    int initialized;
 +
      // options set by the caller
@@ -470,7 +470,7 @@ index 9b49f5506e..eb1dc336a4 100644
 @@ -103,6 +103,7 @@ static av_cold int qsv_decode_init(AVCodecContext *avctx)
          }
      }
- 
+
 +    s->qsv.orig_pix_fmt = AV_PIX_FMT_NV12;
      s->packet_fifo = av_fifo_alloc(sizeof(AVPacket));
      if (!s->packet_fifo) {
@@ -482,7 +482,7 @@ index 03251d2c85..a6f1b88ca0 100644
 @@ -90,6 +90,7 @@ static av_cold int qsv_decode_init(AVCodecContext *avctx)
      }
  #endif
- 
+
 +    s->qsv.orig_pix_fmt = AV_PIX_FMT_NV12;
      s->packet_fifo = av_fifo_alloc(sizeof(AVPacket));
      if (!s->packet_fifo) {
@@ -494,7 +494,7 @@ index 8d5ff2eb65..61135541e5 100644
 @@ -32,10 +32,11 @@
  #include "qsvvpp.h"
  #include "video.h"
- 
+
 -#define IS_VIDEO_MEMORY(mode)  (mode & (MFX_MEMTYPE_VIDEO_MEMORY_DECODER_TARGET | \
 +#define IS_VIDEO_MEMORY(mode)   (mode & (MFX_MEMTYPE_VIDEO_MEMORY_DECODER_TARGET | \
                                          MFX_MEMTYPE_VIDEO_MEMORY_PROCESSOR_TARGET))
@@ -503,7 +503,7 @@ index 8d5ff2eb65..61135541e5 100644
 +#define IS_OPAQUE_MEMORY(mode)  (mode & MFX_MEMTYPE_OPAQUE_FRAME)
 +#define IS_SYSTEM_MEMORY(mode)  (mode & MFX_MEMTYPE_SYSTEM_MEMORY)
 +#define MFX_IMPL_VIA_MASK(impl) (0x0f00 & (impl))
- 
+
  typedef struct QSVFrame {
      AVFrame          *frame;
 @@ -405,12 +406,12 @@ static int init_vpp_session(AVFilterContext *avctx, QSVVPPContext *s)
@@ -511,7 +511,7 @@ index 8d5ff2eb65..61135541e5 100644
      AVQSVFramesContext  *in_frames_hwctx = NULL;
      AVQSVFramesContext *out_frames_hwctx = NULL;
 +    mfxHandleType            handle_type = MFX_IMPL_AUTO;
- 
+
      AVBufferRef *device_ref;
      AVHWDeviceContext *device_ctx;
      AVQSVDeviceContext *device_hwctx;
@@ -523,7 +523,7 @@ index 8d5ff2eb65..61135541e5 100644
 @@ -497,15 +498,30 @@ static int init_vpp_session(AVFilterContext *avctx, QSVVPPContext *s)
          return AVERROR_UNKNOWN;
      }
- 
+
 +    if (MFX_IMPL_VIA_D3D11 == MFX_IMPL_VIA_MASK(impl))
 +    {
 +        handle_type = MFX_HANDLE_D3D11_DEVICE;
@@ -564,7 +564,7 @@ index 6670c47579..34e1ece437 100644
 @@ -510,15 +510,57 @@ static void d3d11va_device_uninit(AVHWDeviceContext *hwdev)
      }
  }
- 
+
 +static int d3d11va_device_find_adapter_by_vendor_id(AVHWDeviceContext *ctx, UINT creationFlags, char *vendor)
 +{
 +    HRESULT hr;
@@ -609,7 +609,7 @@ index 6670c47579..34e1ece437 100644
                                   AVDictionary *opts, int flags)
  {
      AVD3D11VADeviceContext *device_hwctx = ctx->hwctx;
- 
+
      HRESULT hr;
 +    AVDictionaryEntry *e;
      IDXGIAdapter           *pAdapter = NULL;
@@ -618,11 +618,11 @@ index 6670c47579..34e1ece437 100644
 +    int adapter = -1;
      int is_debug       = !!av_dict_get(opts, "debug", NULL, 0);
      int ret;
- 
+
 @@ -538,11 +580,23 @@ static int d3d11va_device_create(AVHWDeviceContext *ctx, const char *device,
          return AVERROR_UNKNOWN;
      }
- 
+
 +    e = av_dict_get(opts, "vendor", NULL, 0);
 +    if (e) {
 +        adapter = d3d11va_device_find_adapter_by_vendor_id(ctx, creationFlags, e ? e->value : NULL);
@@ -651,7 +651,7 @@ index 59e4ed9157..270ef976d7 100644
 @@ -27,9 +27,13 @@
  #include <pthread.h>
  #endif
- 
+
 +#define COBJMACROS
  #if CONFIG_VAAPI
  #include "hwcontext_vaapi.h"
@@ -665,7 +665,7 @@ index 59e4ed9157..270ef976d7 100644
 @@ -44,6 +48,8 @@
  #include "pixdesc.h"
  #include "time.h"
- 
+
 +#define MFX_IMPL_VIA_MASK(impl) (0x0f00 & (impl))
 +
  typedef struct QSVDevicePriv {
@@ -686,10 +686,10 @@ index 59e4ed9157..270ef976d7 100644
      AVQSVDeviceContext *hwctx = ctx->hwctx;
      QSVDeviceContext       *s = ctx->internal->priv;
 +    mfxHandleType handle_type = MFX_IMPL_AUTO;
- 
+
      mfxStatus err;
      int i;
- 
+
 -    for (i = 0; supported_handle_types[i].handle_type; i++) {
 -        err = MFXVideoCORE_GetHandle(hwctx->session, supported_handle_types[i].handle_type,
 -                                     &s->handle);
@@ -711,7 +711,7 @@ index 59e4ed9157..270ef976d7 100644
 @@ -146,6 +141,36 @@ static int qsv_device_init(AVHWDeviceContext *ctx)
          return AVERROR_UNKNOWN;
      }
- 
+
 +    if (MFX_IMPL_VIA_D3D11 == MFX_IMPL_VIA_MASK(s->impl))
 +    {
 +        handle_type = MFX_HANDLE_D3D11_DEVICE;
@@ -744,7 +744,7 @@ index 59e4ed9157..270ef976d7 100644
 +
      return 0;
  }
- 
+
 @@ -222,13 +247,19 @@ static int qsv_init_child_ctx(AVHWFramesContext *ctx)
      if (!child_device_ref)
          return AVERROR(ENOMEM);
@@ -769,7 +769,7 @@ index 59e4ed9157..270ef976d7 100644
 @@ -255,6 +286,16 @@ static int qsv_init_child_ctx(AVHWFramesContext *ctx)
      child_frames_ctx->width             = FFALIGN(ctx->width, 16);
      child_frames_ctx->height            = FFALIGN(ctx->height, 16);
- 
+
 +#if CONFIG_D3D11VA
 +    if (child_device_ctx->type == AV_HWDEVICE_TYPE_D3D11VA) {
 +        AVD3D11VAFramesContext *child_frames_hwctx = child_frames_ctx->hwctx;
@@ -803,7 +803,7 @@ index 59e4ed9157..270ef976d7 100644
      if (child_device_ctx->type == AV_HWDEVICE_TYPE_DXVA2) {
          AVDXVA2FramesContext *child_frames_hwctx = child_frames_ctx->hwctx;
 @@ -421,7 +474,16 @@ static mfxStatus frame_unlock(mfxHDL pthis, mfxMemId mid, mfxFrameData *ptr)
- 
+
  static mfxStatus frame_get_hdl(mfxHDL pthis, mfxMemId mid, mfxHDL *hdl)
  {
 -    *hdl = mid;
@@ -819,7 +819,7 @@ index 59e4ed9157..270ef976d7 100644
 +    }
      return MFX_ERR_NONE;
  }
- 
+
 @@ -668,6 +730,11 @@ static int qsv_map_from(AVHWFramesContext *ctx,
          child_data = (uint8_t*)(intptr_t)*(VASurfaceID*)surf->Data.MemId;
          break;
@@ -861,7 +861,7 @@ index 59e4ed9157..270ef976d7 100644
      case AV_HWDEVICE_TYPE_DXVA2:
          {
 @@ -1009,14 +1097,26 @@ static int qsv_map_to(AVHWFramesContext *dst_ctx,
- 
+
      for (i = 0; i < hwctx->nb_surfaces; i++) {
  #if CONFIG_VAAPI
 -        if (*(VASurfaceID*)hwctx->surfaces[i].Data.MemId ==
@@ -896,7 +896,7 @@ index 59e4ed9157..270ef976d7 100644
 @@ -1074,7 +1174,7 @@ static void qsv_device_free(AVHWDeviceContext *ctx)
      av_freep(&priv);
  }
- 
+
 -static mfxIMPL choose_implementation(const char *device)
 +static mfxIMPL choose_implementation(const char *device, enum AVHWDeviceType child_device_type)
  {
@@ -905,14 +905,14 @@ index 59e4ed9157..270ef976d7 100644
 @@ -1103,6 +1203,10 @@ static mfxIMPL choose_implementation(const char *device)
              impl = strtol(device, NULL, 0);
      }
- 
+
 +    if ( (child_device_type == AV_HWDEVICE_TYPE_D3D11VA) && (impl != MFX_IMPL_SOFTWARE) ) {
 +        impl |= MFX_IMPL_VIA_D3D11;
 +    }
 +
      return impl;
  }
- 
+
 @@ -1129,6 +1233,15 @@ static int qsv_device_derive_from_child(AVHWDeviceContext *ctx,
          }
          break;
@@ -940,12 +940,12 @@ index 59e4ed9157..270ef976d7 100644
 +    return qsv_device_derive_from_child(ctx, impl,
 +                                         child_device_ctx, flags);
  }
- 
+
  static int qsv_device_create(AVHWDeviceContext *ctx, const char *device,
 @@ -1219,25 +1334,63 @@ static int qsv_device_create(AVHWDeviceContext *ctx, const char *device,
      ctx->user_opaque = priv;
      ctx->free        = qsv_device_free;
- 
+
 -    e = av_dict_get(opts, "child_device", NULL, 0);
 -
 -    child_device_opts = NULL;
@@ -977,7 +977,7 @@ index 59e4ed9157..270ef976d7 100644
          av_log(ctx, AV_LOG_ERROR, "No supported child device type is enabled\n");
          return AVERROR(ENOSYS);
      }
- 
+
 +    child_device_opts = NULL;
 +    switch (child_device_type) {
 +#if CONFIG_VAAPI
@@ -1020,12 +1020,12 @@ index 59e4ed9157..270ef976d7 100644
                                   e ? e->value : NULL, child_device_opts, 0);
      if (ret < 0)
 @@ -1245,7 +1398,7 @@ static int qsv_device_create(AVHWDeviceContext *ctx, const char *device,
- 
+
      child_device = (AVHWDeviceContext*)priv->child_device_ctx->data;
- 
+
 -    impl = choose_implementation(device);
 +    impl = choose_implementation(device, child_device_type);
- 
+
      return qsv_device_derive_from_child(ctx, impl, child_device, 0);
  }
 diff --git a/libavutil/hwcontext_qsv.h b/libavutil/hwcontext_qsv.h
@@ -1046,7 +1046,7 @@ index b98d611cfc..d21d58eb61 100644
 +     */
 +    //mfxHandleType handle_type;
  } AVQSVDeviceContext;
- 
+
  /**
 @@ -42,11 +51,11 @@ typedef struct AVQSVDeviceContext {
  typedef struct AVQSVFramesContext {
@@ -1059,5 +1059,5 @@ index b98d611cfc..d21d58eb61 100644
      int frame_type;
 +    void              *texture;
  } AVQSVFramesContext;
- 
+
  #endif /* AVUTIL_HWCONTEXT_QSV_H */

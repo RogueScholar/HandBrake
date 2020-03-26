@@ -4,7 +4,7 @@ diff -Naur harfbuzz-1.2.6.orig/src/hb.h harfbuzz-1.2.6/src/hb.h
 @@ -32,6 +32,9 @@
  #define HB_EXTERN extern
  #endif
- 
+
 +#ifdef __x86_64__
 +#include <emmintrin.h>
 +#endif
