@@ -1455,4 +1455,3 @@ void hb_dvd_set_dvdnav( int enable )
     else
         dvd_methods = hb_dvdread_methods();
 }
-
